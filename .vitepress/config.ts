@@ -36,7 +36,7 @@ export default defineConfig({
     ["link", { rel: "icon", type: "image/png", href: "/favicon-32x32.png", sizes: "32x32" }],
     ["link", { rel: "icon", type: "image/png", href: "/favicon-16x16.png", sizes: "16x16" }],
     ["link", { rel: "manifest", href: "/manifest.json" }],
-    ["meta", { name: "theme-color", content: "#d4a27f" }],
+    ["meta", { name: "theme-color", content: "#141413" }],
     ["meta", { name: "description", content: "Hello, World!" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:locale", content: "en" }],
