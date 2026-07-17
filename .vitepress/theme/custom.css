@@ -487,10 +487,15 @@
 }
 
 :root {
-  --vp-c-brand-1: var(--_brand-clay);
-  --vp-c-brand-2: var(--_brand-clay-hover);
-  --vp-c-brand-3: var(--_brand-clay-dark);
-  --vp-c-brand-soft: color-mix(in srgb, var(--_brand-clay) 15%, transparent);
+  --vp-c-brand-1: var(--vp-c-text-1);
+  --vp-c-brand-2: var(--vp-c-text-1);
+  --vp-c-brand-3: var(--vp-c-text-1);
+  --vp-c-brand-soft: color-mix(in srgb, var(--vp-c-text-1) 15%, transparent);
+}
+
+.VPNavBarMenuLink.active {
+  text-decoration: underline;
+  text-underline-offset: 6px;
 }
 
 /* prettier-ignore */
@@ -506,18 +511,18 @@
 }
 
 .VPHero {
-  padding: 88px 24px 32px !important;
+  padding: 96px 24px 40px !important;
 }
 
 @media (min-width: 640px) {
   .VPHero {
-    padding: 96px 48px 40px !important;
+    padding: 104px 48px 48px !important;
   }
 }
 
 @media (min-width: 960px) {
   .VPHero {
-    padding: 96px 64px 40px !important;
+    padding: 104px 64px 48px !important;
   }
 }
 

@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useData } from "vitepress";
-import { X, Minus, Maximize2, Terminal } from "@lucide/vue";
 
 const { lang } = useData();
 const isZh = computed(() => lang.value.startsWith("zh"));
 
-const TITLE = computed(() => (isZh.value ? "终端" : "Terminal"));
 const NAME = computed(() => (isZh.value ? "罗嘉海" : "luojiahai"));
 const VERSION = "v3.14159";
 const TAGLINE = computed(() => (isZh.value ? "INTJ" : "INTJ personality"));
@@ -153,20 +151,7 @@ onUnmounted(() => {
 
 <template>
   <div class="terminal-frame">
-    <div class="terminal-header">
-      <div class="header-controls">
-        <span class="header-control-button close">
-          <X :size="10" />
-        </span>
-        <span class="header-control-button minimize">
-          <Minus :size="10" />
-        </span>
-        <span class="header-control-button maximize">
-          <Maximize2 :size="10" />
-        </span>
-      </div>
-      <div class="header-title"><Terminal :size="14" /> {{ TITLE }}</div>
-    </div>
+    <div class="terminal-header"></div>
     <div ref="terminalContent" class="terminal-content">
       <span ref="charMeasure" class="char-measure">─</span>
       <div class="heading">
@@ -244,67 +229,6 @@ onUnmounted(() => {
   height: 32px;
   background-color: var(--vp-c-bg-elv);
   color: var(--vp-c-text-2);
-}
-
-.header-title {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 600;
-  gap: 8px;
-  margin-left: 16px;
-}
-
-.header-controls {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 9px;
-}
-
-.header-control-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  cursor: default;
-  user-select: none;
-  position: relative;
-}
-
-.header-control-button svg {
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.header-control-button:hover svg {
-  opacity: 1;
-}
-
-.header-control-button.close {
-  background-color: #ff5f57;
-}
-
-.header-control-button.close svg {
-  color: #4d0000;
-}
-
-.header-control-button.minimize {
-  background-color: #febc2e;
-}
-
-.header-control-button.minimize svg {
-  color: #995700;
-}
-
-.header-control-button.maximize {
-  background-color: #28c840;
-}
-
-.header-control-button.maximize svg {
-  color: #006500;
 }
 
 .terminal-content {
