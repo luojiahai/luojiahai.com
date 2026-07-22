@@ -2,7 +2,7 @@
 
 [中文](./README.zh.md)
 
-This is the source code of [luojiahai.com](https://luojiahai.com), the personal website of Luo, Jiahai. Site stack originally based on [nooc.me](https://github.com/noobnooc/nooc.me).
+This is the source code of [luojiahai.com](https://luojiahai.com), my personal website.
 
 ## Stack
 

@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-这里是罗嘉海的个人网站 [luojiahai.com](https://luojiahai.com) 的源码。网站技术栈基于 [nooc.me](https://github.com/noobnooc/nooc.me)。
+这里是我的个人网站 [luojiahai.com](https://luojiahai.com) 的源码。
 
 ## 技术栈
 
