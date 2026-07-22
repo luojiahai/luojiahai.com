@@ -4,8 +4,10 @@
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedLabel from "$lib/components/PrintedLabel.svelte";
   import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
+  import PrintedEmpty from "$lib/components/PrintedEmpty.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
+  import { showActivity } from "$lib/site-config";
 
   let { data } = $props();
 
@@ -33,7 +35,7 @@
     </p>
   </PrintedSection>
 
-  {#if section === "life"}
+  {#if section === "life" && showActivity}
     <!-- Archive sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
       <div class="flex flex-wrap gap-2">
@@ -68,6 +70,8 @@
             <span class="opacity-50">({category.count[lang]})</span>
           </PrintedLabel>
         </a>
+      {:else}
+        <PrintedEmpty />
       {/each}
     </div>
   </PrintedSection>

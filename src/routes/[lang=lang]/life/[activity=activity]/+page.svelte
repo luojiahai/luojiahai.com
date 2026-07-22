@@ -4,6 +4,7 @@
   import type { Activity } from "../../../../params/activity";
   import type { IconName } from "$lib/icons";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
+  import PrintedEmpty from "$lib/components/PrintedEmpty.svelte";
   import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
@@ -61,6 +62,8 @@
             ></div>
           {/if}
         </div>
+      {:else}
+        <PrintedEmpty />
       {/each}
     </div>
   </PrintedSection>

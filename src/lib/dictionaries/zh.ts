@@ -54,6 +54,7 @@ const dictionary: Dictionary = {
     categories: "分类",
     featured: "精选",
     archive: "归档",
+    empty: "这里还没有内容。",
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",
     brandTagline: "Hello, World!",

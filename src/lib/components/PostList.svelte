@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PostListItem } from "$lib/content";
   import { displayDate } from "$lib/date";
+  import PrintedEmpty from "./PrintedEmpty.svelte";
 
   let {
     posts,
@@ -52,5 +53,7 @@
         ></div>
       {/if}
     </div>
+  {:else}
+    <PrintedEmpty />
   {/each}
 </div>

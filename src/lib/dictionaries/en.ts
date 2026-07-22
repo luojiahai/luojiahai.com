@@ -125,6 +125,7 @@ const dictionary = {
     categories: "Categories",
     featured: "Featured",
     archive: "Archive",
+    empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
     brandTagline: "Hello, World!",
