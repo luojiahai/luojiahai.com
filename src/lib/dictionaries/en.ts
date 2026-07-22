@@ -218,7 +218,7 @@ const dictionary = {
       {
         label: "Software",
         items: [
-          { label: "AI", value: "Claude" },
+          { label: "Coding Agent", value: "Claude Code / Codex" },
           { label: "Editor", value: "Visual Studio Code" },
           { label: "Browser", value: "Edge" },
           { label: "Terminal", value: "Ghostty / Windows Terminal" },

@@ -144,7 +144,7 @@ const dictionary: Dictionary = {
       {
         label: "软件",
         items: [
-          { label: "AI", value: "Claude" },
+          { label: "编程智能体", value: "Claude Code / Codex" },
           { label: "编辑器", value: "Visual Studio Code" },
           { label: "浏览器", value: "Edge" },
           { label: "终端", value: "Ghostty / Windows Terminal" },
