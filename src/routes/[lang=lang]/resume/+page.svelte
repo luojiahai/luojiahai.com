@@ -39,19 +39,33 @@
       {#each content.experiences as experience (`${experience.role}-${experience.period}`)}
         <div>
           <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h3 class="font-serif text-lg text-printer-ink dark:text-printer-ink-dark">
-                {experience.role}
-              </h3>
-              <p
-                class="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-printer-ink-light dark:text-printer-ink-dark/45"
-              >
-                {experience.organization}{experience.location
-                  ? ` · ${experience.location}`
-                  : ""}
-              </p>
+            <div class="flex items-start gap-3">
+              {#if experience.organizationIcon}
+                <img
+                  src={experience.organizationIcon}
+                  alt=""
+                  width="36"
+                  height="36"
+                  loading="lazy"
+                  class="mt-1 h-9 w-9 shrink-0 border border-printer-ink/8 dark:border-printer-ink-dark/8"
+                />
+              {/if}
+              <div>
+                <h3 class="font-serif text-lg text-printer-ink dark:text-printer-ink-dark">
+                  {experience.role}
+                </h3>
+                <p
+                  class="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-printer-ink-light dark:text-printer-ink-dark/45"
+                >
+                  {experience.organization}{experience.location
+                    ? ` · ${experience.location}`
+                    : ""}
+                </p>
+              </div>
             </div>
-            <PrintedLabel variant="muted">{experience.period}</PrintedLabel>
+            <PrintedLabel variant="muted" class="shrink-0 self-start whitespace-nowrap">
+              {experience.period}
+            </PrintedLabel>
           </div>
 
           {#if experience.summary}
@@ -149,16 +163,30 @@
         <div
           class="flex flex-col gap-3 rounded-md border border-printer-ink/8 bg-printer-ink/3 p-4 dark:border-printer-ink-dark/8 dark:bg-printer-ink-dark/3 sm:flex-row sm:items-start sm:justify-between"
         >
-          <div>
-            <h3 class="font-serif text-lg text-printer-ink dark:text-printer-ink-dark">
-              {education.school}
-            </h3>
-            <p class="mt-1 font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/55">
-              {education.degree}
-            </p>
+          <div class="flex items-start gap-3">
+            {#if education.schoolIcon}
+              <img
+                src={education.schoolIcon}
+                alt=""
+                width="36"
+                height="36"
+                loading="lazy"
+                class="mt-1 h-9 w-9 shrink-0 border border-printer-ink/8 dark:border-printer-ink-dark/8"
+              />
+            {/if}
+            <div>
+              <h3 class="font-serif text-lg text-printer-ink dark:text-printer-ink-dark">
+                {education.school}
+              </h3>
+              <p class="mt-1 font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/55">
+                {education.degree}
+              </p>
+            </div>
           </div>
-          <div class="flex flex-col gap-2 sm:items-end">
-            <PrintedLabel variant="muted">{education.period}</PrintedLabel>
+          <div class="flex shrink-0 flex-col gap-2 sm:items-end">
+            <PrintedLabel variant="muted" class="whitespace-nowrap">
+              {education.period}
+            </PrintedLabel>
             <div
               class="font-mono text-[10px] uppercase tracking-[0.25em] text-printer-ink-light dark:text-printer-ink-dark/45"
             >

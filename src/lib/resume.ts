@@ -16,6 +16,7 @@ export interface ResumeProject {
 export interface ResumeExperience {
   role: string;
   organization: string;
+  organizationIcon?: string;
   location?: string;
   period: string;
   summary?: string;
@@ -29,6 +30,7 @@ export interface ResumeSkillGroup {
 
 export interface ResumeEducation {
   school: string;
+  schoolIcon?: string;
   degree: string;
   location: string;
   period: string;
@@ -89,6 +91,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "Senior Software Engineer",
         organization: "REA Group (realestate.com.au)",
+        organizationIcon: "/resume/rea.png",
         location: "Melbourne, Australia",
         period: "2025 - Present",
         projects: [],
@@ -96,6 +99,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "Software Engineer",
         organization: "REA Group (realestate.com.au)",
+        organizationIcon: "/resume/rea.png",
         location: "Melbourne, Australia",
         period: "2024 - 2025",
         projects: [],
@@ -103,6 +107,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "Software Development Engineer",
         organization: "Amazon Web Services (AWS)",
+        organizationIcon: "/resume/aws.png",
         location: "Sydney, Australia",
         period: "2021 - 2024",
         projects: [],
@@ -110,6 +115,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "Software Development Consultant",
         organization: "Deloitte",
+        organizationIcon: "/resume/deloitte.png",
         location: "Melbourne, Australia",
         period: "2020 - 2021",
         projects: [],
@@ -117,6 +123,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "Teaching Assistant",
         organization: "The University of Melbourne",
+        organizationIcon: "/resume/unimelb.png",
         location: "Melbourne, Australia",
         period: "2018 - 2020",
         projects: [],
@@ -147,18 +154,21 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
     education: [
       {
         school: "The University of Melbourne",
+        schoolIcon: "/resume/unimelb.png",
         degree: "Master of Science (Computer Science)",
         location: "Melbourne, Australia",
         period: "2018 - 2020",
       },
       {
         school: "The University of Melbourne",
+        schoolIcon: "/resume/unimelb.png",
         degree: "Bachelor of Science",
         location: "Melbourne, Australia",
         period: "2015 - 2018",
       },
       {
         school: "Peking University",
+        schoolIcon: "/resume/pku.png",
         degree: "Summer School International Program",
         location: "Beijing, China",
         period: "Summer 2016",
@@ -202,6 +212,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "高级软件工程师",
         organization: "REA 集团（realestate.com.au）",
+        organizationIcon: "/resume/rea.png",
         location: "澳大利亚墨尔本",
         period: "2025 - 至今",
         projects: [],
@@ -209,6 +220,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "软件工程师",
         organization: "REA 集团（realestate.com.au）",
+        organizationIcon: "/resume/rea.png",
         location: "澳大利亚墨尔本",
         period: "2024 - 2025",
         projects: [],
@@ -216,6 +228,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "软件开发工程师",
         organization: "亚马逊云科技（AWS）",
+        organizationIcon: "/resume/aws.png",
         location: "澳大利亚悉尼",
         period: "2021 - 2024",
         projects: [],
@@ -223,6 +236,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "软件开发顾问",
         organization: "德勤",
+        organizationIcon: "/resume/deloitte.png",
         location: "澳大利亚墨尔本",
         period: "2020 - 2021",
         projects: [],
@@ -230,6 +244,7 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
       {
         role: "教学助理",
         organization: "墨尔本大学",
+        organizationIcon: "/resume/unimelb.png",
         location: "澳大利亚墨尔本",
         period: "2018 - 2020",
         projects: [],
@@ -260,18 +275,21 @@ export const resumeContent: Record<"zh" | "en", ResumeContent> = {
     education: [
       {
         school: "墨尔本大学",
+        schoolIcon: "/resume/unimelb.png",
         degree: "理学硕士（计算机科学）",
         location: "澳大利亚墨尔本",
         period: "2018 - 2020",
       },
       {
         school: "墨尔本大学",
+        schoolIcon: "/resume/unimelb.png",
         degree: "理学学士",
         location: "澳大利亚墨尔本",
         period: "2015 - 2018",
       },
       {
         school: "北京大学",
+        schoolIcon: "/resume/pku.png",
         degree: "暑期学校国际课程",
         location: "中国北京",
         period: "2016 夏",
