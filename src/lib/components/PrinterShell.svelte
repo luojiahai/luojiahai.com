@@ -6,7 +6,6 @@
   import type { Dictionary, Language } from "$lib/dictionaries";
   import { showStickers } from "$lib/site-config";
   import PrinterSnail from "./PrinterSnail.svelte";
-  import Logo from "./Logo.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
@@ -199,15 +198,17 @@
         <!-- Brand plate -->
         <div class="relative flex items-start justify-between mb-8">
           <div class="flex items-center gap-4">
-            <div class="relative" aria-hidden="true">
+            <div class="relative">
               <div
-                class="absolute -inset-2 rounded-xl bg-black/5 dark:bg-white/[0.08] shadow-inner"
+                class="absolute -inset-2 rounded-full bg-black/5 dark:bg-white/[0.08] shadow-inner"
               ></div>
-              <div
-                class="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-printer-ink text-printer-paper shadow-sm ring-1 ring-black/10 dark:bg-printer-ink-dark dark:text-printer-body-dark dark:ring-white/[0.15] dark:shadow-[0_0_12px_rgba(100,120,255,0.1)]"
-              >
-                <Logo class="h-5 w-5" />
-              </div>
+              <img
+                class="h-8 w-8 rounded-full ring-1 ring-black/10 dark:ring-white/[0.15] shadow-sm dark:shadow-[0_0_12px_rgba(100,120,255,0.1)] relative z-10"
+                src="/static/avatar.webp"
+                alt={dictionary.meta.name}
+                width="32"
+                height="32"
+              />
             </div>
             <div>
               <div
