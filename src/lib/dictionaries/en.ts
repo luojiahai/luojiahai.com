@@ -162,7 +162,7 @@ const dictionary = {
         label: "Hardware",
         items: [
           { label: "Mobile", value: "iPhone 13 Pro Max" },
-          { label: "Laptop", value: "Microsoft Surface Pro 5 2017" },
+          { label: "Laptop", value: "MacBook Air 13-inch M5" },
           { label: "Monitor", value: "Samsung LS27A700NWEXXY / Dell S2721QS" },
           { label: "Dock", value: "Dell D6000" },
           { label: "Mouse", value: "Logitech MX Master 3S" },
@@ -220,7 +220,7 @@ const dictionary = {
           { label: "AI", value: "Claude" },
           { label: "Editor", value: "Visual Studio Code" },
           { label: "Browser", value: "Edge" },
-          { label: "Terminal", value: "iTerm2 / Windows Terminal" },
+          { label: "Terminal", value: "Ghostty / Windows Terminal" },
           { label: "Diagramming", value: "Draw.io / Mermaid" },
         ],
       },

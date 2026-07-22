@@ -91,7 +91,7 @@ const dictionary: Dictionary = {
         label: "硬件",
         items: [
           { label: "手机", value: "iPhone 13 Pro Max" },
-          { label: "笔记本电脑", value: "Microsoft Surface Pro 5 2017" },
+          { label: "笔记本电脑", value: "MacBook Air 13-inch M5" },
           { label: "显示器", value: "Samsung LS27A700NWEXXY / Dell S2721QS" },
           { label: "扩展坞", value: "Dell D6000" },
           { label: "鼠标", value: "Logitech MX Master 3S" },
@@ -146,7 +146,7 @@ const dictionary: Dictionary = {
           { label: "AI", value: "Claude" },
           { label: "编辑器", value: "Visual Studio Code" },
           { label: "浏览器", value: "Edge" },
-          { label: "终端", value: "iTerm2 / Windows Terminal" },
+          { label: "终端", value: "Ghostty / Windows Terminal" },
           { label: "画图", value: "Draw.io / Mermaid" },
         ],
       },
