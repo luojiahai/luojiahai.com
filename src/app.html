@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="%lang%">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="%sveltekit.assets%/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("color-mode");
+          var mode =
+            stored === "system" || stored === "light" || stored === "dark"
+              ? stored
+              : "system";
+          document.documentElement.dataset.colorMode = mode;
+          var dark =
+            mode === "dark" ||
+            (mode === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {}
+      })();
+    </script>
+    %sveltekit.head%
+  </head>
+  <body>
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

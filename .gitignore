@@ -1,0 +1,17 @@
+node_modules
+
+# Build artifacts
+.svelte-kit
+.velite
+.wrangler
+
+# Velite-generated blog assets
+static/blog
+
+# OS
+.DS_Store
+
+# Env
+.env
+.env.*
+!.env.example

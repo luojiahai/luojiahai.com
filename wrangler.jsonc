@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "luojiahai",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-03-31",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".svelte-kit/cloudflare",
+    "binding": "ASSETS"
+  },
+  // Optional: create a KV namespace (`wrangler kv namespace create SOCIAL_CACHE`)
+  // and add its id here to cache social hover-card stats; the code tolerates
+  // a missing binding.
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "SOCIAL_CACHE",
+  //     "id": "<your-kv-namespace-id>"
+  //   }
+  // ],
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "luojiahai.com",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "preview": "pnpm build && wrangler dev",
+    "deploy": "pnpm build && wrangler deploy",
+    "upload": "pnpm build && wrangler versions upload"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@sveltejs/adapter-cloudflare": "^7.2.9",
+    "@sveltejs/kit": "^2.69.3",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/qrcode": "^1.5.5",
+    "qrcode": "^1.5.4",
+    "rehype-pretty-code": "^0.14.4",
+    "satori": "^0.28.0",
+    "svelte": "^5.56.5",
+    "svelte-check": "^4.7.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "velite": "^0.4.0",
+    "vite": "^8.1.5",
+    "wrangler": "^4.111.0"
+  }
+}

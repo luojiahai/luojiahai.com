@@ -1,0 +1,16 @@
+# TODO(placeholder): adjust tech categories as posts get written.
+- slug: development
+  name:
+    en: Development
+    zh: 开发
+  description:
+    en: Notes and problems encountered while building software
+    zh: 分享在开发过程中遇到的一些问题和心得
+
+- slug: ai
+  name:
+    en: AI
+    zh: AI
+  description:
+    en: Thoughts and experiments around AI and coding agents
+    zh: 关于 AI 和编程智能体的想法与实验

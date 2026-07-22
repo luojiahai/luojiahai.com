@@ -1,0 +1,15 @@
+# Immutable, content-hashed build artifacts and blog assets
+/_app/immutable/*
+  Cache-Control: public, max-age=31536000, immutable
+/blog/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Prerendered OG images
+/og/*
+  Cache-Control: public, max-age=86400
+
+# Site images (rarely change, but not content-hashed)
+/images/*
+  Cache-Control: public, max-age=86400
+/static/*
+  Cache-Control: public, max-age=86400
