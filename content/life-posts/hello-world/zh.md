@@ -1,6 +1,6 @@
 ---
 title: 你好，世界！
-description: 重建后的 luojiahai.com 的第一篇文章。
+description: luojiahai.com 的第一篇文章。
 slug: hello-world
 lang: zh
 categories:
@@ -8,6 +8,12 @@ categories:
 date: "2026-07-22"
 ---
 
-你好，世界！这是重建后的 [luojiahai.com](https://luojiahai.com) 的第一篇文章。
+你好，世界！这是 [luojiahai.com](https://luojiahai.com) 的第一篇文章。
 
-TODO（占位内容）：这是一篇占位文章——请替换为真实内容。
+这个网站用 SvelteKit 搭建，做成了小票打印机的样子：这里的每个页面，都是从顶上那台小机器里打印出来的。
+
+很有 2026 年的味道，这个网站我几乎没有手写代码，而是全程指挥编程智能体来完成。这也是我现在写代码的日常方式。与其说是把网站敲出来，不如说是把它导演出来。
+
+这里会写些什么呢？[技术](/zh/posts)板块放技术相关的文章，[生活](/zh/life)板块，也就是这篇文章所在的地方，放其他一切。更新不定期，什么都有可能出现。
+
+暂时就写到这里。想打个招呼的话，可以在 [GitHub](https://github.com/luojiahai) 或 [X](https://x.com/luojiahai) 上找到我，或者发邮件到 [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com)。你好，世界。
