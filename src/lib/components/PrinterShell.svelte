@@ -250,7 +250,7 @@
         <div
           class="relative mt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-2"
         >
-          <nav class="relative flex items-center gap-2 sm:gap-2.5 flex-1 w-full py-1.5">
+          <nav class="relative flex flex-wrap items-center gap-2 sm:gap-2.5 flex-1 w-full py-1.5">
             {#each navItems as item (item.href)}
               <a
                 href={item.href}
