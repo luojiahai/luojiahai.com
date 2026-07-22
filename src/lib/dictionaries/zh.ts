@@ -28,7 +28,6 @@ const dictionary: Dictionary = {
     posts: "/zh/posts",
     life: "/zh/life",
     use: "/zh/use",
-    resume: "/zh/resume",
     about: "/zh/about",
 
     shareToX(title: string, postLink: string) {
@@ -43,7 +42,6 @@ const dictionary: Dictionary = {
     posts: "技术",
     life: "生活",
     use: "使用",
-    resume: "简历",
     about: "关于",
     latestTech: "技术",
     latestLife: "生活",

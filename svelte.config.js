@@ -12,8 +12,7 @@ const config = {
     prerender: {
       // Everything on this site is derived from build-time content. The only
       // runtime code is the locale redirect in hooks.server.ts.
-      // /resume is intentionally unlinked, so the crawler needs a hint.
-      entries: ["*", "/en", "/zh", "/en/resume", "/zh/resume"],
+      entries: ["*", "/en", "/zh"],
       handleHttpError: "fail",
     },
   },

@@ -99,7 +99,6 @@ const dictionary = {
     posts: "/en/posts",
     life: "/en/life",
     use: "/en/use",
-    resume: "/en/resume",
     about: "/en/about",
 
     shareToX(title: string, postLink: string) {
@@ -114,7 +113,6 @@ const dictionary = {
     posts: "Tech",
     life: "Life",
     use: "Use",
-    resume: "Resume",
     about: "About",
     latestTech: "Tech",
     latestLife: "Life",

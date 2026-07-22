@@ -3,7 +3,6 @@ import { categories, findCategory, findPost, isSection, posts } from "$lib/conte
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
 import { displayDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
-import { resumeContent } from "$lib/resume";
 import { activities } from "../../../params/activity";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
@@ -16,7 +15,6 @@ const PAGE_EMOJIS: Record<string, string> = {
   works: "🛠",
   use: "🧰",
   about: "👋",
-  resume: "📄",
   "life/reading": "📚",
   "life/films": "🎬",
   "life/music": "🎵",
@@ -70,7 +68,6 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       works: dictionary.labels.works,
       use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
-      resume: resumeContent[lang].name,
       "life/reading": dictionary.labels.reading,
       "life/films": dictionary.labels.films,
       "life/music": dictionary.labels.music,
@@ -79,7 +76,6 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       works: dictionary.labels.worksSubtitle,
       use: dictionary.labels.useSubtitle,
       about: dictionary.labels.aboutSubtitle || undefined,
-      resume: resumeContent[lang].imageDescription,
     };
     return {
       title: titles[page],

@@ -29,7 +29,6 @@
     { label: dictionary.labels.posts, href: dictionary.urls.posts },
     { label: dictionary.labels.works, href: dictionary.urls.works },
     { label: dictionary.labels.use, href: dictionary.urls.use },
-    { label: dictionary.labels.resume, href: dictionary.urls.resume },
     { label: dictionary.labels.about, href: dictionary.urls.about },
   ]);
 
