@@ -23,7 +23,7 @@
   onMount(() => {
     // Phase timeline (ms). Order matters; the loop walks this list.
     const PHASES = [
-      { k: "approach", d: 2400 }, // descending glide, off-left -> 8% across
+      { k: "approach", d: 2400 }, // descending glide, off-left -> 2% across
       { k: "flare", d: 1600 }, // nose-up flare, settles onto the wheels
       { k: "rollout", d: 2400 }, // decelerating ground roll
       { k: "taxi", d: 2400 }, // slow taxi across mid-deck
@@ -34,7 +34,7 @@
     const PERIOD = PHASES.reduce((s, p) => s + p.d, 0);
 
     // Ground-track fractions of the lane span at each phase boundary.
-    const X = { touch: 0.08, rolled: 0.38, taxied: 0.54, liftoff: 0.98 };
+    const X = { touch: 0.02, rolled: 0.38, taxied: 0.54, liftoff: 0.98 };
 
     // Pitch pivot, in SVG user units (center of the fuselage).
     const PIVOT = "504 500";
