@@ -113,7 +113,7 @@
 
       if (ph === "approach") {
         x = lerp(-0.28, X.touch, easeInOut(local));
-        y = lerp(46, 4, easeOut(local));
+        y = lerp(38, 4, easeOut(local));
         pitch = lerp(6, 2, local); // slight nose-down glide flattening out
       } else if (ph === "flare") {
         x = lerp(X.touch, X.touch + 0.09, local);
