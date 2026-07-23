@@ -8,15 +8,12 @@
     "directory": ".svelte-kit/cloudflare",
     "binding": "ASSETS"
   },
-  // Optional: create a KV namespace (`wrangler kv namespace create SOCIAL_CACHE`)
-  // and add its id here to cache social hover-card stats; the code tolerates
-  // a missing binding.
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "SOCIAL_CACHE",
-  //     "id": "<your-kv-namespace-id>"
-  //   }
-  // ],
+  "kv_namespaces": [
+    {
+      "binding": "SOCIAL_CACHE",
+      "id": "236533db9d71408da892c01c66c7b653"
+    }
+  ],
   "observability": {
     "enabled": true
   }
