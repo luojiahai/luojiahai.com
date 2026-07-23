@@ -18,7 +18,8 @@
 - `assets/icon.svg`: source of truth for the site icons. `pnpm icons`
   (`scripts/generate-icons.mjs`) regenerates `static/{icon.svg,favicon.ico,
   icon.png,icon-192.png,apple-icon.png,mask-icon.svg}` from it; commit the
-  regenerated files.
+  regenerated files. `assets/logo.svg` is the original bare-glyph logo,
+  kept for reference and not served.
 - Root config: `svelte.config.js`, `vite.config.ts`, `velite.config.ts`,
   `wrangler.jsonc`.
 
