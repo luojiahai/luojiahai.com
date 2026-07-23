@@ -397,22 +397,26 @@
     z-index: 40;
     pointer-events: none;
 
-    /* Jet palette (light) — thermal paper + printer plastic */
-    --plane-paper: #fffef9;
+    /* Jet palette (light) — thermal paper + printer plastic. Body white and
+       tail orange ride the app theme; the grey tiers are bespoke steps the
+       theme doesn't have. */
+    --plane-paper: var(--color-printer-paper);
     --plane-mid: #cfc8bc;
     --plane-shade: #a3978a;
     --plane-dark: #6b6156;
     --plane-deep: #2e2921;
-    --plane-accent: #ff6b35;
+    --plane-accent: var(--color-printer-accent);
     --plane-shadow: rgba(46, 41, 33, 0.3);
   }
   :is(.dark) .plane-lane {
+    /* Dark body is deliberately lighter than printer-paper-dark so the
+       plane doesn't vanish against the dark shell */
     --plane-paper: #232734;
     --plane-mid: #343b4d;
     --plane-shade: #4d5468;
     --plane-dark: #3c4254;
     --plane-deep: #0d0f14;
-    --plane-accent: #ff8c5a;
+    --plane-accent: var(--color-printer-accent-dark);
     --plane-shadow: rgba(0, 0, 0, 0.55);
   }
   @media (min-width: 640px) {
