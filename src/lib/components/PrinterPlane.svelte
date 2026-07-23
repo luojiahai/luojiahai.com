@@ -9,14 +9,16 @@
    * Every fill rides a CSS token, so dark mode restyles it automatically.
    *
    * One full cycle, always travelling left to right: descending approach
-   * from off-screen left, flare + touchdown (with a little dust puff),
-   * decelerating rollout, slow taxi across the middle, accelerating takeoff
-   * roll with a late nose rotation, climb out off-screen right, then a quiet
-   * beat with an empty deck before looping.
+   * from off-screen left (with a touch of light chop), flare + touchdown
+   * (with a little dust puff), reverse-thrust rollout, slow taxi across the
+   * middle, accelerating takeoff roll with a late nose rotation, climb out
+   * off-screen right, then a quiet beat with an empty deck before looping.
+   * A soft contact shadow stays on the deck and fades with altitude.
    */
   let lane: HTMLDivElement;
   let flyer: HTMLDivElement;
   let puffEl: HTMLDivElement;
+  let shadowEl: HTMLDivElement;
   let plane: SVGGElement;
   let exhaust: SVGGElement;
 
@@ -36,8 +38,15 @@
     // Ground-track fractions of the lane span at each phase boundary.
     const X = { touch: 0.02, rolled: 0.38, taxied: 0.54, liftoff: 0.98 };
 
-    // Pitch pivot, in SVG user units (center of the fuselage).
-    const PIVOT = "504 500";
+    // Ground speeds (span fractions per ms) that the dynamic off-screen ends
+    // must hand off to: the flare's fixed carry speed, and the speed at the
+    // end of the takeoff roll. Derived from the phase numbers above.
+    const V_TD = 0.16 / 1100;
+    const V_LO = (0.44 * 2 * 3.4) / ((3.4 + 1) * 3300);
+
+    // Pitch pivot, in SVG user units — the main-gear contact patch, so the
+    // wheels stay planted while the nose swings up and down.
+    const PIVOT = "504 648";
 
     const easeIn = (p: number) => p * p;
     const easeOut = (p: number) => 1 - (1 - p) * (1 - p);
@@ -48,21 +57,34 @@
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // Rest pose: parked mid-deck, engines off.
+    // Rest pose: parked mid-deck, engines off, shadow under the wheels.
     const placeStatic = () => {
       flyer.style.opacity = "1";
       flyer.style.transform = `translate3d(${(span / 2).toFixed(2)}px,0,0)`;
       plane.setAttribute("transform", `rotate(0 ${PIVOT})`);
       exhaust.setAttribute("opacity", "0");
+      shadowEl.style.opacity = "1";
+      shadowEl.style.transform = `translate3d(${(span / 2 + (flyerW - shadowW) / 2).toFixed(2)}px,0,0)`;
     };
 
     // Travel range — kept fresh with a ResizeObserver so it survives the
     // initial layout settling and responsive width changes.
     let span = 0;
     let flyerW = 0;
+    let shadowW = 0;
+    let entryX = -0.28;
+    let exitX = 1.3;
     const measure = () => {
       flyerW = flyer.offsetWidth;
+      shadowW = shadowEl.offsetWidth;
       span = Math.max(0, lane.clientWidth - flyerW);
+      // Off-screen ends: on narrow lanes a fixed fraction of the span is
+      // less than the flyer's own width, so the jet would pop in while
+      // half-visible. Grow the margin so it always clears the lane edge
+      // before opacity toggles.
+      const off = span > 0 ? flyerW / span + 0.02 : 1;
+      entryX = -Math.max(0.28, off);
+      exitX = 1 + Math.max(0.3, off);
       if (reduce.matches) placeStatic();
     };
     measure();
@@ -107,48 +129,75 @@
 
       // x: fraction of span (goes <0 / >1 while off-screen)
       // y: px above the deck surface, pitch: deg (negative = nose up)
+      // power: exhaust intensity (0 idle … 0.7 reversers)
+      // turb: light-chop amplitude while in the air
       let x = 0;
       let y = 0;
       let pitch = 0;
-      let thrust = true;
+      let power = 0;
+      let turb = 0;
       let visible = true;
 
       if (ph === "approach") {
-        x = lerp(-0.28, X.touch, local); // constant approach speed
+        // decelerates from however far out the entry sits down to the
+        // flare's exact carry speed at the threshold
+        const m = (V_TD * 2000) / (X.touch - entryX);
+        x = lerp(entryX, X.touch, ramp(local, m / (2 - m)));
         y = lerp(38, 6, local); // fixed glide slope, constant sink
         pitch = -2.5; // stable, slightly nose-up approach attitude
+        power = 0.3; // engines at approach power, not full chat
+        turb = 1;
       } else if (ph === "flare") {
         x = lerp(X.touch, X.touch + 0.16, local);
         y = lerp(6, 0, easeOut(local)); // sink rate decays to a soft kiss
         pitch = lerp(-2.5, -6.5, easeOut(local)); // progressive nose-up pull
+        power = lerp(0.3, 0, Math.min(1, local * 2.5)); // throttles to idle
+        turb = 1 - easeOut(local); // chop settles so the kiss stays clean
         if (local > 0.94) firePuff(x, now); // mains touch at the very end
       } else if (ph === "rollout") {
         // brakes from touchdown speed down to taxi speed
         x = lerp(X.touch + 0.16, X.rolled, ramp(local, 0.41));
         pitch = lerp(-6.5, 0, Math.min(1, local * 2.2)); // derotate onto nose wheel
-        thrust = false; // engines back to idle
+        // reversers spool in fast, roar through the braking, then stow
+        power = 0.7 * Math.max(0, Math.min(1, local / 0.08, (0.55 - local) / 0.15));
       } else if (ph === "taxi") {
-        x = lerp(X.rolled, X.taxied, local); // constant taxi speed
-        thrust = false;
+        x = lerp(X.rolled, X.taxied, local); // constant taxi speed, idle
       } else if (ph === "roll") {
         // steady acceleration from taxi speed up past touchdown speed
         x = lerp(X.taxied, X.liftoff, ramp(local, 3.4));
         pitch = local > 0.82 ? lerp(0, -10, (local - 0.82) / 0.18) : 0; // rotate at Vr
+        power = 0.55 * Math.min(1, local / 0.1); // quick spool to takeoff thrust
       } else if (ph === "climb") {
-        x = lerp(X.liftoff, 1.3, ramp(local, 1.15)); // still accelerating
+        // starts at liftoff speed, still accelerating out to the dynamic exit
+        x = lerp(X.liftoff, exitX, ramp(local, (2 * (exitX - X.liftoff)) / (V_LO * 1450) - 1));
         y = lerp(0, 52, easeIn(local));
         pitch = lerp(-10, -12, easeOut(local)); // settles into climb attitude
+        power = 0.55;
       } else {
         visible = false;
+      }
+
+      // Light chop while airborne — two offbeat sines per axis so it never
+      // reads as a loop, fading through the flare for a clean touchdown.
+      if (turb > 0) {
+        y += (0.7 * Math.sin(now / 173) + 0.4 * Math.sin(now / 89)) * turb;
+        pitch += 0.5 * Math.sin(now / 131) * turb;
       }
 
       flyer.style.opacity = visible ? "1" : "0";
       flyer.style.transform = `translate3d(${(x * span).toFixed(2)}px, ${(-y).toFixed(2)}px, 0)`;
       plane.setAttribute("transform", `rotate(${pitch.toFixed(2)} ${PIVOT})`);
 
-      // Jet exhaust: shimmer under thrust, nearly gone at taxi idle.
+      // Contact shadow: pinned to the deck under the gear (the gear cluster
+      // sits at 50% of the artwork), shrinking and fading with altitude.
+      const alt = Math.min(1, y / 52);
+      const sx = x * span + (flyerW - shadowW) / 2;
+      shadowEl.style.transform = `translate3d(${sx.toFixed(2)}px,0,0) scale(${(1 - 0.35 * alt).toFixed(3)}, ${(1 - 0.5 * alt).toFixed(3)})`;
+      shadowEl.style.opacity = visible ? ((1 - alt) * (1 - alt)).toFixed(3) : "0";
+
+      // Jet exhaust: shimmer scaled by engine power, nearly gone at idle.
       const flick = 0.6 + 0.4 * Math.abs(Math.sin(now / 55));
-      exhaust.setAttribute("opacity", (thrust ? 0.55 * flick : 0.08).toFixed(3));
+      exhaust.setAttribute("opacity", Math.max(0.08, power * flick).toFixed(3));
 
       raf = requestAnimationFrame(frame);
     };
@@ -179,6 +228,7 @@
 </script>
 
 <div class="plane-lane" bind:this={lane} aria-hidden="true">
+  <div class="plane-shadow" bind:this={shadowEl}></div>
   <div class="plane-puff" bind:this={puffEl}>
     <svg viewBox="0 0 22 12" xmlns="http://www.w3.org/2000/svg">
       <circle cx="5" cy="8" r="3" />

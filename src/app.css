@@ -404,6 +404,7 @@
     --plane-dark: #6b6156;
     --plane-deep: #2e2921;
     --plane-accent: #ff6b35;
+    --plane-shadow: rgba(46, 41, 33, 0.3);
   }
   :is(.dark) .plane-lane {
     --plane-paper: #232734;
@@ -412,6 +413,7 @@
     --plane-dark: #3c4254;
     --plane-deep: #0d0f14;
     --plane-accent: #ff8c5a;
+    --plane-shadow: rgba(0, 0, 0, 0.55);
   }
   @media (min-width: 640px) {
     .plane-lane {
@@ -429,18 +431,33 @@
     left: 0;
     width: 76px;
     height: 25px;
-    /* tight contact shadow so it reads as sitting on the printer while
-       rolling, without a gap */
-    filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
     will-change: transform, opacity;
-  }
-  :is(.dark) .plane-flyer {
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
   }
   @media (min-width: 640px) {
     .plane-flyer {
       width: 88px;
       height: 29px;
+    }
+  }
+
+  /* Ground contact shadow — pinned to the deck; JS drives transform +
+     opacity each frame so it stays down here while the jet is airborne */
+  .plane-shadow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 46px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--plane-shadow);
+    filter: blur(1.5px);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  @media (min-width: 640px) {
+    .plane-shadow {
+      width: 54px;
+      height: 5px;
     }
   }
 
