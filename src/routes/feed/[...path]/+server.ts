@@ -63,7 +63,7 @@ export const GET: RequestHandler = async ({ params, request, platform, url }) =>
       link: post.permalink,
       date: post.date,
       categories: post.categories,
-      author: "ljiahai@hotmail.com (Luo, Jiahai)",
+      author: "hi@luojiahai.com (Luo, Jiahai)",
     })),
   });
 

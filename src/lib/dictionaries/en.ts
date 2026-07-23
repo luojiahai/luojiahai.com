@@ -35,8 +35,8 @@ const contacts: Contact[] = [
   },
   {
     label: "Email",
-    name: "ljiahai@hotmail.com",
-    link: "mailto:ljiahai@hotmail.com",
+    name: "hi@luojiahai.com",
+    link: "mailto:hi@luojiahai.com",
     icon: "mail",
   },
   {
@@ -254,7 +254,7 @@ I'm an INTJ and a pragmatic computer programmer. I build useful things.
 
 Outside of programming, I like eating, cooking, and grocery shopping. I also play Microsoft Flight Simulator, flying Airbus.
 
-You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com).
+You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
   `,
 };
 

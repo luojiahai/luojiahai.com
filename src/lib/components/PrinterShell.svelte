@@ -403,7 +403,7 @@
                 </SocialHoverCard>
                 <SocialHoverCard
                   kind="email"
-                  href="mailto:ljiahai@hotmail.com"
+                  href="mailto:hi@luojiahai.com"
                   {lang}
                   {dictionary}
                   align="right"
