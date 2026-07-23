@@ -1,9 +1,9 @@
-// Regenerates the boxed raster icons in static/ from assets/icon.svg.
+// Regenerates the boxed icons in static/ from assets/icon.svg.
 // Run with: pnpm icons
-// static/logo.svg (browser favicon) and static/mask-icon.svg (Safari pinned
-// tab) are hand-maintained and not generated here.
+// static/mask-icon.svg (Safari pinned tab) is hand-maintained and not
+// generated here.
 import { Resvg } from "@resvg/resvg-js";
-import { readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -65,6 +65,8 @@ function writeIco(sizes, name) {
   console.log(`wrote static/${name} (${sizes.join(", ")})`);
 }
 
+copyFileSync(join(root, "assets/icon.svg"), join(root, "static/icon.svg"));
+console.log("wrote static/icon.svg (copy of assets/icon.svg)");
 writePng(512, "icon.png");
 writePng(192, "icon-192.png");
 writePng(180, "apple-icon.png");
