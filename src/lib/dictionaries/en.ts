@@ -230,6 +230,7 @@ const dictionary = {
     },
     emailTo: "To",
     emailHint: "Mail lands straight in my inbox.",
+    connections: "Connections",
     telegramHint: "DMs open, say hi anytime.",
   },
   archive: {

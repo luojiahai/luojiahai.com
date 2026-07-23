@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getDictionary, type Language } from "$lib/dictionaries";
+  import type { IconName } from "$lib/icons";
   import { generateWebSiteJsonLd } from "$lib/json-ld";
+  import type { SocialCardKind } from "$lib/social";
   import Icon from "$lib/components/Icon.svelte";
   import PostList from "$lib/components/PostList.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
@@ -27,6 +29,17 @@
   );
 
   const printedOn = new Date().toISOString().split("T")[0];
+
+  // Contacts whose icon maps to a hover-card kind get a SocialHoverCard;
+  // the rest render as plain links.
+  const cardKinds: Partial<Record<IconName, SocialCardKind>> = {
+    x: "x",
+    github: "github",
+    mail: "email",
+    send: "telegram",
+    linkedin: "linkedin",
+    instagram: "instagram",
+  };
 </script>
 
 <Seo
@@ -66,16 +79,7 @@
     <!-- Contact strip -->
     <div class="flex flex-wrap gap-2 mt-4">
       {#each dictionary.contacts as contact (contact.link)}
-        {@const kind =
-          contact.icon === "x"
-            ? ("x" as const)
-            : contact.icon === "github"
-              ? ("github" as const)
-              : contact.icon === "mail"
-                ? ("email" as const)
-                : contact.icon === "send"
-                  ? ("telegram" as const)
-                  : undefined}
+        {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
           "inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase px-2.5 py-1 rounded-sm border border-printer-ink/8 dark:border-printer-ink-dark/8 text-printer-ink-light dark:text-printer-ink-dark/50 hover:text-printer-accent dark:hover:text-printer-accent-dark hover:border-printer-accent/20 dark:hover:border-printer-accent-dark/20 transition-colors"}
         {#if kind}

@@ -39,11 +39,50 @@ export interface TelegramStats {
   bio: string;
 }
 
+export interface LinkedInStats {
+  handle: string;
+  name: string;
+  bio: string;
+  followers: number;
+  connections: number;
+}
+
+export interface InstagramStats {
+  handle: string;
+  name: string;
+  bio: string;
+  followers: number;
+  following: number;
+  posts: number;
+}
+
 export interface SocialStats {
   fetchedAt: string;
   github: GitHubStats;
   x: XStats;
   telegram: TelegramStats;
+  linkedin: LinkedInStats;
+  instagram: InstagramStats;
 }
 
+/** Card variants supported by SocialHoverCard. */
+export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
+
 export const socialFallback: SocialStats = fallback;
+
+/** Backfill stat fields that cached payloads from earlier deploys (KV
+ * snapshots, edge cache entries) may predate. */
+export function normalizeSocialStats(stats: SocialStats): SocialStats {
+  return {
+    ...stats,
+    telegram: stats.telegram ?? socialFallback.telegram,
+    linkedin:
+      stats.linkedin?.connections != null
+        ? stats.linkedin
+        : socialFallback.linkedin,
+    instagram:
+      stats.instagram?.posts != null
+        ? stats.instagram
+        : socialFallback.instagram,
+  };
+}

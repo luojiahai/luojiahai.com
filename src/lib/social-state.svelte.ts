@@ -1,5 +1,9 @@
 import { browser } from "$app/environment";
-import { socialFallback, type SocialStats } from "./social";
+import {
+  normalizeSocialStats,
+  socialFallback,
+  type SocialStats,
+} from "./social";
 
 /**
  * Shared client-side state for the social hover cards. Starts from the
@@ -18,11 +22,11 @@ export function ensureSocialStats(): void {
 
   // The query string versions the payload shape past stale edge-cache
   // entries from earlier deploys.
-  fetch("/api/social?v=2", { headers: { accept: "application/json" } })
+  fetch("/api/social?v=4", { headers: { accept: "application/json" } })
     .then((res) => (res.ok ? res.json() : null))
     .then((data: SocialStats | null) => {
       if (data?.github?.levels && data.x && data.telegram) {
-        social.stats = data;
+        social.stats = normalizeSocialStats(data);
       }
     })
     .catch(() => {

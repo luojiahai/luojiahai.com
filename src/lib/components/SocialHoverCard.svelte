@@ -3,6 +3,7 @@
   import type { Snippet } from "svelte";
   import { fly } from "svelte/transition";
   import type { Dictionary, Language } from "$lib/dictionaries";
+  import type { SocialCardKind } from "$lib/social";
   import { ensureSocialStats, social } from "$lib/social-state.svelte";
   import Icon from "./Icon.svelte";
 
@@ -16,7 +17,7 @@
     class: className = "",
     children,
   }: {
-    kind: "github" | "x" | "telegram" | "email";
+    kind: SocialCardKind;
     href: string;
     lang: Language;
     dictionary: Dictionary;
@@ -86,6 +87,19 @@
 
   const postmark = new Date().toISOString().split("T")[0];
 
+  const kindMeta = {
+    github: { icon: "github", label: "GITHUB" },
+    x: { icon: "x", label: "X" },
+    telegram: { icon: "send", label: "TELEGRAM" },
+    linkedin: { icon: "linkedin", label: "LINKEDIN" },
+    instagram: { icon: "instagram", label: "INSTAGRAM" },
+    email: { icon: "mail", label: "MAIL" },
+  } as const;
+
+  function formatHandle(handle: string): string {
+    return kind === "linkedin" ? `in/${handle}` : `@${handle}`;
+  }
+
   const alignClasses = {
     center: "left-1/2 -translate-x-1/2",
     left: "left-0",
@@ -138,26 +152,13 @@
           <span
             class="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
           >
-            <Icon
-              name={kind === "email"
-                ? "mail"
-                : kind === "telegram"
-                  ? "send"
-                  : kind}
-              class="w-3 h-3 shrink-0"
-            />
-            {kind === "email"
-              ? "MAIL"
-              : kind === "github"
-                ? "GITHUB"
-                : kind === "telegram"
-                  ? "TELEGRAM"
-                  : "X"}
+            <Icon name={kindMeta[kind].icon} class="w-3 h-3 shrink-0" />
+            {kindMeta[kind].label}
           </span>
           <span
             class="font-mono text-[9px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
           >
-            {kind === "email" ? postmark : `@${stats[kind].handle}`}
+            {kind === "email" ? postmark : formatHandle(stats[kind].handle)}
           </span>
         </div>
 
@@ -213,35 +214,54 @@
           >
             {dictionary.social.recentActivity}
           </div>
-        {:else if kind === "x"}
+        {:else if kind === "x" || kind === "linkedin" || kind === "instagram"}
+          {@const profile = stats[kind]}
+          {@const cells =
+            kind === "x"
+              ? [
+                  [dictionary.social.followers, stats.x.followers],
+                  [dictionary.social.following, stats.x.following],
+                  [dictionary.social.posts, stats.x.posts],
+                ]
+              : kind === "linkedin"
+                ? [
+                    [dictionary.social.followers, stats.linkedin.followers],
+                    [dictionary.social.connections, stats.linkedin.connections],
+                  ]
+                : [
+                    [dictionary.social.followers, stats.instagram.followers],
+                    [dictionary.social.following, stats.instagram.following],
+                    [dictionary.social.posts, stats.instagram.posts],
+                  ]}
           <div class="flex items-baseline gap-1.5">
             <span
               class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
             >
-              {stats.x.name}
+              {profile.name}
             </span>
             <span
               class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
             >
-              {dictionary.social.since(stats.x.joined)}
+              {kind === "x"
+                ? dictionary.social.since(stats.x.joined)
+                : formatHandle(profile.handle)}
             </span>
           </div>
-          {#if stats.x.bio}
+          {#if profile.bio}
             <p
               class="font-serif text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
             >
-              {stats.x.bio}
+              {profile.bio}
             </p>
           {/if}
 
           <div
-            class="grid grid-cols-3 gap-2 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class={[
+              "grid gap-2 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10",
+              cells.length === 2 ? "grid-cols-2" : "grid-cols-3",
+            ]}
           >
-            {#each [
-              [dictionary.social.followers, stats.x.followers],
-              [dictionary.social.following, stats.x.following],
-              [dictionary.social.posts, stats.x.posts],
-            ] as [label, value] (label)}
+            {#each cells as [label, value] (label)}
               <div>
                 <div
                   class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
