@@ -5,7 +5,7 @@
   import type { Snippet } from "svelte";
   import type { Dictionary, Language } from "$lib/dictionaries";
   import { showStickers } from "$lib/site-config";
-  import PrinterSnail from "./PrinterSnail.svelte";
+  import PrinterPlane from "./PrinterPlane.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
@@ -175,8 +175,8 @@
 <div class="min-h-screen page-grid flex flex-col items-center px-3 py-6 sm:py-10">
   <!-- Printer Body -->
   <div class="w-full max-w-3xl relative">
-    <!-- Snail crawling along the very top edge of the printer shell -->
-    <PrinterSnail />
+    <!-- Jet airliner landing on / taking off from the printer's top edge -->
+    <PrinterPlane />
 
     <!-- Unified header housing — wraps both brand and slit areas to share a single shadow -->
     <div

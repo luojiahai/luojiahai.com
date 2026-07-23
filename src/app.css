@@ -382,13 +382,13 @@
 }
 
 /* ============================================================
-   Crawling robo-snail on the printer's top edge — plastic body,
-   antenna LEDs, and a roll of thermal paper for a shell.
-   Travel + the head-sweep turn are driven from JS (PrinterSnail.svelte);
-   only the small idle motions (antenna sway, LED pulse) live here.
+   Jet airliner landing on and taking off from the printer's top
+   edge (PrinterPlane.svelte). The artwork is an optimized flat
+   vector whose fills all ride the tokens below: paper-white body,
+   plastic greys, and the ON light's orange on the tail.
    ============================================================ */
 @layer components {
-  .snail-lane {
+  .plane-lane {
     position: absolute;
     left: 48px;
     right: 48px;
@@ -397,32 +397,24 @@
     z-index: 40;
     pointer-events: none;
 
-    /* Robo-snail palette (light) — printer plastic + thermal paper */
-    --snail-body: #d8cfc2;
-    --snail-body-shade: #a3978a;
-    --snail-line: rgba(54, 46, 36, 0.4);
-    --snail-roll: #fffef9;
-    --snail-roll-edge: rgba(54, 46, 36, 0.32);
-    --snail-roll-print: rgba(54, 46, 36, 0.42);
-    --snail-core: #b8ad9f;
-    --snail-core-hole: #5f574c;
-    --snail-led: #ff6b35;
-    --snail-led-glow: rgba(255, 107, 53, 0.5);
+    /* Jet palette (light) — thermal paper + printer plastic */
+    --plane-paper: #fffef9;
+    --plane-mid: #cfc8bc;
+    --plane-shade: #a3978a;
+    --plane-dark: #6b6156;
+    --plane-deep: #2e2921;
+    --plane-accent: #ff6b35;
   }
-  :is(.dark) .snail-lane {
-    --snail-body: #2a2e3a;
-    --snail-body-shade: #4d5468;
-    --snail-line: rgba(0, 0, 0, 0.55);
-    --snail-roll: #232734;
-    --snail-roll-edge: rgba(255, 255, 255, 0.18);
-    --snail-roll-print: rgba(208, 212, 224, 0.48);
-    --snail-core: #3c4254;
-    --snail-core-hole: #0d0f14;
-    --snail-led: #ff8c5a;
-    --snail-led-glow: rgba(255, 140, 90, 0.65);
+  :is(.dark) .plane-lane {
+    --plane-paper: #232734;
+    --plane-mid: #343b4d;
+    --plane-shade: #4d5468;
+    --plane-dark: #3c4254;
+    --plane-deep: #0d0f14;
+    --plane-accent: #ff8c5a;
   }
   @media (min-width: 640px) {
-    .snail-lane {
+    .plane-lane {
       left: 64px;
       right: 64px;
       top: -27px;
@@ -430,145 +422,69 @@
     }
   }
 
-  /* The traveller — transform is set each frame from JS */
-  .snail-walker {
+  /* The flyer — transform + opacity are set each frame from JS */
+  .plane-flyer {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 46px;
-    height: 28px;
-    /* tight contact shadow so it reads as sitting on the printer, no gap */
+    width: 76px;
+    height: 25px;
+    /* tight contact shadow so it reads as sitting on the printer while
+       rolling, without a gap */
     filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
-    will-change: transform;
+    will-change: transform, opacity;
   }
-  :is(.dark) .snail-walker {
+  :is(.dark) .plane-flyer {
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
   }
   @media (min-width: 640px) {
-    .snail-walker {
-      width: 50px;
-      height: 30px;
+    .plane-flyer {
+      width: 88px;
+      height: 29px;
     }
   }
 
-  .snail-svg {
+  .plane-svg {
     display: block;
     width: 100%;
     height: 100%;
     overflow: visible;
   }
 
-  /* No outline on the body/head so the head blends into the foot and the
-     snail sits seamlessly against the printer (no border seam). */
-  .snail-foot,
-  .snail-neck {
-    fill: var(--snail-body);
+  /* Touchdown dust puff — position + fade are driven from JS */
+  .plane-puff {
+    position: absolute;
+    bottom: 1px;
+    width: 22px;
+    height: 12px;
+    opacity: 0;
   }
-  /* Dashed rubber tread along the underside of the foot */
-  .snail-tread {
-    stroke: var(--snail-body-shade);
-    stroke-width: 1.3;
+  .plane-puff circle {
+    fill: var(--plane-shade);
+  }
+
+  /* Artwork fills — five luminance tiers plus the accent */
+  .plane-t1 {
+    fill: var(--plane-paper);
+  }
+  .plane-t2 {
+    fill: var(--plane-mid);
+  }
+  .plane-t3 {
+    fill: var(--plane-shade);
+  }
+  .plane-t4 {
+    fill: var(--plane-dark);
+  }
+  .plane-t5 {
+    fill: var(--plane-deep);
+  }
+  .plane-accent {
+    fill: var(--plane-accent);
+  }
+  .plane-exhaust {
+    stroke: var(--plane-shade);
+    stroke-width: 8;
     stroke-linecap: round;
-    stroke-dasharray: 2.6 2.4;
-    opacity: 0.75;
-  }
-  /* Faint panel seam on the face plate */
-  .snail-seam {
-    stroke: var(--snail-body-shade);
-    stroke-width: 0.9;
-    stroke-linecap: round;
-    opacity: 0.65;
-  }
-
-  /* Shell: thermal paper roll — intentionally static, no animation */
-  .snail-roll {
-    fill: var(--snail-roll);
-    stroke: var(--snail-roll-edge);
-    stroke-width: 1;
-  }
-  .snail-roll-spiral {
-    stroke: var(--snail-roll-print);
-    stroke-width: 1.4;
-    stroke-linecap: round;
-  }
-  .snail-roll-core {
-    fill: var(--snail-core);
-    stroke: var(--snail-line);
-    stroke-width: 0.5;
-  }
-  .snail-roll-hole {
-    fill: var(--snail-core-hole);
-  }
-  .snail-roll-tape {
-    fill: var(--snail-led);
-    opacity: 0.85;
-  }
-  .snail-roll-shine {
-    fill: #ffffff;
-    opacity: 0.22;
-  }
-  :is(.dark) .snail-roll-shine {
-    opacity: 0.05;
-  }
-
-  .snail-stalk-line {
-    stroke: var(--snail-body-shade);
-    stroke-width: 1.9;
-    stroke-linecap: round;
-  }
-  /* Antenna LEDs — slow pulse instead of a blink, echoing the ON light */
-  .snail-led {
-    fill: var(--snail-led);
-    animation: snail-led-pulse 3.6s ease-in-out infinite;
-  }
-  .snail-led-front {
-    animation-delay: -0.9s;
-  }
-  :is(.dark) .snail-led {
-    filter: drop-shadow(0 0 3px var(--snail-led-glow));
-  }
-  .snail-led-glint {
-    fill: #ffffff;
-    opacity: 0.85;
-  }
-
-  /* Gentle antenna sway, composed on top of the JS head transform */
-  .snail-stalk {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-  }
-  .snail-stalk-front {
-    animation: snail-sway 3s ease-in-out infinite;
-  }
-  .snail-stalk-back {
-    animation: snail-sway 3s ease-in-out -1.4s infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .snail-stalk-front,
-    .snail-stalk-back,
-    .snail-led {
-      animation: none !important;
-    }
-  }
-}
-
-@keyframes snail-sway {
-  0%,
-  100% {
-    transform: rotate(-2.5deg);
-  }
-  50% {
-    transform: rotate(2.5deg);
-  }
-}
-
-@keyframes snail-led-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
   }
 }
