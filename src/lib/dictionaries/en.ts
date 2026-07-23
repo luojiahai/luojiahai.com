@@ -202,7 +202,6 @@ const dictionary = {
           { label: "Editor", value: "Visual Studio Code" },
           { label: "Browser", value: "Edge" },
           { label: "Terminal", value: "Ghostty / Windows Terminal" },
-          { label: "Diagramming", value: "Draw.io / Mermaid" },
         ],
       },
     ],

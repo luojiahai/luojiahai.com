@@ -146,7 +146,6 @@ const dictionary: Dictionary = {
           { label: "编辑器", value: "Visual Studio Code" },
           { label: "浏览器", value: "Edge" },
           { label: "终端", value: "Ghostty / Windows Terminal" },
-          { label: "画图", value: "Draw.io / Mermaid" },
         ],
       },
     ],
