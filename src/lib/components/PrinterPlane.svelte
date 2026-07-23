@@ -24,8 +24,8 @@
     // Phase timeline (ms). Order matters; the loop walks this list.
     const PHASES = [
       { k: "approach", d: 2950 }, // descending glide, off-left -> 8% across
-      { k: "flare", d: 1100 }, // nose-up flare, settles onto the wheels
-      { k: "rollout", d: 1900 }, // decelerating ground roll
+      { k: "flare", d: 1650 }, // nose-up flare, settles onto the wheels
+      { k: "rollout", d: 1500 }, // decelerating ground roll
       { k: "taxi", d: 2400 }, // slow taxi across mid-deck
       { k: "roll", d: 2800 }, // accelerating takeoff roll, rotates late
       { k: "climb", d: 2000 }, // lifts off, climbs off-right
@@ -116,7 +116,7 @@
         y = lerp(38, 4, easeOut(local));
         pitch = lerp(6, 2, local); // slight nose-down glide flattening out
       } else if (ph === "flare") {
-        x = lerp(X.touch, X.touch + 0.09, local);
+        x = lerp(X.touch, X.touch + 0.135, local);
         y = lerp(4, 0, easeIn(local));
         // flare nose-up, then derotate onto the nose wheel
         pitch =
@@ -124,7 +124,7 @@
           (local > 0.85 ? (local - 0.85) * 40 : 0);
         if (local > 0.9 && local < 0.98) firePuff(x, now);
       } else if (ph === "rollout") {
-        x = lerp(X.touch + 0.09, X.rolled, easeOut(local));
+        x = lerp(X.touch + 0.135, X.rolled, easeOut(local));
         pitch = lerp(-1, 0, Math.min(1, local * 3));
       } else if (ph === "taxi") {
         x = lerp(X.rolled, X.taxied, easeInOut(local));
