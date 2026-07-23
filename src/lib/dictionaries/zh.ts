@@ -228,7 +228,7 @@ const dictionary: Dictionary = {
 
 编程之外，我喜欢吃饭、做饭和逛超市。我还玩微软飞行模拟器，飞空客。
 
-你可以在 [GitHub](https://github.com/luojiahai) 或 [X](https://x.com/luojiahai) 找到我，或者发邮件到 [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com)。
+你可以在 [X](https://x.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com)。
   `,
 };
 

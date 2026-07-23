@@ -254,7 +254,7 @@ I'm an INTJ and a pragmatic computer programmer. I build useful things.
 
 Outside of programming, I like eating, cooking, and grocery shopping. I also play Microsoft Flight Simulator, flying Airbus.
 
-You can find me on [GitHub](https://github.com/luojiahai) or [X](https://x.com/luojiahai), or email me at [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com).
+You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com).
   `,
 };
 
