@@ -57,6 +57,13 @@
     colorMode === "dark" || (colorMode === "system" && systemDark),
   );
 
+  function applyDark(dark: boolean) {
+    document.documentElement.classList.toggle("dark", dark);
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", dark ? "#0a0c12" : "#e0e0d8");
+  }
+
   onMount(() => {
     const stored = document.documentElement.dataset.colorMode;
     if (stored === "light" || stored === "dark" || stored === "system") {
@@ -68,7 +75,7 @@
     const onMediaChange = () => {
       systemDark = media.matches;
       if (colorMode === "system") {
-        document.documentElement.classList.toggle("dark", media.matches);
+        applyDark(media.matches);
       }
     };
     media.addEventListener("change", onMediaChange);
@@ -85,7 +92,7 @@
       mode === "dark" ||
       (mode === "system" &&
         window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", dark);
+    applyDark(dark);
   }
 
   // ------------------------------------------------------------------

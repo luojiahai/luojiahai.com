@@ -13,3 +13,21 @@
   Cache-Control: public, max-age=86400
 /static/*
   Cache-Control: public, max-age=86400
+
+# Favicons and app icons (rarely change, but not content-hashed)
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/logo.svg
+  Cache-Control: public, max-age=86400
+/icon.svg
+  Cache-Control: public, max-age=86400
+/icon.png
+  Cache-Control: public, max-age=86400
+/icon-192.png
+  Cache-Control: public, max-age=86400
+/apple-icon.png
+  Cache-Control: public, max-age=86400
+/mask-icon.svg
+  Cache-Control: public, max-age=86400
+/site.webmanifest
+  Cache-Control: public, max-age=86400
