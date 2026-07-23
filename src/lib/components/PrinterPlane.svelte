@@ -25,16 +25,16 @@
     const PHASES = [
       { k: "approach", d: 3600 }, // descending glide, off-left -> 8% across
       { k: "flare", d: 1100 }, // nose-up flare, settles onto the wheels
-      { k: "rollout", d: 2600 }, // decelerating ground roll
+      { k: "rollout", d: 1900 }, // decelerating ground roll
       { k: "taxi", d: 2400 }, // slow taxi across mid-deck
-      { k: "roll", d: 2300 }, // accelerating takeoff roll, rotates late
+      { k: "roll", d: 2800 }, // accelerating takeoff roll, rotates late
       { k: "climb", d: 2000 }, // lifts off, climbs off-right
       { k: "away", d: 2000 }, // empty deck beat before looping
     ] as const;
     const PERIOD = PHASES.reduce((s, p) => s + p.d, 0);
 
     // Ground-track fractions of the lane span at each phase boundary.
-    const X = { touch: 0.08, rolled: 0.46, taxied: 0.62, liftoff: 0.98 };
+    const X = { touch: 0.08, rolled: 0.38, taxied: 0.54, liftoff: 0.98 };
 
     // Pitch pivot, in SVG user units (center of the fuselage).
     const PIVOT = "504 500";
