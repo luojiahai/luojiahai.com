@@ -116,7 +116,7 @@
         y = lerp(38, 4, easeOut(local));
         pitch = lerp(6, 2, local); // slight nose-down glide flattening out
       } else if (ph === "flare") {
-        x = lerp(X.touch, X.touch + 0.135, local);
+        x = lerp(X.touch, X.touch + 0.16, local);
         y = lerp(4, 0, easeIn(local));
         // flare nose-up, then derotate onto the nose wheel
         pitch =
@@ -124,7 +124,7 @@
           (local > 0.85 ? (local - 0.85) * 40 : 0);
         if (local > 0.9 && local < 0.98) firePuff(x, now);
       } else if (ph === "rollout") {
-        x = lerp(X.touch + 0.135, X.rolled, easeOut(local));
+        x = lerp(X.touch + 0.16, X.rolled, easeOut(local));
         pitch = lerp(-1, 0, Math.min(1, local * 3));
       } else if (ph === "taxi") {
         x = lerp(X.rolled, X.taxied, easeInOut(local));
