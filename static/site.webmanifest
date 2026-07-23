@@ -1,0 +1,11 @@
+{
+  "name": "luojiahai",
+  "short_name": "luojiahai",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#e0e0d8",
+  "background_color": "#e0e0d8",
+  "display": "browser"
+}
