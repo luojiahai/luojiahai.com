@@ -23,13 +23,13 @@
   onMount(() => {
     // Phase timeline (ms). Order matters; the loop walks this list.
     const PHASES = [
-      { k: "approach", d: 2400 }, // descending glide, off-left -> 2% across
-      { k: "flare", d: 1600 }, // nose-up flare, settles onto the wheels
-      { k: "rollout", d: 2400 }, // decelerating ground roll
-      { k: "taxi", d: 2400 }, // slow taxi across mid-deck
-      { k: "roll", d: 2400 }, // accelerating takeoff roll, rotates late
-      { k: "climb", d: 2000 }, // lifts off, climbs off-right
-      { k: "away", d: 2000 }, // empty deck beat before looping
+      { k: "approach", d: 2000 }, // constant-speed glide down a fixed slope
+      { k: "flare", d: 1100 }, // nose-up flare, sink bleeds off to a kiss
+      { k: "rollout", d: 1950 }, // steady braking, derotates early on
+      { k: "taxi", d: 2650 }, // constant slow taxi, engines at idle
+      { k: "roll", d: 3300 }, // constant-acceleration roll, rotates at Vr
+      { k: "climb", d: 1450 }, // lifts off, accelerating climb off-right
+      { k: "away", d: 1800 }, // empty deck beat before looping
     ] as const;
     const PERIOD = PHASES.reduce((s, p) => s + p.d, 0);
 
@@ -41,7 +41,9 @@
 
     const easeIn = (p: number) => p * p;
     const easeOut = (p: number) => 1 - (1 - p) * (1 - p);
-    const easeInOut = (p: number) => 0.5 - 0.5 * Math.cos(Math.PI * p);
+    // Constant-acceleration ease: velocity ramps linearly across the phase to
+    // r x its starting value, so adjacent phases can hand off speed smoothly.
+    const ramp = (p: number, r: number) => (2 * p + (r - 1) * p * p) / (r + 1);
     const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -112,30 +114,30 @@
       let visible = true;
 
       if (ph === "approach") {
-        x = lerp(-0.28, X.touch, easeInOut(local));
-        y = lerp(38, 4, easeOut(local));
-        pitch = lerp(6, 2, local); // slight nose-down glide flattening out
+        x = lerp(-0.28, X.touch, local); // constant approach speed
+        y = lerp(38, 6, local); // fixed glide slope, constant sink
+        pitch = -2.5; // stable, slightly nose-up approach attitude
       } else if (ph === "flare") {
         x = lerp(X.touch, X.touch + 0.16, local);
-        y = lerp(4, 0, easeIn(local));
-        // flare nose-up, then derotate onto the nose wheel
-        pitch =
-          lerp(2, -7, Math.min(1, local * 1.6)) +
-          (local > 0.85 ? (local - 0.85) * 40 : 0);
-        if (local > 0.9 && local < 0.98) firePuff(x, now);
+        y = lerp(6, 0, easeOut(local)); // sink rate decays to a soft kiss
+        pitch = lerp(-2.5, -6.5, easeOut(local)); // progressive nose-up pull
+        if (local > 0.94) firePuff(x, now); // mains touch at the very end
       } else if (ph === "rollout") {
-        x = lerp(X.touch + 0.16, X.rolled, easeOut(local));
-        pitch = lerp(-1, 0, Math.min(1, local * 3));
+        // brakes from touchdown speed down to taxi speed
+        x = lerp(X.touch + 0.16, X.rolled, ramp(local, 0.41));
+        pitch = lerp(-6.5, 0, Math.min(1, local * 2.2)); // derotate onto nose wheel
+        thrust = false; // engines back to idle
       } else if (ph === "taxi") {
-        x = lerp(X.rolled, X.taxied, easeInOut(local));
+        x = lerp(X.rolled, X.taxied, local); // constant taxi speed
         thrust = false;
       } else if (ph === "roll") {
-        x = lerp(X.taxied, X.liftoff, easeIn(local));
-        pitch = local > 0.75 ? lerp(0, -9, (local - 0.75) / 0.25) : 0; // rotate
+        // steady acceleration from taxi speed up past touchdown speed
+        x = lerp(X.taxied, X.liftoff, ramp(local, 3.4));
+        pitch = local > 0.82 ? lerp(0, -10, (local - 0.82) / 0.18) : 0; // rotate at Vr
       } else if (ph === "climb") {
-        x = lerp(X.liftoff, 1.3, local);
+        x = lerp(X.liftoff, 1.3, ramp(local, 1.15)); // still accelerating
         y = lerp(0, 52, easeIn(local));
-        pitch = -9;
+        pitch = lerp(-10, -12, easeOut(local)); // settles into climb attitude
       } else {
         visible = false;
       }
