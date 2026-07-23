@@ -69,3 +69,20 @@ export interface SocialStats {
 export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
 
 export const socialFallback: SocialStats = fallback;
+
+/** Backfill stat fields that cached payloads from earlier deploys (KV
+ * snapshots, edge cache entries) may predate. */
+export function normalizeSocialStats(stats: SocialStats): SocialStats {
+  return {
+    ...stats,
+    telegram: stats.telegram ?? socialFallback.telegram,
+    linkedin:
+      stats.linkedin?.connections != null
+        ? stats.linkedin
+        : socialFallback.linkedin,
+    instagram:
+      stats.instagram?.posts != null
+        ? stats.instagram
+        : socialFallback.instagram,
+  };
+}

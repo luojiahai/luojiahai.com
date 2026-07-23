@@ -1,5 +1,9 @@
 import { browser } from "$app/environment";
-import { socialFallback, type SocialStats } from "./social";
+import {
+  normalizeSocialStats,
+  socialFallback,
+  type SocialStats,
+} from "./social";
 
 /**
  * Shared client-side state for the social hover cards. Starts from the
@@ -22,18 +26,7 @@ export function ensureSocialStats(): void {
     .then((res) => (res.ok ? res.json() : null))
     .then((data: SocialStats | null) => {
       if (data?.github?.levels && data.x && data.telegram) {
-        // Older payloads may predate the linkedin/instagram stat fields.
-        social.stats = {
-          ...data,
-          linkedin:
-            data.linkedin?.connections != null
-              ? data.linkedin
-              : socialFallback.linkedin,
-          instagram:
-            data.instagram?.posts != null
-              ? data.instagram
-              : socialFallback.instagram,
-        };
+        social.stats = normalizeSocialStats(data);
       }
     })
     .catch(() => {

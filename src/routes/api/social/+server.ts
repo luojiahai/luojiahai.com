@@ -1,5 +1,6 @@
 import { json } from "@sveltejs/kit";
 import {
+  normalizeSocialStats,
   socialFallback,
   type GitHubStats,
   type InstagramStats,
@@ -239,7 +240,8 @@ export const GET: RequestHandler = async ({ request, platform }) => {
   const lastGood = (await kv
     ?.get(KV_KEY, "json")
     .catch(() => null)) as SocialStats | null;
-  const base = lastGood ?? socialFallback;
+  // Normalization backfills fields that old KV snapshots may predate.
+  const base = normalizeSocialStats(lastGood ?? socialFallback);
 
   const [profile, contributions, x, telegram, instagram] =
     await Promise.allSettled([
@@ -261,21 +263,13 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       ...(contributions.status === "fulfilled" ? contributions.value : {}),
     },
     x: x.status === "fulfilled" ? x.value : base.x,
-    // `base` may predate newer fields (old KV snapshots).
-    telegram:
-      telegram.status === "fulfilled"
-        ? telegram.value
-        : (base.telegram ?? socialFallback.telegram),
+    telegram: telegram.status === "fulfilled" ? telegram.value : base.telegram,
     // LinkedIn sits behind an authwall with no anonymous endpoint, so its
     // numbers always come from the committed snapshot (edit
     // social-fallback.json to update them).
     linkedin: socialFallback.linkedin,
     instagram:
-      instagram.status === "fulfilled"
-        ? instagram.value
-        : base.instagram?.posts != null
-          ? base.instagram
-          : socialFallback.instagram,
+      instagram.status === "fulfilled" ? instagram.value : base.instagram,
   };
 
   if (anyFresh && kv) {
