@@ -23,11 +23,11 @@
   onMount(() => {
     // Phase timeline (ms). Order matters; the loop walks this list.
     const PHASES = [
-      { k: "approach", d: 2950 }, // descending glide, off-left -> 8% across
-      { k: "flare", d: 1650 }, // nose-up flare, settles onto the wheels
-      { k: "rollout", d: 1500 }, // decelerating ground roll
+      { k: "approach", d: 2400 }, // descending glide, off-left -> 8% across
+      { k: "flare", d: 1600 }, // nose-up flare, settles onto the wheels
+      { k: "rollout", d: 2400 }, // decelerating ground roll
       { k: "taxi", d: 2400 }, // slow taxi across mid-deck
-      { k: "roll", d: 2800 }, // accelerating takeoff roll, rotates late
+      { k: "roll", d: 2400 }, // accelerating takeoff roll, rotates late
       { k: "climb", d: 2000 }, // lifts off, climbs off-right
       { k: "away", d: 2000 }, // empty deck beat before looping
     ] as const;
