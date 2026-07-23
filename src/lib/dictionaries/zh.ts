@@ -162,16 +162,16 @@ const dictionary: Dictionary = {
   ],
   contacts: [
     {
-      label: "GitHub",
-      name: "@luojiahai",
-      link: "https://github.com/luojiahai",
-      icon: "github",
-    },
-    {
       label: "X (Twitter)",
       name: "@luojiahai",
       link: "https://x.com/luojiahai",
       icon: "x",
+    },
+    {
+      label: "GitHub",
+      name: "@luojiahai",
+      link: "https://github.com/luojiahai",
+      icon: "github",
     },
     {
       label: "邮箱",
@@ -190,24 +190,6 @@ const dictionary: Dictionary = {
       name: "@luojiahai",
       link: "https://instagram.com/luojiahai",
       icon: "instagram",
-    },
-    {
-      label: "哔哩哔哩",
-      name: "luojiahai",
-      link: "https://space.bilibili.com/866961",
-      icon: "bilibili",
-    },
-    {
-      label: "小红书",
-      name: "luojiahai",
-      link: "https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba",
-      icon: "xiaohongshu",
-    },
-    {
-      label: "微博",
-      name: "ljiahai",
-      link: "https://weibo.com/ljiahai",
-      icon: "weibo",
     },
   ],
   social: {
@@ -243,9 +225,7 @@ const dictionary: Dictionary = {
 
 我是 INTJ，一名务实的计算机程序员，我做有用的东西。
 
-写代码方面，我喜欢驾驶 Claude Code 和 Codex 这样的编程智能体，也因此做了 [Code-by-wire](https://codebywire.com)，在一个控制台里驾驶它们。
-
-编程之外，我喜欢吃饭、做饭和逛超市。作为广州人，我偏爱粤式经典，尤其是肠粉。我还玩微软飞行模拟器，飞空客。
+编程之外，我喜欢吃饭、做饭和逛超市。我还玩微软飞行模拟器，飞空客。
 
 你可以在 [GitHub](https://github.com/luojiahai) 或 [X](https://x.com/luojiahai) 找到我，或者发邮件到 [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com)。
   `,

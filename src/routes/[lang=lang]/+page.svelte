@@ -110,7 +110,7 @@
 
   <!-- Works section -->
   <PrintedSection label={dictionary.labels.works} labelIcon="apps">
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-1 gap-2">
       {#each primaryWorks as work (work.name)}
         <a
           href={work.link}

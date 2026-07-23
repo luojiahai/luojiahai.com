@@ -21,6 +21,7 @@
     "prose-blockquote:text-printer-ink/75 dark:prose-blockquote:text-printer-ink-dark/75 prose-blockquote:py-1",
     "prose-pre:border prose-pre:border-printer-ink/10 dark:prose-pre:border-printer-ink-dark/10",
     "prose-pre:rounded-lg prose-pre:bg-printer-ink/3 dark:prose-pre:bg-printer-ink-dark/5 prose-pre:px-4 prose-pre:py-3",
+    "prose-pre:text-printer-ink/85 dark:prose-pre:text-printer-ink-dark/85",
     "prose-code:text-inherit prose-code:before:content-none prose-code:after:content-none",
     "prose-img:my-6 prose-img:rounded-lg prose-img:border prose-img:border-printer-ink/10",
     "prose-hr:border-printer-ink/10 dark:prose-hr:border-printer-ink-dark/10",

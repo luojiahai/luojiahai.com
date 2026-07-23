@@ -377,15 +377,6 @@
                 class="font-mono text-[10px] tracking-widest uppercase flex items-center gap-4 order-1 sm:order-2"
               >
                 <SocialHoverCard
-                  kind="github"
-                  href="https://github.com/luojiahai"
-                  {lang}
-                  {dictionary}
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  GitHub
-                </SocialHoverCard>
-                <SocialHoverCard
                   kind="x"
                   href="https://x.com/luojiahai"
                   {lang}
@@ -393,6 +384,15 @@
                   class="hover:text-printer-accent transition-colors"
                 >
                   X
+                </SocialHoverCard>
+                <SocialHoverCard
+                  kind="github"
+                  href="https://github.com/luojiahai"
+                  {lang}
+                  {dictionary}
+                  class="hover:text-printer-accent transition-colors"
+                >
+                  GitHub
                 </SocialHoverCard>
                 <SocialHoverCard
                   kind="email"

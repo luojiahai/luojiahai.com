@@ -22,16 +22,16 @@ interface Work {
 
 const contacts: Contact[] = [
   {
-    label: "GitHub",
-    name: "@luojiahai",
-    link: "https://github.com/luojiahai",
-    icon: "github",
-  },
-  {
     label: "X (Twitter)",
     name: "@luojiahai",
     link: "https://x.com/luojiahai",
     icon: "x",
+  },
+  {
+    label: "GitHub",
+    name: "@luojiahai",
+    link: "https://github.com/luojiahai",
+    icon: "github",
   },
   {
     label: "Email",
@@ -50,24 +50,6 @@ const contacts: Contact[] = [
     name: "@luojiahai",
     link: "https://instagram.com/luojiahai",
     icon: "instagram",
-  },
-  {
-    label: "Bilibili",
-    name: "luojiahai",
-    link: "https://space.bilibili.com/866961",
-    icon: "bilibili",
-  },
-  {
-    label: "Xiaohongshu",
-    name: "luojiahai",
-    link: "https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba",
-    icon: "xiaohongshu",
-  },
-  {
-    label: "Weibo",
-    name: "ljiahai",
-    link: "https://weibo.com/ljiahai",
-    icon: "weibo",
   },
 ];
 
@@ -269,9 +251,7 @@ I was born and raised in Guangzhou, China, and I'm currently based in Melbourne,
 
 I'm an INTJ and a pragmatic computer programmer. I build useful things.
 
-When it comes to code, I pilot coding agents like Claude Code and Codex, and I like that way of working enough that I built [Code-by-wire](https://codebywire.com) to fly them from one console.
-
-Outside of programming, I like eating, cooking, and grocery shopping. Being from Guangzhou, I have a soft spot for Cantonese classics, 肠粉 above all. I also play Microsoft Flight Simulator, flying Airbus.
+Outside of programming, I like eating, cooking, and grocery shopping. I also play Microsoft Flight Simulator, flying Airbus.
 
 You can find me on [GitHub](https://github.com/luojiahai) or [X](https://x.com/luojiahai), or email me at [ljiahai@hotmail.com](mailto:ljiahai@hotmail.com).
   `,
