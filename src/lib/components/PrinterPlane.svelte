@@ -13,12 +13,10 @@
    * (with a little dust puff), reverse-thrust rollout, slow taxi across the
    * middle, accelerating takeoff roll with a late nose rotation, climb out
    * off-screen right, then a quiet beat with an empty deck before looping.
-   * A soft contact shadow stays on the deck and fades with altitude.
    */
   let lane: HTMLDivElement;
   let flyer: HTMLDivElement;
   let puffEl: HTMLDivElement;
-  let shadowEl: HTMLDivElement;
   let plane: SVGGElement;
   let exhaust: SVGGElement;
 
@@ -57,26 +55,22 @@
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // Rest pose: parked mid-deck, engines off, shadow under the wheels.
+    // Rest pose: parked mid-deck, engines off.
     const placeStatic = () => {
       flyer.style.opacity = "1";
       flyer.style.transform = `translate3d(${(span / 2).toFixed(2)}px,0,0)`;
       plane.setAttribute("transform", `rotate(0 ${PIVOT})`);
       exhaust.setAttribute("opacity", "0");
-      shadowEl.style.opacity = "1";
-      shadowEl.style.transform = `translate3d(${(span / 2 + (flyerW - shadowW) / 2).toFixed(2)}px,0,0)`;
     };
 
     // Travel range — kept fresh with a ResizeObserver so it survives the
     // initial layout settling and responsive width changes.
     let span = 0;
     let flyerW = 0;
-    let shadowW = 0;
     let entryX = -0.28;
     let exitX = 1.3;
     const measure = () => {
       flyerW = flyer.offsetWidth;
-      shadowW = shadowEl.offsetWidth;
       span = Math.max(0, lane.clientWidth - flyerW);
       // Off-screen ends: on narrow lanes a fixed fraction of the span is
       // less than the flyer's own width, so the jet would pop in while
@@ -188,13 +182,6 @@
       flyer.style.transform = `translate3d(${(x * span).toFixed(2)}px, ${(-y).toFixed(2)}px, 0)`;
       plane.setAttribute("transform", `rotate(${pitch.toFixed(2)} ${PIVOT})`);
 
-      // Contact shadow: pinned to the deck under the gear (the gear cluster
-      // sits at 50% of the artwork), shrinking and fading with altitude.
-      const alt = Math.min(1, y / 52);
-      const sx = x * span + (flyerW - shadowW) / 2;
-      shadowEl.style.transform = `translate3d(${sx.toFixed(2)}px,0,0) scale(${(1 - 0.35 * alt).toFixed(3)}, ${(1 - 0.5 * alt).toFixed(3)})`;
-      shadowEl.style.opacity = visible ? ((1 - alt) * (1 - alt)).toFixed(3) : "0";
-
       // Jet exhaust: shimmer scaled by engine power, nearly gone at idle.
       const flick = 0.6 + 0.4 * Math.abs(Math.sin(now / 55));
       exhaust.setAttribute("opacity", Math.max(0.08, power * flick).toFixed(3));
@@ -228,7 +215,6 @@
 </script>
 
 <div class="plane-lane" bind:this={lane} aria-hidden="true">
-  <div class="plane-shadow" bind:this={shadowEl}></div>
   <div class="plane-puff" bind:this={puffEl}>
     <svg viewBox="0 0 22 12" xmlns="http://www.w3.org/2000/svg">
       <circle cx="5" cy="8" r="3" />
