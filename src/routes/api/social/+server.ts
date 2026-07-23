@@ -2,6 +2,7 @@ import { json } from "@sveltejs/kit";
 import {
   socialFallback,
   type GitHubStats,
+  type InstagramStats,
   type SocialStats,
   type TelegramStats,
   type XStats,
@@ -17,6 +18,7 @@ export const prerender = false;
 const GITHUB_HANDLE = "luojiahai";
 const X_HANDLE = "luojiahai";
 const TELEGRAM_HANDLE = "luojiahai";
+const INSTAGRAM_HANDLE = "luojiahai";
 const KV_KEY = "social-stats:v1";
 /** Days of contribution history to expose (18 weeks). */
 const HEATMAP_DAYS = 126;
@@ -182,6 +184,52 @@ async function fetchTelegramProfile(): Promise<TelegramStats> {
   };
 }
 
+/** Instagram's anonymous web-profile API. It rejects non-browser user
+ * agents and blocks some datacenter IPs, so failures are expected and
+ * fall back to the last-good snapshot. */
+async function fetchInstagramProfile(): Promise<InstagramStats> {
+  const res = await fetch(
+    `https://i.instagram.com/api/v1/users/web_profile_info/?username=${INSTAGRAM_HANDLE}`,
+    {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+        Accept: "application/json",
+        "x-ig-app-id": "936619743392459",
+      },
+    },
+  );
+  if (!res.ok) throw new Error(`instagram profile ${res.status}`);
+  const data = (await res.json()) as {
+    data?: { user?: Record<string, unknown> };
+  };
+  const user = data.data?.user;
+  if (!user) throw new Error("instagram profile shape");
+  const counts = user as {
+    edge_followed_by?: { count?: unknown };
+    edge_follow?: { count?: unknown };
+    edge_owner_to_timeline_media?: { count?: unknown };
+  };
+  return {
+    handle:
+      typeof user.username === "string" ? user.username : INSTAGRAM_HANDLE,
+    name:
+      typeof user.full_name === "string" && user.full_name
+        ? user.full_name
+        : socialFallback.instagram.name,
+    bio: typeof user.biography === "string" ? user.biography : "",
+    followers: assertNumber(
+      counts.edge_followed_by?.count,
+      "instagram followers",
+    ),
+    following: assertNumber(counts.edge_follow?.count, "instagram following"),
+    posts: assertNumber(
+      counts.edge_owner_to_timeline_media?.count,
+      "instagram posts",
+    ),
+  };
+}
+
 export const GET: RequestHandler = async ({ request, platform }) => {
   const cache = platform?.caches?.default;
   const cached = await cache?.match(request.url);
@@ -193,13 +241,15 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     .catch(() => null)) as SocialStats | null;
   const base = lastGood ?? socialFallback;
 
-  const [profile, contributions, x, telegram] = await Promise.allSettled([
-    fetchGitHubProfile(),
-    fetchGitHubContributions(),
-    fetchXProfile(),
-    fetchTelegramProfile(),
-  ]);
-  const anyFresh = [profile, contributions, x, telegram].some(
+  const [profile, contributions, x, telegram, instagram] =
+    await Promise.allSettled([
+      fetchGitHubProfile(),
+      fetchGitHubContributions(),
+      fetchXProfile(),
+      fetchTelegramProfile(),
+      fetchInstagramProfile(),
+    ]);
+  const anyFresh = [profile, contributions, x, telegram, instagram].some(
     (result) => result.status === "fulfilled",
   );
 
@@ -211,11 +261,21 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       ...(contributions.status === "fulfilled" ? contributions.value : {}),
     },
     x: x.status === "fulfilled" ? x.value : base.x,
-    // `base` may predate the telegram field (old KV snapshots).
+    // `base` may predate newer fields (old KV snapshots).
     telegram:
       telegram.status === "fulfilled"
         ? telegram.value
         : (base.telegram ?? socialFallback.telegram),
+    // LinkedIn sits behind an authwall with no anonymous endpoint, so its
+    // numbers always come from the committed snapshot (edit
+    // social-fallback.json to update them).
+    linkedin: socialFallback.linkedin,
+    instagram:
+      instagram.status === "fulfilled"
+        ? instagram.value
+        : base.instagram?.posts != null
+          ? base.instagram
+          : socialFallback.instagram,
   };
 
   if (anyFresh && kv) {

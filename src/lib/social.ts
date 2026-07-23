@@ -39,11 +39,33 @@ export interface TelegramStats {
   bio: string;
 }
 
+export interface LinkedInStats {
+  handle: string;
+  name: string;
+  bio: string;
+  followers: number;
+  connections: number;
+}
+
+export interface InstagramStats {
+  handle: string;
+  name: string;
+  bio: string;
+  followers: number;
+  following: number;
+  posts: number;
+}
+
 export interface SocialStats {
   fetchedAt: string;
   github: GitHubStats;
   x: XStats;
   telegram: TelegramStats;
+  linkedin: LinkedInStats;
+  instagram: InstagramStats;
 }
+
+/** Card variants supported by SocialHoverCard. */
+export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
 
 export const socialFallback: SocialStats = fallback;

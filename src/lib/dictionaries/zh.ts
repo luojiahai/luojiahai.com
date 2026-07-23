@@ -204,6 +204,7 @@ const dictionary: Dictionary = {
     },
     emailTo: "收件人",
     emailHint: "邮件会直达我的收件箱。",
+    connections: "人脉",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
   archive: {

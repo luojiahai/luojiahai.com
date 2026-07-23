@@ -18,11 +18,22 @@ export function ensureSocialStats(): void {
 
   // The query string versions the payload shape past stale edge-cache
   // entries from earlier deploys.
-  fetch("/api/social?v=2", { headers: { accept: "application/json" } })
+  fetch("/api/social?v=4", { headers: { accept: "application/json" } })
     .then((res) => (res.ok ? res.json() : null))
     .then((data: SocialStats | null) => {
       if (data?.github?.levels && data.x && data.telegram) {
-        social.stats = data;
+        // Older payloads may predate the linkedin/instagram stat fields.
+        social.stats = {
+          ...data,
+          linkedin:
+            data.linkedin?.connections != null
+              ? data.linkedin
+              : socialFallback.linkedin,
+          instagram:
+            data.instagram?.posts != null
+              ? data.instagram
+              : socialFallback.instagram,
+        };
       }
     })
     .catch(() => {
