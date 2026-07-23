@@ -23,7 +23,7 @@
   onMount(() => {
     // Phase timeline (ms). Order matters; the loop walks this list.
     const PHASES = [
-      { k: "approach", d: 3600 }, // descending glide, off-left -> 8% across
+      { k: "approach", d: 2950 }, // descending glide, off-left -> 8% across
       { k: "flare", d: 1100 }, // nose-up flare, settles onto the wheels
       { k: "rollout", d: 1900 }, // decelerating ground roll
       { k: "taxi", d: 2400 }, // slow taxi across mid-deck
