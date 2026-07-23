@@ -1,7 +1,5 @@
-// Regenerates the boxed icons in static/ from assets/icon.svg.
+// Regenerates the site icons in static/ from assets/icon.svg.
 // Run with: pnpm icons
-// static/mask-icon.svg (Safari pinned tab) is hand-maintained and not
-// generated here.
 import { Resvg } from "@resvg/resvg-js";
 import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -67,6 +65,17 @@ function writeIco(sizes, name) {
 
 copyFileSync(join(root, "assets/icon.svg"), join(root, "static/icon.svg"));
 console.log("wrote static/icon.svg (copy of assets/icon.svg)");
+
+// Safari's pinned-tab mask icon only reads the silhouette: same glyph and
+// padding as icon.svg, but no background box and a single flat color.
+const mask = svg
+  .replace(/^\s*<rect[^>]*\/>\n/m, "")
+  .replace(/stroke='[^']*'|stroke="[^"]*"/, 'stroke="#000"');
+if (mask === svg || !mask.includes('stroke="#000"')) {
+  throw new Error("mask-icon rewrite failed; check assets/icon.svg markup");
+}
+writeFileSync(join(root, "static/mask-icon.svg"), mask);
+console.log("wrote static/mask-icon.svg");
 writePng(512, "icon.png");
 writePng(192, "icon-192.png");
 writePng(180, "apple-icon.png");
