@@ -30,4 +30,5 @@ Both blogs share one content pipeline (Velite):
 - `pnpm check`: Type-check the project.
 - `pnpm build`: Build the site (including prerendered pages and OG images).
 - `pnpm preview`: Build and preview locally in the Workers runtime.
-- `pnpm deploy`: Build and deploy to Cloudflare Workers.
+- `pnpm deploy`: Build and deploy to Cloudflare Workers. In CI, only main
+  deploys to production; other branches upload a preview version.

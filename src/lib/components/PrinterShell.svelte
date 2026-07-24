@@ -4,8 +4,9 @@
   import { onMount } from "svelte";
   import type { Snippet } from "svelte";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import { showStickers } from "$lib/site-config";
+  import { showStickers, topAnimation } from "$lib/site-config";
   import PrinterPlane from "./PrinterPlane.svelte";
+  import PrinterSnail from "./PrinterSnail.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
@@ -175,8 +176,12 @@
 <div class="min-h-screen page-grid flex flex-col items-center px-3 py-6 sm:py-10">
   <!-- Printer Body -->
   <div class="w-full max-w-3xl relative">
-    <!-- Jet airliner landing on / taking off from the printer's top edge -->
-    <PrinterPlane />
+    <!-- Decorative critter/vehicle on the printer's top edge (src/lib/site-config.ts) -->
+    {#if topAnimation === "plane"}
+      <PrinterPlane />
+    {:else if topAnimation === "snail"}
+      <PrinterSnail />
+    {/if}
 
     <!-- Unified header housing — wraps both brand and slit areas to share a single shadow -->
     <div
