@@ -1,8 +1,9 @@
-// Deploy guard for Cloudflare Workers Builds, which runs the same deploy
-// command on every branch push. Only main may deploy to production; any
-// other branch uploads a preview version instead (own preview URL, no
-// production traffic change). Locally WORKERS_CI_BRANCH is unset, so
-// `pnpm deploy` still deploys to production.
+// Branch guard for `pnpm deploy`. The Workers Builds dashboard already
+// splits its deploy commands (main → `wrangler deploy`, other branches →
+// `wrangler versions upload`, no production traffic change); this applies
+// the same rule via WORKERS_CI_BRANCH as an in-repo backstop against
+// dashboard drift. Locally WORKERS_CI_BRANCH is unset, so `pnpm deploy`
+// still deploys to production.
 import { execSync } from "node:child_process";
 
 const branch = process.env.WORKERS_CI_BRANCH;
