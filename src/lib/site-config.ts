@@ -5,7 +5,7 @@ export const topAnimations = ["none", "snail", "plane"] as const;
 export type TopAnimation = (typeof topAnimations)[number];
 
 /** Which animation plays along the printer shell's top edge. */
-export const topAnimation: TopAnimation = "plane";
+export const topAnimation: TopAnimation = "snail";
 
 /** Show the draggable decorative stickers on the printer shell. */
 export const showStickers = false;
