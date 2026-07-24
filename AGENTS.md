@@ -31,8 +31,9 @@
 - `pnpm preview`: Build + preview in the Workers runtime (wrangler dev).
 - `pnpm deploy`: Build + deploy to Cloudflare Workers.
 CI runs check and build on push via `.github/workflows/ci.yml`. Deployment is
-handled by Cloudflare Workers Builds (Git integration), which builds and
-deploys on push to main.
+handled by Cloudflare Workers Builds (Git integration). `scripts/deploy.mjs`
+guards on `WORKERS_CI_BRANCH`: only main deploys to production; any other
+branch uploads a preview version instead.
 
 ## Architecture Notes
 - The whole site is prerendered (`prerender = true` in the root layout). The

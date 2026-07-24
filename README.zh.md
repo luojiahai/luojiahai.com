@@ -29,4 +29,4 @@
 - `pnpm check`：类型检查。
 - `pnpm build`：构建站点（包含预渲染页面与 OG 图片）。
 - `pnpm preview`：构建并在本地 Workers 运行时中预览。
-- `pnpm deploy`：构建并部署到 Cloudflare Workers。
+- `pnpm deploy`：构建并部署到 Cloudflare Workers。CI 中仅 main 分支部署到生产环境，其他分支只上传预览版本。

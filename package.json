@@ -10,7 +10,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "icons": "node scripts/generate-icons.mjs",
     "preview": "pnpm build && wrangler dev",
-    "deploy": "pnpm build && wrangler deploy",
+    "deploy": "pnpm build && node scripts/deploy.mjs",
     "upload": "pnpm build && wrangler versions upload"
   },
   "devDependencies": {
