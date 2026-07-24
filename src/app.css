@@ -399,7 +399,7 @@
 
     /* Jet palette (light) — thermal paper + printer plastic. Body white and
        tail orange ride the app theme; the grey tiers borrow the robo-snail's
-       livery (see the retired block below) so both critters match. */
+       livery (see the snail block below) so both critters match. */
     --plane-paper: var(--color-printer-paper);
     --plane-mid: #d8cfc2;
     --plane-shade: #a3978a;
@@ -488,18 +488,12 @@
 }
 
 /* ============================================================
-   Retired: crawling robo-snail (PrinterSnail.svelte), replaced by
-   the jet airliner above but kept for easy future recovery. The
-   component file still exists unreferenced in src/lib/components.
-   To recover: uncomment this block, restore the inner comment
-   markers by removing the space inside every "/ *" and "* /",
-   then swap PrinterPlane for PrinterSnail in PrinterShell.
-/ * ============================================================
    Crawling robo-snail on the printer's top edge — plastic body,
-   antenna LEDs, and a roll of thermal paper for a shell.
+   antenna LEDs, and a roll of thermal paper for a shell. Shown
+   when site-config's topAnimation is "snail".
    Travel + the head-sweep turn are driven from JS (PrinterSnail.svelte);
    only the small idle motions (antenna sway, LED pulse) live here.
-   ============================================================ * /
+   ============================================================ */
 @layer components {
   .snail-lane {
     position: absolute;
@@ -510,7 +504,7 @@
     z-index: 40;
     pointer-events: none;
 
-    / * Robo-snail palette (light) — printer plastic + thermal paper * /
+    /* Robo-snail palette (light) — printer plastic + thermal paper */
     --snail-body: #d8cfc2;
     --snail-body-shade: #a3978a;
     --snail-line: rgba(54, 46, 36, 0.4);
@@ -543,14 +537,14 @@
     }
   }
 
-  / * The traveller — transform is set each frame from JS * /
+  /* The traveller — transform is set each frame from JS */
   .snail-walker {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 46px;
     height: 28px;
-    / * tight contact shadow so it reads as sitting on the printer, no gap * /
+    /* tight contact shadow so it reads as sitting on the printer, no gap */
     filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
     will-change: transform;
   }
@@ -571,13 +565,13 @@
     overflow: visible;
   }
 
-  / * No outline on the body/head so the head blends into the foot and the
-     snail sits seamlessly against the printer (no border seam). * /
+  /* No outline on the body/head so the head blends into the foot and the
+     snail sits seamlessly against the printer (no border seam). */
   .snail-foot,
   .snail-neck {
     fill: var(--snail-body);
   }
-  / * Dashed rubber tread along the underside of the foot * /
+  /* Dashed rubber tread along the underside of the foot */
   .snail-tread {
     stroke: var(--snail-body-shade);
     stroke-width: 1.3;
@@ -585,7 +579,7 @@
     stroke-dasharray: 2.6 2.4;
     opacity: 0.75;
   }
-  / * Faint panel seam on the face plate * /
+  /* Faint panel seam on the face plate */
   .snail-seam {
     stroke: var(--snail-body-shade);
     stroke-width: 0.9;
@@ -593,7 +587,7 @@
     opacity: 0.65;
   }
 
-  / * Shell: thermal paper roll — intentionally static, no animation * /
+  /* Shell: thermal paper roll — intentionally static, no animation */
   .snail-roll {
     fill: var(--snail-roll);
     stroke: var(--snail-roll-edge);
@@ -629,7 +623,7 @@
     stroke-width: 1.9;
     stroke-linecap: round;
   }
-  / * Antenna LEDs — slow pulse instead of a blink, echoing the ON light * /
+  /* Antenna LEDs — slow pulse instead of a blink, echoing the ON light */
   .snail-led {
     fill: var(--snail-led);
     animation: snail-led-pulse 3.6s ease-in-out infinite;
@@ -645,7 +639,7 @@
     opacity: 0.85;
   }
 
-  / * Gentle antenna sway, composed on top of the JS head transform * /
+  /* Gentle antenna sway, composed on top of the JS head transform */
   .snail-stalk {
     transform-box: fill-box;
     transform-origin: 50% 100%;
@@ -685,5 +679,4 @@
     opacity: 0.55;
   }
 }
-============================================================ */
 
