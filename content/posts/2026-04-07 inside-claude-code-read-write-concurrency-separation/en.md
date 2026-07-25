@@ -3,6 +3,7 @@ title: "Inside Claude Code: Read/Write Concurrency Separation"
 slug: inside-claude-code-read-write-concurrency-separation
 lang: en
 date: "2026-04-07"
+updated: "2026-07-25"
 categories:
   - ai
 description: "Claude Code runs tools concurrently using the read/write-lock pattern straight out of databases."
@@ -11,15 +12,17 @@ keywords:
   - Concurrency
 ---
 
-When Claude Code needs to read three files and edit one simultaneously, does it wait on each operation one by one, or does it run them in parallel?
+_Based on the source of Claude Code v2.1.88._
 
-The answer is: it depends on what the tools are doing. And the way it figures that out is surprisingly clean.
+When Claude Code needs to read three files and edit one, does it wait on each in turn, or run them in parallel?
+
+It depends on what the tools declare about themselves. The way it works that out is clean.
 
 ## The Core Idea
 
-The execution layer in `toolOrchestration.ts` treats reads and writes differently, much like a database with read/write locks. Multiple read-only tools can run in parallel. The moment a write operation enters the mix, everything waits.
+`toolOrchestration.ts` treats safe and unsafe operations differently, much like a database with read/write locks. Safe tools run together. The moment an unsafe one enters, everything waits.
 
-The concurrency cap defaults to 10, tunable via env var — this applies to the batch executor in `toolOrchestration.ts`:
+The concurrency cap defaults to 10 and applies to this batch executor:
 
 ```typescript
 function getMaxToolUseConcurrency(): number {
@@ -27,11 +30,11 @@ function getMaxToolUseConcurrency(): number {
 }
 ```
 
-Simple. Predictable. You can override it if you know what you're doing.
+Simple, predictable, overridable if you know what you are doing.
 
 ## How It Decides What's Safe
 
-Before any tools run, `partitionToolCalls` walks through all the requested tool calls and groups them into batches:
+Before any tools run, `partitionToolCalls` groups the requested calls into batches:
 
 ```typescript
 function partitionToolCalls(toolUseMessages, toolUseContext): Batch[] {
@@ -58,9 +61,9 @@ function partitionToolCalls(toolUseMessages, toolUseContext): Batch[] {
 }
 ```
 
-Two things stand out here.
+Two things stand out.
 
-First, the safety check is **per-call, not per-tool type**. `isConcurrencySafe` receives the parsed input, which means a tool can declare itself safe for some inputs and unsafe for others. The same tool could be concurrent-safe when reading a config file and unsafe when patching it.
+First, the check is **per-call, not per-tool-type**. `isConcurrencySafe` receives the parsed input, so a tool can be safe for some inputs and unsafe for others. `BashTool` uses this: its `isConcurrencySafe` delegates to `isReadOnly`, so read-only shell commands run concurrently while everything else serializes.
 
 Second, the default is conservative. From `Tool.ts`:
 
@@ -71,13 +74,23 @@ const TOOL_DEFAULTS = {
 };
 ```
 
-Any tool that doesn't explicitly opt in runs serially. FileEdit, FileWrite, and NotebookEdit all fall through to this default. Bash is a notable exception: it has a custom `isConcurrencySafe` that delegates to `isReadOnly`, so read-only shell commands (those passing `checkReadOnlyConstraints`) can still run concurrently. The opt-in list reads like "things that genuinely can't corrupt state": FileRead, Grep, Glob, WebSearch, WebFetch, LSP diagnostics.
+Any tool that does not explicitly opt in runs serially. `FileEdit`, `FileWrite`, and `NotebookEdit` all fall through to this default.
 
-If the safety check itself throws an exception, that's treated as unsafe too. Fail-closed, all the way down.
+## Concurrency-safe is not the same as read-only
+
+It is tempting to read the opt-in list as "things that cannot corrupt state", but the source does not support that. `isConcurrencySafe` and `isReadOnly` are independent properties, and several tools declare one without the other.
+
+`AgentTool` is the sharpest example. It declares `isConcurrencySafe: true` and never declares itself read-only, so subagents that edit files fan out in parallel. `TaskCreate`, `TaskUpdate`, and `TaskStop` are the same shape: concurrency-safe, not read-only.
+
+The tools that declare both are the ones you would expect: `FileRead`, `Grep`, `Glob`, `WebSearch`, `WebFetch`, `LSP`, `ToolSearch`, `TaskGet`, `TaskList`, `Brief`.
+
+So the contract is narrower than "this cannot cause damage". It is "running two of these at once will not corrupt anything". Parallelism is governed by `isConcurrencySafe` alone.
+
+If the safety check itself throws, that counts as unsafe. Fail-closed, all the way down.
 
 ## MCP Tools Follow the Spec
 
-For MCP tools, Claude Code defers to the MCP spec's own annotation:
+For MCP tools, Claude Code defers to the spec's own annotation:
 
 ```typescript
 isConcurrencySafe() {
@@ -85,11 +98,11 @@ isConcurrencySafe() {
 }
 ```
 
-If an MCP server declares `readOnlyHint: true`, those tools get bundled into concurrent batches automatically. No special-casing needed on Claude Code's side.
+If a server declares `readOnlyHint: true`, its tools batch concurrently. No special-casing needed on Claude Code's side.
 
 ## Two Executors, Same Contract
 
-There are actually two independent implementations of this pattern, selected by a feature gate:
+There are two implementations of this pattern, selected by a feature gate:
 
 ```typescript
 const useStreamingToolExecution = config.gates.streamingToolExecution
@@ -98,13 +111,15 @@ let streamingToolExecutor = useStreamingToolExecution
   : null
 ```
 
-`toolOrchestration.ts` is batch-based: it collects all tool calls from a response, partitions them upfront, then runs each batch. The concurrency cap of 10 applies here.
+`toolOrchestration.ts` is batch-based. It collects all tool calls from a response, partitions them upfront, then runs each batch. The cap of 10 applies here.
 
-`StreamingToolExecutor.ts` is event-driven: it starts executing tools as `tool_use` blocks stream in, before the response even finishes. Lower latency, same safety guarantees, but no numeric concurrency cap — its concurrency is governed purely by the safe/unsafe classification. There is one acknowledged limitation: the streaming executor doesn't support context modifiers for concurrent tools at all. If a concurrent tool emits one, it's silently dropped, not deferred. A code comment acknowledges this is a known gap.
+`StreamingToolExecutor.ts` is event-driven. It starts executing tools as `tool_use` blocks stream in, before the response finishes. Lower latency, same safety classification, but no numeric cap. Its concurrency is governed purely by the safe/unsafe split.
+
+The streaming executor has one acknowledged gap: it does not support context modifiers for concurrent tools. If a concurrent tool emits one, it is dropped rather than deferred, and a code comment says so.
 
 ## The Concurrency Pool
 
-The actual parallel execution uses a `Promise.race`-based generator pool in `utils/generators.ts`:
+Parallel execution uses a `Promise.race` generator pool in `utils/generators.ts`:
 
 ```typescript
 export async function* all<A>(
@@ -131,11 +146,11 @@ export async function* all<A>(
 }
 ```
 
-Classic semaphore pool. Keep N slots active, fill a new one whenever one completes. Results arrive in completion order, not submission order.
+A classic semaphore pool. Keep N slots active, refill whenever one completes. Results arrive in completion order, not submission order.
 
 ## Context Modifications Are Ordered
 
-One more wrinkle: context modifications from concurrent tools don't apply immediately. They queue up and are applied in original call order only after the entire batch completes:
+Context modifications from concurrent tools do not apply immediately. They queue, then apply in original call order once the batch completes:
 
 ```typescript
 if (isConcurrencySafe) {
@@ -157,12 +172,12 @@ if (isConcurrencySafe) {
 }
 ```
 
-Even if tool B finishes before tool A, tool A's context modification still applies first. Deterministic, regardless of execution order.
+Even if tool B finishes before tool A, A's modification still applies first. Deterministic regardless of execution order.
 
 ## The Takeaway
 
-Anyone who's worked with databases will recognise this pattern immediately: reads in parallel, read-write exclusive. The implementation is straightforward, but the design decisions are sharp.
+Anyone who has worked with databases will recognise the pattern: safe operations in parallel, unsafe ones exclusive. The implementation is straightforward, but the design decisions are sharp.
 
-The safety contract is per-call, not per-tool. The default is conservative. Both executor variants enforce the same invariants, just at different points in the response lifecycle.
+The safety contract is per-call, not per-tool. The default is conservative. Both executors enforce the same invariants at different points in the response lifecycle.
 
-For a system where tools can touch the filesystem, run shell commands, and modify in-memory context, getting this right matters. And it's satisfying to see classic concurrency control show up intact in an AI tool execution layer.
+And the contract is narrower than it first looks. Concurrency-safe does not mean harmless, only that running two at once will not corrupt anything.
