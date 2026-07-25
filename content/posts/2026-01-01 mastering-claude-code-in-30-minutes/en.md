@@ -11,33 +11,33 @@ keywords:
   - Productivity
 ---
 
-_Distilled from [Mastering Claude Code in 30 minutes](https://www.youtube.com/watch?v=6eBSHbLKuN0), a talk by Boris Cherny — a member of technical staff at Anthropic who created Claude Code. Learn advanced features, shortcuts, and workflows to get the most from Claude Code._
+_Distilled from [Mastering Claude Code in 30 minutes](https://www.youtube.com/watch?v=6eBSHbLKuN0), a talk by Boris Cherny, a member of technical staff at Anthropic who created Claude Code._
 
-## What Claude Code actually is
+## What Claude Code is
 
-It’s not a fancy autocomplete. Earlier coding assistants completed a line — or a few lines — at a time; Claude Code is built for the other end of the spectrum. It’s fully agentic, meant for building whole features, writing entire functions and files, and fixing entire bugs in one go. Boris framed it as five things: terminal-based (not an IDE itself), works with all your tools, fits into your existing workflows, general purpose, and infinitely hackable. In practice that means it runs alongside whatever editor you live in — VS Code, Xcode, JetBrains, Vim, Emacs — in any terminal, locally or over remote SSH and tmux. You don’t swap out your workflow. You just add Claude Code to whatever you’re already doing.
+Earlier coding assistants completed a line, or a few lines, at a time. Claude Code sits at the other end of the spectrum. It is fully agentic, meant for building whole features, writing entire functions and files, and fixing entire bugs in one go.
 
-Under the hood it ships with a small, sharp set of built-in tools — about a dozen: bash execution, file search, file listing, file read and write, web fetch and search, a TODO tracker, and sub-agents. That’s it. The magic is in how the model strings them together autonomously. You don’t say “use this tool, then that one” — you describe the outcome and it decides how to explore, brainstorm, and execute.
+Boris framed it as five things: terminal-based rather than an IDE, works with all your tools, fits into existing workflows, general purpose, and infinitely hackable. It runs alongside whatever editor you already use, in any terminal, locally or over SSH and tmux. You add it to your workflow instead of replacing your workflow.
 
-## Setting up properly
+It ships with about a dozen built-in tools: bash, file search, file listing, file read and write, web fetch and search, a TODO tracker, and sub-agents. The model strings them together on its own. You describe the outcome, not the sequence.
 
-Before diving into real work, run these once:
+## Set up first
 
-- `/terminal-setup`: enables Shift+Enter for newlines so you’re not fighting the prompt
+Run these once:
+
+- `/terminal-setup`: enable Shift+Enter for newlines
 - `/theme`: set light or dark mode
-- `/install-github-app`: lets you `@claude` on any GitHub issue or PR
-- `/allowed-tools`: customise which tools auto-approve so you’re not clicking through confirmations constantly
+- `/install-github-app`: tag `@claude` on any GitHub issue or PR
+- `/allowed-tools`: customise which tools auto-approve
 - `/config`: turn on notifications
 
-One underrated tip Boris mentioned: enable macOS Dictation (System Settings → Accessibility → Dictation), then double-tap the dictation key and just talk to Claude Code. He does this for a lot of his prompts — speaking to it like you would another engineer. Your prompts come out more natural, more detailed, and faster to produce than typing.
+Boris also suggested enabling macOS Dictation (System Settings, Accessibility, Dictation). Double-tap the dictation key and speak your prompt. He does this for most of his prompts. Spoken prompts come out longer and more specific than typed ones.
 
 ## Start with codebase Q&A
 
-This is the single best way to onboard yourself or your team to Claude Code. Don’t start by asking it to write code. Start by asking it questions.
+Do not start by asking Claude to write code. Start by asking it questions about the codebase. This is what Anthropic teaches new technical hires on day one. Onboarding used to take two or three weeks. It now takes two or three days.
 
-At Anthropic, new technical hires used to take 2–3 weeks to get up to speed. With Claude Code, it’s down to 2–3 days. They just point it at the codebase and ask questions.
-
-Some example prompts from Boris’s slides:
+Example prompts from the talk:
 
 ```
 How is @RoutingController.py used?
@@ -49,17 +49,19 @@ Look at PR #9383, then carefully verify which app versions were impacted
 What did I ship last week?
 ```
 
-Notice what these actually ask for. Claude doesn’t just grep for a string and call it done — it goes a level deeper, finding real examples of how a class is instantiated and used, the kind of answer you’d get from documentation rather than from Cmd-F. Several of them lean on git history (“why does this function have 15 arguments, and why are they named so weirdly?”) or pull a GitHub issue or PR via web fetch and cross-check it. The striking part, as Boris pointed out: nobody prompted Claude to do any of this. There’s nothing in the system prompt about reading git history — the model just knows how to use git. As he put it, “we’re lucky to be building on such a good model.”
+These go a level deeper than a text search. Ask how a class is used and Claude finds real examples of how it is instantiated, closer to documentation than to Cmd-F. Several of the prompts lean on git history: why a function takes fifteen arguments, when those arguments were introduced, which commits and issues they trace back to. Others fetch a GitHub issue or PR and cross-check it.
 
-That `What did I ship last week?` prompt is something Boris runs every Monday in his weekly standup. Claude looks through the git log, knows your username, and gives you a clean summary you can copy-paste into a doc. Zero effort.
+Nothing in the system prompt tells Claude to read git history. It knows how to use git because the model knows how to use git.
 
-The Q&A phase also teaches you where the boundaries are: what Claude gets immediately versus what needs more hand-holding — what can be one-shotted, two-shotted, or three-shotted, and what’s better done interactively in the REPL. That mental model is worth building before you hand it a 3,000-line feature request.
+`What did I ship last week?` is a prompt Boris runs every Monday before standup. Claude reads the git log, knows his username, and returns a summary he can paste into a doc.
 
-One thing worth noting: there’s no indexing, no remote database, no code upload. Everything stays local. You just start it and it works.
+Q&A also teaches you the boundaries: what Claude gets in one shot, what takes two or three, and what is better done interactively. That is worth knowing before you hand it a large feature.
 
-## Tools and workflows
+There is no indexing, no remote database, and no code upload. Your code stays local, and there is no setup step to wait through.
 
-Once you’re comfortable with Q&A, move to code editing. Claude will explore the codebase, brainstorm, and then make edits, all by chaining its tools together without you having to orchestrate any of it. You steer it with plain prompts. A few Boris showed:
+## Editing code
+
+Once you are comfortable with Q&A, move to editing. Claude explores, brainstorms, and makes edits by chaining its tools together. You steer with plain prompts:
 
 ```
 Propose a few fixes for issue #8732, then implement the one I pick
@@ -67,114 +69,116 @@ Identify edge cases that are not covered in @app/tests/signupTest.ts, then updat
 Use 3 parallel agents to brainstorm ideas for how to clean up @services/aggregator/feed_service.cpp
 ```
 
-Notice the range: let Claude propose a few options and you pick one; tell it to `think hard` (one of several thinking triggers — `ultrathink` is the strongest); or fan out parallel sub-agents on a gnarly cleanup. Same small handful of tools, very different jobs. (The fourth prompt on that slide, `commit, push, pr`, gets its own treatment below.)
+Same small set of tools, very different jobs: propose options and let you pick, add `think hard` to buy more reasoning, or fan out parallel sub-agents on a messy cleanup.
 
-**Teach Claude your tools.** The moment you plug in your team’s tools is when Claude Code really starts to shine. For bash tools, just tell it about them in the prompt. Even tell it to use `-h` to figure out usage (Boris’s `barley` CLI is a made-up example, but the pattern is real):
+For a large feature, ask Claude to plan before it writes. You do not need plan mode or any special tool. Tell it to make a plan and run it by you first, and it will.
+
+**Teach Claude your tools.** For bash tools, describe them in the prompt and tell Claude to check `-h` for usage:
 
 ```
 Use the barley CLI to check for error logs in the last training run. Use -h to check how to use it.
 ```
 
-For MCP tools, register them once — `claude mcp add barley_server -- node myserver` — and then reference them in your prompts. If you’re adding the same tool repeatedly, dump it in your `CLAUDE.md` so it persists across sessions.
+`barley` is a made-up CLI from the slides, but the pattern is real. For MCP tools, register once with `claude mcp add barley_server -- node myserver`, then reference them by name. If you find yourself adding the same tool repeatedly, put it in `CLAUDE.md` so it persists across sessions.
 
-**Pick the right workflow for the task.** Boris highlighted three patterns:
+**Match the workflow to the task.** Boris showed three.
 
-**Explore → plan → confirm → code → commit.** Ask Claude to propose a few fixes, pick one, then have it implement and commit. Good for non-trivial bugs where you want to understand what’s being changed before it happens.
+Explore, plan, confirm, code, commit. Good for non-trivial bugs where you want to see the approach before it lands.
 
 ```
 Figure out the root cause for issue #983, then propose a few fixes. Let me choose an approach before you code. ultrathink
 ```
 
-**Write tests → commit → code → iterate → commit.** TDD-style. Write failing tests first, commit them, then implement until they pass.
+Write tests, commit, code, iterate, commit. Write failing tests first, commit them, then implement until they pass.
 
 ```
 Write tests for @utils/markdown.ts to make sure links render properly (note the tests won't pass yet, since links aren't yet implemented). Then commit. Then update the code to make the tests pass.
 ```
 
-**Write code → screenshot → iterate.** This one’s powerful. Give Claude a mock image and a tool to screenshot the result (like Puppeteer or an iOS simulator), and let it iterate. Two or three loops and it usually gets very close to the mock. Claude Code has been fully multimodal from the start — even in a terminal, you can drag-and-drop the mock, give it a file path, or paste the image straight in.
+Write code, screenshot, iterate. Give Claude a mock and a way to screenshot the result, such as Puppeteer or the iOS simulator. Two or three loops usually gets it close to the mock. Claude Code has been multimodal from the start: drag and drop the mock, paste it, or give it a file path.
 
 ```
 Implement [mock.png]. Then screenshot it with Puppeteer and iterate till it looks like the mock.
 ```
 
-The key insight is: give Claude a way to check its own work. With a feedback loop it can iterate. Without one, you get one shot.
+The pattern behind all three is the same. Give Claude a way to check its own work. With a feedback loop it iterates. Without one, you get a single shot.
 
-One more incantation Boris uses constantly:
+One more prompt Boris uses constantly:
 
 ```
 commit, push, pr
 ```
 
-That’s the whole prompt. Claude looks through the git log to figure out the commit format, makes the commit, pushes to a branch, and opens a PR on GitHub. No hand-holding needed.
+Claude reads the git log to work out the commit format, makes the commit, pushes a branch, and opens a PR.
 
 ## Context is everything
 
-The more context Claude has, the smarter its decisions will be. This is where the `CLAUDE.md` file comes in.
+The more context Claude has, the better its decisions. `CLAUDE.md` is the simplest way to give it some.
 
-`CLAUDE.md` is a special file that gets automatically read into context at the start of every session. Think of it as the first message in every conversation. Put it in your project root, check it into source control, and share it with your team.
+`CLAUDE.md` is read into context at the start of every session, effectively as part of the first message. Put it in your project root, check it into source control, and share it with your team.
 
-What goes in it: common bash commands, style guides, architectural decisions, important files, MCP tools your team uses. Keep it short. If it gets too long it just burns context without adding much value.
+Put in common bash commands, style conventions, architectural decisions, important files, and the MCP tools your team uses. Keep it short. A long `CLAUDE.md` burns context without adding much.
 
-The file hierarchy looks like this:
+The hierarchy:
 
 ```
-/<enterprise root>/CLAUDE.md     → shared across all projects (managed)
-~/.claude/CLAUDE.md              → your global config
+/<enterprise root>/CLAUDE.md     shared across all projects
+~/.claude/CLAUDE.md              your global config
 project-root/
-  CLAUDE.md                      → checked in, shared with team
-  CLAUDE.local.md                → not checked in, just for you
+  CLAUDE.md                      checked in, shared with the team
+  CLAUDE.local.md                not checked in
 ```
 
-Beyond auto-loaded context, you can pull things in on demand:
+You can also pull context in on demand:
 
-- Slash commands live in `.claude/commands/`. Type `/project:foo` or `/user:foo` to invoke them.
-- `@filename` mentions pull specific files into context.
-- Nested `CLAUDE.md` files in subdirectories get pulled in automatically when Claude works in those directories.
+- Slash commands in `.claude/commands/`, invoked as `/project:foo`, or in `~/.claude/commands/` as `/user:foo`
+- `@filename` to pull a specific file into context
+- Nested `CLAUDE.md` files, pulled in when Claude works in that directory
 
-The slash commands are more powerful than they look. At Anthropic, they have a `label-github-issues.md` command that runs automatically via GitHub Actions to label issues. Write it once, run it everywhere.
+Slash commands go further than they look. The Claude Code repo has a `label-github-issues.md` command that runs from GitHub Actions to label issues, so nobody has to do it by hand.
 
-Boris’s advice: take time to actually tune your context. Run your `CLAUDE.md` through a prompt improver. Ask yourself whether it’s for you or your whole team, and whether it should load automatically or on demand. Getting this right has a dramatic effect on output quality.
+Boris's advice is to take the time to tune your context. Run `CLAUDE.md` through a prompt improver. Decide whether it is for you or the whole team, and whether it should load automatically or on demand. Getting this right has a large effect on output quality.
 
 ## Share with your team
 
-This is the leverage play. Build once, use everywhere. Configure your setup, check it into the repo, and every engineer who clones it gets the whole thing automatically: the right tools, the right memory, the right permissions.
+Configure once, check it in, and everyone who clones the repo gets the same tools, memory, and permissions.
 
-Almost everything about Claude Code can be shared at four levels — enterprise policy, your global config, project (checked in), or project (just you):
+Almost everything can be set at four levels: enterprise policy, your global config, project (checked in), and project (just you).
 
 |                    | Enterprise policy (shared)                              | Global (just me)          | Project (shared)        | Project (just me)             |
 | ------------------ | ------------------------------------------------------- | ------------------------- | ----------------------- | ----------------------------- |
 | **Memory**         | `/Library/Application Support/ClaudeCode/CLAUDE.md`     | `~/.claude/CLAUDE.md`     | `CLAUDE.md`             | `CLAUDE.local.md`             |
-| **Slash commands** | —                                                       | `~/.claude/commands/`     | `.claude/commands/`     | —                             |
+| **Slash commands** |                                                         | `~/.claude/commands/`     | `.claude/commands/`     |                               |
 | **Permissions**    | `/Library/Application Support/ClaudeCode/policies.json` | `~/.claude/settings.json` | `.claude/settings.json` | `.claude/settings.local.json` |
-| **MCP servers**    | —                                                       | `claude mcp`              | `.mcp.json`             | `claude mcp`                  |
+| **MCP servers**    |                                                         | `claude mcp`              | `.mcp.json`             | `claude mcp`                  |
 
-Boris called this “kind of an insane matrix” — Claude Code supports this many configurations because engineering workflows differ at every company. If you’re not sure where to start, his advice was: **start with shared project context.** One person does a little work, checks it in, and the whole team gets the network effect.
+Boris called this "kind of an insane matrix". Claude Code supports it because engineering workflows differ at every company. If you are not sure where to start, start with shared project context. One person does the work once and the whole team benefits.
 
-You can also use the enterprise level to enforce guardrails. Need a test command to always auto-approve? Add it to the enterprise policy and it’s approved for every employee. Need to block a URL from ever being fetched? Add it there and no individual can override it. Same for MCP servers: check a `.mcp.json` into the repo and anyone who runs Claude Code in it is prompted to install them. At Anthropic, the apps repo ships a Puppeteer MCP server this way, so every engineer can drive a browser and screenshot UIs without setting anything up themselves.
+The enterprise level is also where guardrails go. Auto-approve a test command for every employee, or block a URL so no individual can fetch it. The same applies to MCP servers: check a `.mcp.json` into the repo and anyone who runs Claude Code there is prompted to install them. Anthropic's apps repo ships a Puppeteer MCP server this way, so every engineer can drive a browser and screenshot UIs without setting it up.
 
-Run `/memory` to see exactly which memory files are active in your current session and to edit any of them directly. Type `#` followed by anything to save a note mid-session — Claude will ask _which_ memory file it should go into, so you stay in control of what lands where.
+Run `/memory` to see which memory files are active and to edit any of them. Type `#` followed by a note to save it mid-session, and Claude will ask which memory file it should go into.
 
-## Interlude: Keybindings
+## Interlude: keybindings
 
-These aren’t well-advertised, so here’s a quick reference:
+These are hard to discover in a terminal, so here is a quick reference:
 
 | Key                       | What it does                                                                       |
 | ------------------------- | ---------------------------------------------------------------------------------- |
 | `Shift+Tab`               | Toggle auto-accept edits mode (edits apply automatically; bash commands still ask) |
 | `#`                       | Create a memory (you choose which file it goes into)                               |
-| `!`                       | Drop into bash mode (command runs locally and goes into context)                   |
+| `!`                       | Drop into bash mode (the command runs locally and goes into context)               |
 | `@`                       | Add a file or folder to context                                                    |
-| `Esc`                     | Cancel what Claude is doing — safe to hit anytime, mid-edit or mid-command         |
+| `Esc`                     | Cancel what Claude is doing                                                        |
 | `Esc Esc`                 | Jump back in history                                                               |
-| `Ctrl+R`                  | Show verbose output (what Claude sees in its context window)                       |
+| `Ctrl+R`                  | Show verbose output, the same thing Claude sees in its context window              |
 | `--resume` / `--continue` | Resume a specific past session, or continue the most recent one                    |
-| `/vibe`                   | Boris’s easter egg on the slide — go find out                                      |
+| `/vibe`                   | An easter egg on the slide, left unexplained                                       |
 
-The `Esc` key deserves a callout. You can hit it at any point, mid file edit or mid bash command, and it won’t corrupt anything. Boris uses it to interrupt a 20-line diff, tell Claude to change one line, and then have it redo the edit. Very handy.
+`Esc` is worth calling out. It is safe at any point, mid-edit or mid-command, and will not corrupt the session. Boris uses it to interrupt a 20-line diff, correct the one line that is wrong, and have Claude redo the edit.
 
 ## Claude Code SDK
 
-For automation and CI, the SDK is what you want. It’s the _exact_ same engine Claude Code itself runs on, exposed as a CLI utility — and it can talk to the Anthropic API, Amazon Bedrock, or Google Vertex.
+For automation and CI, use the SDK. It is the same engine Claude Code runs on, exposed as a CLI, and it can talk to the Anthropic API, Amazon Bedrock, or Google Vertex.
 
 ```bash
 claude -p "what did I do this week?" \
@@ -191,39 +195,35 @@ git status | \
   jq '.result'
 ```
 
-Boris uses this in CI pipelines, incident response, and all sorts of automation. You can pipe in log files from GCP, Sentry output, anything, and have Claude do something useful with it. The combinations are, as he put it, endless.
+Boris uses it in CI, incident response, and other pipelines. Pipe in a log file from GCP or output from Sentry and have Claude make sense of it.
 
 ## Running Claude Code in parallel
 
-Power users don’t run one Claude session. They run many — what Boris called “multi-Claude.” He cheerfully admitted he’s “sort of a Claude normie” himself, usually one session with a few terminal tabs for different repos. But the power users he sees, inside and outside Anthropic, almost always run several at once.
+Boris described himself as "sort of a Claude normie": usually one session, plus a few terminal tabs for different repos. The power users he sees, inside and outside Anthropic, almost always run several at once.
 
-A few patterns Boris called out:
+- Multiple checkouts of the same repo in separate terminal tabs
+- One checkout with git worktrees for isolation
+- SSH and tmux for remote sessions
+- GitHub Actions jobs launched in parallel
 
-- Multiple checkouts of the same repo in separate terminal tabs, one Claude per tab
-- Git worktrees for isolation across parallel sessions
-- SSH + Tmux tunnels for remote sessions
-- GitHub Actions jobs running in parallel
-
-This is still a bit rough to set up, and Anthropic is actively working on making it easier — but the throughput gains are real. If you have independent tasks, there’s no reason to run them sequentially.
+This is still rough to set up, and Anthropic is working on making it easier. If your tasks are independent, there is no reason to run them one at a time.
 
 ## From the Q&A
 
-A few things from the audience questions worth knowing:
+**Adoption.** About 80% of technical staff at Anthropic, engineers and researchers alike, use Claude Code every day. Researchers lean on tools like the notebook tool to edit and run notebooks.
 
-- **Adoption.** Roughly 80% of technical staff at Anthropic — engineers _and_ researchers — use Claude Code every day. Researchers lean on tools like the notebook tool to edit and run notebooks.
-- **Why a CLI, not an IDE?** Two reasons. Anthropic engineers use a huge spread of editors (VS Code, Xcode, Vim, Emacs…) and the terminal is the one common denominator. And Boris expects models to keep improving so fast that heavy editor UI may matter less before long — so they’re deliberately not over-investing in it.
-- **The hardest part to build** was making bash safe. Bash can change system state in surprising ways, but approving every command by hand kills productivity. The answer is a tiered permission system: detect read-only commands, statically analyze which commands can be safely combined, and let you allow-list and block-list at different levels.
+**Why a CLI and not an IDE?** Anthropic engineers use a wide spread of editors, and the terminal is the one common denominator. Boris also expects models to keep improving fast enough that heavy editor UI may not be worth the investment.
 
-## TL;DR
+**The hardest part to build** was making bash safe. Bash can change system state in surprising ways, but approving every command by hand kills productivity. The answer was a tiered permission system: detect read-only commands, statically analyse which commands can be combined safely, and allow-list or block-list at different levels.
 
-Boris laid out 7 tips, and they build on each other in a clear progression:
+## The seven tips
 
-1. Use codebase Q&A to get started and build intuition
-1. Practice prompting to learn what Claude gets immediately vs. what needs guidance
-1. Teach Claude your tools (bash CLIs, MCP servers)
-1. Match the workflow to the task (explore+plan, TDD, screenshot iteration)
-1. More context = smarter output, so set up your `CLAUDE.md`
-1. Take time to tune context, it compounds
-1. Check everything into git and share with your team
+1. Start with codebase Q&A
+1. Practise prompting to learn what Claude gets on its own and what needs guidance
+1. Teach Claude to use your tools
+1. Tailor the workflow to the task
+1. The more context you give Claude, the smarter it will be
+1. Take time to tune context
+1. Configure `CLAUDE.md`, MCP servers, permissions, and slash commands for your team, and check them into git
 
-If you’ve been using Claude Code as a smarter autocomplete, you’re leaving a lot on the table. The agentic loop with proper tools and context is a different experience entirely.
+If you have been using Claude Code as a smarter autocomplete, you are leaving a lot on the table.
