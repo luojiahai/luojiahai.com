@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ params }) => {
         type: "svg",
         errorCorrectionLevel: "M",
         margin: 0,
-        color: { dark: "#2C2824", light: "#ffffff" },
+        color: { dark: "#141413", light: "#FAF9F5" },
       })
     : undefined;
 

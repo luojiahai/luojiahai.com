@@ -23,12 +23,12 @@ export interface OgImageOptions {
 }
 
 const COLORS = {
-  body: "#F5F0E8",
-  paper: "#FFFEF9",
-  ink: "#2C2824",
-  inkLight: "#8A8078",
-  accent: "#FF6B35",
-  border: "rgba(44, 40, 36, 0.1)",
+  body: "#F5F4ED",
+  paper: "#FAF9F5",
+  ink: "#141413",
+  inkLight: "#5E5D59",
+  accent: "#D97757",
+  border: "rgba(20, 20, 19, 0.1)",
   shadow: "rgba(0, 0, 0, 0.06)",
 };
 
@@ -280,7 +280,7 @@ function articleLayout(options: OgImageOptions): Node {
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 borderRadius: "4px",
-                boxShadow: "0 4px 10px rgba(255, 107, 53, 0.2)",
+                boxShadow: "0 4px 10px rgba(217, 119, 87, 0.2)",
               },
             },
             typeLabel,
