@@ -197,7 +197,7 @@
       href={dictionary.urls.works}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ◦ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -210,7 +210,7 @@
       href={dictionary.urls.life}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ✦ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -223,7 +223,7 @@
       href={dictionary.urls.posts}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ▸ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
