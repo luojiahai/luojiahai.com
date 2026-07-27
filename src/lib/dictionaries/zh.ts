@@ -45,7 +45,7 @@ const dictionary: Dictionary = {
     about: "关于",
     latestTech: "技术",
     latestLife: "生活",
-    worksSubtitle: "嘉海做的东西",
+    worksSubtitle: "我做的东西",
     useSubtitle: "我使用的东西。",
     recommended: "推荐",
     activity: "活动",

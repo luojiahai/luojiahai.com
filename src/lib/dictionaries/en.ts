@@ -98,7 +98,7 @@ const dictionary = {
     about: "About",
     latestTech: "Tech",
     latestLife: "Life",
-    worksSubtitle: "Things Jiahai has made",
+    worksSubtitle: "Things I have made",
     useSubtitle: "Things I'm using.",
     recommended: "Recommended",
     activity: "Activity",
