@@ -12,13 +12,13 @@
   } = $props();
 </script>
 
-<div class="relative mb-2">
+<div class="mb-2 flex items-center gap-2">
   <Icon
     name={icon}
-    class="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-x-5 -translate-y-1/2 text-printer-accent dark:text-printer-accent-dark sm:-translate-x-7"
+    class="pointer-events-none h-4 w-4 shrink-0 text-printer-accent dark:text-printer-accent-dark"
   />
   <h1
-    class="font-serif text-[1.875rem] font-semibold leading-[1] tracking-[-0.03em] text-printer-ink dark:text-printer-ink-dark sm:text-[2.375rem]"
+    class="font-serif text-xl font-bold uppercase leading-none tracking-tight text-printer-ink dark:text-printer-ink-dark"
   >
     {@render children()}
   </h1>
