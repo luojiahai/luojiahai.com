@@ -25,7 +25,7 @@
   <PrintedSection>
     <PrintedPageTitle icon="tag">{category.name[lang]}</PrintedPageTitle>
     {#if category.description?.[lang]}
-      <p class="font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/50">
+      <p class="page-subtitle">
         {category.description[lang]}
       </p>
     {/if}

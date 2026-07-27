@@ -16,22 +16,26 @@
   } = $props();
 </script>
 
-<section class={["mb-8", className]}>
+<section class={["mb-12", className]}>
   {#if label}
-    <div class="flex items-center gap-2 mb-3">
+    <div class="mb-5 flex items-center gap-3">
+      <span
+        class="h-1.5 w-1.5 shrink-0 bg-printer-accent dark:bg-printer-accent-dark"
+        aria-hidden="true"
+      ></span>
       <div
-        class="inline-flex items-center gap-1.5 leading-none align-middle font-mono text-[10px] tracking-[0.3em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50 bg-printer-ink/5 dark:bg-printer-ink-dark/5 px-2 py-[3px] rounded-sm"
+        class="inline-flex items-center gap-1.5 align-middle font-mono text-[10px] font-medium leading-none tracking-[0.18em] text-printer-ink/70 dark:text-printer-ink-dark/65"
       >
         {#if labelIcon}
-          <Icon name={labelIcon} class="w-2.5 h-2.5 shrink-0" />
+          <Icon name={labelIcon} class="h-3 w-3 shrink-0" />
         {/if}
-        <span
-          class="inline-flex items-center leading-none translate-y-[0.5px]"
-        >
+        <span class="inline-flex translate-y-[0.5px] items-center leading-none">
           {label}
         </span>
       </div>
-      <div class="flex-1 h-px bg-printer-ink/5 dark:bg-printer-ink-dark/5"></div>
+      <div
+        class="h-px flex-1 bg-printer-ink/8 dark:bg-printer-ink-dark/8"
+      ></div>
     </div>
   {/if}
   {@render children()}

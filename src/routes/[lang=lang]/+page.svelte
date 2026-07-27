@@ -59,29 +59,61 @@
 />
 
 <div>
-  <!-- Profile header - printed label style -->
-  <PrintedSection>
-    <div class="flex items-start gap-4 mb-2">
-      <div class="flex-1">
+  <!-- Profile masthead -->
+  <PrintedSection class="mb-14">
+    <div class="grid gap-8 sm:grid-cols-[minmax(0,1fr)_9rem] sm:gap-10">
+      <div>
+        <div
+          class="mb-4 flex items-center gap-2 font-mono text-[9px] font-medium tracking-[0.18em] text-printer-accent dark:text-printer-accent-dark"
+        >
+          <span class="h-px w-5 bg-current"></span>
+          PROFILE / 001
+        </div>
         <h1
-          class="font-serif text-2xl font-bold tracking-tight text-printer-ink dark:text-printer-ink-dark"
+          class="max-w-[11ch] font-serif text-[2.5rem] font-semibold leading-[0.94] tracking-[-0.045em] text-printer-ink dark:text-printer-ink-dark sm:text-[3.375rem]"
         >
           {dictionary.meta.name}
         </h1>
         <p
-          class="font-serif text-xs sm:text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60 mt-1 leading-relaxed"
+          class="mt-5 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
         >
           {motto}
         </p>
       </div>
+      <dl
+        class="grid grid-cols-3 gap-3 border-t border-dashed border-printer-ink/10 pt-4 font-mono text-[8px] tracking-[0.12em] text-printer-ink-light tabular-nums dark:border-printer-ink-dark/10 dark:text-printer-ink-dark/40 sm:grid-cols-1 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-1"
+      >
+        <div>
+          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
+            ISSUE
+          </dt>
+          <dd>№ {printedOn.replaceAll("-", "")}</dd>
+        </div>
+        <div>
+          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
+            LOCALE
+          </dt>
+          <dd>{lang.toUpperCase()} / MEL</dd>
+        </div>
+        <div>
+          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
+            STATUS
+          </dt>
+          <dd class="text-printer-accent dark:text-printer-accent-dark">
+            ONLINE
+          </dd>
+        </div>
+      </dl>
     </div>
 
     <!-- Contact strip -->
-    <div class="flex flex-wrap gap-2 mt-4">
+    <div
+      class="mt-9 flex flex-wrap gap-x-5 gap-y-2 border-t border-dashed border-printer-ink/10 pt-4 dark:border-printer-ink-dark/10"
+    >
       {#each dictionary.contacts as contact (contact.link)}
         {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
-          "inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase px-2.5 py-1 rounded-sm border border-printer-ink/8 dark:border-printer-ink-dark/8 text-printer-ink-light dark:text-printer-ink-dark/50 hover:text-printer-accent dark:hover:text-printer-accent-dark hover:border-printer-accent/20 dark:hover:border-printer-accent-dark/20 transition-colors"}
+          "group/contact inline-flex items-center gap-1.5 py-1 font-mono text-[9px] font-medium tracking-[0.12em] text-printer-ink-light transition-colors hover:text-printer-accent dark:text-printer-ink-dark/65 dark:hover:text-printer-accent-dark"}
         {#if kind}
           <SocialHoverCard
             {kind}
@@ -92,7 +124,10 @@
             side="bottom"
             class={linkClass}
           >
-            <Icon name={contact.icon} class="w-3 h-3" />
+            <Icon
+              name={contact.icon}
+              class="h-3 w-3 transition-transform duration-200 group-hover/contact:-translate-y-px"
+            />
             {contact.label}
           </SocialHoverCard>
         {:else}
@@ -102,7 +137,10 @@
             rel="noopener"
             class={linkClass}
           >
-            <Icon name={contact.icon} class="w-3 h-3" />
+            <Icon
+              name={contact.icon}
+              class="h-3 w-3 transition-transform duration-200 group-hover/contact:-translate-y-px"
+            />
             {contact.label}
           </a>
         {/if}
@@ -114,44 +152,49 @@
 
   <!-- Works section -->
   <PrintedSection label={dictionary.labels.works} labelIcon="apps">
-    <div class="grid grid-cols-1 gap-2">
-      {#each primaryWorks as work (work.name)}
+    <div class="grid grid-cols-1">
+      {#each primaryWorks as work, index (work.name)}
         <a
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="group flex items-center gap-3 py-3 -mx-2 px-2 rounded-md hover:bg-printer-ink/3 dark:hover:bg-printer-ink-dark/3 transition-colors"
+          class="printed-row group -mx-3 grid grid-cols-[2rem_3rem_1fr_auto] items-center gap-3 px-3 py-4 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
+          <span
+            class="font-mono text-[9px] text-printer-ink/25 tabular-nums dark:text-printer-ink-dark/20"
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
           {#if work.image}
             <img
-              class="h-10 w-10 rounded-lg border border-printer-ink/10 dark:border-printer-ink-dark/10 shrink-0"
+              class="h-12 w-12 border border-printer-ink/10 dark:border-printer-ink-dark/10"
               src={work.image}
               alt={dictionary.labels.icon(work.name)}
-              width="40"
-              height="40"
+              width="48"
+              height="48"
               loading="lazy"
             />
           {:else}
             <div
-              class="h-10 w-10 rounded-lg bg-printer-accent/10 dark:bg-printer-accent-dark/10 flex items-center justify-center font-mono text-lg font-bold text-printer-accent dark:text-printer-accent-dark shrink-0"
+              class="flex h-12 w-12 items-center justify-center bg-printer-accent/10 font-mono text-lg font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
             >
               {work.name[0]}
             </div>
           {/if}
           <div class="min-w-0 flex-1">
             <div
-              class="font-mono text-sm font-medium text-printer-ink dark:text-printer-ink-dark group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors"
+              class="font-serif text-xl font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
             >
               {work.name}
             </div>
             <div
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5 line-clamp-1"
+              class="mt-0.5 line-clamp-1 font-serif text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60"
             >
               {work.summary}
             </div>
           </div>
           <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors shrink-0"
+            class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
           >
             →
           </span>
@@ -160,9 +203,9 @@
     </div>
     <a
       href={dictionary.urls.works}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="section-action mt-5"
     >
-      ◦ VIEW ALL →
+      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
     </a>
   </PrintedSection>
 
@@ -173,9 +216,9 @@
     <PostList posts={data.latestLife} {lang} compact />
     <a
       href={dictionary.urls.life}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="section-action mt-5"
     >
-      ✦ VIEW ALL →
+      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
     </a>
   </PrintedSection>
 
@@ -186,9 +229,9 @@
     <PostList posts={data.latestTech} {lang} compact />
     <a
       href={dictionary.urls.posts}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="section-action mt-5"
     >
-      ▸ VIEW ALL →
+      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
     </a>
   </PrintedSection>
 

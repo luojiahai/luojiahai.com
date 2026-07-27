@@ -62,7 +62,7 @@
     document.documentElement.classList.toggle("dark", dark);
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", dark ? "#0a0c12" : "#e0e0d8");
+      ?.setAttribute("content", dark ? "#0e0d0c" : "#d9d8cf");
   }
 
   onMount(() => {
@@ -166,6 +166,10 @@
   const currentYear = new Date().getFullYear();
 </script>
 
+<a class="skip-link" href="#main-content">
+  {lang === "zh" ? "跳到主要内容" : "Skip to main content"}
+</a>
+
 <!-- Desktop-only pull-cord light switch (bulb top-left, cord top-right) -->
 <LightSwitch
   {isDark}
@@ -173,9 +177,11 @@
   ontoggle={(dark) => setColorMode(dark ? "dark" : "light")}
 />
 
-<div class="min-h-screen page-grid flex flex-col items-center px-3 py-6 sm:py-10">
+<div
+  class="min-h-screen page-grid flex flex-col items-center px-3 pb-16 pt-7 sm:px-5 sm:pb-24 sm:pt-12"
+>
   <!-- Printer Body -->
-  <div class="w-full max-w-3xl relative">
+  <div class="relative w-full max-w-[56rem]">
     <!-- Decorative critter/vehicle on the printer's top edge (src/lib/site-config.ts) -->
     {#if topAnimation === "plane"}
       <PrinterPlane />
@@ -193,7 +199,7 @@
         aria-hidden="true"
       >
         <div
-          class="absolute -top-[40%] left-1/2 -translate-x-1/2 w-[120%] h-[80%] bg-[radial-gradient(ellipse_at_center,rgba(100,120,255,0.07)_0%,rgba(80,100,220,0.03)_40%,transparent_70%)]"
+          class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(223,128,99,0.06)_0%,rgba(223,128,99,0.018)_42%,transparent_70%)]"
         ></div>
       </div>
 
@@ -204,31 +210,31 @@
 
       <!-- Top part - Brand & Nav -->
       <div
-        class="bg-printer-body dark:bg-printer-body-dark px-6 pt-6 pb-5 sm:px-10 sm:pt-10 relative"
+        class="relative bg-printer-body px-6 pb-6 pt-7 dark:bg-printer-body-dark sm:px-11 sm:pb-7 sm:pt-11"
       >
         <!-- Brand plate -->
-        <div class="relative flex items-start justify-between mb-8">
-          <div class="flex items-center gap-4">
+        <div class="relative mb-9 flex items-start justify-between sm:mb-10">
+          <div class="flex items-center gap-4 sm:gap-5">
             <div class="relative">
               <div
                 class="absolute -inset-2 rounded-full bg-black/5 dark:bg-white/[0.08] shadow-inner"
               ></div>
               <img
-                class="h-8 w-8 rounded-full ring-1 ring-black/10 dark:ring-white/[0.15] shadow-sm dark:shadow-[0_0_12px_rgba(100,120,255,0.1)] relative z-10"
+                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_rgba(223,128,99,0.08)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
                 src="/static/avatar.webp"
                 alt={dictionary.meta.name}
-                width="32"
-                height="32"
+                width="40"
+                height="40"
               />
             </div>
             <div>
               <div
-                class="font-mono text-sm font-bold tracking-[0.25em] text-printer-ink dark:text-printer-ink-dark uppercase"
+                class="font-mono text-sm font-semibold uppercase tracking-[0.28em] text-printer-ink dark:text-printer-ink-dark sm:text-[15px]"
               >
                 {dictionary.labels.brandName}
               </div>
               <div
-                class="font-mono text-[9px] tracking-[0.1em] text-printer-ink-light dark:text-printer-ink-dark/40 uppercase mt-0.5"
+                class="mt-1 font-mono text-[8px] uppercase tracking-[0.2em] text-printer-ink-light dark:text-printer-ink-dark/40 sm:text-[9px]"
               >
                 {dictionary.labels.brandTagline}
               </div>
@@ -241,7 +247,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="w-2.5 h-2.5 rounded-full bg-green-500/90 shadow-[0_0_8px_rgba(34,197,94,0.6),inset_0_-1px_2px_rgba(0,0,0,0.3)] animate-[pulse_2s_infinite]"
+                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(200,95,67,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div
@@ -259,12 +265,16 @@
 
         <!-- Navigation row -->
         <div
-          class="relative mt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-2"
+          class="relative mt-2 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center"
         >
-          <nav class="relative flex flex-wrap items-center gap-2 sm:gap-2.5 flex-1 w-full py-1.5">
+          <nav
+            class="relative flex w-full flex-1 flex-wrap items-center gap-2 py-1.5 sm:gap-2.5"
+            aria-label={lang === "zh" ? "主导航" : "Primary navigation"}
+          >
             {#each navItems as item (item.href)}
               <a
                 href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 onclick={() => onNavPress(item.href)}
                 class={[
                   "printer-btn whitespace-nowrap",
@@ -278,7 +288,7 @@
             {/each}
           </nav>
           <div class="sm:hidden h-[1px] bg-black/10 dark:bg-white/10"></div>
-          <div class="flex items-center justify-end gap-5 shrink-0 py-1">
+          <div class="flex shrink-0 items-center justify-end gap-5 py-1">
             <RotaryDial
               options={[
                 { value: "en", label: "EN" },
@@ -344,7 +354,7 @@
       <div class="paper-top-occlusion" aria-hidden="true"></div>
       <div bind:this={paperElement}>
         <div
-          class="printer-paper-area bg-printer-paper dark:bg-printer-paper-dark dark:border dark:border-white/[0.04] thermal-texture min-h-[60vh] shadow-[0_4px_12px_rgba(0,0,0,0.15),0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4),0_1px_3px_rgba(0,0,0,0.3)] relative z-0 flex flex-col overflow-hidden"
+          class="printer-paper-area thermal-texture relative z-0 flex min-h-[62vh] flex-col overflow-hidden bg-printer-paper shadow-[0_18px_36px_rgba(75,57,43,0.14),0_3px_8px_rgba(75,57,43,0.12)] dark:border dark:border-white/[0.04] dark:bg-printer-paper-dark dark:shadow-[0_20px_42px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.34)]"
         >
           <div
             class="absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
@@ -370,12 +380,16 @@
             {/each}
           </div>
 
-          <div class="printer-content-area flex-1 px-6 sm:px-10 py-8 relative z-10">
+          <main
+            id="main-content"
+            tabindex="-1"
+            class="printer-content-area relative z-10 flex-1 px-7 pb-14 pt-11 sm:px-12 sm:pb-16 sm:pt-14"
+          >
             {@render children()}
-          </div>
+          </main>
 
-          <div
-            class="px-6 sm:px-10 py-6 mt-4 border-t border-dashed border-printer-ink/10 dark:border-printer-ink-dark/10 relative z-10"
+          <footer
+            class="relative z-10 mt-4 border-t border-dashed border-printer-ink/10 px-7 py-7 dark:border-printer-ink-dark/10 sm:px-12"
           >
             <div
               class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-dark/40"
@@ -418,7 +432,7 @@
                 </SocialHoverCard>
               </div>
             </div>
-          </div>
+          </footer>
         </div>
         <div class="paper-edge-bottom h-0"></div>
       </div>

@@ -25,7 +25,7 @@
   <!-- Header -->
   <PrintedSection>
     <PrintedPageTitle icon="apps">{dictionary.labels.works}</PrintedPageTitle>
-    <p class="font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/50">
+    <p class="page-subtitle">
       {dictionary.labels.worksSubtitle}
     </p>
   </PrintedSection>
@@ -38,38 +38,38 @@
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="group flex items-center gap-3 py-3 -mx-2 px-2 rounded-md hover:bg-printer-ink/3 dark:hover:bg-printer-ink-dark/3 transition-colors"
+          class="printed-row group -mx-3 flex items-center gap-4 px-3 py-4 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
           {#if work.image}
             <img
-              class="h-10 w-10 rounded-lg border border-printer-ink/10 dark:border-printer-ink-dark/10 shrink-0"
+              class="h-12 w-12 shrink-0 border border-printer-ink/10 dark:border-printer-ink-dark/10"
               src={work.image}
               alt={dictionary.labels.icon(work.name)}
-              width="40"
-              height="40"
+              width="48"
+              height="48"
               loading="lazy"
             />
           {:else}
             <div
-              class="h-10 w-10 rounded-lg bg-printer-accent/10 dark:bg-printer-accent-dark/10 flex items-center justify-center font-mono text-lg font-bold text-printer-accent dark:text-printer-accent-dark shrink-0"
+              class="flex h-12 w-12 shrink-0 items-center justify-center bg-printer-accent/10 font-mono text-lg font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
             >
               {work.name[0]}
             </div>
           {/if}
           <div class="min-w-0 flex-1">
             <div
-              class="font-mono text-sm font-medium text-printer-ink dark:text-printer-ink-dark group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors"
+              class="font-serif text-xl font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
             >
               {work.name}
             </div>
             <div
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5 line-clamp-1"
+              class="mt-0.5 line-clamp-1 font-serif text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60"
             >
               {work.summary}
             </div>
           </div>
           <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors shrink-0"
+            class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
           >
             →
           </span>
@@ -90,38 +90,38 @@
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="group flex items-center gap-3 py-2.5 -mx-2 px-2 rounded-md hover:bg-printer-ink/3 dark:hover:bg-printer-ink-dark/3 transition-colors"
+          class="printed-row group -mx-3 flex items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
           {#if work.image}
             <img
-              class="h-8 w-8 rounded-lg border border-printer-ink/10 dark:border-printer-ink-dark/10 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity"
+              class="h-9 w-9 shrink-0 border border-printer-ink/10 opacity-60 transition-opacity group-hover:opacity-100 dark:border-printer-ink-dark/10"
               src={work.image}
               alt={dictionary.labels.icon(work.name)}
-              width="32"
-              height="32"
+              width="36"
+              height="36"
               loading="lazy"
             />
           {:else}
             <div
-              class="h-8 w-8 rounded-lg bg-printer-ink/5 dark:bg-printer-ink-dark/5 flex items-center justify-center font-mono text-sm font-bold text-printer-ink-light dark:text-printer-ink-dark/40 shrink-0"
+              class="flex h-9 w-9 shrink-0 items-center justify-center bg-printer-ink/5 font-mono text-sm font-semibold text-printer-ink-light dark:bg-printer-ink-dark/5 dark:text-printer-ink-dark/40"
             >
               {work.name[0]}
             </div>
           {/if}
           <div class="min-w-0 flex-1">
             <div
-              class="font-mono text-xs text-printer-ink/70 dark:text-printer-ink-dark/70 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors"
+              class="font-serif text-base font-medium text-printer-ink/75 transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark/70 dark:group-hover:text-printer-accent-dark"
             >
               {work.name}
             </div>
             <div
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 mt-0.5 line-clamp-1"
+              class="mt-0.5 line-clamp-1 font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/55"
             >
               {work.summary}
             </div>
           </div>
           <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors shrink-0"
+            class="shrink-0 font-mono text-xs text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
           >
             →
           </span>

@@ -74,7 +74,7 @@
       {/each}
     </div>
     <h1
-      class="font-serif text-2xl font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
+      class="max-w-[22ch] font-serif text-[2.125rem] font-semibold leading-[1.04] tracking-[-0.03em] text-printer-ink dark:text-printer-ink-dark sm:text-[2.875rem]"
     >
       {post.title}
     </h1>
@@ -103,9 +103,7 @@
       {/if}
     </div>
     {#if post.description}
-      <p
-        class="font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/50 mt-2 leading-relaxed"
-      >
+      <p class="page-subtitle mt-4">
         {post.description}
       </p>
     {/if}
@@ -160,7 +158,7 @@
   <div class="mt-6">
     <a
       href={dictionary.urls[data.section]}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark hover:underline"
+      class="section-action"
     >
       {dictionary.labels.backToSection[data.section]}
     </a>

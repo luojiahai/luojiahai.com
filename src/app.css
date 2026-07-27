@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -6,43 +6,82 @@
 
 @theme {
   --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  --font-serif: "Newsreader", "Noto Serif SC", "Songti SC", Georgia, serif;
 
-  --color-printer-body: #f5f0e8;
-  --color-printer-body-dark: #13151a;
-  --color-printer-shell: #e8e0d0;
-  --color-printer-shell-dark: #1c1f28;
-  --color-printer-accent: #ff6b35;
-  --color-printer-accent-dark: #ff8c5a;
-  --color-printer-button: #d4cbc0;
-  --color-printer-button-dark: #252833;
-  --color-printer-button-active: #c8bfb4;
-  --color-printer-button-active-dark: #2e3240;
-  --color-printer-paper: #fffef9;
-  --color-printer-paper-dark: #111318;
-  --color-printer-ink: #2c2824;
-  --color-printer-ink-dark: #d0d4e0;
-  --color-printer-ink-light: #8a8078;
-  --color-printer-tape: #f0ede6;
-  --color-printer-tape-dark: #181b22;
+  --color-printer-body: #f2ede4;
+  --color-printer-body-dark: #181613;
+  --color-printer-shell: #e2d9ca;
+  --color-printer-shell-dark: #211e1a;
+  --color-printer-accent: #c85f43;
+  --color-printer-accent-dark: #df8063;
+  --color-printer-button: #d4cabc;
+  --color-printer-button-dark: #2b2722;
+  --color-printer-button-active: #c6baaa;
+  --color-printer-button-active-dark: #353029;
+  --color-printer-paper: #fffdf7;
+  --color-printer-paper-dark: #141210;
+  --color-printer-ink: #29241f;
+  --color-printer-ink-dark: #ded7cc;
+  --color-printer-ink-light: #786f66;
+  --color-printer-tape: #eee8de;
+  --color-printer-tape-dark: #1c1916;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   html,
   body {
     @apply min-h-screen;
-    /* Slightly lightened warm stone-gray */
-    background-color: #e0e0d8;
+    background-color: #d9d8cf;
+    color: var(--color-printer-ink);
   }
 
   :is(.dark) html,
   :is(.dark) body {
-    background-color: #0a0c12;
+    background-color: #0e0d0c;
+    color: var(--color-printer-ink-dark);
   }
 
   *,
   ::before,
   ::after {
     @apply dark:border-neutral-800;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(
+      in oklab,
+      var(--color-printer-accent) 24%,
+      transparent
+    );
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-printer-accent);
+    outline-offset: 3px;
+  }
+
+  :is(.dark) :focus-visible {
+    outline-color: var(--color-printer-accent-dark);
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
   }
 }
 
@@ -57,25 +96,66 @@
 @layer components {
   /* Page grid background - Industrial workbench style */
   .page-grid {
+    position: relative;
+    isolation: isolate;
     background-image:
-      radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.4) 0%, transparent 80%),
+      radial-gradient(
+        ellipse at 50% -8%,
+        rgba(255, 253, 247, 0.72) 0%,
+        transparent 58%
+      ),
+      radial-gradient(
+        ellipse at 12% 42%,
+        rgba(109, 92, 70, 0.06) 0%,
+        transparent 38%
+      ),
       linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
     background-size:
       100% 100%,
+      100% 100%,
       40px 40px,
       40px 40px;
-    /* Offset grid to prevent it from looking too rigid */
     background-position:
+      0 0,
       0 0,
       13px 13px,
       13px 13px;
   }
+  .page-grid::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.22;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+  }
   :is(.dark) .page-grid {
     background-image:
-      radial-gradient(at 50% 0%, rgba(100, 120, 255, 0.04) 0%, transparent 60%),
-      linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      radial-gradient(
+        ellipse at 50% -8%,
+        rgba(223, 128, 99, 0.055) 0%,
+        transparent 54%
+      ),
+      radial-gradient(
+        ellipse at 12% 42%,
+        rgba(255, 255, 255, 0.018) 0%,
+        transparent 36%
+      ),
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  .skip-link {
+    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-[11px] font-medium tracking-wider text-printer-paper transition-transform duration-200;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+  :is(.dark) .skip-link {
+    @apply bg-printer-ink-dark text-printer-paper-dark;
   }
 
   .paper-edge-bottom {
@@ -146,6 +226,9 @@
   .printer-content-area,
   .printer-content-area * {
     border-radius: 0 !important;
+  }
+  .printer-content-area:focus {
+    outline: none;
   }
 
   /* Keep borders on visual assets, but make them very subtle */
@@ -252,7 +335,7 @@
     @apply bg-printer-shell dark:bg-printer-shell-dark;
     @apply border border-printer-ink/10 dark:border-white/[0.08];
     @apply text-printer-ink dark:text-printer-ink-dark;
-    @apply transition-[transform,box-shadow,background-color,border-color] duration-100 select-none cursor-pointer;
+    @apply transition-[transform,box-shadow,background-color,border-color,color] duration-200 select-none cursor-pointer;
     @apply flex items-center justify-center;
     box-shadow:
       inset 0 1px 0.5px rgba(255, 255, 255, 0.5),
@@ -267,9 +350,24 @@
       inset 0 -4px 8px rgba(0, 0, 0, 0.24),
       0 1px 1px rgba(0, 0, 0, 0.4);
   }
+  .printer-btn:hover {
+    @apply -translate-y-px border-printer-accent/25 text-printer-accent;
+    box-shadow:
+      inset 0 1px 0.5px rgba(255, 255, 255, 0.62),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.07),
+      0 5px 10px rgba(75, 57, 43, 0.11);
+  }
+  :is(.dark) .printer-btn:hover {
+    @apply border-printer-accent-dark/30 text-printer-accent-dark;
+    box-shadow:
+      inset 0 1px 0.5px rgba(255, 255, 255, 0.06),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.38),
+      0 6px 14px rgba(0, 0, 0, 0.38);
+  }
   .printer-btn:active,
   .printer-btn.active {
     @apply translate-y-[1.5px];
+    color: var(--color-printer-accent);
     box-shadow:
       inset 0 1px 2px rgba(0, 0, 0, 0.2),
       inset 0 -1px 0 rgba(0, 0, 0, 0.05),
@@ -278,6 +376,7 @@
   :is(.dark) .printer-btn:active,
   :is(.dark) .printer-btn.active {
     background: rgba(255, 255, 255, 0.04);
+    color: var(--color-printer-accent-dark);
     box-shadow:
       inset 0 1px 3px rgba(0, 0, 0, 0.55),
       inset 0 -1px 0 rgba(0, 0, 0, 0.25),
@@ -310,15 +409,53 @@
   .printer-header-border {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      0 4px 12px rgba(0, 0, 0, 0.15),
-      0 1px 2px rgba(0, 0, 0, 0.1);
+      0 18px 40px rgba(75, 57, 43, 0.12),
+      0 4px 10px rgba(75, 57, 43, 0.12);
   }
   :is(.dark) .printer-header-border {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 4px 20px rgba(0, 0, 0, 0.5),
-      0 8px 40px rgba(100, 120, 255, 0.03),
+      0 8px 40px rgba(223, 128, 99, 0.035),
       0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .printed-row {
+    @apply relative transition-[background-color,color,transform] duration-200;
+  }
+  .printed-row::before {
+    content: "";
+    position: absolute;
+    inset-block: 0.5rem;
+    left: 0;
+    width: 2px;
+    background: var(--color-printer-accent);
+    opacity: 0;
+    transform: scaleY(0.35);
+    transform-origin: center;
+    transition:
+      opacity 180ms ease,
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :is(.dark) .printed-row::before {
+    background: var(--color-printer-accent-dark);
+  }
+  .printed-row:hover::before,
+  .printed-row:focus-within::before {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  .section-action {
+    @apply inline-flex items-center gap-2 font-mono text-[10px] font-medium tracking-[0.16em] text-printer-accent transition-[gap,color] duration-200 dark:text-printer-accent-dark;
+  }
+  .section-action:hover,
+  .section-action:focus-visible {
+    @apply gap-3;
+  }
+
+  .page-subtitle {
+    @apply max-w-[52ch] font-serif text-sm leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/65 sm:text-base;
   }
 
   .printer-shell-bottom-shadow {
@@ -401,20 +538,20 @@
        tail orange ride the app theme; the grey tiers borrow the robo-snail's
        livery (see the snail block below) so both critters match. */
     --plane-paper: var(--color-printer-paper);
-    --plane-mid: #d8cfc2;
-    --plane-shade: #a3978a;
-    --plane-dark: #5f574c;
-    --plane-deep: #362e24;
+    --plane-mid: var(--color-printer-shell);
+    --plane-shade: #ad9f8f;
+    --plane-dark: #706257;
+    --plane-deep: var(--color-printer-ink);
     --plane-accent: var(--color-printer-accent);
   }
   :is(.dark) .plane-lane {
     /* Dark body is deliberately lighter than printer-paper-dark so the
        plane doesn't vanish against the dark shell */
-    --plane-paper: #232734;
-    --plane-mid: #2a2e3a;
-    --plane-shade: #4d5468;
-    --plane-dark: #3c4254;
-    --plane-deep: #0d0f14;
+    --plane-paper: var(--color-printer-button-dark);
+    --plane-mid: var(--color-printer-button-active-dark);
+    --plane-shade: #5c5249;
+    --plane-dark: #443c35;
+    --plane-deep: #100e0c;
     --plane-accent: var(--color-printer-accent-dark);
   }
   @media (min-width: 640px) {
@@ -505,28 +642,28 @@
     pointer-events: none;
 
     /* Robo-snail palette (light) — printer plastic + thermal paper */
-    --snail-body: #d8cfc2;
-    --snail-body-shade: #a3978a;
-    --snail-line: rgba(54, 46, 36, 0.4);
-    --snail-roll: #fffef9;
-    --snail-roll-edge: rgba(54, 46, 36, 0.32);
-    --snail-roll-print: rgba(54, 46, 36, 0.42);
-    --snail-core: #b8ad9f;
-    --snail-core-hole: #5f574c;
-    --snail-led: #ff6b35;
-    --snail-led-glow: rgba(255, 107, 53, 0.5);
+    --snail-body: var(--color-printer-shell);
+    --snail-body-shade: #ad9f8f;
+    --snail-line: rgba(41, 36, 31, 0.42);
+    --snail-roll: var(--color-printer-paper);
+    --snail-roll-edge: rgba(41, 36, 31, 0.28);
+    --snail-roll-print: rgba(41, 36, 31, 0.42);
+    --snail-core: #c2b6a6;
+    --snail-core-hole: #706257;
+    --snail-led: var(--color-printer-accent);
+    --snail-led-glow: rgba(200, 95, 67, 0.48);
   }
   :is(.dark) .snail-lane {
-    --snail-body: #2a2e3a;
-    --snail-body-shade: #4d5468;
+    --snail-body: var(--color-printer-button-dark);
+    --snail-body-shade: #5c5249;
     --snail-line: rgba(0, 0, 0, 0.55);
-    --snail-roll: #232734;
-    --snail-roll-edge: rgba(255, 255, 255, 0.18);
-    --snail-roll-print: rgba(208, 212, 224, 0.48);
-    --snail-core: #3c4254;
-    --snail-core-hole: #0d0f14;
-    --snail-led: #ff8c5a;
-    --snail-led-glow: rgba(255, 140, 90, 0.65);
+    --snail-roll: #2f2a25;
+    --snail-roll-edge: rgba(222, 215, 204, 0.18);
+    --snail-roll-print: rgba(222, 215, 204, 0.46);
+    --snail-core: #443c35;
+    --snail-core-hole: #100e0c;
+    --snail-led: var(--color-printer-accent-dark);
+    --snail-led-glow: rgba(223, 128, 99, 0.6);
   }
   @media (min-width: 640px) {
     .snail-lane {
@@ -679,4 +816,3 @@
     opacity: 0.55;
   }
 }
-
