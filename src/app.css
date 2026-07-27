@@ -7,23 +7,24 @@
 @theme {
   --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
 
-  --color-printer-body: #f2ede4;
-  --color-printer-body-dark: #181613;
-  --color-printer-shell: #e2d9ca;
-  --color-printer-shell-dark: #211e1a;
-  --color-printer-accent: #c85f43;
-  --color-printer-accent-dark: #df8063;
-  --color-printer-button: #d4cabc;
-  --color-printer-button-dark: #2b2722;
-  --color-printer-button-active: #c6baaa;
-  --color-printer-button-active-dark: #353029;
-  --color-printer-paper: #fffdf7;
-  --color-printer-paper-dark: #141210;
-  --color-printer-ink: #29241f;
-  --color-printer-ink-dark: #ded7cc;
-  --color-printer-ink-light: #786f66;
-  --color-printer-tape: #eee8de;
-  --color-printer-tape-dark: #1c1916;
+  /* Claude Code palette, mapped to the printer's material hierarchy. */
+  --color-printer-body: #f5f4ed;
+  --color-printer-body-dark: #1a1918;
+  --color-printer-shell: #e8e6dc;
+  --color-printer-shell-dark: #262624;
+  --color-printer-accent: #d97757;
+  --color-printer-accent-dark: #c46849;
+  --color-printer-button: #d1cfc5;
+  --color-printer-button-dark: #30302e;
+  --color-printer-button-active: #c2c0b6;
+  --color-printer-button-active-dark: #3d3d3a;
+  --color-printer-paper: #faf9f5;
+  --color-printer-paper-dark: #141413;
+  --color-printer-ink: #141413;
+  --color-printer-ink-dark: #faf9f5;
+  --color-printer-ink-light: #5e5d59;
+  --color-printer-tape: #f0eee6;
+  --color-printer-tape-dark: #1f1e1d;
 }
 
 @layer base {
@@ -34,13 +35,13 @@
   html,
   body {
     @apply min-h-screen;
-    background-color: #d9d8cf;
+    background-color: #d1cfc5;
     color: var(--color-printer-ink);
   }
 
   :is(.dark) html,
   :is(.dark) body {
-    background-color: #0e0d0c;
+    background-color: #141413;
     color: var(--color-printer-ink-dark);
   }
 
@@ -100,12 +101,12 @@
     background-image:
       radial-gradient(
         ellipse at 50% -8%,
-        rgba(255, 253, 247, 0.72) 0%,
+        rgba(250, 249, 245, 0.72) 0%,
         transparent 58%
       ),
       radial-gradient(
         ellipse at 12% 42%,
-        rgba(109, 92, 70, 0.06) 0%,
+        rgba(94, 93, 89, 0.06) 0%,
         transparent 38%
       ),
       linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
@@ -125,7 +126,7 @@
     background-image:
       radial-gradient(
         ellipse at 50% -8%,
-        rgba(223, 128, 99, 0.055) 0%,
+        rgba(196, 104, 73, 0.055) 0%,
         transparent 54%
       ),
       radial-gradient(
@@ -405,7 +406,7 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 4px 20px rgba(0, 0, 0, 0.5),
-      0 8px 40px rgba(223, 128, 99, 0.035),
+      0 8px 40px rgba(196, 104, 73, 0.035),
       0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
@@ -528,8 +529,8 @@
        livery (see the snail block below) so both critters match. */
     --plane-paper: var(--color-printer-paper);
     --plane-mid: var(--color-printer-shell);
-    --plane-shade: #ad9f8f;
-    --plane-dark: #706257;
+    --plane-shade: #c2c0b6;
+    --plane-dark: #73726c;
     --plane-deep: var(--color-printer-ink);
     --plane-accent: var(--color-printer-accent);
   }
@@ -538,9 +539,9 @@
        plane doesn't vanish against the dark shell */
     --plane-paper: var(--color-printer-button-dark);
     --plane-mid: var(--color-printer-button-active-dark);
-    --plane-shade: #5c5249;
-    --plane-dark: #443c35;
-    --plane-deep: #100e0c;
+    --plane-shade: #5e5d59;
+    --plane-dark: #4d4c48;
+    --plane-deep: #141413;
     --plane-accent: var(--color-printer-accent-dark);
   }
   @media (min-width: 640px) {
@@ -632,27 +633,27 @@
 
     /* Robo-snail palette (light) — printer plastic + thermal paper */
     --snail-body: var(--color-printer-shell);
-    --snail-body-shade: #ad9f8f;
-    --snail-line: rgba(41, 36, 31, 0.42);
+    --snail-body-shade: #c2c0b6;
+    --snail-line: rgba(20, 20, 19, 0.42);
     --snail-roll: var(--color-printer-paper);
-    --snail-roll-edge: rgba(41, 36, 31, 0.28);
-    --snail-roll-print: rgba(41, 36, 31, 0.42);
-    --snail-core: #c2b6a6;
-    --snail-core-hole: #706257;
+    --snail-roll-edge: rgba(20, 20, 19, 0.28);
+    --snail-roll-print: rgba(20, 20, 19, 0.42);
+    --snail-core: #d1cfc5;
+    --snail-core-hole: #73726c;
     --snail-led: var(--color-printer-accent);
-    --snail-led-glow: rgba(200, 95, 67, 0.48);
+    --snail-led-glow: rgba(217, 119, 87, 0.48);
   }
   :is(.dark) .snail-lane {
     --snail-body: var(--color-printer-button-dark);
-    --snail-body-shade: #5c5249;
+    --snail-body-shade: #5e5d59;
     --snail-line: rgba(0, 0, 0, 0.55);
-    --snail-roll: #2f2a25;
-    --snail-roll-edge: rgba(222, 215, 204, 0.18);
-    --snail-roll-print: rgba(222, 215, 204, 0.46);
-    --snail-core: #443c35;
-    --snail-core-hole: #100e0c;
+    --snail-roll: #30302e;
+    --snail-roll-edge: rgba(250, 249, 245, 0.18);
+    --snail-roll-print: rgba(250, 249, 245, 0.46);
+    --snail-core: #4d4c48;
+    --snail-core-hole: #141413;
     --snail-led: var(--color-printer-accent-dark);
-    --snail-led-glow: rgba(223, 128, 99, 0.6);
+    --snail-led-glow: rgba(196, 104, 73, 0.6);
   }
   @media (min-width: 640px) {
     .snail-lane {
@@ -737,7 +738,7 @@
     opacity: 0.85;
   }
   .snail-roll-shine {
-    fill: #ffffff;
+    fill: #faf9f5;
     opacity: 0.22;
   }
   :is(.dark) .snail-roll-shine {
@@ -761,7 +762,7 @@
     filter: drop-shadow(0 0 3px var(--snail-led-glow));
   }
   .snail-led-glint {
-    fill: #ffffff;
+    fill: #faf9f5;
     opacity: 0.85;
   }
 

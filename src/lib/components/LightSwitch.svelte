@@ -125,10 +125,10 @@
     <svg width="100" height="190" viewBox="0 0 100 190" fill="none" class="bulb-svg relative block">
       <defs>
         <radialGradient id="light-switch-diffuser" cx="0.5" cy="0.42" r="0.75">
-          <stop offset="0" stop-color="#fff9e7" />
-          <stop offset="0.5" stop-color="#f5e6bd" />
-          <stop offset="0.85" stop-color="#e9c887" />
-          <stop offset="1" stop-color="#dba56c" />
+          <stop offset="0" stop-color="#faf9f5" />
+          <stop offset="0.5" stop-color="#f0eee6" />
+          <stop offset="0.85" stop-color="#e3dacc" />
+          <stop offset="1" stop-color="#d97757" />
         </radialGradient>
         <!-- horizontal sheen that makes the flat drum read as a cylinder -->
         <linearGradient id="light-switch-cyl" x1="0" y1="0" x2="1" y2="0">
@@ -251,8 +251,8 @@
   .lamp-warmth {
     background: radial-gradient(
       620px circle at max(58px, 50% - 508px) 135px,
-      rgba(219, 165, 108, 0.15),
-      rgba(219, 165, 108, 0.055) 45%,
+      rgba(217, 119, 87, 0.15),
+      rgba(217, 119, 87, 0.055) 45%,
       transparent 72%
     );
     mix-blend-mode: screen;
@@ -286,7 +286,7 @@
     transition: filter 130ms ease-out;
   }
   :global(.dark) .bulb-svg {
-    filter: drop-shadow(0 0 18px rgba(233, 200, 135, 0.38));
+    filter: drop-shadow(0 0 18px rgba(217, 119, 87, 0.3));
   }
 
   .bulb-glow {
@@ -297,8 +297,8 @@
     border-radius: 9999px;
     background: radial-gradient(
       closest-side,
-      rgba(245, 230, 189, 0.55),
-      rgba(219, 165, 108, 0.2) 55%,
+      rgba(240, 238, 230, 0.55),
+      rgba(217, 119, 87, 0.2) 55%,
       transparent 100%
     );
     filter: blur(6px);
@@ -311,18 +311,18 @@
   }
 
   .bulb-wire {
-    stroke: rgba(41, 36, 31, 0.48);
+    stroke: rgba(20, 20, 19, 0.48);
     stroke-width: 3;
     stroke-linecap: round;
   }
   :global(.dark) .bulb-wire {
-    stroke: rgba(222, 215, 204, 0.3);
+    stroke: rgba(250, 249, 245, 0.3);
   }
   .bulb-cap {
     fill: var(--color-printer-ink);
   }
   :global(.dark) .bulb-cap {
-    fill: #4b423a;
+    fill: #4d4c48;
   }
   /* Cream Braun-plastic drum in daylight, charcoal plastic at night */
   .bulb-shade {
@@ -352,7 +352,7 @@
     fill: var(--color-printer-accent-dark);
   }
   .bulb-glass {
-    stroke: rgba(233, 200, 135, 0.58);
+    stroke: rgba(217, 119, 87, 0.58);
     stroke-width: 0.8;
   }
   /* Frosted off-white overlay revealed the instant the lamp dies */
@@ -397,17 +397,17 @@
   }
 
   .cord-rope {
-    stroke: rgba(41, 36, 31, 0.5);
+    stroke: rgba(20, 20, 19, 0.5);
     stroke-width: 2.5;
   }
   :global(.dark) .cord-rope {
-    stroke: rgba(222, 215, 204, 0.3);
+    stroke: rgba(250, 249, 245, 0.3);
   }
   .cord-ferrule {
     fill: var(--color-printer-ink);
   }
   :global(.dark) .cord-ferrule {
-    fill: #4b423a;
+    fill: #4d4c48;
   }
   /* Capsule pull handle in the same Braun plastic as the lamp housing */
   .cord-handle {
