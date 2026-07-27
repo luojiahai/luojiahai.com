@@ -74,7 +74,7 @@
       {/each}
     </div>
     <h1
-      class="max-w-[28ch] font-serif text-2xl font-bold leading-[1.08] tracking-[-0.025em] text-printer-ink dark:text-printer-ink-dark"
+      class="max-w-[28ch] font-serif text-[2rem] font-bold leading-[1.08] tracking-[-0.025em] text-printer-ink dark:text-printer-ink-dark"
     >
       {post.title}
     </h1>
