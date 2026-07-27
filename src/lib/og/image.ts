@@ -27,7 +27,7 @@ const COLORS = {
   paper: "#FFFEF9",
   ink: "#2C2824",
   inkLight: "#8A8078",
-  accent: "#FF6B35",
+  accent: "#157565",
   border: "rgba(44, 40, 36, 0.1)",
   shadow: "rgba(0, 0, 0, 0.06)",
 };

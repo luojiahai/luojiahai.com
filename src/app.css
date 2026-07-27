@@ -11,8 +11,8 @@
   --color-printer-body-dark: #181613;
   --color-printer-shell: #e2d9ca;
   --color-printer-shell-dark: #211e1a;
-  --color-printer-accent: #c85f43;
-  --color-printer-accent-dark: #df8063;
+  --color-printer-accent: #157565;
+  --color-printer-accent-dark: #65c9ad;
   --color-printer-button: #d4cabc;
   --color-printer-button-dark: #2b2722;
   --color-printer-button-active: #c6baaa;
@@ -125,7 +125,7 @@
     background-image:
       radial-gradient(
         ellipse at 50% -8%,
-        rgba(223, 128, 99, 0.055) 0%,
+        rgba(101, 201, 173, 0.055) 0%,
         transparent 54%
       ),
       radial-gradient(
@@ -405,7 +405,7 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 4px 20px rgba(0, 0, 0, 0.5),
-      0 8px 40px rgba(223, 128, 99, 0.035),
+      0 8px 40px rgba(101, 201, 173, 0.035),
       0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
@@ -511,7 +511,7 @@
    Jet airliner landing on and taking off from the printer's top
    edge (PrinterPlane.svelte). The artwork is an optimized flat
    vector whose fills all ride the tokens below: paper-white body,
-   plastic greys, and the ON light's orange on the tail.
+   plastic greys, and the ON light's accent color on the tail.
    ============================================================ */
 @layer components {
   .plane-lane {
@@ -524,7 +524,7 @@
     pointer-events: none;
 
     /* Jet palette (light) — thermal paper + printer plastic. Body white and
-       tail orange ride the app theme; the grey tiers borrow the robo-snail's
+       the tail accent ride the app theme; the grey tiers borrow the robo-snail's
        livery (see the snail block below) so both critters match. */
     --plane-paper: var(--color-printer-paper);
     --plane-mid: var(--color-printer-shell);
@@ -640,7 +640,7 @@
     --snail-core: #c2b6a6;
     --snail-core-hole: #706257;
     --snail-led: var(--color-printer-accent);
-    --snail-led-glow: rgba(200, 95, 67, 0.48);
+    --snail-led-glow: rgba(21, 117, 101, 0.48);
   }
   :is(.dark) .snail-lane {
     --snail-body: var(--color-printer-button-dark);
@@ -652,7 +652,7 @@
     --snail-core: #443c35;
     --snail-core-hole: #100e0c;
     --snail-led: var(--color-printer-accent-dark);
-    --snail-led-glow: rgba(223, 128, 99, 0.6);
+    --snail-led-glow: rgba(101, 201, 173, 0.6);
   }
   @media (min-width: 640px) {
     .snail-lane {

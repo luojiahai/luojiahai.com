@@ -2,7 +2,7 @@
   /**
    * Desktop-only light switch: a pull cord on the right edge of the screen
    * toggles dark mode via a Braun/TE-style pendant lamp hanging on the left —
-   * a matte plastic drum housing with an orange trim ring and a frosted
+   * a matte plastic drum housing with a teal trim ring and a frosted
    * diffuser globe, matching the printer-shell design language.
    *
    * Pulling the cord in light mode blacks out the whole screen, then the

@@ -199,7 +199,7 @@
         aria-hidden="true"
       >
         <div
-          class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(223,128,99,0.06)_0%,rgba(223,128,99,0.018)_42%,transparent_70%)]"
+          class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(101,201,173,0.06)_0%,rgba(101,201,173,0.018)_42%,transparent_70%)]"
         ></div>
       </div>
 
@@ -220,7 +220,7 @@
                 class="absolute -inset-2 rounded-full bg-black/5 dark:bg-white/[0.08] shadow-inner"
               ></div>
               <img
-                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_rgba(223,128,99,0.08)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
+                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_rgba(101,201,173,0.08)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
                 src="/static/avatar.webp"
                 alt={dictionary.meta.name}
                 width="40"
@@ -247,7 +247,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(200,95,67,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
+                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(21,117,101,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark dark:shadow-[0_0_8px_rgba(101,201,173,0.55),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div
