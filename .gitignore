@@ -15,3 +15,8 @@ static/blog
 .env
 .env.*
 !.env.example
+
+# Agent tooling
+.agents
+.claude
+skills-lock.json
