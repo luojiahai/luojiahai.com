@@ -178,7 +178,7 @@
 />
 
 <div
-  class="min-h-screen page-grid flex flex-col items-center px-3 pb-16 pt-7 sm:px-5 sm:pb-24 sm:pt-12"
+  class="min-h-screen page-grid flex flex-col items-center px-3 pb-14 pt-6 sm:px-5 sm:pb-18 sm:pt-9"
 >
   <!-- Printer Body -->
   <div class="relative w-full max-w-[56rem]">
@@ -210,10 +210,10 @@
 
       <!-- Top part - Brand & Nav -->
       <div
-        class="relative bg-printer-body px-6 pb-6 pt-7 dark:bg-printer-body-dark sm:px-11 sm:pb-7 sm:pt-11"
+        class="relative bg-printer-body px-6 pb-5 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
       >
         <!-- Brand plate -->
-        <div class="relative mb-9 flex items-start justify-between sm:mb-10">
+        <div class="relative mb-7 flex items-start justify-between sm:mb-8">
           <div class="flex items-center gap-4 sm:gap-5">
             <div class="relative">
               <div
@@ -383,13 +383,13 @@
           <main
             id="main-content"
             tabindex="-1"
-            class="printer-content-area relative z-10 flex-1 px-7 pb-14 pt-11 sm:px-12 sm:pb-16 sm:pt-14"
+            class="printer-content-area relative z-10 flex-1 px-6 pb-10 pt-9 sm:px-10 sm:pb-12 sm:pt-10"
           >
             {@render children()}
           </main>
 
           <footer
-            class="relative z-10 mt-4 border-t border-dashed border-printer-ink/10 px-7 py-7 dark:border-printer-ink-dark/10 sm:px-12"
+            class="relative z-10 mt-2 border-t border-dashed border-printer-ink/10 px-6 py-6 dark:border-printer-ink-dark/10 sm:px-10"
           >
             <div
               class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-dark/40"

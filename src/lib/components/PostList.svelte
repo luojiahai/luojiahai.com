@@ -22,7 +22,7 @@
         <div
           class={[
             "printed-row -mx-3 px-3 hover:bg-printer-ink/[0.035] group-focus-visible:bg-printer-ink/[0.035] dark:hover:bg-printer-ink-dark/[0.035] dark:group-focus-visible:bg-printer-ink-dark/[0.035]",
-            compact ? "py-3.5" : "py-4",
+            compact ? "py-2.5" : "py-4",
           ]}
         >
           <div class="grid gap-1 sm:grid-cols-[7.5rem_1fr] sm:gap-5">

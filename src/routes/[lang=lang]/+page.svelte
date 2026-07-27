@@ -60,54 +60,51 @@
 
 <div>
   <!-- Profile masthead -->
-  <PrintedSection class="mb-14">
-    <div class="grid gap-8 sm:grid-cols-[minmax(0,1fr)_9rem] sm:gap-10">
-      <div>
-        <div
-          class="mb-4 flex items-center gap-2 font-mono text-[9px] font-medium tracking-[0.18em] text-printer-accent dark:text-printer-accent-dark"
-        >
-          <span class="h-px w-5 bg-current"></span>
-          PROFILE / 001
-        </div>
-        <h1
-          class="max-w-[11ch] font-serif text-[2.5rem] font-semibold leading-[0.94] tracking-[-0.045em] text-printer-ink dark:text-printer-ink-dark sm:text-[3.375rem]"
-        >
-          {dictionary.meta.name}
-        </h1>
-        <p
-          class="mt-5 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
-        >
-          {motto}
-        </p>
-      </div>
-      <dl
-        class="grid grid-cols-3 gap-3 border-t border-dashed border-printer-ink/10 pt-4 font-mono text-[8px] tracking-[0.12em] text-printer-ink-light tabular-nums dark:border-printer-ink-dark/10 dark:text-printer-ink-dark/40 sm:grid-cols-1 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-1"
-      >
-        <div>
-          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
-            ISSUE
-          </dt>
-          <dd>№ {printedOn.replaceAll("-", "")}</dd>
-        </div>
-        <div>
-          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
-            LOCALE
-          </dt>
-          <dd>{lang.toUpperCase()} / MEL</dd>
-        </div>
-        <div>
-          <dt class="mb-1 text-printer-ink/35 dark:text-printer-ink-dark/25">
-            STATUS
-          </dt>
-          <dd class="text-printer-accent dark:text-printer-accent-dark">
-            ONLINE
-          </dd>
-        </div>
-      </dl>
+  <PrintedSection>
+    <div
+      class="mb-3 flex items-center gap-2 font-mono text-[9px] font-medium tracking-[0.18em] text-printer-accent dark:text-printer-accent-dark"
+    >
+      <span class="h-px w-5 bg-current"></span>
+      PROFILE / 001
     </div>
+    <h1
+      class="max-w-[11ch] font-serif text-[2.5rem] font-semibold leading-[0.94] tracking-[-0.045em] text-printer-ink dark:text-printer-ink-dark sm:text-[3.375rem]"
+    >
+      {dictionary.meta.name}
+    </h1>
+    <p
+      class="mt-3 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
+    >
+      {motto}
+    </p>
+
+    <dl
+      class="mt-6 grid grid-cols-3 border-y border-dashed border-printer-ink/10 py-2.5 font-mono text-[8px] tracking-[0.12em] text-printer-ink-light tabular-nums dark:border-printer-ink-dark/10 dark:text-printer-ink-dark/40"
+    >
+      <div class="pr-3">
+        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
+          ISSUE
+        </dt>
+        <dd>№ {printedOn.replaceAll("-", "")}</dd>
+      </div>
+      <div class="border-l border-dashed border-printer-ink/10 px-3 dark:border-printer-ink-dark/10">
+        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
+          LOCALE
+        </dt>
+        <dd>{lang.toUpperCase()} / MEL</dd>
+      </div>
+      <div class="border-l border-dashed border-printer-ink/10 pl-3 dark:border-printer-ink-dark/10">
+        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
+          STATUS
+        </dt>
+        <dd class="text-printer-accent dark:text-printer-accent-dark">
+          ONLINE
+        </dd>
+      </div>
+    </dl>
 
     <!-- Contact strip -->
-    <div class="mt-9 flex flex-wrap gap-2">
+    <div class="mt-5 flex flex-wrap gap-2">
       {#each dictionary.contacts as contact (contact.link)}
         {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
@@ -150,7 +147,7 @@
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="printed-row group -mx-3 grid grid-cols-[2rem_3rem_1fr_auto] items-center gap-3 px-3 py-4 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
+          class="printed-row group -mx-3 grid grid-cols-[1.75rem_2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
           <span
             class="font-mono text-[9px] text-printer-ink/25 tabular-nums dark:text-printer-ink-dark/20"
@@ -159,23 +156,23 @@
           </span>
           {#if work.image}
             <img
-              class="h-12 w-12 border border-printer-ink/10 dark:border-printer-ink-dark/10"
+              class="h-10 w-10 border border-printer-ink/10 dark:border-printer-ink-dark/10"
               src={work.image}
               alt={dictionary.labels.icon(work.name)}
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               loading="lazy"
             />
           {:else}
             <div
-              class="flex h-12 w-12 items-center justify-center bg-printer-accent/10 font-mono text-lg font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
+              class="flex h-10 w-10 items-center justify-center bg-printer-accent/10 font-mono text-base font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
             >
               {work.name[0]}
             </div>
           {/if}
           <div class="min-w-0 flex-1">
             <div
-              class="font-serif text-xl font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
+              class="font-serif text-lg font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
             >
               {work.name}
             </div>
@@ -229,7 +226,7 @@
 
   <!-- Footer stamp -->
   <div
-    class="mt-8 pt-4 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+    class="mt-5 border-t border-dotted border-printer-ink/10 pt-4 dark:border-printer-ink-dark/10"
   >
     <div class="flex items-center justify-between">
       <div

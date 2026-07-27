@@ -16,7 +16,7 @@
   } = $props();
 </script>
 
-<section class={["mb-12", className]}>
+<section class={["mb-8", className]}>
   {#if label}
     <div class="mb-3 flex items-center gap-2">
       <div
