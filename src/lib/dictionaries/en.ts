@@ -105,7 +105,6 @@ const dictionary = {
     categories: "Categories",
     featured: "Featured",
     archive: "Archive",
-    viewAll: "View all",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",

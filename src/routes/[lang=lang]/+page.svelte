@@ -107,13 +107,11 @@
     </div>
 
     <!-- Contact strip -->
-    <div
-      class="mt-9 flex flex-wrap gap-x-5 gap-y-2 border-t border-dashed border-printer-ink/10 pt-4 dark:border-printer-ink-dark/10"
-    >
+    <div class="mt-9 flex flex-wrap gap-2">
       {#each dictionary.contacts as contact (contact.link)}
         {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
-          "group/contact inline-flex items-center gap-1.5 py-1 font-mono text-[9px] font-medium tracking-[0.12em] text-printer-ink-light transition-colors hover:text-printer-accent dark:text-printer-ink-dark/65 dark:hover:text-printer-accent-dark"}
+          "inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"}
         {#if kind}
           <SocialHoverCard
             {kind}
@@ -124,10 +122,7 @@
             side="bottom"
             class={linkClass}
           >
-            <Icon
-              name={contact.icon}
-              class="h-3 w-3 transition-transform duration-200 group-hover/contact:-translate-y-px"
-            />
+            <Icon name={contact.icon} class="h-3 w-3" />
             {contact.label}
           </SocialHoverCard>
         {:else}
@@ -137,10 +132,7 @@
             rel="noopener"
             class={linkClass}
           >
-            <Icon
-              name={contact.icon}
-              class="h-3 w-3 transition-transform duration-200 group-hover/contact:-translate-y-px"
-            />
+            <Icon name={contact.icon} class="h-3 w-3" />
             {contact.label}
           </a>
         {/if}
@@ -203,9 +195,9 @@
     </div>
     <a
       href={dictionary.urls.works}
-      class="section-action mt-5"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
+      ◦ VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -216,9 +208,9 @@
     <PostList posts={data.latestLife} {lang} compact />
     <a
       href={dictionary.urls.life}
-      class="section-action mt-5"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
+      ✦ VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -229,9 +221,9 @@
     <PostList posts={data.latestTech} {lang} compact />
     <a
       href={dictionary.urls.posts}
-      class="section-action mt-5"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      {dictionary.labels.viewAll} <span aria-hidden="true">→</span>
+      ▸ VIEW ALL →
     </a>
   </PrintedSection>
 
