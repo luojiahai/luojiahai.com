@@ -111,18 +111,13 @@
   <!-- Works section -->
   <PrintedSection label={dictionary.labels.works} labelIcon="apps">
     <div class="grid grid-cols-1">
-      {#each primaryWorks as work, index (work.name)}
+      {#each primaryWorks as work (work.name)}
         <a
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="printed-row group -mx-3 grid grid-cols-[1.75rem_2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
+          class="printed-row group -mx-3 grid grid-cols-[2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
-          <span
-            class="font-mono text-[10px] text-printer-ink/25 tabular-nums dark:text-printer-ink-dark/20"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
           {#if work.image}
             <img
               class="h-10 w-10 border border-printer-ink/10 dark:border-printer-ink-dark/10"
