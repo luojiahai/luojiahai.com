@@ -34,7 +34,7 @@
   <!-- Header -->
   <PrintedSection>
     <PrintedPageTitle icon={icons[activity]}>{title}</PrintedPageTitle>
-    <p class="font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/50">
+    <p class="page-subtitle">
       {dictionary.labels.entries(items.length)}
     </p>
   </PrintedSection>

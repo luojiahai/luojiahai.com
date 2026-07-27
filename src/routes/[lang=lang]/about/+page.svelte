@@ -44,7 +44,7 @@
   <PrintedSection>
     <PrintedPageTitle icon="user">{dictionary.labels.aboutTitle}</PrintedPageTitle>
     {#if subtitle}
-      <p class="font-serif text-xs text-printer-ink-light dark:text-printer-ink-dark/50">
+      <p class="page-subtitle">
         {subtitle}
       </p>
     {/if}
@@ -59,7 +59,7 @@
 
   <!-- Footer -->
   <div
-    class="font-mono text-[9px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase text-center py-4"
+    class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase text-center py-4"
   >
     {lang === "zh" ? "就酱～" : "That's about it~"}
   </div>

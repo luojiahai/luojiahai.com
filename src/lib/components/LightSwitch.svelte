@@ -117,7 +117,7 @@
 
 <!-- The bulb, hanging left of the content column -->
 <div
-  class="bulb-root hidden lg:block fixed top-0 left-[max(8px,calc(50%-532px))] z-[95] pointer-events-none"
+  class="bulb-root hidden lg:block fixed top-0 z-[95] pointer-events-none"
   aria-hidden="true"
 >
   <div class="bulb-sway relative">
@@ -125,10 +125,10 @@
     <svg width="100" height="190" viewBox="0 0 100 190" fill="none" class="bulb-svg relative block">
       <defs>
         <radialGradient id="light-switch-diffuser" cx="0.5" cy="0.42" r="0.75">
-          <stop offset="0" stop-color="#fff8dd" />
-          <stop offset="0.5" stop-color="#ffeaae" />
-          <stop offset="0.85" stop-color="#ffcd78" />
-          <stop offset="1" stop-color="#ffb45a" />
+          <stop offset="0" stop-color="#fff9e7" />
+          <stop offset="0.5" stop-color="#f5e6bd" />
+          <stop offset="0.85" stop-color="#e9c887" />
+          <stop offset="1" stop-color="#dba56c" />
         </radialGradient>
         <!-- horizontal sheen that makes the flat drum read as a cylinder -->
         <linearGradient id="light-switch-cyl" x1="0" y1="0" x2="1" y2="0">
@@ -164,7 +164,7 @@
 </div>
 
 <!-- The pull cord, hanging right of the content column -->
-<div class="hidden lg:block fixed -top-12 right-[calc(50%-468px)] z-[95] cord-sway">
+<div class="cord-root cord-sway hidden lg:block fixed -top-12 z-[95]">
   <button
     type="button"
     role="switch"
@@ -219,7 +219,8 @@
 <style>
   /* ---------------- room lighting ---------------- */
 
-  /* The bulb hangs at max(58px, 50% - 482px), 135px — gradients are centred there.
+  /* The bulb and cord sit 60px beyond the 56rem printer's outer edges.
+     The bulb hangs at max(58px, 50% - 508px), 135px — gradients are centred there.
      Both layers appear instantly when dark mode arrives (hidden behind the
      blackout curtain anyway) but fade away gently when the lamp is switched
      off in daylight. */
@@ -237,7 +238,7 @@
   /* Light falls off with distance from the bulb */
   .lamp-shade {
     background: radial-gradient(
-      140% 140% at max(58px, 50% - 482px) 135px,
+      140% 140% at max(58px, 50% - 508px) 135px,
       rgba(0, 0, 0, 0) 0%,
       rgba(0, 0, 0, 0.05) 22%,
       rgba(0, 0, 0, 0.16) 45%,
@@ -249,9 +250,9 @@
   /* Warm incandescent spill close to the bulb */
   .lamp-warmth {
     background: radial-gradient(
-      620px circle at max(58px, 50% - 482px) 135px,
-      rgba(255, 190, 110, 0.14),
-      rgba(255, 185, 105, 0.05) 45%,
+      620px circle at max(58px, 50% - 508px) 135px,
+      rgba(219, 165, 108, 0.15),
+      rgba(219, 165, 108, 0.055) 45%,
       transparent 72%
     );
     mix-blend-mode: screen;
@@ -262,6 +263,7 @@
   /* Lowered down from above the screen when the lamp arrives; when switched
      off it dies first (grey glass) and is then hoisted back up out of view. */
   .bulb-root {
+    left: max(8px, calc(50% - 558px));
     visibility: hidden;
     transform: translateY(-240px);
     transition:
@@ -284,7 +286,7 @@
     transition: filter 130ms ease-out;
   }
   :global(.dark) .bulb-svg {
-    filter: drop-shadow(0 0 18px rgba(255, 190, 100, 0.4));
+    filter: drop-shadow(0 0 18px rgba(233, 200, 135, 0.38));
   }
 
   .bulb-glow {
@@ -295,8 +297,8 @@
     border-radius: 9999px;
     background: radial-gradient(
       closest-side,
-      rgba(255, 216, 130, 0.55),
-      rgba(255, 190, 100, 0.2) 55%,
+      rgba(245, 230, 189, 0.55),
+      rgba(219, 165, 108, 0.2) 55%,
       transparent 100%
     );
     filter: blur(6px);
@@ -309,27 +311,27 @@
   }
 
   .bulb-wire {
-    stroke: rgba(60, 56, 50, 0.45);
+    stroke: rgba(41, 36, 31, 0.48);
     stroke-width: 3;
     stroke-linecap: round;
   }
   :global(.dark) .bulb-wire {
-    stroke: rgba(205, 212, 232, 0.3);
+    stroke: rgba(222, 215, 204, 0.3);
   }
   .bulb-cap {
-    fill: #33363f;
+    fill: var(--color-printer-ink);
   }
   :global(.dark) .bulb-cap {
-    fill: #3c4150;
+    fill: #4b423a;
   }
   /* Cream Braun-plastic drum in daylight, charcoal plastic at night */
   .bulb-shade {
-    fill: #ece5d4;
+    fill: var(--color-printer-tape);
     stroke: rgba(0, 0, 0, 0.14);
     stroke-width: 1;
   }
   :global(.dark) .bulb-shade {
-    fill: #272b36;
+    fill: var(--color-printer-button-dark);
     stroke: rgba(255, 255, 255, 0.1);
   }
   :global(.dark) .bulb-shade-sheen {
@@ -350,12 +352,12 @@
     fill: var(--color-printer-accent-dark);
   }
   .bulb-glass {
-    stroke: rgba(255, 226, 170, 0.55);
+    stroke: rgba(233, 200, 135, 0.58);
     stroke-width: 0.8;
   }
   /* Frosted off-white overlay revealed the instant the lamp dies */
   .bulb-glass-dead {
-    fill: #e9e5db;
+    fill: var(--color-printer-tape);
     stroke: rgba(0, 0, 0, 0.12);
     stroke-width: 0.8;
     opacity: 0.95;
@@ -371,6 +373,10 @@
   }
 
   /* ---------------- pull cord ---------------- */
+
+  .cord-root {
+    right: max(8px, calc(50% - 522px));
+  }
 
   .cord-sway {
     transform-origin: top center;
@@ -391,26 +397,26 @@
   }
 
   .cord-rope {
-    stroke: rgba(60, 56, 50, 0.5);
+    stroke: rgba(41, 36, 31, 0.5);
     stroke-width: 2.5;
   }
   :global(.dark) .cord-rope {
-    stroke: rgba(205, 212, 232, 0.3);
+    stroke: rgba(222, 215, 204, 0.3);
   }
   .cord-ferrule {
-    fill: #33363f;
+    fill: var(--color-printer-ink);
   }
   :global(.dark) .cord-ferrule {
-    fill: #3c4150;
+    fill: #4b423a;
   }
   /* Capsule pull handle in the same Braun plastic as the lamp housing */
   .cord-handle {
-    fill: #ece5d4;
+    fill: var(--color-printer-tape);
     stroke: rgba(0, 0, 0, 0.16);
     stroke-width: 1;
   }
   :global(.dark) .cord-handle {
-    fill: #272b36;
+    fill: var(--color-printer-button-dark);
     stroke: rgba(255, 255, 255, 0.12);
   }
   .cord-accent {

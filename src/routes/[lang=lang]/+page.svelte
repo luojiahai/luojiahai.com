@@ -59,29 +59,25 @@
 />
 
 <div>
-  <!-- Profile header - printed label style -->
+  <!-- Profile masthead -->
   <PrintedSection>
-    <div class="flex items-start gap-4 mb-2">
-      <div class="flex-1">
-        <h1
-          class="font-serif text-2xl font-bold tracking-tight text-printer-ink dark:text-printer-ink-dark"
-        >
-          {dictionary.meta.name}
-        </h1>
-        <p
-          class="font-serif text-xs sm:text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60 mt-1 leading-relaxed"
-        >
-          {motto}
-        </p>
-      </div>
-    </div>
+    <h1
+      class="max-w-[11ch] font-serif text-[2rem] font-bold leading-[0.96] tracking-[-0.04em] text-printer-ink dark:text-printer-ink-dark"
+    >
+      {dictionary.meta.name}
+    </h1>
+    <p
+      class="mt-3 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
+    >
+      {motto}
+    </p>
 
     <!-- Contact strip -->
-    <div class="flex flex-wrap gap-2 mt-4">
+    <div class="mt-4 flex flex-wrap gap-2">
       {#each dictionary.contacts as contact (contact.link)}
         {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
-          "inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase px-2.5 py-1 rounded-sm border border-printer-ink/8 dark:border-printer-ink-dark/8 text-printer-ink-light dark:text-printer-ink-dark/50 hover:text-printer-accent dark:hover:text-printer-accent-dark hover:border-printer-accent/20 dark:hover:border-printer-accent-dark/20 transition-colors"}
+          "inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"}
         {#if kind}
           <SocialHoverCard
             {kind}
@@ -92,7 +88,7 @@
             side="bottom"
             class={linkClass}
           >
-            <Icon name={contact.icon} class="w-3 h-3" />
+            <Icon name={contact.icon} class="h-3 w-3" />
             {contact.label}
           </SocialHoverCard>
         {:else}
@@ -102,7 +98,7 @@
             rel="noopener"
             class={linkClass}
           >
-            <Icon name={contact.icon} class="w-3 h-3" />
+            <Icon name={contact.icon} class="h-3 w-3" />
             {contact.label}
           </a>
         {/if}
@@ -114,17 +110,17 @@
 
   <!-- Works section -->
   <PrintedSection label={dictionary.labels.works} labelIcon="apps">
-    <div class="grid grid-cols-1 gap-2">
+    <div class="grid grid-cols-1">
       {#each primaryWorks as work (work.name)}
         <a
           href={work.link}
           target="_blank"
           rel="noopener"
-          class="group flex items-center gap-3 py-3 -mx-2 px-2 rounded-md hover:bg-printer-ink/3 dark:hover:bg-printer-ink-dark/3 transition-colors"
+          class="printed-row group -mx-3 grid grid-cols-[2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
           {#if work.image}
             <img
-              class="h-10 w-10 rounded-lg border border-printer-ink/10 dark:border-printer-ink-dark/10 shrink-0"
+              class="h-10 w-10 border border-printer-ink/10 dark:border-printer-ink-dark/10"
               src={work.image}
               alt={dictionary.labels.icon(work.name)}
               width="40"
@@ -133,25 +129,25 @@
             />
           {:else}
             <div
-              class="h-10 w-10 rounded-lg bg-printer-accent/10 dark:bg-printer-accent-dark/10 flex items-center justify-center font-mono text-lg font-bold text-printer-accent dark:text-printer-accent-dark shrink-0"
+              class="flex h-10 w-10 items-center justify-center bg-printer-accent/10 font-mono text-base font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
             >
               {work.name[0]}
             </div>
           {/if}
           <div class="min-w-0 flex-1">
             <div
-              class="font-mono text-sm font-medium text-printer-ink dark:text-printer-ink-dark group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors"
+              class="font-serif text-lg font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
             >
               {work.name}
             </div>
             <div
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5 line-clamp-1"
+              class="mt-0.5 line-clamp-1 font-serif text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60"
             >
               {work.summary}
             </div>
           </div>
           <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark transition-colors shrink-0"
+            class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
           >
             →
           </span>
@@ -160,9 +156,9 @@
     </div>
     <a
       href={dictionary.urls.works}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ◦ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -173,9 +169,9 @@
     <PostList posts={data.latestLife} {lang} compact />
     <a
       href={dictionary.urls.life}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ✦ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
@@ -186,19 +182,19 @@
     <PostList posts={data.latestTech} {lang} compact />
     <a
       href={dictionary.urls.posts}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark mt-3 hover:underline"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
-      ▸ VIEW ALL →
+      VIEW ALL →
     </a>
   </PrintedSection>
 
   <!-- Footer stamp -->
   <div
-    class="mt-8 pt-4 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+    class="mt-5 border-t border-dotted border-printer-ink/10 pt-4 dark:border-printer-ink-dark/10"
   >
     <div class="flex items-center justify-between">
       <div
-        class="font-mono text-[9px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase"
+        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase"
       >
         {dictionary.labels.printedOn}
         {printedOn}
