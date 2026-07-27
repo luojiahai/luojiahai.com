@@ -4,7 +4,7 @@
 
 <div
   class={[
-    "post-content prose dark:prose-invert mx-auto max-w-[65ch] font-serif",
+    "post-content prose dark:prose-invert mx-auto max-w-[72ch] font-serif",
     "prose-base sm:prose-lg",
     "prose-headings:font-serif prose-headings:text-printer-ink dark:prose-headings:text-printer-ink-dark",
     "prose-headings:tracking-tight prose-headings:scroll-mt-24",
