@@ -55,7 +55,7 @@
       class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark animate-pulse"
     ></div>
     <span
-      class="font-mono text-[9px] tracking-[0.3em] uppercase text-printer-accent dark:text-printer-accent-dark"
+      class="font-mono text-[10px] tracking-[0.3em] uppercase text-printer-accent dark:text-printer-accent-dark"
     >
       {dictionary.labels.notFoundStatus}
     </span>

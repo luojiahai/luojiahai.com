@@ -150,13 +150,13 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
-            class="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
+            class="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
           >
             <Icon name={kindMeta[kind].icon} class="w-3 h-3 shrink-0" />
             {kindMeta[kind].label}
           </span>
           <span
-            class="font-mono text-[9px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
+            class="font-mono text-[10px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
           >
             {kind === "email" ? postmark : formatHandle(stats[kind].handle)}
           </span>
@@ -297,7 +297,7 @@
             </p>
           {/if}
           <div
-            class="flex items-center gap-1.5 font-mono text-[9px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class="flex items-center gap-1.5 font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
             <Icon
               name="send"
@@ -341,7 +341,7 @@
             </div>
           </div>
           <div
-            class="font-mono text-[9px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
             {dictionary.social.emailHint}
           </div>

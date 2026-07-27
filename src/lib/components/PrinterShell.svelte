@@ -234,7 +234,7 @@
                 {dictionary.labels.brandName}
               </div>
               <div
-                class="mt-1 font-mono text-[8px] uppercase tracking-[0.2em] text-printer-ink-light dark:text-printer-ink-dark/40 sm:text-[9px]"
+                class="mt-1 font-mono text-[8px] uppercase tracking-[0.2em] text-printer-ink-light dark:text-printer-ink-dark/40 sm:text-[10px]"
               >
                 {dictionary.labels.brandTagline}
               </div>

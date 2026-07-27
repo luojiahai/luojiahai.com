@@ -119,7 +119,7 @@
           class="printed-row group -mx-3 grid grid-cols-[1.75rem_2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
         >
           <span
-            class="font-mono text-[9px] text-printer-ink/25 tabular-nums dark:text-printer-ink-dark/20"
+            class="font-mono text-[10px] text-printer-ink/25 tabular-nums dark:text-printer-ink-dark/20"
           >
             {String(index + 1).padStart(2, "0")}
           </span>
@@ -199,7 +199,7 @@
   >
     <div class="flex items-center justify-between">
       <div
-        class="font-mono text-[9px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase"
+        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase"
       >
         {dictionary.labels.printedOn}
         {printedOn}
