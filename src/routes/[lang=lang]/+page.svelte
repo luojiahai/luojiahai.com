@@ -62,7 +62,7 @@
   <!-- Profile masthead -->
   <PrintedSection>
     <h1
-      class="max-w-[11ch] font-serif text-[2.5rem] font-semibold leading-[0.94] tracking-[-0.045em] text-printer-ink dark:text-printer-ink-dark sm:text-[3.375rem]"
+      class="max-w-[11ch] font-serif text-[2rem] font-semibold leading-[0.96] tracking-[-0.04em] text-printer-ink dark:text-printer-ink-dark sm:text-[2.625rem]"
     >
       {dictionary.meta.name}
     </h1>
