@@ -61,12 +61,6 @@
 <div>
   <!-- Profile masthead -->
   <PrintedSection>
-    <div
-      class="mb-3 flex items-center gap-2 font-mono text-[9px] font-medium tracking-[0.18em] text-printer-accent dark:text-printer-accent-dark"
-    >
-      <span class="h-px w-5 bg-current"></span>
-      PROFILE / 001
-    </div>
     <h1
       class="max-w-[11ch] font-serif text-[2.5rem] font-semibold leading-[0.94] tracking-[-0.045em] text-printer-ink dark:text-printer-ink-dark sm:text-[3.375rem]"
     >
@@ -78,33 +72,8 @@
       {motto}
     </p>
 
-    <dl
-      class="mt-6 grid grid-cols-3 border-y border-dashed border-printer-ink/10 py-2.5 font-mono text-[8px] tracking-[0.12em] text-printer-ink-light tabular-nums dark:border-printer-ink-dark/10 dark:text-printer-ink-dark/40"
-    >
-      <div class="pr-3">
-        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
-          ISSUE
-        </dt>
-        <dd>№ {printedOn.replaceAll("-", "")}</dd>
-      </div>
-      <div class="border-l border-dashed border-printer-ink/10 px-3 dark:border-printer-ink-dark/10">
-        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
-          LOCALE
-        </dt>
-        <dd>{lang.toUpperCase()} / MEL</dd>
-      </div>
-      <div class="border-l border-dashed border-printer-ink/10 pl-3 dark:border-printer-ink-dark/10">
-        <dt class="mb-0.5 text-printer-ink/35 dark:text-printer-ink-dark/25">
-          STATUS
-        </dt>
-        <dd class="text-printer-accent dark:text-printer-accent-dark">
-          ONLINE
-        </dd>
-      </div>
-    </dl>
-
     <!-- Contact strip -->
-    <div class="mt-5 flex flex-wrap gap-2">
+    <div class="mt-4 flex flex-wrap gap-2">
       {#each dictionary.contacts as contact (contact.link)}
         {@const kind = cardKinds[contact.icon]}
         {@const linkClass =
