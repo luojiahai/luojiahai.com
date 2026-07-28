@@ -212,7 +212,15 @@ const dictionary = {
       summary:
         "Pilot coding agents (Claude Code, Codex) and monitor their telemetry from one console.",
       image: "/static/code-by-wire.svg",
-      link: "https://codebywire.com",
+      link: "https://github.com/luojiahai/code-by-wire",
+      primary: true,
+    },
+    {
+      name: "Potato",
+      summary:
+        "Stash long terminal commands, find them by fuzzy search, and hand them back.",
+      image: "/static/potato.svg",
+      link: "https://github.com/luojiahai/potato",
       primary: true,
     },
   ] as Work[],
