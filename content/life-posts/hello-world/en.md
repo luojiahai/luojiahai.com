@@ -14,4 +14,4 @@ The site is styled like a printer: every page gets printed out of the little mac
 
 So what goes here? The [Tech](/en/posts) section holds the technical writing, and the [Life](/en/life) section, where this post lives, holds everything else. Updated irregularly. Anything could appear here.
 
-That's it for now. If you want to say hi, find me on [GitHub](https://github.com/luojiahai) or [X](https://x.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
+That's it for now. If you want to follow along, subscribe to the [RSS feed](/feed). And if you want to say hi, find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
