@@ -1,5 +1,5 @@
 ---
-title: "I Don't Want to Talk to People Who Don't Use AI"
+title: "I Don't Talk to People Who Don't Use AI"
 description: "Don't waste effort convincing people who don't use AI to use it."
 slug: i-dont-talk-to-people-who-dont-use-ai
 lang: en
@@ -8,7 +8,7 @@ categories:
 date: "2026-07-29"
 ---
 
-Not wanting to use AI and not knowing how are two different things. The people who don't want to, the ones who resist it at their core, will never get it no matter how much you say, so I'd rather not engage, and I certainly won't go out of my way to convince them. People who don't know how are different: they haven't found a use case yet, but they want to learn and are willing to try. If you're the latter, I'm happy to talk and share how I use AI myself.
+Not wanting to use AI and not knowing how are two different things. It's the former I don't talk to. The people who don't want to, the ones who resist it at their core, will never get it no matter how much you say, so I'd rather not engage, and I certainly won't go out of my way to convince them. People who don't know how are different: they haven't found a use case yet, but they want to learn and are willing to try. If you're the latter, I'm happy to talk and share how I use AI myself.
 
 More than ninety percent of what I do, in life and at work, runs through AI. Whenever something needs doing, my first reaction is no longer "how do I do this" but "can AI do this" and "can this be automated." That reaction is the default now. I don't have to remind myself.
 
