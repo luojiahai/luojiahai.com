@@ -228,7 +228,7 @@ const dictionary: Dictionary = {
 
 你好，我是罗嘉海。「luojiahai」是我中文名字的拼音，也是我在互联网上的常用 ID。
 
-我是 INTJ。我在中国广州出生长大，目前住在澳大利亚墨尔本。
+我是 INTJ。我在中国广州出生长大，目前住在澳大利亚墨尔本。可惜我不喜欢咖啡，我喝水和可口可乐。
 
 我是一名务实的计算机程序员，我做有用的东西，也参与开源贡献。AI 是我生活和工作的一部分，[我不和不用 AI 的人说话](/zh/life/i-dont-talk-to-people-who-dont-use-ai)。
 

@@ -255,7 +255,7 @@ Updated irregularly, sharing random things. Anything could appear here.
 
 Hi there, I'm Jiahai. "luojiahai" is the Pinyin (Mandarin romanization) of my Chinese name, 罗嘉海, and I use it as my internet handle.
 
-I'm an INTJ. I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia.
+I'm an INTJ. I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia. Unfortunately I'm not into coffee. I drink water and Coca-Cola.
 
 I'm a pragmatic computer programmer. I build useful things and contribute to open source. AI is part of my life and work. [I don't talk to people who don't use AI](/en/life/i-dont-talk-to-people-who-dont-use-ai).
 
