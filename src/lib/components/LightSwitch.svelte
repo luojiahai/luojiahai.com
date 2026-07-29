@@ -217,10 +217,17 @@
 ></div>
 
 <style>
+  /* The lamp and cord axes hang --lamp-offset outside the 56rem printer's
+     edges (50% ∓ 448px), mirrored. Never clamped to the viewport — that is
+     what used to shove the lamp on top of the shell. */
+  :global(:root) {
+    --lamp-offset: 64px;
+    --lamp-x: calc(50% - 448px - var(--lamp-offset));
+  }
+
   /* ---------------- room lighting ---------------- */
 
-  /* The bulb and cord sit 60px beyond the 56rem printer's outer edges.
-     The bulb hangs at max(58px, 50% - 508px), 135px — gradients are centred there.
+  /* The gradients are centred on the bulb.
      Both layers appear instantly when dark mode arrives (hidden behind the
      blackout curtain anyway) but fade away gently when the lamp is switched
      off in daylight. */
@@ -238,7 +245,7 @@
   /* Light falls off with distance from the bulb */
   .lamp-shade {
     background: radial-gradient(
-      140% 140% at max(58px, 50% - 508px) 135px,
+      140% 140% at var(--lamp-x) 135px,
       rgba(0, 0, 0, 0) 0%,
       rgba(0, 0, 0, 0.05) 22%,
       rgba(0, 0, 0, 0.16) 45%,
@@ -250,7 +257,7 @@
   /* Warm incandescent spill close to the bulb */
   .lamp-warmth {
     background: radial-gradient(
-      620px circle at max(58px, 50% - 508px) 135px,
+      620px circle at var(--lamp-x) 135px,
       rgba(217, 119, 87, 0.15),
       rgba(217, 119, 87, 0.055) 45%,
       transparent 72%
@@ -263,7 +270,7 @@
   /* Lowered down from above the screen when the lamp arrives; when switched
      off it dies first (grey glass) and is then hoisted back up out of view. */
   .bulb-root {
-    left: max(8px, calc(50% - 558px));
+    left: calc(var(--lamp-x) - 50px); /* lamp axis is at local x=50 */
     visibility: hidden;
     transform: translateY(-240px);
     transition:
@@ -375,7 +382,7 @@
   /* ---------------- pull cord ---------------- */
 
   .cord-root {
-    right: max(8px, calc(50% - 522px));
+    right: calc(var(--lamp-x) - 14px); /* cable is at local x=14 */
   }
 
   .cord-sway {
