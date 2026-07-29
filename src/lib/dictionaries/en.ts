@@ -255,11 +255,11 @@ Updated irregularly, sharing random things. Anything could appear here.
 
 Hi there, I'm Jiahai. "luojiahai" is the Pinyin (Mandarin romanization) of my Chinese name, 罗嘉海, and I use it as my internet handle.
 
-I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia.
+I'm an INTJ. I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia.
 
-I'm an INTJ and a pragmatic computer programmer. I build useful things.
+I'm a pragmatic computer programmer. I build useful things. Outside of programming, I like eating, cooking, and grocery shopping.
 
-Outside of programming, I like eating, cooking, and grocery shopping. I also play Microsoft Flight Simulator, flying Airbus.
+I'm an aviation enthusiast. I play Microsoft Flight Simulator. I fly the Airbus.
 
 You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
   `,
