@@ -220,7 +220,7 @@ const dictionary: Dictionary = {
     music: [],
   },
   aboutContent: `
-这里是 [luojiahai](https://luojiahai.com) 的角落。
+这里是 [luojiahai](https://luojiahai.com) 的互联网角落。
 
 不定期更新，分享一些随想随记，什么内容都有可能出现。
 
@@ -230,9 +230,11 @@ const dictionary: Dictionary = {
 
 我是 INTJ。我在中国广州出生长大，目前住在澳大利亚墨尔本。
 
-我是一名务实的计算机程序员，我做有用的东西。编程之外，我喜欢吃饭、做饭和逛超市。
+我是一名务实的计算机程序员，我做有用的东西，也参与开源贡献。AI 是我生活和工作的一部分，[我不和不用 AI 的人说话](/zh/life/i-dont-talk-to-people-who-dont-use-ai)。
 
-我是航空爱好者。我玩微软飞行模拟器，飞空客。
+编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我的首选餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
+
+我是航空爱好者。我玩微软飞行模拟器，飞 [FlyByWire](https://flybywiresim.com/) 制作的空客 A320（A32NX），练习真实的驾驶：飞行程序、无线电通话，以及背后的航空知识。
 
 你可以在 [X](https://x.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。
   `,

@@ -247,7 +247,7 @@ const dictionary = {
     music: [] as ArchiveEntry[],
   },
   aboutContent: `
-This is the corner of [luojiahai](https://luojiahai.com).
+This is [luojiahai](https://luojiahai.com)'s corner of the internet.
 
 Updated irregularly, sharing random things. Anything could appear here.
 
@@ -257,9 +257,11 @@ Hi there, I'm Jiahai. "luojiahai" is the Pinyin (Mandarin romanization) of my Ch
 
 I'm an INTJ. I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia.
 
-I'm a pragmatic computer programmer. I build useful things. Outside of programming, I like eating, cooking, and grocery shopping.
+I'm a pragmatic computer programmer. I build useful things and contribute to open source. AI is part of my life and work. [I don't talk to people who don't use AI](/en/life/i-dont-talk-to-people-who-dont-use-ai).
 
-I'm an aviation enthusiast. I play Microsoft Flight Simulator. I fly the Airbus.
+Outside of programming, I like eating, cooking, and grocery shopping. McDonald's is my go-to restaurant. I have lots of McDonald's merch. I'm a Costco Executive member. I enjoy shopping there. Even walking the aisles and buying nothing is fine.
+
+I'm an aviation enthusiast. I play Microsoft Flight Simulator. I fly the Airbus A320 (A32NX) built by [FlyByWire](https://flybywiresim.com/), practicing realistic piloting: procedures, radio communications, and the aviation knowledge behind them.
 
 You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
   `,
