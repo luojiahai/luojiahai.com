@@ -8,9 +8,7 @@
 /og/*
   Cache-Control: public, max-age=86400
 
-# Site images (rarely change, but not content-hashed)
-/images/*
-  Cache-Control: public, max-age=86400
+# Site assets (rarely change, but not content-hashed)
 /static/*
   Cache-Control: public, max-age=86400
 

@@ -1,6 +1,6 @@
 const BASE_URL = "https://luojiahai.com";
 
-export interface JsonLdWebSite {
+interface JsonLdWebSite {
   name: string;
   alternateName?: string;
   url: string;
@@ -31,7 +31,7 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
   };
 }
 
-export interface JsonLdBlogPosting {
+interface JsonLdBlogPosting {
   title: string;
   description?: string;
   url: string;
@@ -79,7 +79,7 @@ export function generateBlogPostingJsonLd(
   };
 }
 
-export interface JsonLdBreadcrumb {
+interface JsonLdBreadcrumb {
   items: { name: string; url: string }[];
 }
 

@@ -148,7 +148,6 @@ async function fetchXProfile(): Promise<XStats> {
     handle: typeof user.screen_name === "string" ? user.screen_name : X_HANDLE,
     name: typeof user.name === "string" ? user.name : socialFallback.x.name,
     bio: typeof user.description === "string" ? user.description : "",
-    location: typeof user.location === "string" ? user.location : "",
     followers: assertNumber(user.followers, "x followers"),
     following: assertNumber(user.following, "x following"),
     posts: assertNumber(user.tweets, "x tweets"),

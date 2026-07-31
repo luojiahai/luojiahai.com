@@ -6,12 +6,10 @@
   let {
     variant = "default",
     icon,
-    class: className = "",
     children,
   }: {
     variant?: "default" | "accent" | "muted";
     icon?: IconName;
-    class?: string;
     children: Snippet;
   } = $props();
 
@@ -29,7 +27,6 @@
   class={[
     "inline-flex items-center gap-1 leading-none font-mono text-[10px] tracking-widest uppercase px-2 py-[3px] rounded-sm border",
     variantClasses[variant],
-    className,
   ]}
 >
   {#if icon}

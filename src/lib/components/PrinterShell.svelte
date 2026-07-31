@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import type { Component, Snippet } from "svelte";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import { showStickers, type Mascot } from "$lib/site-config";
+  import type { Mascot } from "$lib/site-config";
   import { hydrateMascot, mascot } from "$lib/mascot-state.svelte";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
@@ -12,7 +12,6 @@
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
-  import Stickers from "./Stickers.svelte";
 
   type ColorMode = "system" | "light" | "dark";
 
@@ -223,11 +222,6 @@
           class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(196,104,73,0.06)_0%,rgba(196,104,73,0.018)_42%,transparent_70%)]"
         ></div>
       </div>
-
-      <!-- Draggable shell stickers -->
-      {#if showStickers}
-        <Stickers />
-      {/if}
 
       <!-- Top part - Brand & Nav -->
       <div

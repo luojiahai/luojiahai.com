@@ -8,7 +8,6 @@ const NON_LOCALIZED_PREFIXES = [
   "/og",
   "/blog",
   "/static",
-  "/images",
   "/_app",
 ];
 

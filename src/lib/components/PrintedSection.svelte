@@ -6,17 +6,15 @@
   let {
     label,
     labelIcon,
-    class: className = "",
     children,
   }: {
     label?: string;
     labelIcon?: IconName;
-    class?: string;
     children: Snippet;
   } = $props();
 </script>
 
-<section class={["mb-8", className]}>
+<section class="mb-8">
   {#if label}
     <div class="mb-3 flex items-center gap-2">
       <div

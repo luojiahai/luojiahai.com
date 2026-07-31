@@ -25,7 +25,6 @@ export interface XStats {
   handle: string;
   name: string;
   bio: string;
-  location: string;
   followers: number;
   following: number;
   posts: number;
@@ -39,7 +38,7 @@ export interface TelegramStats {
   bio: string;
 }
 
-export interface LinkedInStats {
+interface LinkedInStats {
   handle: string;
   name: string;
   bio: string;
