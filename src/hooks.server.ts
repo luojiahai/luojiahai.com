@@ -36,7 +36,6 @@ function preferredLanguage(acceptLanguage: string | null): string {
 export const handle: Handle = async ({ event, resolve }) => {
   const { pathname } = event.url;
 
-  // The Work page used to live at /{lang}/works.
   const legacyWork = pathname.match(/^(\/(?:en|zh))?\/works\/?$/);
   if (legacyWork) {
     const prefix =

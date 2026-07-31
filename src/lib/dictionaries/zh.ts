@@ -25,7 +25,7 @@ const dictionary: Dictionary = {
   urls: {
     home: "/zh",
     work: "/zh/work",
-    // 技术文章已并入作品页，保留此项用于返回链接。
+    // 技术文章列在作品页。
     posts: "/zh/work",
     life: "/zh/life",
     use: "/zh/use",

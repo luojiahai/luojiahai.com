@@ -134,7 +134,7 @@ async function loadEmoji(grapheme: string): Promise<string | null> {
 }
 
 // ---------------------------------------------------------------------------
-// Building blocks (ported from the previous next/og implementation)
+// Building blocks
 // ---------------------------------------------------------------------------
 
 const AVATAR_DATA_URI = `data:image/jpeg;base64,${readFileSync("src/lib/og/avatar.jpg").toString("base64")}`;

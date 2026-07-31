@@ -8,9 +8,6 @@ import {
 import { languages, type Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
-// The tech list now lives on the Work page, so nothing links to
-// /{lang}/posts any more. Name the indexes so both stay prerendered; the
-// posts one keeps its old URL alive and points its canonical at /work.
 export const entries: EntryGenerator = () =>
   languages.flatMap((lang) => sections.map((section) => ({ lang, section })));
 

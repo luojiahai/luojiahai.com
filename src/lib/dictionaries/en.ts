@@ -83,7 +83,7 @@ const dictionary = {
   urls: {
     home: "/en",
     work: "/en/work",
-    // Tech posts are merged into the Work page; kept for back-links.
+    // Tech posts are listed on the Work page.
     posts: "/en/work",
     life: "/en/life",
     use: "/en/use",
