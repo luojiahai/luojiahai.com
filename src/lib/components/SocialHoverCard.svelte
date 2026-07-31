@@ -143,7 +143,7 @@
       aria-hidden="true"
     >
       <div
-        class="rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15 bg-printer-paper dark:bg-printer-paper-dark thermal-texture shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)] px-4 py-3 text-left normal-case tracking-normal"
+        class="printed-card px-4 py-3 text-left normal-case tracking-normal"
       >
         <!-- Receipt header -->
         <div

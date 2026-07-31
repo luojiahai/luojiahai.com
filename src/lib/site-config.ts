@@ -1,11 +1,18 @@
 /** Site-wide feature flags. */
 
-/** The decorative animations available on the printer shell's top edge. */
-export const topAnimations = ["none", "snail", "plane"] as const;
-export type TopAnimation = (typeof topAnimations)[number];
+/**
+ * The critters available to ride the printer shell's top edge — the deck —
+ * in the order the deck menu lists them.
+ */
+export const mascots = ["none", "plane", "snail"] as const;
+export type Mascot = (typeof mascots)[number];
 
-/** Which animation plays along the printer shell's top edge. */
-export const topAnimation: TopAnimation = "snail";
+/**
+ * Which mascot rides the deck by default. Visitors can override it from the
+ * deck menu; their pick is stored under the "mascot" key (see
+ * src/lib/mascot-state.svelte.ts).
+ */
+export const defaultMascot: Mascot = "snail";
 
 /** Show the draggable decorative stickers on the printer shell. */
 export const showStickers = false;

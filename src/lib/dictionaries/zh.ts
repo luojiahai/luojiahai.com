@@ -56,6 +56,12 @@ const dictionary: Dictionary = {
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",
     brandTagline: "Hello, World!",
+    deck: "机顶",
+    deckOptions: {
+      none: "空",
+      plane: "飞机",
+      snail: "蜗牛",
+    },
     backToSection: {
       posts: "← 返回技术",
       life: "← 返回生活",
