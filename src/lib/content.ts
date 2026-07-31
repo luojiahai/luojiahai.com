@@ -1,9 +1,8 @@
 import { categories as allCategories, posts as allPosts } from "#velite";
 import type { Language } from "$lib/dictionaries";
+import type { Section } from "$lib/sections";
 
-export const sections = ["posts", "life"] as const;
-
-export type Section = (typeof sections)[number];
+export { isSection, sections, type Section } from "$lib/sections";
 
 type Localized = Record<Language, string>;
 
@@ -34,10 +33,6 @@ export interface Category {
   description?: Localized;
   count: Record<Language, number>;
   permalink: Localized;
-}
-
-export function isSection(value: string): value is Section {
-  return (sections as readonly string[]).includes(value);
 }
 
 /** All published posts, newest first. Drafts are only visible in dev. */
