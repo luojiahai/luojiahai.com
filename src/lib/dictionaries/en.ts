@@ -134,8 +134,8 @@ const dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "Printed on",
     reading: "Recent Reading",
-    films: "Recent Films",
-    music: "Recent Listening",
+    watching: "Recent Watching",
+    listening: "Recent Listening",
     aboutTitle: "About",
     aboutSubtitle: "Hello, World!",
     wechatScanHint: "Scan to read on WeChat",
@@ -251,8 +251,8 @@ const dictionary = {
   archive: {
     // TODO(placeholder): intentionally empty for now, fill these in later.
     reading: [] as ArchiveEntry[],
-    films: [] as ArchiveEntry[],
-    music: [] as ArchiveEntry[],
+    watching: [] as ArchiveEntry[],
+    listening: [] as ArchiveEntry[],
   },
   aboutContent: `
 This is [luojiahai](https://luojiahai.com)'s corner of the internet.

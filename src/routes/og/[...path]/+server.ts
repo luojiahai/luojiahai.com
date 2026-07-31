@@ -14,8 +14,8 @@ const PAGE_EMOJIS: Record<string, string> = {
   use: "🧰",
   about: "👋",
   "life/reading": "📚",
-  "life/films": "🎬",
-  "life/music": "🎵",
+  "life/watching": "🎬",
+  "life/listening": "🎵",
 };
 
 export const entries: EntryGenerator = () => [
@@ -66,8 +66,8 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
       "life/reading": dictionary.labels.reading,
-      "life/films": dictionary.labels.films,
-      "life/music": dictionary.labels.music,
+      "life/watching": dictionary.labels.watching,
+      "life/listening": dictionary.labels.listening,
     };
     const descriptions: Record<string, string | undefined> = {
       work: dictionary.labels.workSubtitle,

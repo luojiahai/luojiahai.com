@@ -15,8 +15,8 @@
 
   const icons: Record<Activity, IconName> = {
     reading: "book",
-    films: "film",
-    music: "music",
+    watching: "film",
+    listening: "music",
   };
 
   let title = $derived(dictionary.labels[activity]);

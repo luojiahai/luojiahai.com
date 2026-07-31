@@ -76,8 +76,8 @@ const dictionary: Dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "打印于",
     reading: "最近阅读",
-    films: "最近观影",
-    music: "最近聆听",
+    watching: "最近观看",
+    listening: "最近聆听",
     aboutTitle: "关于",
     aboutSubtitle: "你好，世界！",
     wechatScanHint: "微信扫码阅读原文",
@@ -225,8 +225,8 @@ const dictionary: Dictionary = {
   archive: {
     // TODO(placeholder): 暂时为空，之后在这里补充内容。
     reading: [],
-    films: [],
-    music: [],
+    watching: [],
+    listening: [],
   },
   aboutContent: `
 这里是 [luojiahai](https://luojiahai.com) 的互联网角落。

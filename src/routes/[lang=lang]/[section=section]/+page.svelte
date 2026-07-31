@@ -43,14 +43,14 @@
             {dictionary.labels.reading}
           </PrintedLabel>
         </a>
-        <a href="{dictionary.urls.life}/films">
+        <a href="{dictionary.urls.life}/watching">
           <PrintedLabel variant="default" icon="film">
-            {dictionary.labels.films}
+            {dictionary.labels.watching}
           </PrintedLabel>
         </a>
-        <a href="{dictionary.urls.life}/music">
+        <a href="{dictionary.urls.life}/listening">
           <PrintedLabel variant="default" icon="music">
-            {dictionary.labels.music}
+            {dictionary.labels.listening}
           </PrintedLabel>
         </a>
       </div>
