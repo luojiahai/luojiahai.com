@@ -20,9 +20,9 @@ Cache API).
 
 Both blogs share one content pipeline (Velite):
 
-- `content/posts/**` — tech posts, served under `/{lang}/posts`
+- `content/tech-posts/**` — tech posts, served under `/{lang}/tech`
 - `content/life-posts/**` — life posts, served under `/{lang}/life`
-- `content/categories/{posts,life}.yml` — categories for each section
+- `content/categories/{tech,life}.yml` — categories for each section
 
 ## Develop & Deploy
 

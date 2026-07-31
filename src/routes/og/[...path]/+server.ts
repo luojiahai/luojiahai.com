@@ -10,7 +10,7 @@ export const prerender = true;
 /** Static pages under each language, with their page-layout OG options. */
 const PAGE_EMOJIS: Record<string, string> = {
   life: "🌿",
-  work: "🛠",
+  tech: "🛠",
   use: "🧰",
   about: "👋",
   "life/reading": "📚",
@@ -62,7 +62,7 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   if (page in PAGE_EMOJIS) {
     const titles: Record<string, string> = {
       life: dictionary.labels.life,
-      work: dictionary.labels.work,
+      tech: dictionary.labels.tech,
       use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
       "life/reading": dictionary.labels.reading,
@@ -70,7 +70,8 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       "life/listening": dictionary.labels.listening,
     };
     const descriptions: Record<string, string | undefined> = {
-      work: dictionary.labels.workSubtitle,
+      tech: dictionary.labels.sectionSubtitle.tech,
+      life: dictionary.labels.sectionSubtitle.life,
       use: dictionary.labels.useSubtitle,
       about: dictionary.labels.aboutSubtitle || undefined,
     };

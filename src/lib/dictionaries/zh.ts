@@ -24,9 +24,7 @@ const dictionary: Dictionary = {
   },
   urls: {
     home: "/zh",
-    work: "/zh/work",
-    // 技术文章列在作品页。
-    posts: "/zh/work",
+    tech: "/zh/tech",
     life: "/zh/life",
     use: "/zh/use",
     about: "/zh/about",
@@ -39,17 +37,20 @@ const dictionary: Dictionary = {
   },
   labels: {
     home: "主页",
-    work: "作品",
-    posts: "技术",
+    tech: "技术",
     life: "生活",
     use: "使用",
     about: "关于",
+    // 技术页和生活页共用的板块标题。
+    posts: "文章",
     latestTech: "技术",
     latestLife: "生活",
-    workSubtitle: "我做的东西",
+    sectionSubtitle: {
+      tech: "关于技术的东西。",
+      life: "关于我生活的东西。",
+    },
     useSubtitle: "我使用的东西。",
     activity: "活动",
-    categories: "分类",
     projects: "项目",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
@@ -62,11 +63,11 @@ const dictionary: Dictionary = {
       snail: "蜗牛",
     },
     backToSection: {
-      posts: "← 返回作品",
+      tech: "← 返回技术",
       life: "← 返回生活",
     },
     allSectionPosts: {
-      posts: "← 全部技术文章",
+      tech: "← 全部技术文章",
       life: "← 全部生活文章",
     },
     notFoundStatus: "纸空了",

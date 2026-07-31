@@ -44,7 +44,7 @@
   let navItems = $derived([
     { label: dictionary.labels.home, href: dictionary.urls.home },
     { label: dictionary.labels.life, href: dictionary.urls.life },
-    { label: dictionary.labels.work, href: dictionary.urls.work },
+    { label: dictionary.labels.tech, href: dictionary.urls.tech },
     { label: dictionary.labels.use, href: dictionary.urls.use },
     { label: dictionary.labels.about, href: dictionary.urls.about },
   ]);
@@ -57,10 +57,6 @@
   function isActive(href: string): boolean {
     const pathname = page.url.pathname;
     if (href === dictionary.urls.home) return pathname === href;
-    // Tech posts live under /{lang}/posts but belong to the Work page.
-    if (href === dictionary.urls.work && pathname.startsWith(`/${lang}/posts`)) {
-      return true;
-    }
     return pathname.startsWith(href);
   }
 

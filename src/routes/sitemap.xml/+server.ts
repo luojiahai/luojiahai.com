@@ -21,7 +21,7 @@ export const GET: RequestHandler = () => {
     return [
       { loc: dictionary.urls.home, lastmod: now, priority: 1 },
       { loc: dictionary.urls.life, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.work, lastmod: now, priority: 1 },
+      { loc: dictionary.urls.tech, lastmod: now, priority: 1 },
       { loc: dictionary.urls.use, lastmod: now, priority: 0.8 },
       { loc: dictionary.urls.about, lastmod: now, priority: 0.8 },
       ...activities.map((activity) => ({
@@ -43,7 +43,7 @@ export const GET: RequestHandler = () => {
   const postUrls: SitemapUrl[] = posts.map((post) => ({
     loc: post.permalink,
     lastmod: post.updated || post.date,
-    priority: post.section === "posts" ? 1 : 0.9,
+    priority: post.section === "tech" ? 1 : 0.9,
   }));
 
   const urls = [...basicUrls, ...categoryUrls, ...postUrls]

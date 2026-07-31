@@ -82,9 +82,7 @@ const dictionary = {
   },
   urls: {
     home: "/en",
-    work: "/en/work",
-    // Tech posts are listed on the Work page.
-    posts: "/en/work",
+    tech: "/en/tech",
     life: "/en/life",
     use: "/en/use",
     about: "/en/about",
@@ -97,17 +95,20 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    work: "Work",
-    posts: "Tech",
+    tech: "Tech",
     life: "Life",
     use: "Use",
     about: "About",
+    // Section header shared by the Tech and Life pages.
+    posts: "Posts",
     latestTech: "Tech",
     latestLife: "Life",
-    workSubtitle: "Things I have made",
+    sectionSubtitle: {
+      tech: "Things about tech.",
+      life: "Things about my life.",
+    },
     useSubtitle: "Things I'm using.",
     activity: "Activity",
-    categories: "Categories",
     projects: "Projects",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
@@ -120,11 +121,11 @@ const dictionary = {
       snail: "Snail",
     },
     backToSection: {
-      posts: "← BACK TO WORK",
+      tech: "← BACK TO TECH",
       life: "← BACK TO LIFE",
     },
     allSectionPosts: {
-      posts: "← ALL TECH POSTS",
+      tech: "← ALL TECH POSTS",
       life: "← ALL LIFE POSTS",
     },
     notFoundStatus: "Paper Tray Empty",

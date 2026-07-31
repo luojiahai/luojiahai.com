@@ -19,9 +19,9 @@
 
 两个博客共用同一套内容管道（Velite）：
 
-- `content/posts/**` —— 技术文章，对应 `/{lang}/posts`
+- `content/tech-posts/**` —— 技术文章，对应 `/{lang}/tech`
 - `content/life-posts/**` —— 生活文章，对应 `/{lang}/life`
-- `content/categories/{posts,life}.yml` —— 两个板块各自的分类
+- `content/categories/{tech,life}.yml` —— 两个板块各自的分类
 
 ## 开发与部署
 

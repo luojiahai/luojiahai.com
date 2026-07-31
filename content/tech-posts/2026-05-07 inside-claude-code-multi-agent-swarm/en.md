@@ -58,7 +58,7 @@ The work runs in phases, and the only one the coordinator does itself is the thi
 | Implementation | Workers            | Make targeted changes, commit                   |
 | Verification   | Workers            | Prove the changes work                          |
 
-Concurrency is the same read/write discipline from the [tool execution layer](/en/posts/inside-claude-code-read-write-concurrency-separation), lifted to the agent level: *"Parallelism is your superpower. Workers are async."* Read-only research fans out freely. Write-heavy implementation runs one worker at a time per set of files. `SendMessage` lets the coordinator continue a worker whose task is done, reusing its warm context instead of paying to spin up a fresh one.
+Concurrency is the same read/write discipline from the [tool execution layer](/en/tech/inside-claude-code-read-write-concurrency-separation), lifted to the agent level: *"Parallelism is your superpower. Workers are async."* Read-only research fans out freely. Write-heavy implementation runs one worker at a time per set of files. `SendMessage` lets the coordinator continue a worker whose task is done, reusing its warm context instead of paying to spin up a fresh one.
 
 ## The rule against handing off understanding
 
