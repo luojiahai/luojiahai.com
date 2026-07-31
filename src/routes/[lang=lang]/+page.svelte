@@ -9,6 +9,7 @@
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedLabel from "$lib/components/PrintedLabel.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
+  import ProjectList from "$lib/components/ProjectList.svelte";
   import Seo from "$lib/components/Seo.svelte";
   import SocialHoverCard from "$lib/components/SocialHoverCard.svelte";
 
@@ -24,9 +25,7 @@
   });
   let motto = $derived(dictionary.meta.mottos[mottoIndex] ?? dictionary.meta.motto);
 
-  let primaryWorks = $derived(
-    dictionary.works.filter((work) => work.primary).slice(0, 4),
-  );
+  let works = $derived(dictionary.works.slice(0, 3));
 
   const printedOn = new Date().toISOString().split("T")[0];
 
@@ -108,54 +107,11 @@
 
   <PrintedDivider style="dotted" />
 
-  <!-- Works section -->
-  <PrintedSection label={dictionary.labels.works} labelIcon="apps">
-    <div class="grid grid-cols-1">
-      {#each primaryWorks as work (work.name)}
-        <a
-          href={work.link}
-          target="_blank"
-          rel="noopener"
-          class="printed-row group -mx-3 grid grid-cols-[2.5rem_1fr_auto] items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
-        >
-          {#if work.image}
-            <img
-              class="h-10 w-10 border border-printer-ink/10 dark:border-printer-ink-dark/10"
-              src={work.image}
-              alt={dictionary.labels.icon(work.name)}
-              width="40"
-              height="40"
-              loading="lazy"
-            />
-          {:else}
-            <div
-              class="flex h-10 w-10 items-center justify-center bg-printer-accent/10 font-mono text-base font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
-            >
-              {work.name[0]}
-            </div>
-          {/if}
-          <div class="min-w-0 flex-1">
-            <div
-              class="font-serif text-lg font-medium tracking-[-0.02em] text-printer-ink transition-colors group-hover:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark"
-            >
-              {work.name}
-            </div>
-            <div
-              class="mt-0.5 line-clamp-1 font-serif text-[13px] text-printer-ink-light dark:text-printer-ink-dark/60"
-            >
-              {work.summary}
-            </div>
-          </div>
-          <span
-            class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
-          >
-            →
-          </span>
-        </a>
-      {/each}
-    </div>
+  <!-- Projects section -->
+  <PrintedSection label={dictionary.labels.projects} labelIcon="code">
+    <ProjectList {works} {lang} />
     <a
-      href={dictionary.urls.works}
+      href={dictionary.urls.work}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
       VIEW ALL →

@@ -7,7 +7,7 @@ interface Contact {
   icon: IconName;
 }
 
-interface ArchiveEntry {
+interface RecentEntry {
   title: string;
   summary: string;
 }
@@ -17,7 +17,6 @@ interface Work {
   summary: string;
   image?: string;
   link: string;
-  primary: boolean;
 }
 
 const contacts: Contact[] = [
@@ -83,8 +82,9 @@ const dictionary = {
   },
   urls: {
     home: "/en",
-    works: "/en/works",
-    posts: "/en/posts",
+    work: "/en/work",
+    // Tech posts are listed on the Work page.
+    posts: "/en/work",
     life: "/en/life",
     use: "/en/use",
     about: "/en/about",
@@ -97,19 +97,18 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    works: "Works",
+    work: "Work",
     posts: "Tech",
     life: "Life",
     use: "Use",
     about: "About",
     latestTech: "Tech",
     latestLife: "Life",
-    worksSubtitle: "Things I have made",
+    workSubtitle: "Things I have made",
     useSubtitle: "Things I'm using.",
     activity: "Activity",
     categories: "Categories",
-    featured: "Featured",
-    archive: "Archive",
+    projects: "Projects",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
@@ -121,7 +120,7 @@ const dictionary = {
       snail: "Snail",
     },
     backToSection: {
-      posts: "← BACK TO TECH",
+      posts: "← BACK TO WORK",
       life: "← BACK TO LIFE",
     },
     allSectionPosts: {
@@ -135,8 +134,8 @@ const dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "Printed on",
     reading: "Recent Reading",
-    films: "Recent Films",
-    music: "Recent Listening",
+    watching: "Recent Watching",
+    listening: "Recent Listening",
     aboutTitle: "About",
     aboutSubtitle: "Hello, World!",
     wechatScanHint: "Scan to read on WeChat",
@@ -224,7 +223,6 @@ const dictionary = {
         "Pilot coding agents (Claude Code, Codex) and monitor their telemetry from one console.",
       image: "/static/code-by-wire.svg",
       link: "https://github.com/luojiahai/code-by-wire",
-      primary: true,
     },
     {
       name: "Potato",
@@ -232,7 +230,6 @@ const dictionary = {
         "Stash long terminal commands, find them by fuzzy search, and hand them back.",
       image: "/static/potato.svg",
       link: "https://github.com/luojiahai/potato",
-      primary: true,
     },
   ] as Work[],
   contacts,
@@ -251,11 +248,11 @@ const dictionary = {
     connections: "Connections",
     telegramHint: "DMs open, say hi anytime.",
   },
-  archive: {
+  recent: {
     // TODO(placeholder): intentionally empty for now, fill these in later.
-    reading: [] as ArchiveEntry[],
-    films: [] as ArchiveEntry[],
-    music: [] as ArchiveEntry[],
+    reading: [] as RecentEntry[],
+    watching: [] as RecentEntry[],
+    listening: [] as RecentEntry[],
   },
   aboutContent: `
 This is [luojiahai](https://luojiahai.com)'s corner of the internet.

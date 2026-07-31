@@ -24,8 +24,9 @@ const dictionary: Dictionary = {
   },
   urls: {
     home: "/zh",
-    works: "/zh/works",
-    posts: "/zh/posts",
+    work: "/zh/work",
+    // 技术文章列在作品页。
+    posts: "/zh/work",
     life: "/zh/life",
     use: "/zh/use",
     about: "/zh/about",
@@ -38,19 +39,18 @@ const dictionary: Dictionary = {
   },
   labels: {
     home: "主页",
-    works: "作品",
+    work: "作品",
     posts: "技术",
     life: "生活",
     use: "使用",
     about: "关于",
     latestTech: "技术",
     latestLife: "生活",
-    worksSubtitle: "我做的东西",
+    workSubtitle: "我做的东西",
     useSubtitle: "我使用的东西。",
     activity: "活动",
     categories: "分类",
-    featured: "精选",
-    archive: "归档",
+    projects: "项目",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",
@@ -62,7 +62,7 @@ const dictionary: Dictionary = {
       snail: "蜗牛",
     },
     backToSection: {
-      posts: "← 返回技术",
+      posts: "← 返回作品",
       life: "← 返回生活",
     },
     allSectionPosts: {
@@ -76,8 +76,8 @@ const dictionary: Dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "打印于",
     reading: "最近阅读",
-    films: "最近观影",
-    music: "最近聆听",
+    watching: "最近观看",
+    listening: "最近聆听",
     aboutTitle: "关于",
     aboutSubtitle: "你好，世界！",
     wechatScanHint: "微信扫码阅读原文",
@@ -161,14 +161,12 @@ const dictionary: Dictionary = {
       summary: "在一个控制台中驾驶编程智能体（Claude Code、Codex）并监控其遥测数据。",
       image: "/static/code-by-wire.svg",
       link: "https://github.com/luojiahai/code-by-wire",
-      primary: true,
     },
     {
       name: "Potato",
       summary: "收纳冗长的终端命令，通过模糊搜索找到并取回。",
       image: "/static/potato.svg",
       link: "https://github.com/luojiahai/potato",
-      primary: true,
     },
   ],
   contacts: [
@@ -224,11 +222,11 @@ const dictionary: Dictionary = {
     connections: "人脉",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
-  archive: {
+  recent: {
     // TODO(placeholder): 暂时为空，之后在这里补充内容。
     reading: [],
-    films: [],
-    music: [],
+    watching: [],
+    listening: [],
   },
   aboutContent: `
 这里是 [luojiahai](https://luojiahai.com) 的互联网角落。

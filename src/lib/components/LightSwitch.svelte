@@ -218,8 +218,8 @@
 
 <style>
   /* The lamp and cord axes hang --lamp-offset outside the 56rem printer's
-     edges (50% ∓ 448px), mirrored. Never clamped to the viewport — that is
-     what used to shove the lamp on top of the shell. */
+     edges (50% ∓ 448px), mirrored. Never clamped to the viewport, which
+     would shove the lamp on top of the shell. */
   :global(:root) {
     --lamp-offset: 64px;
     --lamp-x: calc(50% - 448px - var(--lamp-offset));

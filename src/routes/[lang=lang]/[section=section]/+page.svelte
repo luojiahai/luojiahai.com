@@ -35,7 +35,7 @@
   </PrintedSection>
 
   {#if section === "life"}
-    <!-- Archive sections - links to subpages -->
+    <!-- Activity sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
       <div class="flex flex-wrap gap-2">
         <a href="{dictionary.urls.life}/reading">
@@ -43,14 +43,14 @@
             {dictionary.labels.reading}
           </PrintedLabel>
         </a>
-        <a href="{dictionary.urls.life}/films">
+        <a href="{dictionary.urls.life}/watching">
           <PrintedLabel variant="default" icon="film">
-            {dictionary.labels.films}
+            {dictionary.labels.watching}
           </PrintedLabel>
         </a>
-        <a href="{dictionary.urls.life}/music">
+        <a href="{dictionary.urls.life}/listening">
           <PrintedLabel variant="default" icon="music">
-            {dictionary.labels.music}
+            {dictionary.labels.listening}
           </PrintedLabel>
         </a>
       </div>

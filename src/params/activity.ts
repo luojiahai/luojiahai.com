@@ -1,6 +1,6 @@
 import type { ParamMatcher } from "@sveltejs/kit";
 
-export const activities = ["reading", "films", "music"] as const;
+export const activities = ["reading", "watching", "listening"] as const;
 
 export type Activity = (typeof activities)[number];
 

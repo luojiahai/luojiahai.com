@@ -1,6 +1,15 @@
-import { categoriesOf, postsOf, toListItem, type Section } from "$lib/content";
-import type { Language } from "$lib/dictionaries";
-import type { PageServerLoad } from "./$types";
+import {
+  categoriesOf,
+  postsOf,
+  sections,
+  toListItem,
+  type Section,
+} from "$lib/content";
+import { languages, type Language } from "$lib/dictionaries";
+import type { EntryGenerator, PageServerLoad } from "./$types";
+
+export const entries: EntryGenerator = () =>
+  languages.flatMap((lang) => sections.map((section) => ({ lang, section })));
 
 export const load: PageServerLoad = ({ params }) => {
   const lang = params.lang as Language;
