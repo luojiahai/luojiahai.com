@@ -179,7 +179,7 @@
             fill="none"
             d="M28 24 C27 19 26.8 15 26.5 11"
           />
-          <circle class="snail-led snail-led-back" cx="26.5" cy="10.4" r="2" />
+          <circle class="snail-led" cx="26.5" cy="10.4" r="2" />
           <circle class="snail-led-glint" cx="27.1" cy="9.8" r="0.55" />
         </g>
         <g class="snail-stalk snail-stalk-front">

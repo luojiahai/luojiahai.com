@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
  * by the prerendered /og/... endpoint, so it never ships to the worker.
  */
 
-export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
 export interface OgImageOptions {
   title: string;
@@ -99,12 +99,6 @@ async function loadCjkSubset(text: string): Promise<ArrayBuffer | null> {
 // ---------------------------------------------------------------------------
 
 const emojiCache = new Map<string, string | null>();
-
-function toCodePoints(grapheme: string): string[] {
-  return Array.from(grapheme).map(
-    (char) => char.codePointAt(0)!.toString(16).padStart(4, "0").replace(/^0+(?=\d{4})/, ""),
-  );
-}
 
 async function loadEmoji(grapheme: string): Promise<string | null> {
   const cached = emojiCache.get(grapheme);

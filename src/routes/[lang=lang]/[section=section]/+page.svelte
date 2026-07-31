@@ -7,7 +7,6 @@
   import PrintedEmpty from "$lib/components/PrintedEmpty.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
-  import { showActivity } from "$lib/site-config";
 
   let { data } = $props();
 
@@ -35,7 +34,7 @@
     </p>
   </PrintedSection>
 
-  {#if section === "life" && showActivity}
+  {#if section === "life"}
     <!-- Archive sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
       <div class="flex flex-wrap gap-2">

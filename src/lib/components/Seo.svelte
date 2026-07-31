@@ -11,11 +11,9 @@
     keywords,
     path,
     ogType = "website",
-    ogImage,
     article,
     alternates,
     feeds = false,
-    noindex = false,
     jsonLd = [],
   }: {
     lang: Language;
@@ -25,8 +23,6 @@
     /** Canonical path of this page, e.g. "/en/posts". */
     path: string;
     ogType?: "website" | "article";
-    /** Path of the OG image; defaults to the prerendered one for this page. */
-    ogImage?: string;
     article?: {
       publishedTime: string;
       modifiedTime?: string;
@@ -39,13 +35,12 @@
     alternates?: Partial<Record<Language, string>>;
     /** Advertise RSS feeds (used on the home page). */
     feeds?: boolean;
-    noindex?: boolean;
     jsonLd?: object[];
   } = $props();
 
   let dictionary = $derived(getDictionary(lang));
   let url = $derived(`${BASE_URL}${path}`);
-  let image = $derived(`${BASE_URL}${ogImage ?? `/og${path}.png`}`);
+  let image = $derived(`${BASE_URL}/og${path}.png`);
   let allKeywords = $derived(dictionary.meta.fillKeywords(keywords));
   let feedBase = $derived(lang === "zh" ? "/feed/zh" : "/feed");
 
@@ -80,9 +75,6 @@
   <meta name="keywords" content={allKeywords.join(", ")} />
   <meta name="author" content="Luo, Jiahai" />
   <link rel="canonical" href={url} />
-  {#if noindex}
-    <meta name="robots" content="noindex, nofollow" />
-  {/if}
 
   <meta property="og:type" content={ogType} />
   <meta property="og:url" content={url} />

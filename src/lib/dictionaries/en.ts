@@ -40,6 +40,12 @@ const contacts: Contact[] = [
     icon: "mail",
   },
   {
+    label: "Telegram",
+    name: "@luojiahai",
+    link: "https://t.me/luojiahai",
+    icon: "send",
+  },
+  {
     label: "LinkedIn",
     name: "in/luojiahai",
     link: "https://linkedin.com/in/luojiahai",
@@ -100,7 +106,6 @@ const dictionary = {
     latestLife: "Life",
     worksSubtitle: "Things I have made",
     useSubtitle: "Things I'm using.",
-    recommended: "Recommended",
     activity: "Activity",
     categories: "Categories",
     featured: "Featured",

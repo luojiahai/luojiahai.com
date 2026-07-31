@@ -47,7 +47,6 @@ const dictionary: Dictionary = {
     latestLife: "生活",
     worksSubtitle: "我做的东西",
     useSubtitle: "我使用的东西。",
-    recommended: "推荐",
     activity: "活动",
     categories: "分类",
     featured: "精选",
@@ -190,6 +189,12 @@ const dictionary: Dictionary = {
       name: "hi@luojiahai.com",
       link: "mailto:hi@luojiahai.com",
       icon: "mail",
+    },
+    {
+      label: "Telegram",
+      name: "@luojiahai",
+      link: "https://t.me/luojiahai",
+      icon: "send",
     },
     {
       label: "领英",

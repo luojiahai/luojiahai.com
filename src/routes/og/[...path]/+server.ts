@@ -3,7 +3,6 @@ import { categories, findCategory, findPost, isSection, posts } from "$lib/conte
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
 import { displayDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
-import { activities } from "../../../params/activity";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
 export const prerender = true;

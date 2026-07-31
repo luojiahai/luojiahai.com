@@ -1,4 +1,4 @@
-/** Site-wide feature flags. */
+/** Site-wide configuration. */
 
 /**
  * The critters available to ride the printer shell's top edge — the deck —
@@ -13,9 +13,3 @@ export type Mascot = (typeof mascots)[number];
  * src/lib/mascot-state.svelte.ts).
  */
 export const defaultMascot: Mascot = "snail";
-
-/** Show the draggable decorative stickers on the printer shell. */
-export const showStickers = false;
-
-/** Show the activity section (recent reading/films/listening) on the life page. */
-export const showActivity = false;

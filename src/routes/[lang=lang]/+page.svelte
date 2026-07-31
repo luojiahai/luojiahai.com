@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { getDictionary, type Language } from "$lib/dictionaries";
+  import { getDictionary } from "$lib/dictionaries";
   import type { IconName } from "$lib/icons";
   import { generateWebSiteJsonLd } from "$lib/json-ld";
   import type { SocialCardKind } from "$lib/social";
