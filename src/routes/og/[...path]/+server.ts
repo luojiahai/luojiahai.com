@@ -9,9 +9,8 @@ export const prerender = true;
 
 /** Static pages under each language, with their page-layout OG options. */
 const PAGE_EMOJIS: Record<string, string> = {
-  posts: "✍️",
   life: "🌿",
-  works: "🛠",
+  work: "🛠",
   use: "🧰",
   about: "👋",
   "life/reading": "📚",
@@ -62,9 +61,8 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   // Static pages
   if (page in PAGE_EMOJIS) {
     const titles: Record<string, string> = {
-      posts: dictionary.labels.posts,
       life: dictionary.labels.life,
-      works: dictionary.labels.works,
+      work: dictionary.labels.work,
       use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
       "life/reading": dictionary.labels.reading,
@@ -72,7 +70,7 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       "life/music": dictionary.labels.music,
     };
     const descriptions: Record<string, string | undefined> = {
-      works: dictionary.labels.worksSubtitle,
+      work: dictionary.labels.workSubtitle,
       use: dictionary.labels.useSubtitle,
       about: dictionary.labels.aboutSubtitle || undefined,
     };

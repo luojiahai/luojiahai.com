@@ -60,7 +60,7 @@ as an in-repo backstop.
 - Styling: Tailwind CSS 4 (CSS-first config in `src/app.css`).
 
 ## Commit & Pull Request Guidelines
-- Commits: clear, imperative messages (e.g., "Update featured works").
+- Commits: clear, imperative messages (e.g., "Update work entries").
 - i18n: update both `en` and `zh` where applicable (content and dictionaries).
 - Content: new tech posts use `content/posts/YYYY-MM-DD title/` with `en.md`,
   `zh.md`, and images alongside.
