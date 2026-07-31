@@ -2,9 +2,9 @@
   import { afterNavigate, goto } from "$app/navigation";
   import { page } from "$app/state";
   import { onMount } from "svelte";
-  import type { Snippet } from "svelte";
+  import type { Component, Snippet } from "svelte";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import { showStickers } from "$lib/site-config";
+  import { showStickers, type Mascot } from "$lib/site-config";
   import { hydrateMascot, mascot } from "$lib/mascot-state.svelte";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
@@ -15,6 +15,22 @@
   import Stickers from "./Stickers.svelte";
 
   type ColorMode = "system" | "light" | "dark";
+
+  /**
+   * Who rides the deck, keyed by the mascot values site-config lists. An
+   * empty deck runs nothing, so adding a mascot means adding a row here —
+   * the Record makes the compiler ask for it.
+   */
+  const deckOccupants: Record<Mascot, Component | null> = {
+    none: null,
+    plane: PrinterPlane,
+    snail: PrinterSnail,
+  };
+
+  /** Stays empty until hydration knows which mascot the visitor picked. */
+  let DeckOccupant = $derived(
+    mascot.ready ? deckOccupants[mascot.current] : null,
+  );
 
   let {
     lang,
@@ -190,12 +206,8 @@
     <!-- Decorative critter/vehicle on the printer's top edge. The default
       lives in src/lib/site-config.ts; the deck menu overrides it per visitor
       and only renders once hydration knows which one to run. -->
-    {#if mascot.ready}
-      {#if mascot.current === "plane"}
-        <PrinterPlane />
-      {:else if mascot.current === "snail"}
-        <PrinterSnail />
-      {/if}
+    {#if DeckOccupant}
+      <DeckOccupant />
     {/if}
 
     <!-- Unified header housing — wraps both brand and slit areas to share a single shadow -->

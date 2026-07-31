@@ -2,7 +2,7 @@
   import { tick } from "svelte";
   import { fly } from "svelte/transition";
   import type { Dictionary } from "$lib/dictionaries";
-  import { topAnimations, type TopAnimation } from "$lib/site-config";
+  import { mascots, type Mascot } from "$lib/site-config";
   import { mascot, setMascot } from "$lib/mascot-state.svelte";
   import { mascotGlyphs } from "$lib/mascot-glyphs";
   import DotMatrix from "./DotMatrix.svelte";
@@ -18,11 +18,14 @@
    */
   let { dictionary }: { dictionary: Dictionary } = $props();
 
-  /** Keep in sync with .deck-chit's width in app.css. */
+  /**
+   * The chit's width in px, set on the element below: placing the chit
+   * needs the same number that lays it out, so only one of them holds it.
+   */
   const CHIT_WIDTH = 144;
   const VIEWPORT_MARGIN = 8;
 
-  const options: TopAnimation[] = [...topAnimations];
+  const options: Mascot[] = [...mascots];
 
   let open = $state(false);
   let position = $state({ top: 0, left: 0 });
@@ -65,7 +68,7 @@
     if (returnFocus) triggerEl?.focus();
   }
 
-  function select(value: TopAnimation) {
+  function select(value: Mascot) {
     setMascot(value);
     close(true);
   }
@@ -154,11 +157,10 @@
       class="deck-chit"
       style:top="{position.top}px"
       style:left="{position.left}px"
+      style:width="{CHIT_WIDTH}px"
       transition:fly={{ y: -6, duration: 160 }}
     >
-      <div
-        class="rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15 bg-printer-paper dark:bg-printer-paper-dark thermal-texture shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)] px-2.5 py-2 text-left"
-      >
+      <div class="printed-card px-2.5 py-2 text-left">
         <!-- No title row: the readout's caption already names this. -->
         <div role="menu" aria-label={dictionary.labels.deck}>
           {#each options as option, i (option)}

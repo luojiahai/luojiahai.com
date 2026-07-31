@@ -303,7 +303,8 @@
   }
 
   /* Dot matrix / thermal print texture */
-  .thermal-texture {
+  .thermal-texture,
+  .printed-card {
     background-image: radial-gradient(
       circle,
       rgba(0, 0, 0, 0.04) 0.6px,
@@ -311,12 +312,23 @@
     );
     background-size: 5px 5px;
   }
-  :is(.dark) .thermal-texture {
+  :is(.dark) .thermal-texture,
+  :is(.dark) .printed-card {
     background-image: radial-gradient(
       circle,
       rgba(255, 255, 255, 0.03) 0.6px,
       transparent 0.6px
     );
+  }
+
+  /* A slip of thermal paper lifted off the shell: the shared body of the
+     social hover card and the deck chit. Padding stays with the caller,
+     since each slip holds a different kind of print. */
+  .printed-card {
+    @apply rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15;
+    @apply bg-printer-paper dark:bg-printer-paper-dark;
+    @apply shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)];
+    @apply dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)];
   }
 
   /* Printer button style */
@@ -450,13 +462,12 @@
   }
 
   /* The chit itself sits in the top layer, so it escapes the header
-     housing's overflow clip. Coordinates come from JS in viewport space;
-     these rules just undo the UA popover styling. */
+     housing's overflow clip. Coordinates and width come from JS in viewport
+     space; these rules just undo the UA popover styling. */
   .deck-chit {
     position: fixed;
     inset: auto;
     z-index: 60;
-    width: 9rem;
     margin: 0;
     padding: 0;
     overflow: visible;

@@ -1,11 +1,11 @@
 import { browser } from "$app/environment";
-import { topAnimation, topAnimations, type TopAnimation } from "./site-config";
+import { defaultMascot, mascots, type Mascot } from "./site-config";
 
 /** localStorage key holding the visitor's pick. Mirrored in app.html. */
 const STORAGE_KEY = "mascot";
 
-function isTopAnimation(value: string | undefined): value is TopAnimation {
-  return (topAnimations as readonly string[]).includes(value ?? "");
+function isMascot(value: string | undefined): value is Mascot {
+  return (mascots as readonly string[]).includes(value ?? "");
 }
 
 /**
@@ -16,19 +16,19 @@ function isTopAnimation(value: string | undefined): value is TopAnimation {
  * hydration has read it — so nobody sees the default mascot flash past on
  * the way to their own.
  */
-export const mascot = $state<{ current: TopAnimation; ready: boolean }>({
-  current: topAnimation,
+export const mascot = $state<{ current: Mascot; ready: boolean }>({
+  current: defaultMascot,
   ready: false,
 });
 
 export function hydrateMascot(): void {
   if (!browser) return;
   const stored = document.documentElement.dataset.mascot;
-  mascot.current = isTopAnimation(stored) ? stored : topAnimation;
+  mascot.current = isMascot(stored) ? stored : defaultMascot;
   mascot.ready = true;
 }
 
-export function setMascot(value: TopAnimation): void {
+export function setMascot(value: Mascot): void {
   mascot.current = value;
   if (!browser) return;
   document.documentElement.dataset.mascot = value;
