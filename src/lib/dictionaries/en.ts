@@ -249,11 +249,26 @@ const dictionary = {
     connections: "Connections",
     telegramHint: "DMs open, say hi anytime.",
   },
+  // Newest first: the Life page prints the top entry of each list as a preview.
   recent: {
-    // TODO(placeholder): intentionally empty for now, fill these in later.
-    reading: [] as RecentEntry[],
-    watching: [] as RecentEntry[],
-    listening: [] as RecentEntry[],
+    reading: [
+      {
+        title: "The Pragmatic Programmer",
+        summary: "Andrew Hunt and David Thomas, on the craft of software.",
+      },
+    ] as RecentEntry[],
+    watching: [
+      {
+        title: "Air Crash Investigation",
+        summary: "Aviation accidents, reconstructed one flight per episode.",
+      },
+    ] as RecentEntry[],
+    listening: [
+      {
+        title: "Every Little Part",
+        summary: "Le Youth",
+      },
+    ] as RecentEntry[],
   },
   aboutContent: `
 This is [luojiahai](https://luojiahai.com)'s corner of the internet.

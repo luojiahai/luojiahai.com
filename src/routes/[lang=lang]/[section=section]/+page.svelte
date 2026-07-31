@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
+  import ActivityList from "$lib/components/ActivityList.svelte";
   import PostList from "$lib/components/PostList.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedLabel from "$lib/components/PrintedLabel.svelte";
@@ -39,23 +40,7 @@
   {#if section === "life"}
     <!-- Activity sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
-      <div class="flex flex-wrap gap-2">
-        <a href="{dictionary.urls.life}/reading">
-          <PrintedLabel variant="default" icon="book">
-            {dictionary.labels.reading}
-          </PrintedLabel>
-        </a>
-        <a href="{dictionary.urls.life}/watching">
-          <PrintedLabel variant="default" icon="film">
-            {dictionary.labels.watching}
-          </PrintedLabel>
-        </a>
-        <a href="{dictionary.urls.life}/listening">
-          <PrintedLabel variant="default" icon="music">
-            {dictionary.labels.listening}
-          </PrintedLabel>
-        </a>
-      </div>
+      <ActivityList {lang} />
     </PrintedSection>
   {:else}
     <!-- Projects -->

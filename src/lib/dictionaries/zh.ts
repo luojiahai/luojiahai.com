@@ -223,11 +223,26 @@ const dictionary: Dictionary = {
     connections: "人脉",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
+  // 最新的排在最前：「生活」页会把每个列表的第一条作为预览打印出来。
   recent: {
-    // TODO(placeholder): 暂时为空，之后在这里补充内容。
-    reading: [],
-    watching: [],
-    listening: [],
+    reading: [
+      {
+        title: "程序员修炼之道",
+        summary: "Andrew Hunt 与 David Thomas 写的软件手艺。",
+      },
+    ],
+    watching: [
+      {
+        title: "空中浩劫",
+        summary: "每集还原一次空难。",
+      },
+    ],
+    listening: [
+      {
+        title: "Every Little Part",
+        summary: "Le Youth",
+      },
+    ],
   },
   aboutContent: `
 这里是 [luojiahai](https://luojiahai.com) 的互联网角落。
