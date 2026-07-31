@@ -36,14 +36,6 @@ function preferredLanguage(acceptLanguage: string | null): string {
 export const handle: Handle = async ({ event, resolve }) => {
   const { pathname } = event.url;
 
-  const legacyWork = pathname.match(/^(\/(?:en|zh))?\/works\/?$/);
-  if (legacyWork) {
-    const prefix =
-      legacyWork[1] ??
-      `/${preferredLanguage(event.request.headers.get("accept-language"))}`;
-    redirect(301, `${prefix}/work`);
-  }
-
   // Redirect locale-less page paths (e.g. / or /posts) to the visitor's
   // preferred language. Assets, feeds, and generated files are excluded.
   const firstSegment = pathname.split("/")[1] ?? "";
