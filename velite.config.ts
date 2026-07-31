@@ -3,9 +3,9 @@ import { defineCollection, defineConfig, s } from "velite";
 
 /**
  * Both blogs share a single content pipeline:
- *   content/posts/**      -> section "posts" (tech), served under /{lang}/posts
- *   content/life-posts/** -> section "life",         served under /{lang}/life
- * Categories live in content/categories/{posts,life}.yml.
+ *   content/tech-posts/** -> section "tech", served under /{lang}/tech
+ *   content/life-posts/** -> section "life", served under /{lang}/life
+ * Categories live in content/categories/{tech,life}.yml.
  */
 
 const lang = s.enum(["en", "zh"]);
@@ -29,10 +29,14 @@ const count = s
   })
   .default({ en: 0, zh: 0 });
 
-function sectionOfPath(path: string): "posts" | "life" {
-  return path.startsWith("life-posts/") || path.startsWith("categories/life")
-    ? "life"
-    : "posts";
+function sectionOfPath(path: string): "tech" | "life" {
+  if (path.startsWith("life-posts/") || path.startsWith("categories/life")) {
+    return "life";
+  }
+  if (path.startsWith("tech-posts/") || path.startsWith("categories/tech")) {
+    return "tech";
+  }
+  throw new Error(`Content outside a known section: ${path}`);
 }
 
 const categories = defineCollection({
@@ -61,7 +65,7 @@ const categories = defineCollection({
 
 const posts = defineCollection({
   name: "Post",
-  pattern: ["posts/**/*.md", "life-posts/**/*.md"],
+  pattern: ["tech-posts/**/*.md", "life-posts/**/*.md"],
   schema: s
     .object({
       title: s.string().max(99),

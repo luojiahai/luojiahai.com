@@ -20,7 +20,7 @@
     title: string;
     description?: string;
     keywords?: string[];
-    /** Canonical path of this page, e.g. "/en/posts". */
+    /** Canonical path of this page, e.g. "/en/tech". */
     path: string;
     ogType?: "website" | "article";
     article?: {

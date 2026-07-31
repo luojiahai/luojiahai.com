@@ -3,7 +3,7 @@
  * matcher — which ships to the browser as part of the client router — does
  * not pull the velite output (`#velite`) into the client bundle.
  */
-export const sections = ["posts", "life"] as const;
+export const sections = ["tech", "life"] as const;
 
 export type Section = (typeof sections)[number];
 

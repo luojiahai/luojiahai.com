@@ -32,7 +32,7 @@ function parsePath(
 
   if (segments.length === 0) return { lang };
   if (segments.length > 1) return undefined;
-  if (segments[0] === "tech") return { lang, section: "posts" };
+  if (segments[0] === "tech") return { lang, section: "tech" };
   if (segments[0] === "life") return { lang, section: "life" };
   return undefined;
 }
@@ -48,9 +48,8 @@ export const GET: RequestHandler = async ({ params, request, platform, url }) =>
 
   const { lang, section } = parsed;
   const dictionary = getDictionary(lang);
-  const kind = section === "posts" ? "tech" : section === "life" ? "life" : "all";
-  const suffix =
-    kind === "all" ? "" : ` - ${dictionary.labels[section as Section]}`;
+  const kind = section ?? "all";
+  const suffix = section ? ` - ${dictionary.labels[section]}` : "";
 
   const xml = generateRssFeed({
     title: `${dictionary.meta.websiteName}${suffix}`,

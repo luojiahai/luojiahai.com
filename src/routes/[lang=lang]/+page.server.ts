@@ -7,6 +7,6 @@ export const load: PageServerLoad = ({ params }) => {
 
   return {
     latestLife: postsOf(lang, "life").slice(0, 3).map(toListItem),
-    latestTech: postsOf(lang, "posts").slice(0, 3).map(toListItem),
+    latestTech: postsOf(lang, "tech").slice(0, 3).map(toListItem),
   };
 };
