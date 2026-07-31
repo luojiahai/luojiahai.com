@@ -134,7 +134,7 @@
   <PrintedDivider style="dashed" />
 
   <!-- Latest Tech Posts -->
-  <PrintedSection label={dictionary.labels.latestTech} labelIcon="window">
+  <PrintedSection label={dictionary.labels.latestTech} labelIcon="computer">
     <PostList posts={data.latestTech} {lang} compact />
     <a
       href={dictionary.urls.tech}
