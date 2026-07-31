@@ -222,7 +222,7 @@ const dictionary: Dictionary = {
     connections: "人脉",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
-  archive: {
+  recent: {
     // TODO(placeholder): 暂时为空，之后在这里补充内容。
     reading: [],
     watching: [],

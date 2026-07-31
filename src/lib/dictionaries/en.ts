@@ -7,7 +7,7 @@ interface Contact {
   icon: IconName;
 }
 
-interface ArchiveEntry {
+interface RecentEntry {
   title: string;
   summary: string;
 }
@@ -248,11 +248,11 @@ const dictionary = {
     connections: "Connections",
     telegramHint: "DMs open, say hi anytime.",
   },
-  archive: {
+  recent: {
     // TODO(placeholder): intentionally empty for now, fill these in later.
-    reading: [] as ArchiveEntry[],
-    watching: [] as ArchiveEntry[],
-    listening: [] as ArchiveEntry[],
+    reading: [] as RecentEntry[],
+    watching: [] as RecentEntry[],
+    listening: [] as RecentEntry[],
   },
   aboutContent: `
 This is [luojiahai](https://luojiahai.com)'s corner of the internet.

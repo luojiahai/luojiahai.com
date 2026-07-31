@@ -35,7 +35,7 @@
   </PrintedSection>
 
   {#if section === "life"}
-    <!-- Archive sections - links to subpages -->
+    <!-- Activity sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
       <div class="flex flex-wrap gap-2">
         <a href="{dictionary.urls.life}/reading">

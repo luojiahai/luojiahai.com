@@ -20,7 +20,7 @@
   };
 
   let title = $derived(dictionary.labels[activity]);
-  let items = $derived(dictionary.archive[activity]);
+  let items = $derived(dictionary.recent[activity]);
 </script>
 
 <Seo
@@ -41,7 +41,7 @@
 
   <PrintedDivider style="dashed" />
 
-  <!-- Archive list -->
+  <!-- Recent entries -->
   <PrintedSection>
     <div class="flex flex-col">
       {#each items as item, index (item.title)}
