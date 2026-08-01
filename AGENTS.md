@@ -14,10 +14,12 @@
   page template shared by every aircraft, served outside the printer shell.
   `<slug>/*.md` is the source of truth for that aircraft — for the A32NX, nine
   numbered procedure notes following FlyByWire's beginner guide, plus
-  `controls.md` (docs deep links), `terms.md` (tooltip glossary),
+  `controls.md` (docs deep links), `names.md` (the one full-name map, for the
+  name under each control and the tooltip on a bolded setting),
   `abbreviations.md` (a verbatim copy of FlyByWire's Airbus Terms and
-  Abbreviations page, refreshed by re-downloading, not by editing), `lights.md`
-  and `atc-communications.md`; see that directory's `README.md`. `pnpm fly`
+  Abbreviations page, refreshed by re-downloading, not by editing, and the
+  only source of the Abbreviations sheet), `lights.md` and
+  `atc-communications.md`; see that directory's `README.md`. `pnpm fly`
   (`scripts/build-companion.mjs`) regenerates `<slug>.json` from them; commit
   the regenerated payload. At most nine procedure phases — the companion binds
   the digits 1-9. Adding an aircraft means a `src/params/aircraft.ts` entry, a

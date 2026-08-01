@@ -201,6 +201,31 @@
   .items li[data-done="true"] .cond { color: var(--faint); }
   .items li[data-done="true"] .act b { color: var(--faint); font-weight: 400; }
 
+  /* ---------- tooltip ----------
+     A bolded value the names map knows carries its full name. The dotted rule
+     under it is the affordance; the bubble itself is one shared element moved
+     to the hovered term, because a term in the right-hand condition column
+     would push a per-term bubble off the window edge, and the reference drawer
+     is in the top layer, where a bubble left in the page would hide behind it. */
+  [data-tip] {
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  }
+  #tip {
+    position: fixed; z-index: 80; pointer-events: none;
+    max-width: min(280px, 72vw); padding: 6px 9px;
+    background: var(--shell); border: 1px solid var(--line);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .55);
+    color: var(--ink); font-size: 11px; line-height: 1.45;
+  }
+  #tip[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    #tip { animation: tip-in .12s ease; }
+  }
+  @keyframes tip-in { from { opacity: 0; } }
+
   /* ---------- matrix ---------- */
   .scroll { overflow-x: auto; margin-bottom: 22px; }
   table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
@@ -455,6 +480,8 @@
   <div class="ref-body" id="ref-body" tabindex="-1"></div>
 </dialog>
 
+<div id="tip" role="tooltip" hidden></div>
+
 <footer class="tips">
   <span><kbd>J</kbd><kbd>K</kbd> move</span>
   <span><kbd>Space</kbd> tick</span>
@@ -495,7 +522,7 @@
       icon: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
     },
     {
-      id: "glossary", tab: "Terms", key: "a",
+      id: "abbreviations", tab: "Abbreviations", key: "a",
       // lucide "book-open"
       icon: '<path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/>',
     },
@@ -519,11 +546,11 @@
     .replace(/[—–]/g, "-")
     .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const glossOf = v => (DATA.glossary || {})[String(v).trim().toUpperCase()] || null;
+  const nameOf = v => (DATA.names || {})[String(v).trim().toUpperCase().replace(/\s+/g, " ")] || null;
 
   const inline = frag => (frag || []).map(n => {
     if (n.t === "text") return esc(n.v);
-    if (n.t === "b") { const f = glossOf(n.v); return f ? '<b title="' + esc(f) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>"; }
+    if (n.t === "b") { const f = nameOf(n.v); return f ? '<b data-tip="' + esc(f) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>"; }
     if (n.t === "i") return "<i>" + esc(n.v) + "</i>";
     if (n.t === "sub") return "<sub>" + esc(n.v) + "</sub>";
     if (n.t === "link") return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + esc(n.v) + "</a>";
@@ -648,6 +675,7 @@
     html += groupsHTML(p);
     document.getElementById("main").innerHTML = html;
     cursor = -1;
+    hideTip(); // the term under the pointer may not survive the re-render
   }
 
   /* ---------- reference drawer ---------- */
@@ -662,9 +690,9 @@
 
     let html = "<h1>" + esc(p.title) + "</h1>";
 
-    if (id === "glossary") {
-      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter terms and abbreviations" ' +
-        'spellcheck="false" aria-label="Filter terms and abbreviations">';
+    if (id === "abbreviations") {
+      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
+        'spellcheck="false" aria-label="Filter abbreviations">';
     }
     if (p.kind === "atc") {
       if (p.chain) {
@@ -680,6 +708,7 @@
     const body = document.getElementById("ref-body");
     body.innerHTML = html;
     body.scrollTop = 0;
+    hideTip();
   }
 
   function openRef(id) {
@@ -690,7 +719,7 @@
     if (search) search.focus(); else document.getElementById("ref-body").focus();
   }
 
-  function filterGlossary(query) {
+  function filterAbbreviations(query) {
     const q = query.trim().toLowerCase();
     let shown = 0;
     document.querySelectorAll("#ref-body tbody tr").forEach(tr => {
@@ -711,6 +740,44 @@
       empty.textContent = "Nothing matches " + query.trim();
     }
   }
+
+  /* ---------- tooltip ---------- */
+  const GAP = 7, EDGE = 8;
+
+  function showTip(el) {
+    const tip = document.getElementById("tip");
+    tip.textContent = el.dataset.tip;
+    /* A dialog sits in the top layer, above everything the page can stack
+       against, so the bubble follows the term in and out of the sheet. */
+    const host = el.closest("dialog") || document.body;
+    if (tip.parentNode !== host) host.append(tip);
+    /* Park it at the origin before measuring: a fixed element left near the
+       right edge shrinks to the space beside it and wraps differently there. */
+    tip.style.left = tip.style.top = "0px";
+    tip.hidden = false;
+
+    const r = el.getBoundingClientRect();
+    const t = tip.getBoundingClientRect();
+    const room = innerWidth - t.width - EDGE;
+    tip.style.left = Math.max(EDGE, Math.min(r.left + r.width / 2 - t.width / 2, room)) + "px";
+    // above the term unless it is too close to the top of the window
+    tip.style.top = (r.top > t.height + GAP ? r.top - t.height - GAP : r.bottom + GAP) + "px";
+  }
+
+  function hideTip() {
+    const tip = document.getElementById("tip");
+    if (tip) tip.hidden = true;
+  }
+
+  document.addEventListener("mouseover", e => {
+    const el = e.target.closest("[data-tip]");
+    if (el) showTip(el); else hideTip();
+  });
+  // mouseover cannot fire on the way out of the window
+  document.addEventListener("mouseleave", hideTip);
+  // fixed coordinates go stale the moment anything moves under them
+  document.addEventListener("scroll", hideTip, true);
+  window.addEventListener("resize", hideTip);
 
   /* ---------- state ---------- */
   function setPhase(id) {
@@ -766,14 +833,14 @@
   dialog().addEventListener("click", e => {
     if (e.target === dialog()) dialog().close();
   });
-  dialog().addEventListener("close", () => { openRefId = null; });
+  dialog().addEventListener("close", () => { openRefId = null; hideTip(); });
 
   document.addEventListener("change", e => {
     if (e.target.matches(".items input")) setTick(e.target.dataset.id, e.target.checked);
   });
 
   document.addEventListener("input", e => {
-    if (e.target.id === "ref-search") return filterGlossary(e.target.value);
+    if (e.target.id === "ref-search") return filterAbbreviations(e.target.value);
     if (!e.target.matches("[data-tok]")) return;
     fields[e.target.dataset.tok] = e.target.value;
     save(LS.fields, fields);
