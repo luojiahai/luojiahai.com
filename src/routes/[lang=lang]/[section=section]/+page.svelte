@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
   import ActivityList from "$lib/components/ActivityList.svelte";
+  import FlyList from "$lib/components/FlyList.svelte";
   import PostList from "$lib/components/PostList.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedLabel from "$lib/components/PrintedLabel.svelte";
@@ -41,6 +42,11 @@
     <!-- Activity sections - links to subpages -->
     <PrintedSection label={dictionary.labels.activity} labelIcon="pulse">
       <ActivityList {lang} />
+    </PrintedSection>
+
+    <!-- Sim companions - links out of the printer shell -->
+    <PrintedSection label={dictionary.labels.fly} labelIcon="plane">
+      <FlyList entries={dictionary.fly} />
     </PrintedSection>
   {:else}
     <!-- Projects -->

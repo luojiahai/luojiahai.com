@@ -51,6 +51,7 @@ const dictionary: Dictionary = {
     },
     useSubtitle: "我使用的东西。",
     activity: "活动",
+    fly: "飞行",
     projects: "项目",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
@@ -244,6 +245,13 @@ const dictionary: Dictionary = {
       },
     ],
   },
+  fly: [
+    {
+      slug: "fbw-a32nx",
+      summary:
+        "从登机口到登机口的操作流程、通话与灯光，在微软模拟飞行旁边逐项勾选。",
+    },
+  ],
   aboutContent: `
 这里是 [luojiahai](https://luojiahai.com) 的互联网角落。
 

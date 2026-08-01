@@ -8,7 +8,15 @@
   Standalone pages: `about/`, `use/`, and `life/[activity=activity]/`
   (`reading`, `watching`, `listening`).
   Endpoints: `feed/` (runtime RSS), `og/` (prerendered OG images),
-  `sitemap.xml/`, `robots.txt/`.
+  `sitemap.xml/`, `robots.txt/`, `fly/[aircraft=aircraft]/` (prerendered
+  flight companions).
+- `src/lib/fly/`: the flight companions. `companion.html` is one standalone
+  page template shared by every aircraft, served outside the printer shell;
+  `<slug>.json` is the checklist payload, generated from the procedure notes
+  in github.com/luojiahai/wiki by its `tools/build-companion.mjs` and
+  vendored here. Adding an aircraft means a `src/params/aircraft.ts` entry, a
+  payload, a `payloads` row in the endpoint, and a summary in both
+  dictionaries.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,

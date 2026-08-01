@@ -1,6 +1,7 @@
 import { categories, posts } from "$lib/content";
 import { getDictionary, languages } from "$lib/dictionaries";
 import { activities } from "../../params/activity";
+import { aircraft } from "../../params/aircraft";
 import type { RequestHandler } from "./$types";
 
 export const prerender = true;
@@ -32,6 +33,14 @@ export const GET: RequestHandler = () => {
     ];
   });
 
+  // The sim companions sit outside the /{lang}/ namespace, so they are listed
+  // once rather than per language.
+  const companionUrls: SitemapUrl[] = aircraft.map((entry) => ({
+    loc: `/fly/${entry.slug}`,
+    lastmod: now,
+    priority: 0.6,
+  }));
+
   const categoryUrls: SitemapUrl[] = categories.flatMap((category) =>
     languages.map((lang) => ({
       loc: category.permalink[lang],
@@ -46,7 +55,7 @@ export const GET: RequestHandler = () => {
     priority: post.section === "tech" ? 1 : 0.9,
   }));
 
-  const urls = [...basicUrls, ...categoryUrls, ...postUrls]
+  const urls = [...basicUrls, ...companionUrls, ...categoryUrls, ...postUrls]
     .map(
       (item) => `  <url>
     <loc>${BASE_URL}${item.loc}</loc>${item.lastmod ? `\n    <lastmod>${item.lastmod}</lastmod>` : ""}

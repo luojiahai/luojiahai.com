@@ -1,0 +1,683 @@
+<!doctype html>
+<!--
+  The flight companion: a tick-off checklist built to sit on a second screen
+  beside the simulator. One template, filled in per aircraft by
+  src/routes/fly/[aircraft=aircraft]/+server.ts, which substitutes %name%,
+  %slug% and the checklist payload.
+
+  It lives outside the printer shell on purpose. The shell is a reading frame,
+  and this is an instrument: dark, dense, and legible at a glance. It stays
+  inside the brand by borrowing the site's night tokens from src/app.css, the
+  same JetBrains Mono, the terracotta accent, and the thermal dot texture.
+
+  The payloads are generated from the procedure notes in
+  github.com/luojiahai/wiki by tools/build-companion.mjs, and vendored here.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141413">
+<title>%name% Flight Companion - luojiahai</title>
+<meta name="description" content="A gate to gate tick-off checklist for the %name% in Microsoft Flight Simulator, with the light matrix, abbreviations and VATSIM radio scripts.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-icon.png">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+
+  :root {
+    /* Straight from src/app.css, dark side only. */
+    --paper: #141413;
+    --body: #1a1918;
+    --shell: #262624;
+    --button: #30302e;
+    --button-active: #3d3d3a;
+    --ink: #faf9f5;
+    --muted: #9c9a93;
+    --faint: #6e6d68;
+    --accent: #c46849;
+    --line: rgba(250, 249, 245, 0.09);
+    --line-soft: rgba(250, 249, 245, 0.05);
+    --mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+    --rail: 208px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 13px/1.5 var(--mono);
+    -webkit-font-smoothing: antialiased;
+    /* the site's thermal dot texture, carried over as panel grain */
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0.6px, transparent 0.6px);
+    background-size: 5px 5px;
+  }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  ::selection { background: rgba(196, 104, 73, 0.3); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .skip {
+    position: fixed; left: 12px; top: 10px; z-index: 60;
+    background: var(--accent); color: var(--paper); padding: 8px 12px;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    transform: translateY(-180%);
+  }
+  .skip:focus { transform: none; }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--body);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+  }
+  .hwrap {
+    display: grid; grid-template-columns: var(--rail) 1fr auto;
+    gap: 28px; align-items: center;
+    width: min(100% - 40px, 1320px); min-height: 64px; margin: 0 auto;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .lamp {
+    position: relative; width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(0, 0, 0, .4); display: grid; place-items: center;
+    border: 1px solid rgba(255, 255, 255, .05);
+  }
+  .lamp i {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 8px rgba(196, 104, 73, .5), inset 0 -1px 2px rgba(0, 0, 0, .3);
+    animation: lamp 2.4s infinite;
+  }
+  @keyframes lamp { 0%, 100% { opacity: 1 } 50% { opacity: .5 } }
+  .brand b { font-size: 12px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; }
+  .brand small { display: block; color: var(--faint); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase; margin-top: 3px; }
+
+  .progress { display: grid; gap: 7px; max-width: 420px; }
+  .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .progress-row span:first-child { color: var(--faint); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; }
+  .progress-row b { font-weight: 500; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .cells { display: flex; gap: 2px; }
+  .cells i { width: 5px; height: 9px; background: rgba(250, 249, 245, .12); }
+  .cells i.on { background: var(--accent); }
+
+  .actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .btn {
+    height: 30px; padding: 0 13px; cursor: pointer;
+    background: var(--button); border: 1px solid rgba(255, 255, 255, .07);
+    color: var(--ink); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, .05), inset 0 -2px 0 rgba(0, 0, 0, .38);
+    transition: transform .15s, color .15s, border-color .15s;
+  }
+  .btn:hover { color: var(--accent); border-color: rgba(196, 104, 73, .3); transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px); }
+
+  /* ---------- shell ---------- */
+  .shell {
+    display: grid; grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: 28px; width: min(100% - 40px, 1320px); margin: 0 auto;
+    align-items: start;
+  }
+  .rail { position: sticky; top: 88px; padding: 22px 0 40px; }
+  .rail-label { margin: 0 0 10px; color: var(--faint); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; }
+  .rail nav { display: grid; gap: 1px; }
+  .rail button {
+    display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center;
+    width: 100%; padding: 8px 10px; cursor: pointer; text-align: left;
+    background: transparent; border: 0; border-left: 2px solid transparent;
+    color: var(--muted); font-size: 11.5px;
+    transition: background .15s, color .15s;
+  }
+  .rail button:hover { background: rgba(250, 249, 245, .04); color: var(--ink); }
+  .rail button[aria-current="true"] { background: var(--body); border-left-color: var(--accent); color: var(--ink); }
+  .rail .num { color: var(--faint); font-size: 10px; }
+  .rail button[aria-current="true"] .num { color: var(--accent); }
+  .rail .pct { color: var(--faint); font-size: 9.5px; font-variant-numeric: tabular-nums; }
+  .rail button[data-complete] .pct { color: var(--accent); }
+
+  main { padding: 26px 0 80px; min-width: 0; }
+  h1 { margin: 0 0 6px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .lede { margin: 0 0 24px; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
+
+  .grp { margin-bottom: 30px; }
+  .grp h2 {
+    display: flex; align-items: center; gap: 12px; margin: 0 0 12px;
+    color: var(--faint); font-size: 9.5px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase;
+  }
+  .grp h2::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+  .grp h3 { margin: 0 0 8px; font-size: 12.5px; font-weight: 600; }
+
+  .para { margin: 0 0 14px; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
+  .note { margin: 0 0 14px; padding: 4px 0 4px 13px; border-left: 2px solid rgba(196, 104, 73, .4); color: var(--muted); font-size: 12px; max-width: 62ch; }
+  .steps { margin: 0 0 18px; padding-left: 20px; color: var(--ink); font-size: 12.5px; }
+  .steps li { margin-bottom: 6px; }
+
+  /* ---------- checklist ---------- */
+  .items-head, .items label {
+    display: grid; grid-template-columns: 15px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, .85fr);
+    gap: 0 16px; align-items: start;
+  }
+  .items-head {
+    padding-bottom: 6px; border-bottom: 1px solid var(--line);
+    color: var(--faint); font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  }
+  .items { list-style: none; margin: 0 0 22px; padding: 0; }
+  .items li { border-bottom: 1px solid var(--line-soft); }
+  .items li:last-child { border-bottom: 0; }
+  .items label { padding: 8px 0; cursor: pointer; }
+  .items li:hover { background: rgba(250, 249, 245, .025); }
+  .items li[data-cursor="true"] label { box-shadow: inset 2px 0 0 var(--accent); padding-left: 8px; margin-left: -10px; }
+  .items input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .box {
+    margin-top: 3px; width: 13px; height: 13px; display: grid; place-items: center;
+    border: 1px solid rgba(250, 249, 245, .35);
+  }
+  .box i { width: 7px; height: 7px; background: var(--accent); opacity: 0; }
+  .items li[data-done="true"] .box i { opacity: 1; }
+  .ctl { font-size: 12.5px; line-height: 1.35; }
+  .act { font-size: 12.5px; line-height: 1.35; }
+  .cond { color: var(--faint); font-size: 11px; line-height: 1.35; }
+  .full { display: block; margin-top: 1px; color: var(--faint); font-size: 9.5px; line-height: 1.3; }
+  .act b, .steps b { font-weight: 600; color: var(--accent); }
+  .ctl a { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-color: rgba(250, 249, 245, .3); }
+  .ctl a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+  .items li[data-done="true"] .ctl,
+  .items li[data-done="true"] .act,
+  .items li[data-done="true"] .cond { color: var(--faint); }
+  .items li[data-done="true"] .act b { color: var(--faint); font-weight: 400; }
+
+  /* ---------- matrix ---------- */
+  .scroll { overflow-x: auto; margin-bottom: 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+  thead th { padding: 6px 16px 6px 0; text-align: left; font-weight: 400; color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; border-bottom: 1px solid var(--line); }
+  tbody td, tbody th { padding: 6px 16px 6px 0; text-align: left; font-weight: 400; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
+  tbody td { color: var(--accent); }
+  tbody td.nil { color: rgba(250, 249, 245, .18); }
+  tbody td.soft { color: var(--muted); }
+
+  /* ---------- atc ---------- */
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .fields label { display: grid; gap: 4px; color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+  .fields input {
+    background: var(--body); border: 1px solid var(--line); color: var(--ink);
+    padding: 6px 8px; font-size: 12px; letter-spacing: 0; text-transform: none;
+  }
+  .fields input::placeholder { color: rgba(250, 249, 245, .22); }
+  .fields input:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
+  .turn { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 5px 0 5px 12px; margin-bottom: 5px; border-left: 2px solid var(--line); }
+  .turn.you { border-left-color: rgba(196, 104, 73, .5); }
+  .who { color: var(--faint); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
+  .who span { display: block; margin-top: 3px; letter-spacing: 0; text-transform: none; }
+  .say { font-size: 12.5px; line-height: 1.6; }
+  .say .tok { background: rgba(196, 104, 73, .14); color: var(--accent); padding: 0 4px; }
+  .say .fill { color: var(--accent); font-weight: 600; }
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--muted); font-size: 10.5px; }
+  .chain b { font-weight: 400; padding: 3px 8px; border: 1px solid var(--line); }
+  .chain i { color: var(--faint); font-style: normal; }
+
+  /* ---------- reference drawer ----------
+     Lights, abbreviations and the radio scripts are lookups, not phases:
+     they open over the checklist and close again without costing you your
+     place in it. Docked right so the rail and the ticked rows stay in view. */
+  .rail-ref { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  .rail-ref nav { display: grid; gap: 1px; }
+  .rail-ref button { grid-template-columns: 16px 1fr auto; color: var(--muted); }
+  .rail-ref .key {
+    min-width: 15px; padding: 1px 4px; text-align: center;
+    border: 1px solid var(--line); color: var(--faint); font-size: 9px;
+  }
+  .rail-ref button:hover .key { border-color: rgba(196, 104, 73, .35); color: var(--accent); }
+
+  #ref {
+    margin: 0 0 0 auto; padding: 0; max-width: none; max-height: none;
+    width: min(660px, 94vw); height: 100dvh;
+    background: var(--body); color: var(--ink);
+    border: 0; border-left: 1px solid var(--line);
+    box-shadow: -26px 0 64px rgba(0, 0, 0, .55);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0.6px, transparent 0.6px);
+    background-size: 5px 5px;
+  }
+  #ref[open] { display: grid; grid-template-rows: auto 1fr; }
+  #ref::backdrop { background: rgba(10, 10, 9, .66); }
+
+  .ref-head {
+    display: flex; align-items: center; gap: 6px;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--shell);
+  }
+  .ref-tabs { display: flex; gap: 6px; flex: 1; min-width: 0; overflow-x: auto; }
+  .ref-tab {
+    height: 28px; padding: 0 11px; cursor: pointer; white-space: nowrap;
+    background: transparent; border: 1px solid transparent; color: var(--muted);
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    transition: color .15s, border-color .15s;
+  }
+  .ref-tab:hover { color: var(--ink); }
+  .ref-tab[aria-selected="true"] { color: var(--accent); border-color: rgba(196, 104, 73, .4); }
+  .ref-body { overflow-y: auto; padding: 22px 16px 48px; }
+  .ref-body h1 { font-size: 15px; margin-bottom: 18px; }
+  .ref-search {
+    width: 100%; margin-bottom: 16px; padding: 8px 10px;
+    background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-size: 12px;
+  }
+  .ref-search::placeholder { color: rgba(250, 249, 245, .22); }
+  .ref-search:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
+  .ref-empty { color: var(--faint); font-size: 12px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    #ref[open] { animation: sheet-in .24s cubic-bezier(.16, 1, .3, 1); }
+    #ref[open]::backdrop { animation: scrim-in .24s ease; }
+  }
+  @keyframes sheet-in { from { transform: translateX(28px); opacity: .3; } }
+  @keyframes scrim-in { from { opacity: 0; } }
+
+  /* ---------- footer ---------- */
+  .tips {
+    position: sticky; bottom: 0; z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 18px; justify-content: center;
+    padding: 10px 20px; background: var(--body); border-top: 1px solid var(--line);
+    color: var(--faint); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .tips kbd { display: inline-block; min-width: 16px; padding: 1px 4px; margin-right: 3px; text-align: center; border: 1px solid var(--line); color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .hwrap { grid-template-columns: 1fr auto; row-gap: 12px; padding: 12px 0; }
+    .progress { grid-column: 1 / -1; max-width: none; }
+    .shell { grid-template-columns: 1fr; gap: 0; }
+    .rail { position: static; padding: 18px 0 0; }
+    .rail nav { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 6px; }
+    .rail button { width: auto; border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+    .rail button[aria-current="true"] { border-left: 0; border-bottom-color: var(--accent); }
+    .rail-ref { margin-top: 12px; padding-top: 12px; }
+    .rail-ref nav { display: flex; gap: 6px; overflow-x: auto; }
+    .rail-ref .key { display: none; }
+    #ref { width: 100vw; border-left: 0; }
+    .items-head { display: none; }
+    .items label { grid-template-columns: 15px 1fr; gap: 4px 12px; }
+    .items .cond:empty { display: none; }
+    .tips { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lamp i { animation: none; }
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to current phase</a>
+
+<header>
+  <div class="hwrap">
+    <a class="brand" href="/">
+      <span class="lamp" aria-hidden="true"><i></i></span>
+      <span>
+        <b>%name%</b>
+        <small>Flight companion</small>
+      </span>
+    </a>
+    <div class="progress">
+      <div class="progress-row"><span>Flight progress</span><b id="total"></b></div>
+      <div class="cells" id="cells" aria-hidden="true"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="reset">Reset flight</button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail">
+    <p class="rail-label">Phase</p>
+    <nav id="nav" aria-label="Flight phases"></nav>
+    <div class="rail-ref">
+      <p class="rail-label">Reference</p>
+      <nav id="ref-nav" aria-label="Reference"></nav>
+    </div>
+  </aside>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<dialog id="ref" aria-label="Reference">
+  <div class="ref-head">
+    <div class="ref-tabs" id="ref-tabs" role="tablist" aria-label="Reference"></div>
+    <button class="btn" id="ref-close">Close</button>
+  </div>
+  <div class="ref-body" id="ref-body" tabindex="-1"></div>
+</dialog>
+
+<footer class="tips">
+  <span><kbd>J</kbd><kbd>K</kbd> move</span>
+  <span><kbd>Space</kbd> tick</span>
+  <span><kbd>1</kbd>-<kbd>7</kbd> phase</span>
+  <span><kbd>L</kbd><kbd>A</kbd><kbd>R</kbd> reference</span>
+  <span>Ticks stay in this browser</span>
+</footer>
+
+<script id="data" type="application/json">/*__DATA__*/</script>
+<script>
+(() => {
+  "use strict";
+
+  /* State is per aircraft: two companions open in two tabs must not share a
+     flight. The slug is substituted in when the page is built. */
+  const SLUG = "%slug%";
+  const LS = {
+    ticks: "fly." + SLUG + ".ticks.v1",
+    fields: "fly." + SLUG + ".fields.v1",
+    phase: "fly." + SLUG + ".phase.v1",
+  };
+  const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+  /* The three reference sheets ride in the same payload as the procedures but
+     carry no ticks, so they stay out of the flight spine and open in the
+     drawer instead. Keyed by the shortcut that opens each one. */
+  const REFS = [
+    { id: "lights", tab: "Lights", key: "l" },
+    { id: "glossary", tab: "Abbreviations", key: "a" },
+    { id: "atc", tab: "Radio", key: "r" },
+  ];
+  const isRef = id => REFS.some(r => r.id === id);
+
+  let DATA, procedures = [], ticks = load(LS.ticks, {}), fields = load(LS.fields, {});
+  let current, cursor = -1, openRefId = null;
+
+  const refPhase = id => DATA.phases.find(p => p.id === id);
+  const dialog = () => document.getElementById("ref");
+
+  const esc = s => String(s)
+    .replace(/[—–]/g, "-")
+    .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  const glossOf = v => (DATA.glossary || {})[String(v).trim().toUpperCase()] || null;
+
+  const inline = frag => (frag || []).map(n => {
+    if (n.t === "text") return esc(n.v);
+    if (n.t === "b") { const f = glossOf(n.v); return f ? '<b title="' + esc(f) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>"; }
+    if (n.t === "i") return "<i>" + esc(n.v) + "</i>";
+    if (n.t === "sub") return "<sub>" + esc(n.v) + "</sub>";
+    if (n.t === "link") return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + esc(n.v) + "</a>";
+    return "";
+  }).join("");
+
+  const phaseItems = p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items));
+  const countPhase = p => { const it = phaseItems(p); return { done: it.filter(i => ticks[i.id]).length, total: it.length }; };
+
+  /* ---------- render ---------- */
+  const CELLS = 40;
+  function renderTotals() {
+    let done = 0, total = 0;
+    procedures.forEach(p => { const c = countPhase(p); done += c.done; total += c.total; });
+    document.getElementById("total").textContent = done + " / " + total;
+    const on = total ? Math.round(done / total * CELLS) : 0;
+    document.getElementById("cells").innerHTML =
+      Array.from({ length: CELLS }, (_, i) => '<i' + (i < on ? ' class="on"' : "") + "></i>").join("");
+  }
+
+  function renderNav() {
+    document.getElementById("nav").innerHTML = procedures.map(p => {
+      const { done, total } = countPhase(p);
+      const pct = total ? Math.round(done / total * 100) + "%" : "";
+      return '<button data-id="' + p.id + '" aria-current="' + (p.id === current) + '"' +
+        (total && done === total ? ' data-complete="true"' : "") + ">" +
+        '<span class="num">' + esc(p.num) + "</span>" +
+        "<span>" + esc(p.short) + "</span>" +
+        '<span class="pct">' + pct + "</span></button>";
+    }).join("");
+  }
+
+  function renderRefNav() {
+    document.getElementById("ref-nav").innerHTML = REFS.map(r => {
+      const p = refPhase(r.id);
+      if (!p) return "";
+      return '<button data-ref="' + r.id + '"><span class="num"></span><span>' +
+        esc(p.short) + '</span><span class="key">' + r.key.toUpperCase() + "</span></button>";
+    }).join("");
+  }
+
+  function itemsHTML(block) {
+    const label = block.items[0] && block.items[0].conditionLabel || "";
+    return '<div class="items-head" aria-hidden="true"><span></span><span>Control</span><span>Action</span><span>' +
+      esc(label) + "</span></div><ul class=\"items\">" + block.items.map(i =>
+      '<li data-done="' + !!ticks[i.id] + '" data-item="' + esc(i.id) + '">' +
+        '<label><input type="checkbox"' + (ticks[i.id] ? " checked" : "") + ' data-id="' + esc(i.id) + '">' +
+        '<span class="box" aria-hidden="true"><i></i></span>' +
+        '<span class="ctl">' + inline(i.control) + (i.full ? '<span class="full">' + esc(i.full) + "</span>" : "") + "</span>" +
+        '<span class="act">' + inline(i.action) + "</span>" +
+        '<span class="cond">' + (i.condition ? inline(i.condition) : "") + "</span>" +
+      "</label></li>").join("") + "</ul>";
+  }
+
+  function sayHTML(text) {
+    return esc(text).replace(/\{([A-Z0-9 _+]+)\}/g, (m, tok) => {
+      const v = (fields[tok] || "").trim();
+      return v ? '<span class="fill">' + esc(v) + "</span>" : '<span class="tok">' + esc(tok.toLowerCase()) + "</span>";
+    });
+  }
+
+  function blockHTML(b) {
+    if (b.type === "items") return itemsHTML(b);
+    if (b.type === "para") return '<p class="para">' + inline(b.frag) + "</p>";
+    if (b.type === "note") return '<p class="note">' + inline(b.frag) + "</p>";
+    if (b.type === "steps") return '<ol class="steps">' + b.items.map(s => "<li>" + inline(s) + "</li>").join("") + "</ol>";
+    if (b.type === "matrix") {
+      return '<div class="scroll"><table><thead><tr>' + b.head.map(h => "<th>" + esc(h) + "</th>").join("") +
+        "</tr></thead><tbody>" + b.rows.map((r, ri) => "<tr>" + r.map((c, ci) => {
+          if (ci === 0) {
+            const full = (b.fulls || [])[ri];
+            return "<th>" + esc(c) + (full ? '<span class="full">' + esc(full) + "</span>" : "") + "</th>";
+          }
+          const nil = c === "–" || c === "-" || c === "";
+          return '<td class="' + (nil ? "nil" : /required/i.test(c) ? "soft" : "") + '">' + esc(nil ? "-" : c) + "</td>";
+        }).join("") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    if (b.type === "exchange") {
+      return (b.title ? "<h3>" + esc(b.title) + "</h3>" : "") + b.turns.map(t =>
+        '<div class="turn ' + (t.who === "You" ? "you" : "atc") + '">' +
+          '<span class="who">' + esc(t.who) + (t.tag ? "<span>" + esc(t.tag) + "</span>" : "") + "</span>" +
+          '<span class="say">' + sayHTML(t.text) + "</span></div>").join("");
+    }
+    return "";
+  }
+
+  function groupsHTML(p) {
+    return (p.groups || []).map(g =>
+      '<section class="grp">' + (g.title ? "<h2>" + esc(g.title) + "</h2>" : "") +
+      (g.blocks || []).map(blockHTML).join("") + "</section>").join("");
+  }
+
+  function renderMain() {
+    const p = procedures.find(x => x.id === current) || procedures[0];
+    let html = "<h1>" + esc(p.title) + "</h1>";
+    if (p.lede) html += '<p class="lede">' + esc(p.lede) + "</p>";
+    html += groupsHTML(p);
+    document.getElementById("main").innerHTML = html;
+    cursor = -1;
+  }
+
+  /* ---------- reference drawer ---------- */
+  function renderRef(id) {
+    const p = refPhase(id);
+    if (!p) return;
+    openRefId = id;
+
+    document.getElementById("ref-tabs").innerHTML = REFS.map(r =>
+      '<button class="ref-tab" role="tab" data-ref="' + r.id + '" aria-selected="' +
+      (r.id === id) + '">' + esc(r.tab) + "</button>").join("");
+
+    let html = "<h1>" + esc(p.title) + "</h1>";
+
+    if (id === "glossary") {
+      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
+        'spellcheck="false" aria-label="Filter abbreviations">';
+    }
+    if (p.kind === "atc") {
+      if (p.chain) {
+        html += '<div class="chain">' + p.chain.map((c, i) =>
+          (i ? "<i>-&gt;</i>" : "") + "<b>" + esc(c) + "</b>").join("") + "</div>";
+      }
+      html += '<div class="fields">' + DATA.tokens.map(t =>
+        "<label>" + esc(t.label) + '<input data-tok="' + esc(t.key) + '" value="' + esc(fields[t.key] || "") +
+        '" placeholder="' + esc(t.key.toLowerCase()) + '" spellcheck="false"></label>').join("") + "</div>";
+    }
+
+    html += groupsHTML(p);
+    const body = document.getElementById("ref-body");
+    body.innerHTML = html;
+    body.scrollTop = 0;
+  }
+
+  function openRef(id) {
+    const dlg = dialog();
+    renderRef(id);
+    if (!dlg.open) dlg.showModal();
+    const search = document.getElementById("ref-search");
+    if (search) search.focus(); else document.getElementById("ref-body").focus();
+  }
+
+  function filterGlossary(query) {
+    const q = query.trim().toLowerCase();
+    let shown = 0;
+    document.querySelectorAll("#ref-body tbody tr").forEach(tr => {
+      const hit = !q || tr.textContent.toLowerCase().includes(q);
+      tr.hidden = !hit;
+      if (hit) shown++;
+    });
+    let empty = document.getElementById("ref-empty");
+    if (!shown && !empty) {
+      empty = document.createElement("p");
+      empty.id = "ref-empty";
+      empty.className = "ref-empty";
+      empty.textContent = "Nothing matches " + query.trim();
+      document.getElementById("ref-body").append(empty);
+    } else if (shown && empty) {
+      empty.remove();
+    } else if (empty) {
+      empty.textContent = "Nothing matches " + query.trim();
+    }
+  }
+
+  /* ---------- state ---------- */
+  function setPhase(id) {
+    current = id;
+    save(LS.phase, id);
+    renderNav();
+    renderMain();
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function setTick(id, on) {
+    if (on) ticks[id] = true; else delete ticks[id];
+    save(LS.ticks, ticks);
+    const li = document.querySelector('[data-item="' + CSS.escape(id) + '"]');
+    if (li) {
+      li.dataset.done = String(!!on);
+      const box = li.querySelector("input");
+      if (box) box.checked = !!on;
+    }
+    renderNav();
+    renderTotals();
+  }
+
+  function rows() { return [...document.querySelectorAll(".items li")]; }
+  function moveCursor(delta) {
+    const list = rows();
+    if (!list.length) return;
+    list.forEach(li => (li.dataset.cursor = "false"));
+    cursor = cursor < 0 ? (delta > 0 ? 0 : list.length - 1)
+                        : Math.max(0, Math.min(list.length - 1, cursor + delta));
+    const li = list[cursor];
+    li.dataset.cursor = "true";
+    li.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
+  document.addEventListener("click", e => {
+    const nav = e.target.closest("#nav button");
+    if (nav) return setPhase(nav.dataset.id);
+
+    const ref = e.target.closest("[data-ref]");
+    if (ref) return openRef(ref.dataset.ref);
+
+    if (e.target.id === "ref-close") return dialog().close();
+
+    if (e.target.id === "reset") {
+      ticks = {}; save(LS.ticks, ticks);
+      renderNav(); renderMain(); renderTotals();
+    }
+  });
+
+  /* Clicking the scrim beside the sheet closes it, the usual drawer contract. */
+  dialog().addEventListener("click", e => {
+    if (e.target === dialog()) dialog().close();
+  });
+  dialog().addEventListener("close", () => { openRefId = null; });
+
+  document.addEventListener("change", e => {
+    if (e.target.matches(".items input")) setTick(e.target.dataset.id, e.target.checked);
+  });
+
+  document.addEventListener("input", e => {
+    if (e.target.id === "ref-search") return filterGlossary(e.target.value);
+    if (!e.target.matches("[data-tok]")) return;
+    fields[e.target.dataset.tok] = e.target.value;
+    save(LS.fields, fields);
+    renderSays();
+  });
+
+  /* Worksheet values substitute into the calls as you type, so the drawer
+     reads as the sentence you will actually say. */
+  function renderSays() {
+    const p = refPhase("atc");
+    if (!p) return;
+    const turns = (p.groups || []).flatMap(g =>
+      (g.blocks || []).filter(b => b.type === "exchange").flatMap(b => b.turns));
+    document.querySelectorAll("#ref-body .say").forEach((el, i) => {
+      if (turns[i]) el.innerHTML = sayHTML(turns[i].text);
+    });
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("input, textarea, select")) return;
+
+    const shortcut = REFS.find(r => r.key === e.key.toLowerCase());
+    if (shortcut) {
+      e.preventDefault();
+      // The same key that opened the drawer closes it again.
+      if (openRefId === shortcut.id) dialog().close();
+      else openRef(shortcut.id);
+      return;
+    }
+
+    // Everything below drives the checklist, which the drawer is covering.
+    if (dialog().open) return;
+
+    if (e.key === "j" || e.key === "J") { e.preventDefault(); moveCursor(1); }
+    else if (e.key === "k" || e.key === "K") { e.preventDefault(); moveCursor(-1); }
+    else if (e.key === " " && cursor >= 0) {
+      e.preventDefault();
+      const li = rows()[cursor];
+      if (li) setTick(li.dataset.item, li.dataset.done !== "true");
+    } else if (/^[1-9]$/.test(e.key)) {
+      const p = procedures[Number(e.key) - 1];
+      if (p) setPhase(p.id);
+    }
+  });
+
+  /* ---------- boot ---------- */
+  try {
+    DATA = JSON.parse(document.getElementById("data").textContent);
+    procedures = DATA.phases.filter(p => !isRef(p.id));
+    current = load(LS.phase, procedures[0].id);
+    if (!procedures.some(p => p.id === current)) current = procedures[0].id;
+    renderNav();
+    renderRefNav();
+    renderMain();
+    renderTotals();
+  } catch {
+    document.getElementById("main").innerHTML =
+      '<p class="para">Could not read the checklist data.</p>';
+  }
+})();
+</script>
+</body>
+</html>

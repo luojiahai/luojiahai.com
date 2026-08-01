@@ -1,4 +1,5 @@
 import type { IconName } from "$lib/icons";
+import type { AircraftSlug } from "../../params/aircraft";
 
 interface Contact {
   label: string;
@@ -17,6 +18,12 @@ interface Work {
   summary: string;
   image?: string;
   link: string;
+}
+
+/** The aircraft name and URL come from the registry; only the copy is here. */
+interface FlyEntry {
+  slug: AircraftSlug;
+  summary: string;
 }
 
 const contacts: Contact[] = [
@@ -109,6 +116,7 @@ const dictionary = {
     },
     useSubtitle: "Things I'm using.",
     activity: "Activity",
+    fly: "Fly",
     projects: "Projects",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
@@ -270,6 +278,15 @@ const dictionary = {
       },
     ] as RecentEntry[],
   },
+  // Sim companions. These open outside the printer shell, since they are
+  // built to sit on a second screen next to the simulator.
+  fly: [
+    {
+      slug: "fbw-a32nx",
+      summary:
+        "Gate to gate procedures, radio calls and lights, ticked off beside Microsoft Flight Simulator.",
+    },
+  ] as FlyEntry[],
   aboutContent: `
 This is [luojiahai](https://luojiahai.com)'s corner of the internet.
 
