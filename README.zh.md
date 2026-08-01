@@ -12,8 +12,12 @@
 - [Cloudflare Workers](https://workers.cloudflare.com)（通过 `@sveltejs/adapter-cloudflare`）
 
 整个站点在构建期预渲染，作为静态资源由 Cloudflare 边缘节点直接分发。Worker
-中只运行两件事：无语言前缀 URL 的 `Accept-Language` 重定向，以及 RSS
-订阅源（使用 Cloudflare Cache API 做边缘缓存）。
+中只运行三件事：无语言前缀 URL 的 `Accept-Language` 重定向、RSS 订阅源，以及
+`/api/social`（社交悬浮卡片的实时账号数据）。三者都使用 Cloudflare Cache API
+做边缘缓存。
+
+`/fly/<aircraft>` 提供飞行助手页面——由 `src/lib/fly/<aircraft>/` 下的笔记构建
+而成的独立、自包含检查单。
 
 ## 内容
 

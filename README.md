@@ -12,9 +12,13 @@ This is the source code of [luojiahai.com](https://luojiahai.com), my personal w
 - [Cloudflare Workers](https://workers.cloudflare.com) via `@sveltejs/adapter-cloudflare`
 
 The whole site is prerendered at build time and served as static assets from
-Cloudflare's edge. Only two things run in the worker: the `Accept-Language`
-redirect for locale-less URLs, and the RSS feeds (cached with the Cloudflare
-Cache API).
+Cloudflare's edge. Only three things run in the worker: the `Accept-Language`
+redirect for locale-less URLs, the RSS feeds, and `/api/social` (live profile
+stats for the social hover cards). All of them are cached with the Cloudflare
+Cache API.
+
+`/fly/<aircraft>` serves a flight companion — a standalone, self-contained
+checklist page built from the notes in `src/lib/fly/<aircraft>/`.
 
 ## Content
 
