@@ -52,12 +52,6 @@ const contacts: Contact[] = [
     icon: "send",
   },
   {
-    label: "LinkedIn",
-    name: "in/luojiahai",
-    link: "https://linkedin.com/in/luojiahai",
-    icon: "linkedin",
-  },
-  {
     label: "Instagram",
     name: "@luojiahai",
     link: "https://instagram.com/luojiahai",
@@ -254,7 +248,6 @@ const dictionary = {
     },
     emailTo: "To",
     emailHint: "Mail lands straight in my inbox.",
-    connections: "Connections",
     telegramHint: "DMs open, say hi anytime.",
   },
   // Newest first: the Life page prints the top entry of each list as a preview.

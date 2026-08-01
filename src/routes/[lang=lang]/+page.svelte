@@ -36,7 +36,6 @@
     github: "github",
     mail: "email",
     send: "telegram",
-    linkedin: "linkedin",
     instagram: "instagram",
   };
 </script>

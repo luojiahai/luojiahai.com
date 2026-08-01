@@ -263,10 +263,6 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     },
     x: x.status === "fulfilled" ? x.value : base.x,
     telegram: telegram.status === "fulfilled" ? telegram.value : base.telegram,
-    // LinkedIn sits behind an authwall with no anonymous endpoint, so its
-    // numbers always come from the committed snapshot (edit
-    // social-fallback.json to update them).
-    linkedin: socialFallback.linkedin,
     instagram:
       instagram.status === "fulfilled" ? instagram.value : base.instagram,
   };

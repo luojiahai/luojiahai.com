@@ -24,7 +24,6 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
       sameAs: [
         "https://x.com/luojiahai",
         "https://github.com/luojiahai",
-        "https://linkedin.com/in/luojiahai",
         "https://instagram.com/luojiahai",
       ],
     },

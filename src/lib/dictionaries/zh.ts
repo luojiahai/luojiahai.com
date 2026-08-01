@@ -197,12 +197,6 @@ const dictionary: Dictionary = {
       icon: "send",
     },
     {
-      label: "领英",
-      name: "in/luojiahai",
-      link: "https://linkedin.com/in/luojiahai",
-      icon: "linkedin",
-    },
-    {
       label: "Instagram",
       name: "@luojiahai",
       link: "https://instagram.com/luojiahai",
@@ -221,7 +215,6 @@ const dictionary: Dictionary = {
     },
     emailTo: "收件人",
     emailHint: "邮件会直达我的收件箱。",
-    connections: "人脉",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
   // 最新的排在最前：「生活」页会把每个列表的第一条作为预览打印出来。
