@@ -284,7 +284,7 @@ const dictionary = {
     {
       slug: "fbw-a32nx",
       summary:
-        "FlyByWire's beginner guide as a gate to gate tick-off checklist, with lights, radio calls and Airbus abbreviations.",
+        "Airbus A320neo (A320-251N) built by FlyByWire Simulations.",
     },
   ] as FlyEntry[],
   aboutContent: `

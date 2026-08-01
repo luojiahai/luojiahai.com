@@ -248,8 +248,7 @@ const dictionary: Dictionary = {
   fly: [
     {
       slug: "fbw-a32nx",
-      summary:
-        "把 FlyByWire 的入门指南做成从登机口到登机口的勾选清单，附灯光、通话与空客缩写。",
+      summary: "由 FlyByWire Simulations 制作的空客 A320neo（A320-251N）。",
     },
   ],
   aboutContent: `

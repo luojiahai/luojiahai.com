@@ -311,6 +311,21 @@ function parseSections(md) {
       continue;
     }
 
+    // Bullets are a list of separate remarks, not a sequence, so they stay
+    // unordered. Without this they fall through to the paragraph collector
+    // below and arrive as one run-on block with literal "-" markers in it.
+    if (/^[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length) {
+        const m = lines[i].match(/^[-*]\s+(.*)$/);
+        if (m) { items.push(m[1]); i++; }
+        else if (/^\s{2,}\S/.test(lines[i]) && items.length) { items[items.length - 1] += " " + lines[i].trim(); i++; }
+        else break;
+      }
+      ensure().blocks.push({ type: "bullets", items: items.map(t => parseInline(t, controlHref)) });
+      continue;
+    }
+
     if (/^\[\^/.test(line)) { // footnote definition — fold into a note
       const buf = [line.replace(/^\[\^[^\]]+\]:\s*/, "")];
       i++;
@@ -322,7 +337,7 @@ function parseSections(md) {
     if (line.trim()) {
       const buf = [line];
       i++;
-      while (i < lines.length && lines[i].trim() && !/^(#|\||>|\d+\.|\[\^|---)/.test(lines[i])) buf.push(lines[i++]);
+      while (i < lines.length && lines[i].trim() && !/^(#|\||>|\d+\.|\[\^|---|[-*]\s)/.test(lines[i])) buf.push(lines[i++]);
       const text = buf.join(" ").replace(/\[\^[^\]]+\]/g, "").trim();
       if (text) ensure().blocks.push({ type: "para", frag: parseInline(text, controlHref) });
       continue;

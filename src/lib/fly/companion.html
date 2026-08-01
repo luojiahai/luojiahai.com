@@ -119,7 +119,12 @@
     gap: 28px; width: min(100% - 40px, 1320px); margin: 0 auto;
     align-items: start;
   }
-  .rail { position: sticky; top: 88px; padding: 22px 0 40px; }
+  /* Both tracks must be allowed to shrink below their content. Without this the
+     rail's row of phase buttons sets the grid's minimum size, the document grows
+     to the width of all nine of them, and a phone renders the whole page zoomed
+     out to fit. */
+  .shell > * { min-width: 0; }
+  .rail { position: sticky; top: calc(var(--header-h, 64px) + 24px); padding: 22px 0 40px; }
   .rail-label { margin: 0 0 10px; color: var(--faint); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; }
   .rail nav { display: grid; gap: 1px; }
   .rail button {
@@ -152,6 +157,15 @@
   .note { margin: 0 0 14px; padding: 4px 0 4px 13px; border-left: 2px solid rgba(196, 104, 73, .4); color: var(--muted); font-size: 12px; max-width: 62ch; }
   .steps { margin: 0 0 18px; padding-left: 20px; color: var(--ink); font-size: 12.5px; }
   .steps li { margin-bottom: 6px; }
+  /* Remarks about the matrix above, so they read closer to .para than to a
+     sequence: muted, marked by an accent tick rather than a number. */
+  .bullets { list-style: none; margin: 0 0 18px; padding: 0; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
+  .bullets li { position: relative; margin-bottom: 8px; padding-left: 15px; }
+  .bullets li::before {
+    content: ""; position: absolute; left: 0; top: .62em;
+    width: 5px; height: 1px; background: var(--accent); opacity: .75;
+  }
+  .bullets b { font-weight: 600; color: var(--ink); }
 
   /* ---------- checklist ---------- */
   .items-head, .items label {
@@ -200,6 +214,9 @@
   .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
   .fields label { display: grid; gap: 4px; color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
   .fields input {
+    /* an input's default intrinsic width is about 20 characters, which is wider
+       than the track it sits in, and as a grid item it will not shrink on its own */
+    width: 100%; min-width: 0;
     background: var(--body); border: 1px solid var(--line); color: var(--ink);
     padding: 6px 8px; font-size: 12px; letter-spacing: 0; text-transform: none;
   }
@@ -223,6 +240,10 @@
   .rail-ref { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
   .rail-ref nav { display: grid; gap: 1px; }
   .rail-ref button { grid-template-columns: 16px 1fr auto; color: var(--muted); }
+  /* the icon sits in the slot the phase numbers use in the rail above */
+  .rail-ref .ico { display: grid; place-items: center; color: var(--faint); }
+  .rail-ref .ico svg { display: block; width: 13px; height: 13px; }
+  .rail-ref button:hover .ico { color: var(--accent); }
   .rail-ref .key {
     min-width: 15px; padding: 1px 4px; text-align: center;
     border: 1px solid var(--line); color: var(--faint); font-size: 9px;
@@ -254,7 +275,9 @@
   }
   .ref-tab:hover { color: var(--ink); }
   .ref-tab[aria-selected="true"] { color: var(--accent); border-color: rgba(196, 104, 73, .4); }
-  .ref-body { overflow-y: auto; padding: 22px 16px 48px; }
+  /* contain: flicking past the end of the sheet must not scroll the checklist
+     underneath it, which would cost you your place in the list. */
+  .ref-body { overflow-y: auto; overscroll-behavior-y: contain; padding: 22px 16px 48px; }
   .ref-body h1 { font-size: 15px; margin-bottom: 18px; }
   .ref-search {
     width: 100%; margin-bottom: 16px; padding: 8px 10px;
@@ -280,23 +303,109 @@
   }
   .tips kbd { display: inline-block; min-width: 16px; padding: 1px 4px; margin-right: 3px; text-align: center; border: 1px solid var(--line); color: var(--muted); }
 
-  @media (max-width: 860px) {
-    .hwrap { grid-template-columns: 1fr auto; row-gap: 12px; padding: 12px 0; }
-    .progress { grid-column: 1 / -1; max-width: none; }
+  /* ---------- narrow: one column, rail becomes a strip ----------
+     Below this width the rail cannot sit beside the checklist, so it turns into
+     a sticky strip under the header: phases scroll horizontally on the left,
+     the three reference sheets stay pinned right so a lookup is always one tap
+     away from wherever you are in the list. */
+  @media (max-width: 900px) {
+    .hwrap, .shell { width: min(100% - 32px, 1320px); }
+
+    /* All three are placed explicitly. Left to auto-flow, the full-width
+       progress row advances the cursor past row 1 and pushes the reset button
+       onto a third row, which is what made this header a fifth of the screen. */
+    .hwrap { grid-template-columns: 1fr auto; gap: 9px 12px; min-height: 0; padding: 9px 0 10px; }
+    .brand { grid-area: 1 / 1; }
+    .actions { grid-area: 1 / 2; }
+    .brand small { font-size: 9px; }
+    /* The count reads as the readout at the end of the bar, so the separate
+       "flight progress" caption above it is redundant here. */
+    .progress { grid-area: 2 / 1 / 3 / -1; max-width: none; display: flex; align-items: center; gap: 10px; }
+    .progress-row { order: 2; flex: none; }
+    .progress-row span:first-child { display: none; }
+    .cells { order: 1; flex: 1; min-width: 0; gap: 1px; }
+    .cells i { flex: 1; width: auto; min-width: 0; height: 6px; }
+    .btn { height: 40px; padding: 0 14px; }
+
     .shell { grid-template-columns: 1fr; gap: 0; }
-    .rail { position: static; padding: 18px 0 0; }
-    .rail nav { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 6px; }
-    .rail button { width: auto; border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
-    .rail button[aria-current="true"] { border-left: 0; border-bottom-color: var(--accent); }
-    .rail-ref { margin-top: 12px; padding-top: 12px; }
-    .rail-ref nav { display: flex; gap: 6px; overflow-x: auto; }
+    .rail {
+      position: sticky; top: var(--header-h, 64px); z-index: 25;
+      display: flex; align-items: stretch; padding: 0;
+      margin: 0 -16px; background: var(--body); border-bottom: 1px solid var(--line);
+    }
+    .rail-label { display: none; }
+    .rail > nav {
+      flex: 1; min-width: 0; display: flex; gap: 0; padding-left: 16px;
+      overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
+      /* the strip carries nine phases in roughly two chips of space, so the
+         trailing edge fades to say so rather than cutting a name in half */
+      mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent);
+    }
+    .rail > nav::-webkit-scrollbar { display: none; }
+    .rail button {
+      width: auto; min-height: 44px; padding: 0 12px; white-space: nowrap;
+      border-left: 0; border-bottom: 2px solid transparent; scroll-snap-align: start;
+    }
+    .rail button[aria-current="true"] { border-left: 0; border-bottom-color: var(--accent); background: transparent; }
+    .rail-ref {
+      flex: none; margin: 0; padding: 0 16px 0 0;
+      border-top: 0; border-left: 1px solid var(--line);
+    }
+    .rail-ref nav { display: flex; gap: 0; }
+    .rail-ref button { grid-template-columns: auto 1fr; gap: 7px; padding: 0 10px; font-size: 10.5px; }
     .rail-ref .key { display: none; }
-    #ref { width: 100vw; border-left: 0; }
-    .items-head { display: none; }
-    .items label { grid-template-columns: 15px 1fr; gap: 4px 12px; }
-    .items .cond:empty { display: none; }
+
+    main { padding: 22px 0 64px; }
+    #ref { width: 100%; border-left: 0; }
     .tips { display: none; }
   }
+
+  /* ---------- phone: the four checklist columns stack ---------- */
+  @media (max-width: 620px) {
+    body { font-size: 14px; }
+    h1 { font-size: 18px; }
+    .lede, .para, .steps, .bullets, .say { font-size: 13.5px; }
+
+    .items-head { display: none; }
+    /* Four columns will not fit, so control / action / condition stack beside
+       the box. They must be placed explicitly: left to auto-flow, the action
+       drops into the 15px box column and wraps a word per line. */
+    .items label { grid-template-columns: 18px minmax(0, 1fr); gap: 3px 12px; padding: 11px 0; }
+    .items .box { grid-column: 1; grid-row: 1 / span 3; margin-top: 2px; width: 15px; height: 15px; }
+    .items .ctl { grid-column: 2; grid-row: 1; font-size: 13.5px; font-weight: 500; }
+    /* Borrowed from .note: an accent hairline marks what you actually do. */
+    .items .act {
+      grid-column: 2; grid-row: 2; font-size: 13.5px;
+      padding-left: 9px; border-left: 1px solid rgba(196, 104, 73, .35);
+    }
+    .items .cond { grid-column: 2; grid-row: 3; font-size: 12px; }
+    .items .cond:empty { display: none; }
+    .items .full { font-size: 10.5px; }
+
+    /* The reference cluster is pinned beside the phase strip and three labels
+       take most of a phone's width. The icons carry the meaning here, so the
+       words stay for screen readers only. */
+    .rail-ref button { grid-template-columns: auto; padding: 0 13px; }
+    .rail-ref .lbl {
+      position: absolute; width: 1px; height: 1px;
+      overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+    }
+    .rail-ref .ico svg { width: 15px; height: 15px; }
+    .items li[data-cursor="true"] label { box-shadow: none; padding-left: 0; margin-left: 0; }
+
+    /* Under 16px iOS Safari zooms the page in on focus and never zooms back. */
+    .fields input, .ref-search { font-size: 16px; }
+    /* Two columns even on the narrowest phone: at 16px a single column turns
+       the worksheet into a screen and a half of scrolling before the calls. */
+    .fields { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 9px; }
+    .fields label { font-size: 10px; color: var(--muted); }
+    .fields input::placeholder, .ref-search::placeholder { color: rgba(250, 249, 245, .38); }
+    .turn { grid-template-columns: 1fr; gap: 3px; }
+    .who span { display: inline; margin: 0 0 0 6px; }
+    .ref-body { padding: 18px 16px 40px; }
+    .ref-tab { height: 40px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .lamp i { animation: none; }
     .btn { transition: none; }
@@ -374,12 +483,29 @@
 
   /* The three reference sheets ride in the same payload as the procedures but
      carry no ticks, so they stay out of the flight spine and open in the
-     drawer instead. Keyed by the shortcut that opens each one. */
+     drawer instead. Keyed by the shortcut that opens each one.
+
+     Icon paths are Remix Icon (24x24), the same source src/lib/icons.ts draws
+     from. They are inlined rather than imported so the page stays standalone. */
   const REFS = [
-    { id: "lights", tab: "Lights", key: "l" },
-    { id: "glossary", tab: "Terms", key: "a" },
-    { id: "atc", tab: "Radio", key: "r" },
+    {
+      id: "lights", tab: "Lights", key: "l",
+      // lightbulb-fill
+      icon: "M11 18H7.94101C7.64391 16.7274 6.30412 15.6857 5.75395 14.9992C4.65645 13.6297 4 11.8915 4 10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10C20 11.8925 19.3428 13.6315 18.2443 15.0014C17.6944 15.687 16.3558 16.7276 16.059 18H13V13H11V18ZM16 20V21C16 22.1046 15.1046 23 14 23H10C8.89543 23 8 22.1046 8 21V20H16Z",
+    },
+    {
+      id: "glossary", tab: "Terms", key: "a",
+      // book-2-fill
+      icon: "M21 18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H21V22H6C4.34315 22 3 20.6569 3 19V4C3 2.89543 3.89543 2 5 2H21V18ZM16 9V7H8V9H16Z",
+    },
+    {
+      id: "atc", tab: "Radio", key: "r",
+      // broadcast-fill
+      icon: "M4.92893 2.92896L6.34315 4.34317C4.89543 5.79088 4 7.79088 4 10C4 12.2092 4.89543 14.2092 6.34315 15.6569L4.92893 17.0711C3.11929 15.2614 2 12.7614 2 10C2 7.2386 3.11929 4.7386 4.92893 2.92896ZM19.0711 2.92896C20.8807 4.7386 22 7.2386 22 10C22 12.7614 20.8807 15.2614 19.0711 17.0711L17.6569 15.6569C19.1046 14.2092 20 12.2092 20 10C20 7.79088 19.1046 5.79088 17.6569 4.34317L19.0711 2.92896ZM7.75736 5.75738L9.17157 7.1716C8.44771 7.89545 8 8.89545 8 10C8 11.1046 8.44771 12.1046 9.17157 12.8285L7.75736 14.2427C6.67157 13.1569 6 11.6569 6 10C6 8.34317 6.67157 6.84317 7.75736 5.75738ZM16.2426 5.75738C17.3284 6.84317 18 8.34317 18 10C18 11.6569 17.3284 13.1569 16.2426 14.2427L14.8284 12.8285C15.5523 12.1046 16 11.1046 16 10C16 8.89545 15.5523 7.89545 14.8284 7.1716L16.2426 5.75738ZM12 12C10.8954 12 10 11.1046 10 10C10 8.89545 10.8954 8.00002 12 8.00002C13.1046 8.00002 14 8.89545 14 10C14 11.1046 13.1046 12 12 12ZM12 14C12.5798 14 13.0774 14.413 13.1843 14.9829L14.5 22H9.5L10.8157 14.9829C10.9226 14.413 11.4202 14 12 14Z",
+    },
   ];
+  const iconSVG = d =>
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="' + d + '"/></svg>';
   const isRef = id => REFS.some(r => r.id === id);
 
   let DATA, procedures = [], ticks = load(LS.ticks, {}), fields = load(LS.fields, {});
@@ -417,6 +543,29 @@
       Array.from({ length: CELLS }, (_, i) => '<i' + (i < on ? ' class="on"' : "") + "></i>").join("");
   }
 
+  const still = matchMedia("(prefers-reduced-motion: reduce)");
+  const glide = () => (still.matches ? "instant" : "smooth");
+
+  /* The header is sticky and its height changes with the viewport, so the rail
+     below it cannot dock against a hard-coded offset. Publish the measured
+     height and let the CSS position both the rail and its own scroll offset. */
+  function trackHeader() {
+    const header = document.querySelector("header");
+    const publish = () =>
+      document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+    new ResizeObserver(publish).observe(header);
+    publish();
+  }
+
+  /* On narrow screens the phases are a horizontal strip, so the current one can
+     sit off-screen after a reload or a keyboard jump. */
+  function revealCurrent() {
+    const nav = document.getElementById("nav");
+    if (nav.scrollWidth <= nav.clientWidth) return;
+    const btn = nav.querySelector('[aria-current="true"]');
+    if (btn) btn.scrollIntoView({ inline: "center", block: "nearest", behavior: glide() });
+  }
+
   function renderNav() {
     document.getElementById("nav").innerHTML = procedures.map(p => {
       const { done, total } = countPhase(p);
@@ -433,8 +582,9 @@
     document.getElementById("ref-nav").innerHTML = REFS.map(r => {
       const p = refPhase(r.id);
       if (!p) return "";
-      return '<button data-ref="' + r.id + '"><span class="num"></span><span>' +
-        esc(p.short) + '</span><span class="key">' + r.key.toUpperCase() + "</span></button>";
+      return '<button data-ref="' + r.id + '"><span class="ico">' + iconSVG(r.icon) +
+        '</span><span class="lbl">' + esc(p.short) + '</span><span class="key">' +
+        r.key.toUpperCase() + "</span></button>";
     }).join("");
   }
 
@@ -463,6 +613,7 @@
     if (b.type === "para") return '<p class="para">' + inline(b.frag) + "</p>";
     if (b.type === "note") return '<p class="note">' + inline(b.frag) + "</p>";
     if (b.type === "steps") return '<ol class="steps">' + b.items.map(s => "<li>" + inline(s) + "</li>").join("") + "</ol>";
+    if (b.type === "bullets") return '<ul class="bullets">' + b.items.map(s => "<li>" + inline(s) + "</li>").join("") + "</ul>";
     if (b.type === "matrix") {
       return '<div class="scroll"><table><thead><tr>' + b.head.map(h => "<th>" + esc(h) + "</th>").join("") +
         "</tr></thead><tbody>" + b.rows.map((r, ri) => "<tr>" + r.map((c, ci) => {
@@ -567,6 +718,7 @@
     renderNav();
     renderMain();
     window.scrollTo({ top: 0, behavior: "instant" });
+    revealCurrent();
   }
 
   function setTick(id, on) {
@@ -591,7 +743,7 @@
                         : Math.max(0, Math.min(list.length - 1, cursor + delta));
     const li = list[cursor];
     li.dataset.cursor = "true";
-    li.scrollIntoView({ block: "center", behavior: "smooth" });
+    li.scrollIntoView({ block: "center", behavior: glide() });
   }
 
   document.addEventListener("click", e => {
@@ -667,6 +819,7 @@
   });
 
   /* ---------- boot ---------- */
+  trackHeader();
   try {
     DATA = JSON.parse(document.getElementById("data").textContent);
     procedures = DATA.phases.filter(p => !isRef(p.id));
@@ -676,6 +829,7 @@
     renderRefNav();
     renderMain();
     renderTotals();
+    revealCurrent();
   } catch {
     document.getElementById("main").innerHTML =
       '<p class="para">Could not read the checklist data.</p>';
