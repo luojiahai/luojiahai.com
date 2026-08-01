@@ -1,3 +1,4 @@
+import type { Element, Parent, Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
 
@@ -7,6 +8,31 @@ import { defineCollection, defineConfig, s } from "velite";
  *   content/life-posts/** -> section "life", served under /{lang}/life
  * Categories live in content/categories/{tech,life}.yml.
  */
+
+/**
+ * Wrap every table in a horizontally scrollable div. The printed paper column is
+ * ~294px wide on a phone and .printer-paper-area clips its overflow, so a wide
+ * table loses its right-hand columns with no way to reach them. Styled as
+ * .table-scroll in src/app.css.
+ */
+function rehypeTableScroll() {
+  return (tree: Root) => {
+    const wrap = (node: Parent) => {
+      node.children = node.children.map((child) => {
+        // Descend first, so the wrapper we return is never revisited.
+        if ("children" in child) wrap(child);
+        if (child.type !== "element" || child.tagName !== "table") return child;
+        return {
+          type: "element",
+          tagName: "div",
+          properties: { className: ["table-scroll"], tabIndex: 0 },
+          children: [child],
+        } satisfies Element;
+      });
+    };
+    wrap(tree);
+  };
+}
 
 const lang = s.enum(["en", "zh"]);
 
@@ -105,7 +131,7 @@ export default defineConfig({
     clean: true,
   },
   collections: { categories, posts },
-  markdown: { rehypePlugins: [rehypePrettyCode] },
+  markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
   prepare: ({ categories, posts }) => {
     const unknownCategories = posts
       .flatMap((post) =>
