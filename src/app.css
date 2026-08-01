@@ -321,28 +321,6 @@
     vertical-align: top;
   }
 
-  /* Fade the trailing edge while there is more table to the right, so a cut-off
-     column reads as "more here". Driven by the scroll timeline so a table that
-     already fits leaves the animation inactive and shows no mask at all. */
-  @supports (animation-timeline: scroll(x self)) {
-    .post-content .table-scroll {
-      animation: table-scroll-fade linear both;
-      animation-timeline: scroll(x self);
-    }
-    @keyframes table-scroll-fade {
-      from {
-        mask-image: linear-gradient(
-          to right,
-          #000 calc(100% - 28px),
-          transparent
-        );
-      }
-      to {
-        mask-image: linear-gradient(to right, #000 100%, transparent);
-      }
-    }
-  }
-
   /* Dot matrix / thermal print texture */
   .thermal-texture,
   .printed-card {
