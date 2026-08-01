@@ -512,9 +512,12 @@
      carry no ticks, so they stay out of the flight spine and open in the
      drawer instead. Keyed by the shortcut that opens each one.
 
-     Icon markup is hand-copied from Lucide (24x24, stroke-based), the same
-     source src/lib/icons.ts draws its generic icons from. It's inlined
-     rather than imported so the page stays standalone. */
+     Icon markup is copied verbatim from @lucide/svelte 1.28.0 (24x24,
+     stroke-based), out of dist/icons/<name>.svelte. It's inlined rather than
+     imported because this page ships standalone, outside the printer shell.
+     Nothing syncs it: these three glyphs are not in src/lib/icons.ts, and
+     pnpm fly only writes the JSON payload, so a Lucide upgrade that redraws
+     them has to be re-copied here by hand. */
   const REFS = [
     {
       id: "lights", tab: "Lights", key: "l",

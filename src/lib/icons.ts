@@ -1,10 +1,10 @@
 /**
  * Icon registry. Generic UI icons come from Lucide (stroke-based, tree-shaken
- * per icon). `customIconPaths` is a fallback for anything Lucide doesn't
- * cover well: brand marks (Simple Icons has no Lucide equivalent — Lucide
- * permanently excludes brand logos) and, if needed, any generic icon whose
- * Lucide substitute doesn't look right, kept as its original Remix Icon path
- * (24x24 viewBox, filled).
+ * per icon). `customIconPaths` covers brand marks only, as filled 24x24
+ * Simple Icons paths: Lucide excludes brand logos on purpose, so there is no
+ * Lucide equivalent to reach for. Everything else belongs in `icons` — a
+ * generic icon kept as a filled path would read as a different weight next to
+ * the stroke-based set.
  */
 import Activity from "@lucide/svelte/icons/activity";
 import AppWindow from "@lucide/svelte/icons/app-window";
