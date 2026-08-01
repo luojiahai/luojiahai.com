@@ -33,7 +33,7 @@ const SHORT = {
   "7-approach-and-ils-landing": "Approach and Landing",
 };
 
-const REF_IDS = new Set(["lights", "glossary", "atc"]);
+const REF_IDS = new Set(["lights", "abbreviations", "atc"]);
 
 /* ------------------------------------------------------------------ *
  * inline markdown -> fragment nodes the template can render safely
@@ -78,37 +78,42 @@ const stripMd = md =>
     .trim();
 
 /* ------------------------------------------------------------------ *
- * terms.md -> TERM -> full name
+ * names.md -> LABEL -> full name
  *
- * This is the tooltip map, deliberately not the abbreviations sheet: the
- * FlyByWire abbreviations page is an airline-wide glossary where RET is
- * "RETurn", which is the wrong reading for a speed brake lever.
+ * The one name source: it fills the line under each checklist control and the
+ * tooltip on a bolded setting. Deliberately standalone, and deliberately not
+ * resolved out of abbreviations.md — that page is a verbatim copy of an
+ * airline-wide glossary, so a re-download must not be able to drop a name
+ * here, and it reads RET as "RETurn" where a speed brake lever means
+ * "RETracted".
+ *
+ * A "–" value means the label reads plainly on its own, on purpose.
  * ------------------------------------------------------------------ */
 
-const duplicateTerms = [];
+const duplicateNames = [];
 
-function buildGlossary() {
-  const terms = {};
-  for (const line of read("terms.md").split("\n")) {
+function buildNames() {
+  const names = {};
+  for (const line of read("names.md").split("\n")) {
     if (!line.startsWith("|")) continue;
     const cells = line.split("|").slice(1, -1).map(c => c.trim());
     if (cells.length !== 2) continue;
-    const term = stripMd(cells[0]);
+    const name = stripMd(cells[0]);
     const full = stripMd(cells[1]);
-    if (!term || !full || /^-+$/.test(term) || term === "Term") continue;
-    const key = term.toUpperCase();
-    if (key in terms && terms[key] !== full) duplicateTerms.push(key);
-    terms[key] = full;
+    if (!name || /^-+$/.test(name) || name === "Name") continue;
+    const key = name.toUpperCase().replace(/\s+/g, " ");
+    const value = !full || /^[-–—]$/.test(full) ? null : full;
+    if (key in names && names[key] !== value) duplicateNames.push(key);
+    names[key] = value;
   }
-  return terms;
+  return names;
 }
 
-const GLOSSARY = buildGlossary();
-const glossOf = s => GLOSSARY[String(s).trim().toUpperCase()] ?? null;
+const NAMES = buildNames();
+const nameOf = s => NAMES[String(s).trim().toUpperCase().replace(/\s+/g, " ")] ?? null;
 
 /* ------------------------------------------------------------------ *
- * controls.md -> docs URL and plain-English name, resolved within the
- * linked section
+ * controls.md -> docs URL, resolved within the linked section
  *
  * Procedure links carry the section as an anchor (controls.md#performance),
  * which disambiguates names that appear on more than one panel — "FLAPS"
@@ -123,8 +128,9 @@ const slugify = s =>
 
 function buildControlIndex() {
   const md = read("controls.md");
-  const sections = new Map(); // slug -> Map(NAME -> { url, desc })
+  const sections = new Map(); // slug -> Map(NAME -> url)
   const global = new Map();
+  const labels = [];
   let slug = "";
 
   for (const line of md.split("\n")) {
@@ -136,9 +142,9 @@ function buildControlIndex() {
     const name = stripMd(cells[0]);
     const url = (cells[2].match(/\((https?:\/\/[^)]+)\)/) || [])[1];
     if (!name || !url || /^(Control|Page \/ field|Indication|Panel)$/.test(name)) continue;
-    const entry = { url, desc: stripMd(cells[1]) };
-    sections.get(slug)?.set(name.toUpperCase(), entry);
-    if (!global.has(name.toUpperCase())) global.set(name.toUpperCase(), entry);
+    labels.push(name);
+    sections.get(slug)?.set(name.toUpperCase(), url);
+    if (!global.has(name.toUpperCase())) global.set(name.toUpperCase(), url);
   }
 
   const norm = s => s.toUpperCase().replace(/\s+/g, " ").trim();
@@ -172,7 +178,7 @@ function buildControlIndex() {
     return subseq ? map.get(subseq) : null;
   }
 
-  return (label, anchor) => {
+  const lookup = (label, anchor) => {
     const map = (anchor && sections.get(anchor)) || global;
     const tries = [];
     const q = norm(label);
@@ -190,9 +196,11 @@ function buildControlIndex() {
     }
     return null;
   };
+
+  return { labels, lookup };
 }
 
-const lookupControl = buildControlIndex();
+const { labels: CONTROL_LABELS, lookup: lookupControl } = buildControlIndex();
 const unresolved = new Set();
 
 function controlHref(text, target) {
@@ -201,52 +209,22 @@ function controlHref(text, target) {
   if (!/^controls\.md/.test(target)) return null;
   const anchor = (target.split("#")[1] || "").trim();
   if (!anchor) return null; // prose link to the reference page as a whole
-  const entry = lookupControl(text, anchor);
-  if (!entry) unresolved.add(`${text} (#${anchor})`);
-  return entry?.url ?? null;
+  const url = lookupControl(text, anchor);
+  if (!url) unresolved.add(`${text} (#${anchor})`);
+  return url;
 }
 
 /* ------------------------------------------------------------------ *
- * plain-English name for a control cell
+ * full name for a control cell
  *
- * "[EXT PWR](controls.md#electrical) pushbutton" -> "External power".
- * The glossary wins where it has an entry (V1 is "decision speed", not
- * "takeoff performance entries"), otherwise controls.md supplies the name,
- * trimmed of the parts the checklist row already says.
+ * "[EXT PWR](controls.md#electrical) pushbutton" -> "EXTernal PoWeR".
+ * names.md is the only source: no derivation, no fuzzy fallback. A label the
+ * map does not carry has no name, and the run prints it.
  * ------------------------------------------------------------------ */
 
-const DEVICE = /\s+(pushbuttons?|switch(es)?|selectors?|knobs?|levers?|handles?|handwheels?|signs?|indications?|windows?)$/i;
-const same = (a, b) => String(a).toUpperCase().replace(/\s+/g, " ").trim() ===
-                       String(b).toUpperCase().replace(/\s+/g, " ").trim();
-
-// "navaid and ILS frequency tuning" -> "navaid and instrument landing system …"
-const expandAcronyms = s => s.split(" ").map(w => {
-  const bare = w.replace(/[.,;:]+$/, "");
-  const full = /^[A-Z0-9/&-]{2,}$/.test(bare) && glossOf(bare);
-  return full ? full + w.slice(bare.length) : w;
-}).join(" ");
-
 function controlFull(cell) {
-  const m = String(cell).match(/\[([^\]]+)\]\(controls\.md#([^)]+)\)/);
-  const label = m ? m[1] : stripMd(cell);
-
-  const gloss = glossOf(label);
-  if (gloss) return gloss;
-  if (!m) return null;
-
-  const entry = lookupControl(label, m[2].trim());
-  if (!entry?.desc) return null;
-
-  // "Altitude selector knob — turn to select, …" -> "altitude selector"
-  let desc = entry.desc.split(" — ")[0]
-    .replace(/\s*\([^)]*\)\s*$/, "")     // trailing list of positions
-    .replace(DEVICE, "")                  // the row already names the device
-    .trim();
-  if (/^[A-Z][a-z]/.test(desc)) desc = desc[0].toLowerCase() + desc.slice(1);
-  desc = expandAcronyms(desc);
-
-  // nothing gained if it only echoes the label ("FLAPS lever" -> "flaps")
-  return desc && !same(desc, label) ? desc : null;
+  const m = String(cell).match(/\[([^\]]+)\]\(controls\.md#[^)]+\)/);
+  return nameOf(m ? m[1] : stripMd(cell));
 }
 
 /* ------------------------------------------------------------------ *
@@ -443,8 +421,8 @@ function buildLights() {
 
 function buildAbbreviations() {
   return {
-    id: "glossary", num: "G",
-    title: "Airbus Terms and Abbreviations", short: "Terms",
+    id: "abbreviations", num: "G",
+    title: "Airbus Terms and Abbreviations", short: "Abbreviations",
     groups: matrixGroups(read("abbreviations.md"), false),
   };
 }
@@ -563,7 +541,7 @@ const data = {
     atc.phase,
   ],
   tokens: atc.tokens,
-  glossary: GLOSSARY,
+  names: Object.fromEntries(Object.entries(NAMES).filter(([, v]) => v)),
 };
 
 const items = data.phases.flatMap(p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items)));
@@ -591,9 +569,13 @@ console.log(`  ${data.phases.length} phases · ${items.length} checklist items �
 const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
 console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
 const named = items.filter(i => i.full).length;
-console.log(`  ${named}/${items.length} items carry a plain-English control name`);
-console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.keys(GLOSSARY).length} tooltip terms · ${absRows} abbreviation rows`);
+console.log(`  ${named}/${items.length} items carry a full control name`);
+console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.keys(data.names).length} names · ${absRows} abbreviation rows`);
 const unnamed = items.filter(i => !i.full).map(i => stripMd(i.control.map(n => n.v).join("")));
-if (unnamed.length) console.log(`  no plain-English name: ${[...new Set(unnamed)].join(", ")}`);
+if (unnamed.length) console.log(`  no full name: ${[...new Set(unnamed)].join(", ")}`);
 if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
-if (duplicateTerms.length) console.log(`  conflicting terms.md keys: ${[...new Set(duplicateTerms)].join(", ")}`);
+if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
+// names.md is meant to cover the whole control inventory, not just what the
+// procedures happen to link today
+const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(l.toUpperCase().replace(/\s+/g, " ") in NAMES));
+if (uncovered.length) console.log(`  controls.md labels missing from names.md: ${uncovered.join(", ")}`);

@@ -33,7 +33,8 @@ The three reference sheets:
 
 - `lights.md` — the light state matrix, from the beginner guide's per-phase
   calls plus the `ovhd/ext-lt`, `ovhd/int-lt` and `ovhd/signs` briefing pages.
-- `abbreviations.md` — a **verbatim copy** of FlyByWire's
+- `abbreviations.md` — the sole source of the Abbreviations sheet, a **verbatim
+  copy** of FlyByWire's
   [Airbus Terms and Abbreviations](https://docs.flybywiresim.com/pilots-corner/airliner/abbreviations/)
   page. Refresh it by re-downloading, never by editing:
 
@@ -48,13 +49,18 @@ The three reference sheets:
 Two supporting indexes:
 
 - `controls.md` — maps every control label to its deep link into the
-  `a32nx-briefing/flight-deck/**` pages, plus a plain-English name. Every
-  `[LABEL](controls.md#section)` in a procedure note resolves through here; the
-  generator prints anything it cannot resolve.
-- `terms.md` — the tooltip glossary, deliberately narrow. It covers only the
-  positions and settings the notes actually bold. `abbreviations.md` is *not*
-  used for tooltips: it is an airline-wide glossary where `RET` means *return*,
-  which is the wrong reading for a speed brake lever.
+  `a32nx-briefing/flight-deck/**` pages. Every `[LABEL](controls.md#section)` in
+  a procedure note resolves through here; the generator prints anything it
+  cannot resolve. Its "What it is" column is prose for a human reader, not
+  build input.
+- `names.md` — the full-name map, and the only one. It fills the line under
+  each checklist control and the tooltip on a bolded setting, in
+  `abbreviations.md`'s own style (`EXT PWR` → `EXTernal PoWeR`), with `–` for
+  labels that read plainly on their own. Nothing resolves from it into
+  `abbreviations.md` at build time: that page is an airline-wide glossary,
+  refreshed by re-download, and it reads `RET` as *return* where a speed brake
+  lever means *retracted*. The generator prints any `controls.md` label with no
+  row here, and any two rows that disagree.
 
 ## Row conventions
 
@@ -66,7 +72,7 @@ Procedure tables read **control → action → condition**:
 
 - **verify** means it should already be in that position — look, do not touch.
 - **set** / **adjust** / **press** means act.
-- The bold value is the target state, and picks up a tooltip if `terms.md`
+- The bold value is the target state, and picks up a tooltip if `names.md`
   has it.
 - `–` in the condition column means unconditional.
 - The third heading is free text and shows through to the rendered column:
