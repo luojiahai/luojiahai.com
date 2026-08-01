@@ -38,14 +38,6 @@ export interface TelegramStats {
   bio: string;
 }
 
-interface LinkedInStats {
-  handle: string;
-  name: string;
-  bio: string;
-  followers: number;
-  connections: number;
-}
-
 export interface InstagramStats {
   handle: string;
   name: string;
@@ -60,7 +52,6 @@ export interface SocialStats {
   github: GitHubStats;
   x: XStats;
   telegram: TelegramStats;
-  linkedin: LinkedInStats;
   instagram: InstagramStats;
 }
 
@@ -75,10 +66,6 @@ export function normalizeSocialStats(stats: SocialStats): SocialStats {
   return {
     ...stats,
     telegram: stats.telegram ?? socialFallback.telegram,
-    linkedin:
-      stats.linkedin?.connections != null
-        ? stats.linkedin
-        : socialFallback.linkedin,
     instagram:
       stats.instagram?.posts != null
         ? stats.instagram
