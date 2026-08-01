@@ -15,8 +15,9 @@
   };
 
   // One row per activity: the label, how many entries are filed under it, and
-  // the newest one as a preview. The count is printed even when it is zero, so
-  // an empty channel reads as empty here instead of after a click.
+  // every title run together as a preview, newest first. The count is printed
+  // even when it is zero, so an empty channel reads as empty here instead of
+  // after a click.
   let rows = $derived(
     activities.map((activity) => {
       const items = dictionary.recent[activity];
@@ -25,7 +26,9 @@
         href: `${dictionary.urls.life}/${activity}`,
         label: dictionary.labels[activity],
         count: items.length,
-        latest: items[0]?.title,
+        preview: items
+          .map((item) => item.title)
+          .join(dictionary.labels.listSeparator),
       };
     }),
   );
@@ -60,11 +63,11 @@
           </span>
         </div>
 
-        {#if row.latest}
+        {#if row.preview}
           <p
-            class="mt-1 line-clamp-1 max-w-[62ch] font-serif text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60"
+            class="mt-1 max-w-[62ch] truncate font-serif text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60"
           >
-            {row.latest}
+            {row.preview}
           </p>
         {/if}
       </div>

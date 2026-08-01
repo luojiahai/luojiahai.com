@@ -142,6 +142,8 @@ const dictionary = {
     aboutTitle: "About",
     aboutSubtitle: "Hello, World!",
     wechatScanHint: "Scan to read on WeChat",
+    // Joins the titles in an Activity row preview.
+    listSeparator: ", ",
     entries(count: number) {
       return `${count} ${count === 1 ? "entry" : "entries"}`;
     },
@@ -250,7 +252,8 @@ const dictionary = {
     emailHint: "Mail lands straight in my inbox.",
     telegramHint: "DMs open, say hi anytime.",
   },
-  // Newest first: the Life page prints the top entry of each list as a preview.
+  // Newest first: the Life page prints each list as one comma-separated line
+  // of titles, in this order, clipped where it runs out of room.
   recent: {
     reading: [
       {
@@ -260,11 +263,28 @@ const dictionary = {
     ] as RecentEntry[],
     watching: [
       {
+        title: "9-1-1",
+        summary: "Los Angeles first responders, one emergency call at a time.",
+      },
+      {
         title: "Air Crash Investigation",
         summary: "Aviation accidents, reconstructed one flight per episode.",
       },
     ] as RecentEntry[],
     listening: [
+      // An artist rather than a track, so the fields read the other way round.
+      {
+        title: "space x",
+        summary: "Chinese R&B and hip-hop, best known for 0321.",
+      },
+      {
+        title: "melt our hearts",
+        summary: "Altero, Angie Robba",
+      },
+      {
+        title: "Cánh Hoa Héo Tàn",
+        summary: "Mochiii x Domino Remix",
+      },
       {
         title: "Every Little Part",
         summary: "Le Youth",

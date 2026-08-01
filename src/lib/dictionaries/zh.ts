@@ -83,6 +83,8 @@ const dictionary: Dictionary = {
     aboutTitle: "关于",
     aboutSubtitle: "你好，世界！",
     wechatScanHint: "微信扫码阅读原文",
+    // 顿号：中文里列举并列的名字用它，不用逗号。
+    listSeparator: "、",
     entries(count: number) {
       return `${count} 条`;
     },
@@ -217,7 +219,8 @@ const dictionary: Dictionary = {
     emailHint: "邮件会直达我的收件箱。",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
-  // 最新的排在最前：「生活」页会把每个列表的第一条作为预览打印出来。
+  // 最新的排在最前：「生活」页会按这个顺序把每个列表的标题排成一行，
+  // 用逗号隔开，放不下的部分截断。
   recent: {
     reading: [
       {
@@ -227,11 +230,28 @@ const dictionary: Dictionary = {
     ],
     watching: [
       {
+        title: "紧急呼救",
+        summary: "洛杉矶急救人员的出勤日常。",
+      },
+      {
         title: "空中浩劫",
         summary: "每集还原一次空难。",
       },
     ],
     listening: [
+      // 这条是歌手不是歌，所以两个字段反过来了。
+      {
+        title: "space x",
+        summary: "华语 R&B 与嘻哈，代表作《0321》。",
+      },
+      {
+        title: "melt our hearts",
+        summary: "Altero, Angie Robba",
+      },
+      {
+        title: "Cánh Hoa Héo Tàn",
+        summary: "Mochiii x Domino Remix",
+      },
       {
         title: "Every Little Part",
         summary: "Le Youth",
