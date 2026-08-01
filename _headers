@@ -6,8 +6,11 @@
 
 # The flight companions are prerendered endpoints rather than pages, so their
 # assets land without a file extension and the runtime cannot infer a type.
+# The URLs are stable across rebuilds, so they cache like the other
+# non-content-hashed assets below rather than immutably.
 /fly/*
   Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=86400
 
 # Prerendered OG images
 /og/*
