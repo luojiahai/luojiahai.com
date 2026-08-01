@@ -322,11 +322,18 @@
   /* ---------- footer ---------- */
   .tips {
     position: sticky; bottom: 0; z-index: 20;
-    display: flex; flex-wrap: wrap; gap: 18px; justify-content: center;
+    /* Baseline, not the default stretch: a kbd is taller than bare text, so
+       stretched hints put their words lower in the row than the plain
+       "ticks stay in this browser" tail, and the line reads as two heights. */
+    display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; align-items: baseline;
     padding: 10px 20px; background: var(--body); border-top: 1px solid var(--line);
     color: var(--faint); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
   }
   .tips kbd { display: inline-block; min-width: 16px; padding: 1px 4px; margin-right: 3px; text-align: center; border: 1px solid var(--line); color: var(--muted); }
+  /* Inline, not a flex child of the span: the span's own baseline has to stay
+     its text baseline for the row above to keep lining up. The nudge sits the
+     glyph on the cap band rather than the baseline. */
+  .tips svg { display: inline; width: 11px; height: 11px; margin-right: 5px; vertical-align: -2px; }
 
   /* ---------- narrow: one column, rail becomes a strip ----------
      Below this width the rail cannot sit beside the checklist, so it turns into
@@ -487,7 +494,8 @@
   <span><kbd>Space</kbd> tick</span>
   <span><kbd>1</kbd>-<kbd>9</kbd> phase</span>
   <span><kbd>L</kbd><kbd>A</kbd><kbd>R</kbd> reference</span>
-  <span>Ticks stay in this browser</span>
+  <!-- lucide "info" -->
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Ticks stay in this browser</span>
 </footer>
 
 <script id="data" type="application/json">/*__DATA__*/</script>
