@@ -10,6 +10,7 @@ import Activity from "@lucide/svelte/icons/activity";
 import AppWindow from "@lucide/svelte/icons/app-window";
 import Book from "@lucide/svelte/icons/book";
 import Code from "@lucide/svelte/icons/code";
+import ExternalLink from "@lucide/svelte/icons/external-link";
 import Film from "@lucide/svelte/icons/film";
 import Mail from "@lucide/svelte/icons/mail";
 import Monitor from "@lucide/svelte/icons/monitor";
@@ -36,6 +37,7 @@ export const icons = {
   music: Music,
   plane: Plane,
   pulse: Activity,
+  external: ExternalLink,
   code: Code,
   user: User,
   mail: Mail,

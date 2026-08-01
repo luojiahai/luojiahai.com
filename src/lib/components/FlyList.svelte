@@ -20,11 +20,13 @@
 
 <div class="flex flex-col">
   {#each rows as entry (entry.slug)}
-    <!-- The companions are standalone pages outside the printer shell, so the
-      client router has to hand off to a full load. -->
+    <!-- The companions are standalone pages outside the printer shell, built to
+      sit on a second screen next to the simulator, so they open in their own
+      tab. -->
     <a
       href={entry.href}
-      data-sveltekit-reload
+      target="_blank"
+      rel="noopener noreferrer"
       class="printed-row group -mx-3 flex items-start gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
     >
       <Icon
@@ -45,12 +47,10 @@
         </p>
       </div>
 
-      <span
-        aria-hidden="true"
-        class="shrink-0 font-mono text-sm leading-5 text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
-      >
-        →
-      </span>
+      <Icon
+        name="external"
+        class="mt-[3px] h-3.5 w-3.5 shrink-0 text-printer-ink-light transition-[transform,color] duration-200 group-hover:translate-x-1 group-hover:text-printer-accent group-focus-visible:translate-x-1 group-focus-visible:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark"
+      />
     </a>
   {:else}
     <PrintedEmpty />
