@@ -4,6 +4,11 @@
 /blog/*
   Cache-Control: public, max-age=31536000, immutable
 
+# The flight companions are prerendered endpoints rather than pages, so their
+# assets land without a file extension and the runtime cannot infer a type.
+/fly/*
+  Content-Type: text/html; charset=utf-8
+
 # Prerendered OG images
 /og/*
   Cache-Control: public, max-age=86400

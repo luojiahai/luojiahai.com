@@ -51,6 +51,7 @@ const dictionary: Dictionary = {
     },
     useSubtitle: "我使用的东西。",
     activity: "活动",
+    fly: "飞行",
     projects: "项目",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
@@ -244,6 +245,12 @@ const dictionary: Dictionary = {
       },
     ],
   },
+  fly: [
+    {
+      slug: "fbw-a32nx",
+      summary: "由 FlyByWire Simulations 制作的空客 A320neo（A320-251N）。",
+    },
+  ],
   aboutContent: `
 这里是 [luojiahai](https://luojiahai.com) 的互联网角落。
 

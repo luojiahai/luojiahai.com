@@ -8,7 +8,21 @@
   Standalone pages: `about/`, `use/`, and `life/[activity=activity]/`
   (`reading`, `watching`, `listening`).
   Endpoints: `feed/` (runtime RSS), `og/` (prerendered OG images),
-  `sitemap.xml/`, `robots.txt/`.
+  `sitemap.xml/`, `robots.txt/`, `fly/[aircraft=aircraft]/` (prerendered
+  flight companions).
+- `src/lib/fly/`: the flight companions. `companion.html` is one standalone
+  page template shared by every aircraft, served outside the printer shell.
+  `<slug>/*.md` is the source of truth for that aircraft — for the A32NX, nine
+  numbered procedure notes following FlyByWire's beginner guide, plus
+  `controls.md` (docs deep links), `terms.md` (tooltip glossary),
+  `abbreviations.md` (a verbatim copy of FlyByWire's Airbus Terms and
+  Abbreviations page, refreshed by re-downloading, not by editing), `lights.md`
+  and `atc-communications.md`; see that directory's `README.md`. `pnpm fly`
+  (`scripts/build-companion.mjs`) regenerates `<slug>.json` from them; commit
+  the regenerated payload. At most nine procedure phases — the companion binds
+  the digits 1-9. Adding an aircraft means a `src/params/aircraft.ts` entry, a
+  notes directory, a `PROCEDURES` array, a `payloads` row in the endpoint, and
+  a summary in both dictionaries.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
@@ -34,6 +48,8 @@
 - `pnpm install`: Install dependencies (pnpm only; no npm/yarn lockfiles).
 - `pnpm dev`: Start local dev server (runs Velite in watch mode).
 - `pnpm check`: svelte-check type checking. Run before PRs.
+- `pnpm fly`: Regenerate the flight companion payloads from
+  `src/lib/fly/<slug>/`; commit the regenerated JSON.
 - `pnpm build`: Production build; prerenders every page and OG image.
 - `pnpm preview`: Build + preview in the Workers runtime (wrangler dev).
 - `pnpm deploy`: Build + deploy to Cloudflare Workers.
