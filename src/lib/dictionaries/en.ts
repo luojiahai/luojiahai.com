@@ -284,7 +284,7 @@ const dictionary = {
     {
       slug: "fbw-a32nx",
       summary:
-        "Gate to gate procedures, radio calls and lights, ticked off beside Microsoft Flight Simulator.",
+        "FlyByWire's beginner guide as a gate to gate tick-off checklist, with lights, radio calls and Airbus abbreviations.",
     },
   ] as FlyEntry[],
   aboutContent: `

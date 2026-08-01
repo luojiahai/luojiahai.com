@@ -10,8 +10,9 @@
   inside the brand by borrowing the site's night tokens from src/app.css, the
   same JetBrains Mono, the terracotta accent, and the thermal dot texture.
 
-  The payloads are generated from the procedure notes in
-  github.com/luojiahai/wiki by tools/build-companion.mjs, and vendored here.
+  The payloads are generated from the procedure notes alongside this file — for
+  the A32NX, src/lib/fly/fbw-a32nx/ — by scripts/build-companion.mjs (pnpm fly),
+  and committed.
 -->
 <html lang="en">
 <head>
@@ -348,7 +349,7 @@
 <footer class="tips">
   <span><kbd>J</kbd><kbd>K</kbd> move</span>
   <span><kbd>Space</kbd> tick</span>
-  <span><kbd>1</kbd>-<kbd>7</kbd> phase</span>
+  <span><kbd>1</kbd>-<kbd>9</kbd> phase</span>
   <span><kbd>L</kbd><kbd>A</kbd><kbd>R</kbd> reference</span>
   <span>Ticks stay in this browser</span>
 </footer>
@@ -362,7 +363,9 @@
      flight. The slug is substituted in when the page is built. */
   const SLUG = "%slug%";
   const LS = {
-    ticks: "fly." + SLUG + ".ticks.v1",
+    /* v2: rewriting the checklists against the FlyByWire beginner guide
+       replaced every item id, so v1 ticks no longer point at anything. */
+    ticks: "fly." + SLUG + ".ticks.v2",
     fields: "fly." + SLUG + ".fields.v1",
     phase: "fly." + SLUG + ".phase.v1",
   };
@@ -374,7 +377,7 @@
      drawer instead. Keyed by the shortcut that opens each one. */
   const REFS = [
     { id: "lights", tab: "Lights", key: "l" },
-    { id: "glossary", tab: "Abbreviations", key: "a" },
+    { id: "glossary", tab: "Terms", key: "a" },
     { id: "atc", tab: "Radio", key: "r" },
   ];
   const isRef = id => REFS.some(r => r.id === id);
@@ -508,8 +511,8 @@
     let html = "<h1>" + esc(p.title) + "</h1>";
 
     if (id === "glossary") {
-      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
-        'spellcheck="false" aria-label="Filter abbreviations">';
+      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter terms and abbreviations" ' +
+        'spellcheck="false" aria-label="Filter terms and abbreviations">';
     }
     if (p.kind === "atc") {
       if (p.chain) {

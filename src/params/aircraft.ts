@@ -8,7 +8,7 @@ import type { ParamMatcher } from "@sveltejs/kit";
  * carry only the translated summary, keyed by slug.
  *
  * Deliberately free of the checklist payloads: this module ships to the
- * browser as part of the param matcher, and each payload is ~100 kB.
+ * browser as part of the param matcher, and each payload is ~200 kB.
  */
 export const aircraft = [{ slug: "fbw-a32nx", name: "FlyByWire A32NX" }] as const;
 

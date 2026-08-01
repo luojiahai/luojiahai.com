@@ -249,7 +249,7 @@ const dictionary: Dictionary = {
     {
       slug: "fbw-a32nx",
       summary:
-        "从登机口到登机口的操作流程、通话与灯光，在微软模拟飞行旁边逐项勾选。",
+        "把 FlyByWire 的入门指南做成从登机口到登机口的勾选清单，附灯光、通话与空客缩写。",
     },
   ],
   aboutContent: `
