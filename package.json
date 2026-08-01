@@ -15,6 +15,7 @@
     "upload": "pnpm build && wrangler versions upload"
   },
   "devDependencies": {
+    "@lucide/svelte": "^1.28.0",
     "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/adapter-cloudflare": "^7.2.9",
     "@sveltejs/kit": "^2.69.3",
