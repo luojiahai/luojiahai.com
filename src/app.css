@@ -299,6 +299,50 @@
     @apply font-mono font-normal text-inherit bg-printer-ink/8 dark:bg-printer-ink-dark/12 px-1 py-0.5 rounded;
   }
 
+  /* Wide tables scroll inside the paper column rather than being clipped by
+     .printer-paper-area's overflow-hidden. The typography plugin gives `pre`
+     an overflow-x but leaves tables alone. Wrapper comes from velite.config.ts. */
+  .post-content .table-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    max-width: 100%;
+    margin-block: 1.5rem; /* takes over the prose table margin */
+  }
+  /* prose sets `table { width: 100% }`, which inside a scroll container resolves
+     to the container width — the table would squeeze to fit and never scroll. */
+  .post-content .table-scroll > table {
+    width: auto;
+    min-width: 100%;
+    margin-block: 0;
+  }
+  /* Without a floor, five columns collapse to their min-content slivers. */
+  .post-content .table-scroll :is(th, td) {
+    min-width: 8rem;
+    vertical-align: top;
+  }
+
+  /* Fade the trailing edge while there is more table to the right, so a cut-off
+     column reads as "more here". Driven by the scroll timeline so a table that
+     already fits leaves the animation inactive and shows no mask at all. */
+  @supports (animation-timeline: scroll(x self)) {
+    .post-content .table-scroll {
+      animation: table-scroll-fade linear both;
+      animation-timeline: scroll(x self);
+    }
+    @keyframes table-scroll-fade {
+      from {
+        mask-image: linear-gradient(
+          to right,
+          #000 calc(100% - 28px),
+          transparent
+        );
+      }
+      to {
+        mask-image: linear-gradient(to right, #000 100%, transparent);
+      }
+    }
+  }
+
   /* Dot matrix / thermal print texture */
   .thermal-texture,
   .printed-card {
