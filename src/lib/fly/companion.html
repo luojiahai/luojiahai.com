@@ -37,7 +37,7 @@
     --ink: #faf9f5;
     --muted: #9c9a93;
     --faint: #6e6d68;
-    --accent: #c46849;
+    --accent: #d4a27f;
     --line: rgba(250, 249, 245, 0.09);
     --line-soft: rgba(250, 249, 245, 0.05);
     --mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
@@ -57,7 +57,7 @@
   }
   button, input { font: inherit; color: inherit; }
   a { color: inherit; }
-  ::selection { background: rgba(196, 104, 73, 0.3); }
+  ::selection { background: rgba(212, 162, 127, 0.3); }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .skip {
     position: fixed; left: 12px; top: 10px; z-index: 60;
@@ -87,7 +87,7 @@
   }
   .lamp i {
     width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 8px rgba(196, 104, 73, .5), inset 0 -1px 2px rgba(0, 0, 0, .3);
+    box-shadow: 0 0 8px rgba(212, 162, 127, .5), inset 0 -1px 2px rgba(0, 0, 0, .3);
     animation: lamp 2.4s infinite;
   }
   @keyframes lamp { 0%, 100% { opacity: 1 } 50% { opacity: .5 } }
@@ -110,7 +110,7 @@
     box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, .05), inset 0 -2px 0 rgba(0, 0, 0, .38);
     transition: transform .15s, color .15s, border-color .15s;
   }
-  .btn:hover { color: var(--accent); border-color: rgba(196, 104, 73, .3); transform: translateY(-1px); }
+  .btn:hover { color: var(--accent); border-color: rgba(212, 162, 127, .3); transform: translateY(-1px); }
   .btn:active { transform: translateY(1px); }
 
   /* ---------- shell ---------- */
@@ -154,7 +154,7 @@
   .grp h3 { margin: 0 0 8px; font-size: 12.5px; font-weight: 600; }
 
   .para { margin: 0 0 14px; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
-  .note { margin: 0 0 14px; padding: 4px 0 4px 13px; border-left: 2px solid rgba(196, 104, 73, .4); color: var(--muted); font-size: 12px; max-width: 62ch; }
+  .note { margin: 0 0 14px; padding: 4px 0 4px 13px; border-left: 2px solid rgba(212, 162, 127, .4); color: var(--muted); font-size: 12px; max-width: 62ch; }
   .steps { margin: 0 0 18px; padding-left: 20px; color: var(--ink); font-size: 12.5px; }
   .steps li { margin-bottom: 6px; }
   /* Remarks about the matrix above, so they read closer to .para than to a
@@ -246,13 +246,13 @@
     padding: 6px 8px; font-size: 12px; letter-spacing: 0; text-transform: none;
   }
   .fields input::placeholder { color: rgba(250, 249, 245, .22); }
-  .fields input:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
+  .fields input:focus { border-color: rgba(212, 162, 127, .5); outline: none; }
   .turn { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 5px 0 5px 12px; margin-bottom: 5px; border-left: 2px solid var(--line); }
-  .turn.you { border-left-color: rgba(196, 104, 73, .5); }
+  .turn.you { border-left-color: rgba(212, 162, 127, .5); }
   .who { color: var(--faint); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
   .who span { display: block; margin-top: 3px; letter-spacing: 0; text-transform: none; }
   .say { font-size: 12.5px; line-height: 1.6; }
-  .say .tok { background: rgba(196, 104, 73, .14); color: var(--accent); padding: 0 4px; }
+  .say .tok { background: rgba(212, 162, 127, .14); color: var(--accent); padding: 0 4px; }
   .say .fill { color: var(--accent); font-weight: 600; }
   .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--muted); font-size: 10.5px; }
   .chain b { font-weight: 400; padding: 3px 8px; border: 1px solid var(--line); }
@@ -273,7 +273,7 @@
     min-width: 15px; padding: 1px 4px; text-align: center;
     border: 1px solid var(--line); color: var(--faint); font-size: 9px;
   }
-  .rail-ref button:hover .key { border-color: rgba(196, 104, 73, .35); color: var(--accent); }
+  .rail-ref button:hover .key { border-color: rgba(212, 162, 127, .35); color: var(--accent); }
 
   #ref {
     margin: 0 0 0 auto; padding: 0; max-width: none; max-height: none;
@@ -299,7 +299,7 @@
     transition: color .15s, border-color .15s;
   }
   .ref-tab:hover { color: var(--ink); }
-  .ref-tab[aria-selected="true"] { color: var(--accent); border-color: rgba(196, 104, 73, .4); }
+  .ref-tab[aria-selected="true"] { color: var(--accent); border-color: rgba(212, 162, 127, .4); }
   /* contain: flicking past the end of the sheet must not scroll the checklist
      underneath it, which would cost you your place in the list. */
   .ref-body { overflow-y: auto; overscroll-behavior-y: contain; padding: 22px 16px 48px; }
@@ -309,7 +309,7 @@
     background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-size: 12px;
   }
   .ref-search::placeholder { color: rgba(250, 249, 245, .22); }
-  .ref-search:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
+  .ref-search:focus { border-color: rgba(212, 162, 127, .5); outline: none; }
   .ref-empty { color: var(--faint); font-size: 12px; }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -408,7 +408,7 @@
     /* Borrowed from .note: an accent hairline marks what you actually do. */
     .items .act {
       grid-column: 2; grid-row: 2; font-size: 13.5px;
-      padding-left: 9px; border-left: 1px solid rgba(196, 104, 73, .35);
+      padding-left: 9px; border-left: 1px solid rgba(212, 162, 127, .35);
     }
     .items .cond { grid-column: 2; grid-row: 3; font-size: 12px; }
     .items .cond:empty { display: none; }

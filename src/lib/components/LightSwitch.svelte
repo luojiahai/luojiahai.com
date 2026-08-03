@@ -128,7 +128,7 @@
           <stop offset="0" stop-color="#faf9f5" />
           <stop offset="0.5" stop-color="#f0eee6" />
           <stop offset="0.85" stop-color="#e3dacc" />
-          <stop offset="1" stop-color="#d97757" />
+          <stop offset="1" stop-color="#d4a27f" />
         </radialGradient>
         <!-- horizontal sheen that makes the flat drum read as a cylinder -->
         <linearGradient id="light-switch-cyl" x1="0" y1="0" x2="1" y2="0">
@@ -258,8 +258,8 @@
   .lamp-warmth {
     background: radial-gradient(
       620px circle at var(--lamp-x) 135px,
-      rgba(217, 119, 87, 0.15),
-      rgba(217, 119, 87, 0.055) 45%,
+      rgba(212, 162, 127, 0.15),
+      rgba(212, 162, 127, 0.055) 45%,
       transparent 72%
     );
     mix-blend-mode: screen;
@@ -293,7 +293,7 @@
     transition: filter 130ms ease-out;
   }
   :global(.dark) .bulb-svg {
-    filter: drop-shadow(0 0 18px rgba(217, 119, 87, 0.3));
+    filter: drop-shadow(0 0 18px rgba(212, 162, 127, 0.3));
   }
 
   .bulb-glow {
@@ -305,7 +305,7 @@
     background: radial-gradient(
       closest-side,
       rgba(240, 238, 230, 0.55),
-      rgba(217, 119, 87, 0.2) 55%,
+      rgba(212, 162, 127, 0.2) 55%,
       transparent 100%
     );
     filter: blur(6px);
@@ -359,7 +359,7 @@
     fill: var(--color-printer-accent-dark);
   }
   .bulb-glass {
-    stroke: rgba(217, 119, 87, 0.58);
+    stroke: rgba(212, 162, 127, 0.58);
     stroke-width: 0.8;
   }
   /* Frosted off-white overlay revealed the instant the lamp dies */

@@ -12,8 +12,8 @@
   --color-printer-body-dark: #1a1918;
   --color-printer-shell: #e8e6dc;
   --color-printer-shell-dark: #262624;
-  --color-printer-accent: #d97757;
-  --color-printer-accent-dark: #c46849;
+  --color-printer-accent: #bd7b4c;
+  --color-printer-accent-dark: #d4a27f;
   --color-printer-button-dark: #30302e;
   --color-printer-button-active-dark: #3d3d3a;
   --color-printer-paper: #faf9f5;
@@ -123,7 +123,7 @@
     background-image:
       radial-gradient(
         ellipse at 50% -8%,
-        rgba(196, 104, 73, 0.055) 0%,
+        rgba(212, 162, 127, 0.055) 0%,
         transparent 54%
       ),
       radial-gradient(
@@ -556,7 +556,7 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 4px 20px rgba(0, 0, 0, 0.5),
-      0 8px 40px rgba(196, 104, 73, 0.035),
+      0 8px 40px rgba(212, 162, 127, 0.035),
       0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
@@ -791,7 +791,7 @@
     --snail-core: #d1cfc5;
     --snail-core-hole: #73726c;
     --snail-led: var(--color-printer-accent);
-    --snail-led-glow: rgba(217, 119, 87, 0.48);
+    --snail-led-glow: rgba(189, 123, 76, 0.48);
   }
   :is(.dark) .snail-lane {
     --snail-body: var(--color-printer-button-dark);
@@ -803,7 +803,7 @@
     --snail-core: #4d4c48;
     --snail-core-hole: #141413;
     --snail-led: var(--color-printer-accent-dark);
-    --snail-led-glow: rgba(196, 104, 73, 0.6);
+    --snail-led-glow: rgba(212, 162, 127, 0.6);
   }
   @media (min-width: 640px) {
     .snail-lane {
