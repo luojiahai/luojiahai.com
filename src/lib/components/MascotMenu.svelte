@@ -187,7 +187,7 @@
                   class={[
                     "h-1.5 w-1.5 rounded-full transition-colors duration-200",
                     active
-                      ? "bg-printer-accent shadow-[0_0_6px_rgba(189,123,76,0.5)] dark:bg-printer-accent-dark dark:shadow-[0_0_6px_rgba(212,162,127,0.5)]"
+                      ? "bg-printer-accent shadow-[0_0_6px_rgba(14,14,14,0.5)] dark:bg-printer-accent-dark dark:shadow-[0_0_6px_rgba(212,162,127,0.5)]"
                       : "bg-transparent",
                   ]}
                 ></span>

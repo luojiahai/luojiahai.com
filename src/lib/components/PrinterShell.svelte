@@ -218,7 +218,7 @@
         aria-hidden="true"
       >
         <div
-          class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(189,123,76,0.06)_0%,rgba(189,123,76,0.018)_42%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(212,162,127,0.06)_0%,rgba(212,162,127,0.018)_42%,transparent_70%)]"
+          class="absolute -top-[40%] left-1/2 h-[80%] w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(14,14,14,0.06)_0%,rgba(14,14,14,0.018)_42%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(212,162,127,0.06)_0%,rgba(212,162,127,0.018)_42%,transparent_70%)]"
         ></div>
       </div>
 
@@ -263,7 +263,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(189,123,76,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark dark:shadow-[0_0_8px_rgba(212,162,127,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
+                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(14,14,14,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark dark:shadow-[0_0_8px_rgba(212,162,127,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div

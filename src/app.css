@@ -12,7 +12,7 @@
   --color-printer-body-dark: #1a1918;
   --color-printer-shell: #e8e6dc;
   --color-printer-shell-dark: #262624;
-  --color-printer-accent: #bd7b4c;
+  --color-printer-accent: #0e0e0e;
   --color-printer-accent-dark: #d4a27f;
   --color-printer-button-dark: #30302e;
   --color-printer-button-active-dark: #3d3d3a;
@@ -791,7 +791,7 @@
     --snail-core: #d1cfc5;
     --snail-core-hole: #73726c;
     --snail-led: var(--color-printer-accent);
-    --snail-led-glow: rgba(189, 123, 76, 0.48);
+    --snail-led-glow: rgba(14, 14, 14, 0.48);
   }
   :is(.dark) .snail-lane {
     --snail-body: var(--color-printer-button-dark);

@@ -27,7 +27,7 @@ const COLORS = {
   paper: "#FAF9F5",
   ink: "#141413",
   inkLight: "#5E5D59",
-  accent: "#BD7B4C",
+  accent: "#0E0E0E",
   border: "rgba(20, 20, 19, 0.1)",
   shadow: "rgba(0, 0, 0, 0.06)",
 };
@@ -274,7 +274,7 @@ function articleLayout(options: OgImageOptions): Node {
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 borderRadius: "4px",
-                boxShadow: "0 4px 10px rgba(189, 123, 76, 0.2)",
+                boxShadow: "0 4px 10px rgba(14, 14, 14, 0.2)",
               },
             },
             typeLabel,
