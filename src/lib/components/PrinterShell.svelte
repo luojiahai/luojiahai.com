@@ -4,11 +4,9 @@
   import { onMount } from "svelte";
   import type { Component, Snippet } from "svelte";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import type { Mascot } from "$lib/site-config";
-  import { hydrateMascot, mascot } from "$lib/mascot-state.svelte";
+  import { mascot, type Mascot } from "$lib/site-config";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
-  import MascotMenu from "./MascotMenu.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
@@ -26,10 +24,7 @@
     snail: PrinterSnail,
   };
 
-  /** Stays empty until hydration knows which mascot the visitor picked. */
-  let DeckOccupant = $derived(
-    mascot.ready ? deckOccupants[mascot.current] : null,
-  );
+  const DeckOccupant = deckOccupants[mascot];
 
   let {
     lang,
@@ -110,9 +105,6 @@
         window.matchMedia("(prefers-color-scheme: dark)").matches);
     applyDark(dark);
   }
-
-  // Top-edge mascot — the stored pick is already on <html data-mascot>.
-  onMount(hydrateMascot);
 
   // ------------------------------------------------------------------
   // Language switch — let the dial animate before navigating.
@@ -200,9 +192,8 @@
 >
   <!-- Printer Body -->
   <div class="relative w-full max-w-[56rem]">
-    <!-- Decorative critter/vehicle on the printer's top edge. The default
-      lives in src/lib/site-config.ts; the deck menu overrides it per visitor
-      and only renders once hydration knows which one to run. -->
+    <!-- Decorative critter/vehicle on the printer's top edge, picked by
+      the mascot flag in src/lib/site-config.ts. -->
     {#if DeckOccupant}
       <DeckOccupant />
     {/if}
@@ -254,9 +245,8 @@
             </div>
           </div>
 
-          <!-- Instrument cluster: deck readout alongside the power lamp -->
+          <!-- Instrument cluster: the power lamp -->
           <div class="flex items-center gap-5 sm:gap-6">
-            <MascotMenu {dictionary} />
             <div class="flex flex-col items-center gap-1.5">
               <div
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"

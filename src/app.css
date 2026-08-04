@@ -328,9 +328,8 @@
     );
   }
 
-  /* A slip of thermal paper lifted off the shell: the shared body of the
-     social hover card and the deck chit. Padding stays with the caller,
-     since each slip holds a different kind of print. */
+  /* A slip of thermal paper lifted off the shell: the body of the social
+     hover card. Padding stays with the caller. */
   .printed-card {
     @apply rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15;
     @apply bg-printer-paper dark:bg-printer-paper-dark;
@@ -413,125 +412,6 @@
     .printer-btn {
       @apply h-[30px] px-2.5;
     }
-  }
-
-  /* Deck readout — the mascot picker's trigger (MascotMenu.svelte). A well
-     recessed into the shell rather than another raised button, so it reads
-     as instrumentation beside the ON lamp instead of a seventh nav item.
-     No caret: the dials and pull cord don't advertise themselves either,
-     and the well deepening under the cursor is affordance enough. */
-  .deck-readout {
-    @apply relative flex cursor-pointer select-none items-center rounded-[3px] px-2 py-1;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.08),
-      rgba(0, 0, 0, 0.03)
-    );
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    box-shadow:
-      inset 0 2px 3px rgba(0, 0, 0, 0.12),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.4),
-      0 1px 0 rgba(255, 255, 255, 0.5);
-    transition:
-      background 0.2s,
-      border-color 0.2s;
-  }
-  :is(.dark) .deck-readout {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.55),
-      rgba(0, 0, 0, 0.42)
-    );
-    border-color: rgba(0, 0, 0, 0.5);
-    box-shadow:
-      inset 0 2px 5px rgba(0, 0, 0, 0.6),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-      0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-  /* Hover and open both press the window deeper into the shell */
-  .deck-readout:hover,
-  .deck-readout[aria-expanded="true"] {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.13),
-      rgba(0, 0, 0, 0.06)
-    );
-    border-color: rgba(0, 0, 0, 0.2);
-  }
-  :is(.dark) .deck-readout:hover,
-  :is(.dark) .deck-readout[aria-expanded="true"] {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.62),
-      rgba(0, 0, 0, 0.48)
-    );
-    border-color: rgba(0, 0, 0, 0.55);
-  }
-
-  /* The chit itself sits in the top layer, so it escapes the header
-     housing's overflow clip. Coordinates and width come from JS in viewport
-     space; these rules just undo the UA popover styling. */
-  .deck-chit {
-    position: fixed;
-    inset: auto;
-    z-index: 60;
-    margin: 0;
-    padding: 0;
-    overflow: visible;
-    border: 0;
-    background: transparent;
-  }
-
-  /* Dot-matrix print — blank paper dots with the glyph struck over them */
-  .dot-matrix {
-    display: grid;
-    grid-template-columns: repeat(var(--cols), var(--dot));
-    gap: 1px;
-  }
-  .dot-matrix span {
-    width: var(--dot);
-    height: var(--dot);
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.09);
-  }
-  .dot-matrix span.on {
-    background: var(--color-printer-ink);
-  }
-  :is(.dark) .dot-matrix span {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  :is(.dark) .dot-matrix span.on {
-    background: var(--color-printer-ink-dark);
-  }
-  /* A print pass: dots land row by row, top to bottom */
-  @media (prefers-reduced-motion: no-preference) {
-    .dot-matrix.printing span {
-      animation: deck-print 260ms both;
-      animation-delay: calc(var(--row) * 45ms);
-    }
-  }
-  @keyframes deck-print {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Rows of the deck chit — the top-edge mascot picker (MascotMenu.svelte) */
-  .deck-option {
-    @apply flex w-full items-center justify-between gap-4 rounded-[2px] px-1.5 py-[7px];
-    @apply font-mono text-[11px] uppercase tracking-widest;
-    @apply text-printer-ink dark:text-printer-ink-dark;
-    @apply cursor-pointer transition-colors duration-150;
-  }
-  .deck-option:hover {
-    @apply bg-printer-ink/[0.05] text-printer-accent;
-    @apply dark:bg-printer-ink-dark/[0.07] dark:text-printer-accent-dark;
-  }
-  .deck-option.active {
-    @apply text-printer-accent dark:text-printer-accent-dark;
   }
 
   .printer-header-border {
@@ -755,7 +635,7 @@
 /* ============================================================
    Crawling robo-snail on the printer's top edge — plastic body,
    antenna LEDs, and a roll of thermal paper for a shell. Shown
-   when the deck menu (or site-config's default) selects "snail".
+   when site-config's mascot flag selects "snail".
    Travel + the head-sweep turn are driven from JS (PrinterSnail.svelte);
    only the small idle motions (antenna sway, LED pulse) live here.
    ============================================================ */

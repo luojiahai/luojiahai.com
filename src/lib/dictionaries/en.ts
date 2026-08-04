@@ -102,12 +102,6 @@ const dictionary = {
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
     brandTagline: "Hello, World!",
-    deck: "Deck",
-    deckOptions: {
-      none: "Empty",
-      plane: "Plane",
-      snail: "Snail",
-    },
     backToPosts: "← BACK TO POSTS",
     allPosts: "← ALL POSTS",
     notFoundStatus: "Paper Tray Empty",

@@ -32,13 +32,11 @@
   UI labels — `works`, `social`, the per-aircraft `fly` summaries, and the
   whole `aboutContent` prose block all live here, once per language.
 - `src/lib/site-config.ts`: the deck mascots (`none`, `plane`, `snail`) and
-  the default. A mascot exists in five places that must agree: this list,
-  its 7x5 glyph in `mascot-glyphs.ts`, `mascot-state.svelte.ts`, its styles
-  in `app.css`, and the hardcoded literals in `src/app.html`'s pre-paint
-  script (which also mirrors the `color-mode` values). The inline script
-  reads localStorage onto `<html data-*>` before paint, so a missing entry
-  there means the visitor's pick flashes past on load rather than failing
-  loudly.
+  the `mascot` flag picking which one rides the printer's top edge — an
+  in-code setting, not a visitor preference. A mascot exists in three places
+  that must agree: this list, its styles in `app.css`, and the
+  `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
+  script only mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, categories).
 - `content/`: source content. Posts in `content/posts/YYYY-MM-DD title/`;
   each post directory holds one `<lang>.md` per translation (`en.md`,

@@ -27,13 +27,6 @@
           if (themeColor) {
             themeColor.setAttribute("content", dark ? "#141413" : "#d1cfc5");
           }
-          // Top-edge mascot, read before paint so hydration picks the right
-          // one straight away. Keep in sync with mascots in
-          // src/lib/site-config.ts; an unset attribute means "use the default".
-          var mascot = localStorage.getItem("mascot");
-          if (mascot === "none" || mascot === "plane" || mascot === "snail") {
-            document.documentElement.dataset.mascot = mascot;
-          }
         } catch (e) {}
       })();
     </script>
