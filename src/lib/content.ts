@@ -61,6 +61,17 @@ export function toListItem(post: Post): PostListItem {
   };
 }
 
+/** The one category projection every page shares. */
+export function toCategoryItem(category: Category): Category {
+  return {
+    slug: category.slug,
+    name: category.name,
+    description: category.description,
+    count: category.count,
+    permalink: category.permalink,
+  };
+}
+
 export function postsOf(lang: Language, category?: string): Post[] {
   return posts.filter(
     (post) =>

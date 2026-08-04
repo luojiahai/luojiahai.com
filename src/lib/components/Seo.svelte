@@ -116,8 +116,8 @@
     <link
       rel="alternate"
       type="application/rss+xml"
-      href="{feedBase}"
-      title="{dictionary.meta.websiteName} - All"
+      href={feedBase}
+      title={dictionary.meta.websiteName}
     />
   {/if}
 

@@ -1,5 +1,11 @@
 import { error } from "@sveltejs/kit";
-import { categories, findCategory, postsOf, toListItem } from "$lib/content";
+import {
+  categories,
+  findCategory,
+  postsOf,
+  toCategoryItem,
+  toListItem,
+} from "$lib/content";
 import { languages } from "$lib/dictionaries";
 import type { Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
@@ -16,12 +22,7 @@ export const load: PageServerLoad = ({ params }) => {
   if (!category) error(404, "Category not found");
 
   return {
-    category: {
-      slug: category.slug,
-      name: category.name,
-      description: category.description,
-      permalink: category.permalink,
-    },
+    category: toCategoryItem(category),
     posts: postsOf(lang, category.slug).map(toListItem),
   };
 };

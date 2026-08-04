@@ -5,6 +5,7 @@ import {
   findPost,
   posts,
   postTranslations,
+  toCategoryItem,
 } from "$lib/content";
 import type { Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
@@ -24,11 +25,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   const categories = allCategories
     .filter((category) => post.categories.includes(category.slug))
-    .map((category) => ({
-      slug: category.slug,
-      name: category.name,
-      permalink: category.permalink,
-    }));
+    .map(toCategoryItem);
 
   // Pre-render the WeChat QR code as inline SVG at build time.
   const wechatQrSvg = post.wechatLink

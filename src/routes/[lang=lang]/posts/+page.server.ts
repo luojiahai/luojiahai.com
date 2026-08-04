@@ -1,4 +1,4 @@
-import { categories, postsOf, toListItem } from "$lib/content";
+import { categories, postsOf, toCategoryItem, toListItem } from "$lib/content";
 import { languages, type Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
@@ -9,11 +9,6 @@ export const load: PageServerLoad = ({ params }) => {
 
   return {
     posts: postsOf(lang).map(toListItem),
-    categories: categories.map((category) => ({
-      slug: category.slug,
-      name: category.name,
-      permalink: category.permalink,
-      count: category.count,
-    })),
+    categories: categories.map(toCategoryItem),
   };
 };
