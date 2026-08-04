@@ -5,7 +5,7 @@ slug: hello-world
 lang: en
 categories:
   - journal
-date: "2026-07-22"
+date: "2014-01-01"
 ---
 
 Hello, World! This is the first post on [luojiahai.com](https://luojiahai.com).
