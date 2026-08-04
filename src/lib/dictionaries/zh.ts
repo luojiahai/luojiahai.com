@@ -59,7 +59,7 @@ const dictionary: Dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "打印于",
     aboutTitle: "关于",
-    aboutSubtitle: "你好，世界！",
+    aboutSubtitle: "关于我的东西。",
     wechatScanHint: "微信扫码阅读原文",
     entries(count: number) {
       return `${count} 条`;
@@ -201,19 +201,11 @@ const dictionary: Dictionary = {
     },
   ],
   aboutContent: `
-这里是 [luojiahai](https://luojiahai.com) 的互联网角落。
+这是我的网站，不定期更新，分享一些随想随记，什么内容都有可能出现。「luojiahai」是我中文名字罗嘉海的拼音，也是我在互联网上的常用 ID。
 
-不定期更新，分享一些随想随记，什么内容都有可能出现。
+我是 INTJ（内向、直觉、思考、判断四种特质组成的人格类型）。我在中国广州出生长大，目前住在澳大利亚墨尔本。我是一名务实的计算机程序员，我做有用的东西。
 
-### 关于我
-
-你好，我是罗嘉海。「luojiahai」是我中文名字的拼音，也是我在互联网上的常用 ID。
-
-我是 INTJ。我在中国广州出生长大，目前住在澳大利亚墨尔本。可惜我不喜欢咖啡，我喝水和可口可乐。
-
-我是一名务实的计算机程序员，我做有用的东西，也参与开源贡献。AI 是我生活和工作的一部分，[我不和不用 AI 的人说话](/zh/posts/i-dont-talk-to-people-who-dont-use-ai)。
-
-编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我的首选餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
+编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我最喜欢的餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
 
 我是航空爱好者。我玩微软飞行模拟器，飞 [FlyByWire](https://flybywiresim.com/) 制作的空客 A320（A32NX），练习真实的驾驶：飞行程序、无线电通话，以及背后的航空知识。
 
