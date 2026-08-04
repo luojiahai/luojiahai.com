@@ -1,17 +1,10 @@
 import type { IconName } from "$lib/icons";
-import type { AircraftSlug } from "../../params/aircraft";
 
 interface Contact {
   label: string;
   name: string;
   link: string;
   icon: IconName;
-}
-
-/** The aircraft name and URL come from the registry; only the copy is here. */
-interface FlyEntry {
-  slug: AircraftSlug;
-  summary: string;
 }
 
 const contacts: Contact[] = [
@@ -129,15 +122,6 @@ const dictionary = {
     emailHint: "Mail lands straight in my inbox.",
     telegramHint: "DMs open, say hi anytime.",
   },
-  // Sim companions. These open outside the printer shell, since they are
-  // built to sit on a second screen next to the simulator.
-  fly: [
-    {
-      slug: "fbw-a32nx",
-      summary:
-        "Airbus A320neo (A320-251N) built by FlyByWire Simulations.",
-    },
-  ] as FlyEntry[],
 };
 
 export default dictionary;

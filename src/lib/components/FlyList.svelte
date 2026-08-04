@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { Dictionary } from "$lib/dictionaries";
+  import type { FlyItem } from "$lib/content";
   import { aircraftNames } from "../../params/aircraft";
   import Icon from "./Icon.svelte";
   import PrintedEmpty from "./PrintedEmpty.svelte";
 
-  let { entries }: { entries: Dictionary["fly"] } = $props();
+  let { entries }: { entries: FlyItem[] } = $props();
 
-  // The name and the URL belong to the aircraft registry; the dictionary
-  // supplies only the translated summary.
+  // The name and the URL belong to the aircraft registry; the collection
+  // supplies only the translated blurb.
   let rows = $derived(
     entries.map((entry) => ({
       slug: entry.slug,
       name: aircraftNames[entry.slug],
-      summary: entry.summary,
+      description: entry.description,
       href: `/fly/${entry.slug}`,
     })),
   );
@@ -38,7 +38,7 @@
         <p
           class="mt-1 max-w-[62ch] font-serif text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60"
         >
-          {entry.summary}
+          {entry.description}
         </p>
       </div>
 

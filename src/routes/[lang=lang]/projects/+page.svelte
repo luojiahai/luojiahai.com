@@ -43,7 +43,7 @@
 
   <!-- Sim companions - links out of the printer shell -->
   <PrintedSection label={dictionary.labels.fly} labelIcon="plane">
-    <FlyList entries={dictionary.fly} />
+    <FlyList entries={data.fly} />
   </PrintedSection>
 
   <PrintedDivider style="dashed" />

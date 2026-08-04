@@ -112,12 +112,6 @@ const dictionary: Dictionary = {
     emailHint: "邮件会直达我的收件箱。",
     telegramHint: "私信随时开放，欢迎来聊。",
   },
-  fly: [
-    {
-      slug: "fbw-a32nx",
-      summary: "由 FlyByWire Simulations 制作的空客 A320neo（A320-251N）。",
-    },
-  ],
 };
 
 export default dictionary;
