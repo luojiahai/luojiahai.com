@@ -154,6 +154,26 @@ const projects = defineCollection({
   }),
 });
 
+/**
+ * The gear list on /{lang}/use, one record per group. A group has no identity
+ * beyond its label and its position, so this is not a taxonomy - the items
+ * live inside it rather than pointing at it.
+ */
+const use = defineCollection({
+  name: "UseGroup",
+  pattern: "use/*.yml",
+  schema: s.object({
+    slug: s.string(),
+    label: localized(20),
+    items: s.array(
+      s.object({
+        label: localized(30),
+        value: s.string().max(60),
+      }),
+    ),
+  }),
+});
+
 export default defineConfig({
   root: "content",
   output: {
@@ -163,9 +183,9 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { categories, pages, posts, projects },
+  collections: { categories, pages, posts, projects, use },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
-  prepare: ({ categories, pages, posts, projects }) => {
+  prepare: ({ categories, pages, posts, projects, use }) => {
     const unknownCategories = posts
       .flatMap((post) => post.categories)
       .filter((slug) => !categories.some((c) => c.slug === slug));
@@ -188,6 +208,22 @@ export default defineConfig({
       projects.map((project) => project.slug),
     );
     if (!projectsOk) return false;
+
+    const useOk = reportDuplicates(
+      "use group slugs",
+      use.map((group) => group.slug),
+    );
+    if (!useOk) return false;
+
+    // Items have no slug - the page keys them by `value`, so a group listing
+    // the same product twice is the same crash a duplicate slug would be.
+    const itemsOk = use.every((group) =>
+      reportDuplicates(
+        `use items in ${group.slug}`,
+        group.items.map((item) => item.value),
+      ),
+    );
+    if (!itemsOk) return false;
 
     // Unlike posts, a page renders at a fixed URL in every language, so a
     // missing translation is a broken route rather than one fewer list entry.
