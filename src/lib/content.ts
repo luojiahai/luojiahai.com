@@ -3,6 +3,7 @@ import {
   pages as allPages,
   posts as allPosts,
   projects as allProjects,
+  use as allUseGroups,
 } from "#velite";
 import type { Language } from "$lib/dictionaries";
 
@@ -58,6 +59,24 @@ export type ProjectItem = Omit<Project, "description"> & {
   description: string;
 };
 
+/** One labelled row of the gear list. `value` is a product name, never translated. */
+export interface UseItem {
+  label: Localized;
+  value: string;
+}
+
+export interface UseGroup {
+  slug: string;
+  label: Localized;
+  items: UseItem[];
+}
+
+export type UseGroupItem = {
+  slug: string;
+  label: string;
+  items: { label: string; value: string }[];
+};
+
 /** All published posts, newest first. Drafts are only visible in dev. */
 export const posts: Post[] = (allPosts as unknown as Post[])
   .filter((post) => import.meta.env.DEV || !post.draft)
@@ -68,6 +87,8 @@ export const pages: Page[] = allPages as unknown as Page[];
 export const categories: Category[] = allCategories as unknown as Category[];
 
 export const projects: Project[] = allProjects as unknown as Project[];
+
+export const useGroups: UseGroup[] = allUseGroups as unknown as UseGroup[];
 
 /** The lightweight shape sent to list pages (no rendered content). */
 export type PostListItem = Pick<
@@ -129,6 +150,18 @@ export function projectsOf(lang: Language): ProjectItem[] {
   return projects.map((project) => ({
     ...project,
     description: project.description[lang],
+  }));
+}
+
+/** The gear list, in authored order, with every label resolved for `lang`. */
+export function useGroupsOf(lang: Language): UseGroupItem[] {
+  return useGroups.map((group) => ({
+    slug: group.slug,
+    label: group.label[lang],
+    items: group.items.map((item) => ({
+      label: item.label[lang],
+      value: item.value,
+    })),
   }));
 }
 

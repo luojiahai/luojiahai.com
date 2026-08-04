@@ -6,6 +6,8 @@
   import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
+  let { data } = $props();
+
   let lang = $derived(page.params.lang as Language);
   let dictionary = $derived(getDictionary(lang));
 </script>
@@ -29,10 +31,10 @@
   <PrintedDivider style="solid" />
 
   <!-- One section per group; the group names carry the labels here. -->
-  {#each dictionary.use.groups as group (group.label)}
+  {#each data.groups as group (group.slug)}
     <PrintedSection label={group.label} labelIcon="tag">
       <div class="flex flex-col">
-        {#each group.items as item, index (item.label)}
+        {#each group.items as item, index (item.value)}
           <div>
             <div
               class="flex flex-col gap-y-1 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-4"

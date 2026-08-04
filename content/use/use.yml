@@ -1,0 +1,78 @@
+# Array order is display order, for the groups and the items inside them.
+# `value` is a product name, identical in every language, so it is not
+# localized - only the labels are.
+- slug: hardware
+  label: { en: Hardware, zh: 硬件 }
+  items:
+    - label: { en: Mobile, zh: 手机 }
+      value: iPhone 13 Pro Max
+    - label: { en: Laptop, zh: 笔记本电脑 }
+      value: MacBook Air 13-inch M5
+    - label: { en: Monitor, zh: 显示器 }
+      value: Samsung LS27A700NWEXXY / Dell S2721QS
+    - label: { en: Dock, zh: 扩展坞 }
+      value: Dell D6000
+    - label: { en: Mouse, zh: 鼠标 }
+      value: Logitech MX Master 3S
+    - label: { en: Keyboard, zh: 键盘 }
+      value: 8BitDo Retro Fami / Keychron Q1
+    - label: { en: Speaker, zh: 音响 }
+      value: Marshall Stockwell 2 / Ultimate Ears Boom 3
+    - label: { en: Power Bank, zh: 充电宝 }
+      value: Sharge Shargeek 140W 20000mAh
+    - label: { en: Watch, zh: 手表 }
+      value: Garmin Epix Pro (Gen 2) Sapphire 47mm
+
+- slug: desktop-computer
+  label: { en: Desktop Computer, zh: 台式电脑 }
+  items:
+    - label: { en: Processor, zh: 处理器 }
+      value: AMD Ryzen 7 5700G
+    - label: { en: Motherboard, zh: 主板 }
+      value: ASUS Prime B550M-A WiFi II
+    - label: { en: Graphics, zh: 显卡 }
+      value: ASUS NVIDIA GeForce GTX 3060
+    - label: { en: Cooling, zh: 冷却 }
+      value: Cooler Master MasterLiquid ML240L V2
+    - label: { en: Case, zh: 机箱 }
+      value: Fractal Design Pop Mini Air RGB White Micro ATX
+    - label: { en: Power Supply, zh: 电源 }
+      value: Fractal Design ION Gold 750W
+    - label: { en: Memory, zh: 内存 }
+      value: Kingston Fury Beast RGB 2x16GB
+    - label: { en: SSD, zh: 硬盘 }
+      value: Samsung 980 Pro 1TB
+
+- slug: flight-simulator
+  label: { en: Flight Simulator, zh: 飞行模拟 }
+  items:
+    - label: { en: Joystick, zh: 操纵杆 }
+      value: Thrustmaster TCA Sidestick Airbus Edition
+    - label: { en: Throttle, zh: 油门 }
+      value: Winwing Ursa Minor 32 Throttle Metal
+    - label: { en: Aerodynamic Control Panel, zh: 气动构型面板 }
+      value: Winwing 32 PAC Metal
+
+- slug: camera
+  label: { en: Camera, zh: 相机 }
+  items:
+    - label: { en: Digital Camera, zh: 电子相机 }
+      value: Sony A7 I
+    - label: { en: Film Camera, zh: 胶片相机 }
+      value: Pentax S1a
+    - label: { en: Lens, zh: 镜头 }
+      value: Sony Zeiss 35mm f/2.8
+    - label: { en: Films, zh: 胶片 }
+      value: Kodak Portra 400 / Fujifilm Fujicolor 200
+
+- slug: software
+  label: { en: Software, zh: 软件 }
+  items:
+    - label: { en: Coding Agent, zh: 编程智能体 }
+      value: Claude Code / Codex
+    - label: { en: Editor, zh: 编辑器 }
+      value: Visual Studio Code
+    - label: { en: Browser, zh: 浏览器 }
+      value: Edge
+    - label: { en: Terminal, zh: 终端 }
+      value: Ghostty / Windows Terminal
