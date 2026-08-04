@@ -2,6 +2,7 @@ import {
   categories as allCategories,
   pages as allPages,
   posts as allPosts,
+  projects as allProjects,
 } from "#velite";
 import type { Language } from "$lib/dictionaries";
 
@@ -43,6 +44,20 @@ export interface Category {
   permalink: Localized;
 }
 
+/** A thing I build. Only the blurb varies by language. */
+export interface Project {
+  slug: string;
+  name: string;
+  description: Localized;
+  image?: string;
+  link: string;
+}
+
+/** A project with its blurb resolved, which is all a list row needs. */
+export type ProjectItem = Omit<Project, "description"> & {
+  description: string;
+};
+
 /** All published posts, newest first. Drafts are only visible in dev. */
 export const posts: Post[] = (allPosts as unknown as Post[])
   .filter((post) => import.meta.env.DEV || !post.draft)
@@ -51,6 +66,8 @@ export const posts: Post[] = (allPosts as unknown as Post[])
 export const pages: Page[] = allPages as unknown as Page[];
 
 export const categories: Category[] = allCategories as unknown as Category[];
+
+export const projects: Project[] = allProjects as unknown as Project[];
 
 /** The lightweight shape sent to list pages (no rendered content). */
 export type PostListItem = Pick<
@@ -102,6 +119,17 @@ export function findPost(lang: Language, slug: string): Post | undefined {
 /** The same post in other languages, for hreflang alternates. */
 export function postTranslations(post: Post): Post[] {
   return posts.filter((other) => other.slug === post.slug);
+}
+
+/**
+ * Every project, in authored order, with the blurb resolved for `lang`. The
+ * `{ en, zh }` shape stops here so routes and components never see it.
+ */
+export function projectsOf(lang: Language): ProjectItem[] {
+  return projects.map((project) => ({
+    ...project,
+    description: project.description[lang],
+  }));
 }
 
 export function findPage(lang: Language, slug: string): Page | undefined {

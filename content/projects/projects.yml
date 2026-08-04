@@ -1,0 +1,16 @@
+# Array order is display order; the home page shows the first three.
+- slug: code-by-wire
+  name: Code-by-wire
+  description:
+    en: Pilot coding agents (Claude Code, Codex) and monitor their telemetry from one console.
+    zh: 在一个控制台中驾驶编程智能体（Claude Code、Codex）并监控其遥测数据。
+  image: /static/code-by-wire.svg
+  link: https://github.com/luojiahai/code-by-wire
+
+- slug: potato
+  name: Potato
+  description:
+    en: Stash long terminal commands, find them by fuzzy search, and hand them back.
+    zh: 收纳冗长的终端命令，通过模糊搜索找到并取回。
+  image: /static/potato.svg
+  link: https://github.com/luojiahai/potato

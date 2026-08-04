@@ -8,6 +8,8 @@
   import ProjectList from "$lib/components/ProjectList.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
+  let { data } = $props();
+
   let lang = $derived(page.params.lang as Language);
   let dictionary = $derived(getDictionary(lang));
 </script>
@@ -34,7 +36,7 @@
 
   <!-- Projects. The page title already names them, so no section label. -->
   <PrintedSection>
-    <ProjectList works={dictionary.works} {lang} />
+    <ProjectList projects={data.projects} {lang} />
   </PrintedSection>
 
   <PrintedDivider style="dashed" />

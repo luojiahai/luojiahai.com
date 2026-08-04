@@ -132,20 +132,6 @@ const dictionary: Dictionary = {
       },
     ],
   },
-  works: [
-    {
-      name: "Code-by-wire",
-      summary: "在一个控制台中驾驶编程智能体（Claude Code、Codex）并监控其遥测数据。",
-      image: "/static/code-by-wire.svg",
-      link: "https://github.com/luojiahai/code-by-wire",
-    },
-    {
-      name: "Potato",
-      summary: "收纳冗长的终端命令，通过模糊搜索找到并取回。",
-      image: "/static/potato.svg",
-      link: "https://github.com/luojiahai/potato",
-    },
-  ],
   contacts: [
     {
       label: "X (Twitter)",
