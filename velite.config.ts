@@ -46,14 +46,13 @@ const localized = (max: number) =>
     zh: s.string().max(max),
   });
 
-/**
- * The keys that appear more than once. Duplicate slugs are not cosmetic: the
- * pages key their `{#each}` blocks by slug, and Svelte throws on a repeated key.
- */
+/** The keys that appear more than once, each reported once. */
 function duplicates(keys: string[]): string[] {
   const seen = new Set<string>();
   return [
-    ...new Set(keys.filter((key) => (seen.has(key) ? true : (seen.add(key), false)))),
+    ...new Set(
+      keys.filter((key) => (seen.has(key) ? true : (seen.add(key), false))),
+    ),
   ];
 }
 
@@ -209,41 +208,31 @@ export default defineConfig({
       return false;
     }
 
-    // Translations are linked by slug alone, so a slug reused by two posts
-    // in the same language would silently shadow one of them.
-    const postsOk = reportDuplicates(
-      "post slugs",
-      posts.map((post) => `${post.lang}/${post.slug}`),
-    );
-    if (!postsOk) return false;
-
-    const projectsOk = reportDuplicates(
-      "project slugs",
-      projects.map((project) => project.slug),
-    );
-    if (!projectsOk) return false;
-
-    const useOk = reportDuplicates(
-      "use group slugs",
-      use.map((group) => group.slug),
-    );
-    if (!useOk) return false;
-
-    // Items have no slug - the page keys them by `value`, so a group listing
-    // the same product twice is the same crash a duplicate slug would be.
-    const itemsOk = use.every((group) =>
-      reportDuplicates(
-        `use items in ${group.slug}`,
-        group.items.map((item) => item.value),
+    // Every list page keys its `{#each}` by the key named here, and Svelte
+    // throws on a repeated key - so a duplicate is a broken page, not a
+    // cosmetic slip. Posts key by lang+slug because translations share one
+    // slug; use items have no slug at all, so the page keys them by `value`.
+    const keyed = [
+      ["post slugs", posts.map((post) => `${post.lang}/${post.slug}`)],
+      ["page slugs", pages.map((page) => `${page.lang}/${page.slug}`)],
+      ["category slugs", categories.map((category) => category.slug)],
+      ["project slugs", projects.map((project) => project.slug)],
+      ["use group slugs", use.map((group) => group.slug)],
+      ...use.map(
+        (group) =>
+          [
+            `use items in ${group.slug}`,
+            group.items.map((item) => item.value),
+          ] as const,
       ),
-    );
-    if (!itemsOk) return false;
+      ["fly slugs", fly.map((entry) => entry.slug)],
+    ] as const;
 
-    const flyOk = reportDuplicates(
-      "fly slugs",
-      fly.map((entry) => entry.slug),
-    );
-    if (!flyOk) return false;
+    // Report every collection before bailing, so one run lists all the work.
+    const keysOk = keyed
+      .map(([what, keys]) => reportDuplicates(what, keys))
+      .every(Boolean);
+    if (!keysOk) return false;
 
     // In the dictionaries this slug was checked against AircraftSlug at compile
     // time. YAML gives that up, so check it here: an unknown slug would render
@@ -271,12 +260,6 @@ export default defineConfig({
       console.error("Missing page translations:", missingPages.join(", "));
       return false;
     }
-
-    const pagesOk = reportDuplicates(
-      "page slugs",
-      pages.map((page) => `${page.lang}/${page.slug}`),
-    );
-    if (!pagesOk) return false;
 
     for (const category of categories) {
       category.count = {

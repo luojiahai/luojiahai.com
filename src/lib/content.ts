@@ -73,7 +73,7 @@ export interface UseGroup {
   items: UseItem[];
 }
 
-export type UseGroupItem = {
+export type ResolvedUseGroup = {
   slug: string;
   label: string;
   items: { label: string; value: string }[];
@@ -99,11 +99,11 @@ export const pages: Page[] = allPages as unknown as Page[];
 
 export const categories: Category[] = allCategories as unknown as Category[];
 
-export const projects: Project[] = allProjects as unknown as Project[];
+const projects: Project[] = allProjects as unknown as Project[];
 
-export const useGroups: UseGroup[] = allUseGroups as unknown as UseGroup[];
+const useGroups: UseGroup[] = allUseGroups as unknown as UseGroup[];
 
-export const fly: FlyEntry[] = allFly as unknown as FlyEntry[];
+const fly: FlyEntry[] = allFly as unknown as FlyEntry[];
 
 /** The lightweight shape sent to list pages (no rendered content). */
 export type PostListItem = Pick<
@@ -169,7 +169,7 @@ export function projectsOf(lang: Language): ProjectItem[] {
 }
 
 /** The gear list, in authored order, with every label resolved for `lang`. */
-export function useGroupsOf(lang: Language): UseGroupItem[] {
+export function useGroupsOf(lang: Language): ResolvedUseGroup[] {
   return useGroups.map((group) => ({
     slug: group.slug,
     label: group.label[lang],
