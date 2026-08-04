@@ -1,6 +1,5 @@
 import { categories, posts } from "$lib/content";
 import { getDictionary, languages } from "$lib/dictionaries";
-import { activities } from "../../params/activity";
 import { aircraft } from "../../params/aircraft";
 import type { RequestHandler } from "./$types";
 
@@ -21,15 +20,9 @@ export const GET: RequestHandler = () => {
     const dictionary = getDictionary(lang);
     return [
       { loc: dictionary.urls.home, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.life, lastmod: now, priority: 1 },
+      { loc: dictionary.urls.posts, lastmod: now, priority: 1 },
       { loc: dictionary.urls.tech, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.use, lastmod: now, priority: 0.8 },
       { loc: dictionary.urls.about, lastmod: now, priority: 0.8 },
-      ...activities.map((activity) => ({
-        loc: `${dictionary.urls.life}/${activity}`,
-        lastmod: now,
-        priority: 0.6,
-      })),
     ];
   });
 
@@ -52,7 +45,7 @@ export const GET: RequestHandler = () => {
   const postUrls: SitemapUrl[] = posts.map((post) => ({
     loc: post.permalink,
     lastmod: post.updated || post.date,
-    priority: post.section === "tech" ? 1 : 0.9,
+    priority: 1,
   }));
 
   const urls = [...basicUrls, ...companionUrls, ...categoryUrls, ...postUrls]

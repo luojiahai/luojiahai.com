@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { categories, findCategory, findPost, isSection, posts } from "$lib/content";
+import { categories, findCategory, findPost, posts } from "$lib/content";
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
 import { displayDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
@@ -9,13 +9,9 @@ export const prerender = true;
 
 /** Static pages under each language, with their page-layout OG options. */
 const PAGE_EMOJIS: Record<string, string> = {
-  life: "🌿",
+  posts: "📝",
   tech: "🛠",
-  use: "🧰",
   about: "👋",
-  "life/reading": "📚",
-  "life/watching": "🎬",
-  "life/listening": "🎵",
 };
 
 export const entries: EntryGenerator = () => [
@@ -23,12 +19,10 @@ export const entries: EntryGenerator = () => [
   ...languages.flatMap((lang) =>
     Object.keys(PAGE_EMOJIS).map((page) => ({ path: `${lang}/${page}.png` })),
   ),
-  ...posts.map((post) => ({
-    path: `${post.lang}/${post.section}/${post.slug}.png`,
-  })),
+  ...posts.map((post) => ({ path: `${post.lang}/posts/${post.slug}.png` })),
   ...categories.flatMap((category) =>
     languages.map((lang) => ({
-      path: `${lang}/${category.section}/categories/${category.slug}.png`,
+      path: `${lang}/posts/categories/${category.slug}.png`,
     })),
   ),
 ];
@@ -61,18 +55,13 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   // Static pages
   if (page in PAGE_EMOJIS) {
     const titles: Record<string, string> = {
-      life: dictionary.labels.life,
+      posts: dictionary.labels.posts,
       tech: dictionary.labels.tech,
-      use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
-      "life/reading": dictionary.labels.reading,
-      "life/watching": dictionary.labels.watching,
-      "life/listening": dictionary.labels.listening,
     };
     const descriptions: Record<string, string | undefined> = {
-      tech: dictionary.labels.sectionSubtitle.tech,
-      life: dictionary.labels.sectionSubtitle.life,
-      use: dictionary.labels.useSubtitle,
+      posts: dictionary.labels.postsSubtitle,
+      tech: dictionary.labels.techSubtitle,
       about: dictionary.labels.aboutSubtitle || undefined,
     };
     return {
@@ -84,27 +73,26 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     };
   }
 
-  const [section, ...rest] = segments;
-  if (!isSection(section)) return undefined;
-  const type = section === "life" ? "life" : "post";
+  const [prefix, ...rest] = segments;
+  if (prefix !== "posts") return undefined;
 
   // Category pages
   if (rest.length === 2 && rest[0] === "categories") {
-    const category = findCategory(section, rest[1]);
+    const category = findCategory(rest[1]);
     if (!category) return undefined;
-    return { title: category.name[lang], type, ...branding };
+    return { title: category.name[lang], type: "post", ...branding };
   }
 
   // Post pages
   if (rest.length === 1) {
-    const post = findPost(lang, section, rest[0]);
+    const post = findPost(lang, rest[0]);
     if (!post) return undefined;
     return {
       title: post.title,
       description: post.description,
       category: post.categories[0],
       date: displayDate(post.date, "en-US"),
-      type,
+      type: "post",
       ...branding,
     };
   }

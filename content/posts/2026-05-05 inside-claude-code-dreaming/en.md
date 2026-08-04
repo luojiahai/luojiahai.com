@@ -14,7 +14,7 @@ keywords:
 
 _Based on the source of Claude Code v2.1.88._
 
-The [three-tier memory system](/en/tech/inside-claude-code-three-tier-memory-architecture) has a slow-motion problem. Memories accumulate across sessions and drift. A note saying "the build uses webpack" outlives the migration to Vite. Near-duplicates pile up because each session writes in isolation. Left alone, the memory directory degrades into exactly the stale, contradictory mess the system was built to avoid.
+The [three-tier memory system](/en/posts/inside-claude-code-three-tier-memory-architecture) has a slow-motion problem. Memories accumulate across sessions and drift. A note saying "the build uses webpack" outlives the migration to Vite. Near-duplicates pile up because each session writes in isolation. Left alone, the memory directory degrades into exactly the stale, contradictory mess the system was built to avoid.
 
 Biology solved this long ago. During sleep the brain replays the day and consolidates short-term experience into durable memory. Claude Code does the same, and the source does not bother with a euphemism. The feature is called **dreaming** and it lives in `services/autoDream/`.
 
@@ -49,11 +49,11 @@ When the gates open, it forks an agent and hands it a prompt that opens by telli
 3. **Consolidate.** Merge new signal into existing topic files rather than spawning near-duplicates, convert relative dates to absolute ones, and *delete* facts the day's work has contradicted.
 4. **Prune and index.** Keep `MEMORY.md` under its 200-line and 25KB caps. It is an index, not a dump.
 
-If that reads like a garbage-collection pass for the memory architecture, that is exactly what it is. Everything the [memory post](/en/tech/inside-claude-code-three-tier-memory-architecture) describes as a design invariant, the lean index, the topic files, absolute dates, deleting stale claims, is something the dream actively enforces over time.
+If that reads like a garbage-collection pass for the memory architecture, that is exactly what it is. Everything the [memory post](/en/posts/inside-claude-code-three-tier-memory-architecture) describes as a design invariant, the lean index, the topic files, absolute dates, deleting stale claims, is something the dream actively enforces over time.
 
 ## Sandboxed like a background extraction
 
-The dream reuses the safety envelope of the end-of-turn [memory extractor](/en/tech/inside-claude-code-three-tier-memory-architecture). It is a forked agent sharing the parent's cached prompt prefix, running with `skipTranscript: true`, with the same asymmetric permissions: reads anywhere, writes only inside the memory directory.
+The dream reuses the safety envelope of the end-of-turn [memory extractor](/en/posts/inside-claude-code-three-tier-memory-architecture). It is a forked agent sharing the parent's cached prompt prefix, running with `skipTranscript: true`, with the same asymmetric permissions: reads anywhere, writes only inside the memory directory.
 
 ```typescript
 // autoDream.ts

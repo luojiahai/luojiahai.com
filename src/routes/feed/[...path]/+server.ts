@@ -1,39 +1,24 @@
 import { error } from "@sveltejs/kit";
-import { postsOf, type Section } from "$lib/content";
+import { postsOf } from "$lib/content";
 import { generateRssFeed } from "$lib/feed";
 import { getDictionary, type Language } from "$lib/dictionaries";
 import type { RequestHandler } from "./$types";
 
-// Feeds keep their extensionless URLs (/feed, /feed/zh/tech, ...), so they
-// are served by the worker instead of being prerendered — a static file
-// without an extension would lose its XML content type. Responses are cached
-// at the edge with the Cloudflare Cache API (see below).
+// Feeds keep their extensionless URLs (/feed, /feed/zh), so they are served
+// by the worker instead of being prerendered — a static file without an
+// extension would lose its XML content type. Responses are cached at the
+// edge with the Cloudflare Cache API (see below).
 export const prerender = false;
 
-const FEED_DESCRIPTIONS: Record<Language, Record<string, string>> = {
-  en: {
-    all: "All posts from luojiahai: tech articles and life essays.",
-    tech: "Tech articles and development insights from luojiahai.",
-    life: "Life essays and personal writing from luojiahai.",
-  },
-  zh: {
-    all: "罗嘉海的全部文章：技术与生活。",
-    tech: "罗嘉海的技术文章。",
-    life: "罗嘉海的生活随笔。",
-  },
+const FEED_DESCRIPTIONS: Record<Language, string> = {
+  en: "All posts from luojiahai.",
+  zh: "罗嘉海的全部文章。",
 };
 
-function parsePath(
-  path: string,
-): { lang: Language; section?: Section } | undefined {
+function parsePath(path: string): { lang: Language } | undefined {
   const segments = path.split("/").filter(Boolean);
-  const lang: Language = segments[0] === "zh" ? "zh" : "en";
-  if (segments[0] === "zh") segments.shift();
-
-  if (segments.length === 0) return { lang };
-  if (segments.length > 1) return undefined;
-  if (segments[0] === "tech") return { lang, section: "tech" };
-  if (segments[0] === "life") return { lang, section: "life" };
+  if (segments.length === 0) return { lang: "en" };
+  if (segments.length === 1 && segments[0] === "zh") return { lang: "zh" };
   return undefined;
 }
 
@@ -46,17 +31,15 @@ export const GET: RequestHandler = async ({ params, request, platform, url }) =>
   const cached = await cache?.match(request.url);
   if (cached) return cached;
 
-  const { lang, section } = parsed;
+  const { lang } = parsed;
   const dictionary = getDictionary(lang);
-  const kind = section ?? "all";
-  const suffix = section ? ` - ${dictionary.labels[section]}` : "";
 
   const xml = generateRssFeed({
-    title: `${dictionary.meta.websiteName}${suffix}`,
-    description: FEED_DESCRIPTIONS[lang][kind],
+    title: dictionary.meta.websiteName,
+    description: FEED_DESCRIPTIONS[lang],
     link: url.pathname,
     language: lang,
-    items: postsOf(lang, section).map((post) => ({
+    items: postsOf(lang).map((post) => ({
       title: post.title,
       description: post.description,
       link: post.permalink,

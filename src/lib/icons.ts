@@ -6,23 +6,18 @@
  * generic icon kept as a filled path would read as a different weight next to
  * the stroke-based set.
  */
-import Activity from "@lucide/svelte/icons/activity";
 import AppWindow from "@lucide/svelte/icons/app-window";
-import Book from "@lucide/svelte/icons/book";
 import Code from "@lucide/svelte/icons/code";
 import ExternalLink from "@lucide/svelte/icons/external-link";
-import Film from "@lucide/svelte/icons/film";
 import Mail from "@lucide/svelte/icons/mail";
 import Monitor from "@lucide/svelte/icons/monitor";
 import Moon from "@lucide/svelte/icons/moon";
-import Music from "@lucide/svelte/icons/music";
 import PenLine from "@lucide/svelte/icons/pen-line";
 import Plane from "@lucide/svelte/icons/plane";
 import Send from "@lucide/svelte/icons/send";
 import Sun from "@lucide/svelte/icons/sun";
 import Tag from "@lucide/svelte/icons/tag";
 import User from "@lucide/svelte/icons/user";
-import Wrench from "@lucide/svelte/icons/wrench";
 
 export const icons = {
   draft: PenLine,
@@ -31,12 +26,7 @@ export const icons = {
   moon: Moon,
   sun: Sun,
   tag: Tag,
-  tools: Wrench,
-  book: Book,
-  film: Film,
-  music: Music,
   plane: Plane,
-  pulse: Activity,
   external: ExternalLink,
   code: Code,
   user: User,

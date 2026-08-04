@@ -1,4 +1,4 @@
-# TODO(placeholder): adjust tech categories as posts get written.
+# TODO(placeholder): adjust categories as posts get written.
 - slug: development
   name:
     en: Development
@@ -14,3 +14,11 @@
   description:
     en: Thoughts and experiments around AI and coding agents
     zh: 关于 AI 和编程智能体的想法与实验
+
+- slug: journal
+  name:
+    en: Journal
+    zh: 日常
+  description:
+    en: Everyday life, in no particular order
+    zh: 一些日常，想到什么写什么
