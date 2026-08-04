@@ -1,4 +1,8 @@
-import { categories as allCategories, posts as allPosts } from "#velite";
+import {
+  categories as allCategories,
+  pages as allPages,
+  posts as allPosts,
+} from "#velite";
 import type { Language } from "$lib/dictionaries";
 
 type Localized = Record<Language, string>;
@@ -22,6 +26,15 @@ export interface Post {
   permalink: string;
 }
 
+/** A standalone page's prose, rendered by a hand-written route. */
+export interface Page {
+  slug: string;
+  lang: Language;
+  title: string;
+  description?: string;
+  content: string;
+}
+
 export interface Category {
   slug: string;
   name: Localized;
@@ -34,6 +47,8 @@ export interface Category {
 export const posts: Post[] = (allPosts as unknown as Post[])
   .filter((post) => import.meta.env.DEV || !post.draft)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const pages: Page[] = allPages as unknown as Page[];
 
 export const categories: Category[] = allCategories as unknown as Category[];
 
@@ -87,6 +102,10 @@ export function findPost(lang: Language, slug: string): Post | undefined {
 /** The same post in other languages, for hreflang alternates. */
 export function postTranslations(post: Post): Post[] {
   return posts.filter((other) => other.slug === post.slug);
+}
+
+export function findPage(lang: Language, slug: string): Page | undefined {
+  return pages.find((page) => page.lang === lang && page.slug === slug);
 }
 
 export function findCategory(slug: string): Category | undefined {

@@ -1,5 +1,11 @@
 import { error } from "@sveltejs/kit";
-import { categories, findCategory, findPost, posts } from "$lib/content";
+import {
+  categories,
+  findCategory,
+  findPage,
+  findPost,
+  posts,
+} from "$lib/content";
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
 import { displayDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
@@ -53,22 +59,28 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     };
   }
 
-  // Static pages
+  // Static pages. About's title and subtitle live in its markdown source
+  // (content/pages/about), not in the dictionaries.
   if (page in PAGE_EMOJIS) {
-    const titles: Record<string, string> = {
+    const about = findPage(lang, "about");
+    const titles: Record<string, string | undefined> = {
       posts: dictionary.labels.posts,
       projects: dictionary.labels.projects,
       use: dictionary.labels.use,
-      about: dictionary.labels.aboutTitle,
+      about: about?.title,
     };
     const descriptions: Record<string, string | undefined> = {
       posts: dictionary.labels.postsSubtitle,
       projects: dictionary.labels.projectsSubtitle,
       use: dictionary.labels.useSubtitle,
-      about: dictionary.labels.aboutSubtitle || undefined,
+      about: about?.description,
     };
+    const title = titles[page];
+    // No title means the page's markdown source is missing, and an OG image
+    // with a blank headline is worse than none.
+    if (title === undefined) return undefined;
     return {
-      title: titles[page],
+      title,
       subtitle: descriptions[page],
       emoji: PAGE_EMOJIS[page],
       type: "page",

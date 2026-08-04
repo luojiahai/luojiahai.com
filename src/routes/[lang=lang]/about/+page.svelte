@@ -1,48 +1,32 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { getDictionary, type Language } from "$lib/dictionaries";
+  import { getDictionary } from "$lib/dictionaries";
   import PostContent from "$lib/components/PostContent.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
-  let lang = $derived(page.params.lang as Language);
-  let dictionary = $derived(getDictionary(lang));
-  let subtitle = $derived(dictionary.labels.aboutSubtitle.trim());
+  let { data } = $props();
 
-  // Convert the simple markdown-ish about text to HTML. The prose is one
-  // flat run of paragraphs, so this handles links, code spans, and paragraph
-  // breaks only - no headings.
-  let aboutHtml = $derived(
-    dictionary.aboutContent
-      .trim()
-      .replace(
-        /\[([^\]]+)\]\(([^)]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener">$1</a>',
-      )
-      .replace(/`([^`]+)`/g, "<code>$1</code>")
-      .replace(/\n\n/g, "</p><p>")
-      .replace(/^/, "<p>")
-      .replace(/$/, "</p>")
-      .replace(/<p><\/p>/g, ""),
-  );
+  let lang = $derived(data.lang);
+  let about = $derived(data.about);
+  let dictionary = $derived(getDictionary(lang));
 </script>
 
 <Seo
   {lang}
-  title="{dictionary.labels.aboutTitle} - {dictionary.meta.websiteName}"
-  description={subtitle || dictionary.labels.aboutTitle}
+  title="{about.title} - {dictionary.meta.websiteName}"
+  description={about.description ?? about.title}
   path={dictionary.urls.about}
 />
 
 <div>
   <!-- Header -->
   <PrintedSection>
-    <PrintedPageTitle icon="user">{dictionary.labels.aboutTitle}</PrintedPageTitle>
-    {#if subtitle}
+    <PrintedPageTitle icon="user">{about.title}</PrintedPageTitle>
+    {#if about.description}
       <p class="page-subtitle">
-        {subtitle}
+        {about.description}
       </p>
     {/if}
   </PrintedSection>
@@ -50,7 +34,7 @@
   <PrintedDivider style="solid" />
 
   <!-- About content -->
-  <PostContent html={aboutHtml} />
+  <PostContent html={about.content} />
 
   <PrintedDivider style="dashed" />
 

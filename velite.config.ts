@@ -104,6 +104,23 @@ const posts = defineCollection({
     }),
 });
 
+/**
+ * Standalone pages: prose that belongs to a hand-written route rather than to
+ * the blog. The route owns the URL, so there is no permalink here - `slug` is
+ * only the lookup key the route asks for.
+ */
+const pages = defineCollection({
+  name: "Page",
+  pattern: "pages/**/*.md",
+  schema: s.object({
+    slug: s.string(),
+    lang,
+    title: s.string().max(99),
+    description: s.string().max(999).optional(),
+    content: s.markdown(),
+  }),
+});
+
 export default defineConfig({
   root: "content",
   output: {
@@ -113,9 +130,9 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { categories, posts },
+  collections: { categories, pages, posts },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
-  prepare: ({ categories, posts }) => {
+  prepare: ({ categories, pages, posts }) => {
     const unknownCategories = posts
       .flatMap((post) => post.categories)
       .filter((slug) => !categories.some((c) => c.slug === slug));
@@ -134,6 +151,29 @@ export default defineConfig({
 
     if (duplicates.length > 0) {
       console.error("Duplicate post slugs found:", duplicates.join(", "));
+      return false;
+    }
+
+    // Unlike posts, a page renders at a fixed URL in every language, so a
+    // missing translation is a broken route rather than one fewer list entry.
+    const pageKeys = new Set(pages.map((page) => `${page.lang}/${page.slug}`));
+    const missingPages = [...new Set(pages.map((page) => page.slug))].flatMap(
+      (slug) =>
+        lang.options
+          .filter((language) => !pageKeys.has(`${language}/${slug}`))
+          .map((language) => `pages/${slug}/${language}.md`),
+    );
+
+    if (missingPages.length > 0) {
+      console.error("Missing page translations:", missingPages.join(", "));
+      return false;
+    }
+
+    if (pageKeys.size !== pages.length) {
+      console.error(
+        "Duplicate page slugs found:",
+        pages.map((page) => `${page.lang}/${page.slug}`).join(", "),
+      );
       return false;
     }
 
