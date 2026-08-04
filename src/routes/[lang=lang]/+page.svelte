@@ -25,8 +25,6 @@
   });
   let motto = $derived(dictionary.meta.mottos[mottoIndex] ?? dictionary.meta.motto);
 
-  let works = $derived(dictionary.works.slice(0, 3));
-
   const printedOn = new Date().toISOString().split("T")[0];
 
   // Contacts whose icon maps to a hover-card kind get a SocialHoverCard;
@@ -108,7 +106,7 @@
 
   <!-- Projects section -->
   <PrintedSection label={dictionary.labels.projects} labelIcon="code">
-    <ProjectList {works} {lang} />
+    <ProjectList projects={data.projects} {lang} />
     <a
       href={dictionary.urls.projects}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"

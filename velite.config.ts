@@ -35,17 +35,33 @@ function rehypeTableScroll() {
 
 const lang = s.enum(["en", "zh"]);
 
-const localized = s.object({
-  en: s.string().max(20),
-  zh: s.string().max(20),
-});
+/**
+ * A field that varies by language, written inline so everything around it -
+ * links, image paths, product names - stays written once.
+ */
+const localized = (max: number) =>
+  s.object({
+    en: s.string().max(max),
+    zh: s.string().max(max),
+  });
 
-const localizedDescription = s
-  .object({
-    en: s.string().max(100),
-    zh: s.string().max(100),
-  })
-  .optional();
+/**
+ * The keys that appear more than once. Duplicate slugs are not cosmetic: the
+ * pages key their `{#each}` blocks by slug, and Svelte throws on a repeated key.
+ */
+function duplicates(keys: string[]): string[] {
+  const seen = new Set<string>();
+  return [
+    ...new Set(keys.filter((key) => (seen.has(key) ? true : (seen.add(key), false)))),
+  ];
+}
+
+function reportDuplicates(what: string, keys: string[]): boolean {
+  const found = duplicates(keys);
+  if (found.length === 0) return true;
+  console.error(`Duplicate ${what} found:`, found.join(", "));
+  return false;
+}
 
 const count = s
   .object({
@@ -60,8 +76,8 @@ const categories = defineCollection({
   schema: s
     .object({
       slug: s.string(),
-      name: localized,
-      description: localizedDescription,
+      name: localized(20),
+      description: localized(100).optional(),
       count,
     })
     .transform((data) => {
@@ -121,6 +137,23 @@ const pages = defineCollection({
   }),
 });
 
+/**
+ * The things I build, listed on /{lang}/projects and the home page. Names,
+ * links and image paths are the same in every language, so only the blurb is
+ * localized. Array order is display order.
+ */
+const projects = defineCollection({
+  name: "Project",
+  pattern: "projects/*.yml",
+  schema: s.object({
+    slug: s.string(),
+    name: s.string(),
+    description: localized(100),
+    image: s.string().optional(),
+    link: s.string(),
+  }),
+});
+
 export default defineConfig({
   root: "content",
   output: {
@@ -130,9 +163,9 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { categories, pages, posts },
+  collections: { categories, pages, posts, projects },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
-  prepare: ({ categories, pages, posts }) => {
+  prepare: ({ categories, pages, posts, projects }) => {
     const unknownCategories = posts
       .flatMap((post) => post.categories)
       .filter((slug) => !categories.some((c) => c.slug === slug));
@@ -144,15 +177,17 @@ export default defineConfig({
 
     // Translations are linked by slug alone, so a slug reused by two posts
     // in the same language would silently shadow one of them.
-    const seen = new Set<string>();
-    const duplicates = posts
-      .map((post) => `${post.lang}/${post.slug}`)
-      .filter((key) => (seen.has(key) ? true : (seen.add(key), false)));
+    const postsOk = reportDuplicates(
+      "post slugs",
+      posts.map((post) => `${post.lang}/${post.slug}`),
+    );
+    if (!postsOk) return false;
 
-    if (duplicates.length > 0) {
-      console.error("Duplicate post slugs found:", duplicates.join(", "));
-      return false;
-    }
+    const projectsOk = reportDuplicates(
+      "project slugs",
+      projects.map((project) => project.slug),
+    );
+    if (!projectsOk) return false;
 
     // Unlike posts, a page renders at a fixed URL in every language, so a
     // missing translation is a broken route rather than one fewer list entry.
@@ -169,13 +204,11 @@ export default defineConfig({
       return false;
     }
 
-    if (pageKeys.size !== pages.length) {
-      console.error(
-        "Duplicate page slugs found:",
-        pages.map((page) => `${page.lang}/${page.slug}`).join(", "),
-      );
-      return false;
-    }
+    const pagesOk = reportDuplicates(
+      "page slugs",
+      pages.map((page) => `${page.lang}/${page.slug}`),
+    );
+    if (!pagesOk) return false;
 
     for (const category of categories) {
       category.count = {

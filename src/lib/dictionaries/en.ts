@@ -8,13 +8,6 @@ interface Contact {
   icon: IconName;
 }
 
-interface Work {
-  name: string;
-  summary: string;
-  image?: string;
-  link: string;
-}
-
 /** The aircraft name and URL come from the registry; only the copy is here. */
 interface FlyEntry {
   slug: AircraftSlug;
@@ -190,22 +183,6 @@ const dictionary = {
       },
     ],
   },
-  works: [
-    {
-      name: "Code-by-wire",
-      summary:
-        "Pilot coding agents (Claude Code, Codex) and monitor their telemetry from one console.",
-      image: "/static/code-by-wire.svg",
-      link: "https://github.com/luojiahai/code-by-wire",
-    },
-    {
-      name: "Potato",
-      summary:
-        "Stash long terminal commands, find them by fuzzy search, and hand them back.",
-      image: "/static/potato.svg",
-      link: "https://github.com/luojiahai/potato",
-    },
-  ] as Work[],
   contacts,
   social: {
     followers: "Followers",
