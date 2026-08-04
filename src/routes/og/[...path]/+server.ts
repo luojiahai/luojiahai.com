@@ -11,6 +11,7 @@ export const prerender = true;
 const PAGE_EMOJIS: Record<string, string> = {
   posts: "📝",
   projects: "🛠",
+  use: "🧰",
   about: "👋",
 };
 
@@ -57,11 +58,13 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     const titles: Record<string, string> = {
       posts: dictionary.labels.posts,
       projects: dictionary.labels.projects,
+      use: dictionary.labels.use,
       about: dictionary.labels.aboutTitle,
     };
     const descriptions: Record<string, string | undefined> = {
       posts: dictionary.labels.postsSubtitle,
       projects: dictionary.labels.projectsSubtitle,
+      use: dictionary.labels.useSubtitle,
       about: dictionary.labels.aboutSubtitle || undefined,
     };
     return {

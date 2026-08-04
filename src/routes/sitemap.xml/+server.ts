@@ -22,6 +22,7 @@ export const GET: RequestHandler = () => {
       { loc: dictionary.urls.home, lastmod: now, priority: 1 },
       { loc: dictionary.urls.posts, lastmod: now, priority: 1 },
       { loc: dictionary.urls.projects, lastmod: now, priority: 1 },
+      { loc: dictionary.urls.use, lastmod: now, priority: 0.8 },
       { loc: dictionary.urls.about, lastmod: now, priority: 0.8 },
     ];
   });

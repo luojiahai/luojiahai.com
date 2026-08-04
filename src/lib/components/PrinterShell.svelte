@@ -40,6 +40,7 @@
     { label: dictionary.labels.home, href: dictionary.urls.home },
     { label: dictionary.labels.posts, href: dictionary.urls.posts },
     { label: dictionary.labels.projects, href: dictionary.urls.projects },
+    { label: dictionary.labels.use, href: dictionary.urls.use },
     { label: dictionary.labels.about, href: dictionary.urls.about },
   ]);
 

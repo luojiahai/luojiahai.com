@@ -6,7 +6,8 @@
 - `src/routes/`: SvelteKit routes with `[lang=lang]/` i18n prefix. The blog
   lives under `posts/`, which covers the list, `[slug]/`, and
   `categories/[categorySlug]/`. Standalone pages: `projects/` (the project
-  list and Fly) and `about/`.
+  list and Fly), `use/` (the gear list, straight from the dictionaries), and
+  `about/`.
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
   `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`,
   `fly/[aircraft=aircraft]/` (prerendered flight companions).
@@ -29,8 +30,9 @@
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
   `zh.ts` must match). Keep keys in sync. These carry page content, not just
-  UI labels — `works`, `social`, the per-aircraft `fly` summaries, and the
-  whole `aboutContent` prose block all live here, once per language.
+  UI labels — `works`, `social`, `use` (the whole gear list), the
+  per-aircraft `fly` summaries, and the whole `aboutContent` prose block all
+  live here, once per language.
 - `src/lib/site-config.ts`: the deck mascots (`none`, `plane`, `snail`) and
   the `mascot` flag picking which one rides the printer's top edge — an
   in-code setting, not a visitor preference. A mascot exists in three places

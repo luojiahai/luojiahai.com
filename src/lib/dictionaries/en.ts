@@ -80,6 +80,7 @@ const dictionary = {
     home: "/en",
     posts: "/en/posts",
     projects: "/en/projects",
+    use: "/en/use",
     about: "/en/about",
 
     shareToX(title: string, postLink: string) {
@@ -94,9 +95,11 @@ const dictionary = {
     // read "Posts"; the same holds for "Projects".
     posts: "Posts",
     projects: "Projects",
+    use: "Use",
     about: "About",
     postsSubtitle: "Things I write.",
     projectsSubtitle: "Things I build.",
+    useSubtitle: "Things I'm using.",
     fly: "Fly",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
@@ -119,6 +122,75 @@ const dictionary = {
     icon(label: string) {
       return `Icon for ${label}`;
     },
+  },
+  use: {
+    groups: [
+      {
+        label: "Hardware",
+        items: [
+          { label: "Mobile", value: "iPhone 13 Pro Max" },
+          { label: "Laptop", value: "MacBook Air 13-inch M5" },
+          { label: "Monitor", value: "Samsung LS27A700NWEXXY / Dell S2721QS" },
+          { label: "Dock", value: "Dell D6000" },
+          { label: "Mouse", value: "Logitech MX Master 3S" },
+          { label: "Keyboard", value: "8BitDo Retro Fami / Keychron Q1" },
+          {
+            label: "Speaker",
+            value: "Marshall Stockwell 2 / Ultimate Ears Boom 3",
+          },
+          { label: "Power Bank", value: "Sharge Shargeek 140W 20000mAh" },
+          { label: "Watch", value: "Garmin Epix Pro (Gen 2) Sapphire 47mm" },
+        ],
+      },
+      {
+        label: "Desktop Computer",
+        items: [
+          { label: "Processor", value: "AMD Ryzen 7 5700G" },
+          { label: "Motherboard", value: "ASUS Prime B550M-A WiFi II" },
+          { label: "Graphics", value: "ASUS NVIDIA GeForce GTX 3060" },
+          { label: "Cooling", value: "Cooler Master MasterLiquid ML240L V2" },
+          {
+            label: "Case",
+            value: "Fractal Design Pop Mini Air RGB White Micro ATX",
+          },
+          { label: "Power Supply", value: "Fractal Design ION Gold 750W" },
+          { label: "Memory", value: "Kingston Fury Beast RGB 2x16GB" },
+          { label: "SSD", value: "Samsung 980 Pro 1TB" },
+        ],
+      },
+      {
+        label: "Flight Simulator",
+        items: [
+          {
+            label: "Joystick",
+            value: "Thrustmaster TCA Sidestick Airbus Edition",
+          },
+          { label: "Throttle", value: "Winwing Ursa Minor 32 Throttle Metal" },
+          {
+            label: "Aerodynamic Control Panel",
+            value: "Winwing 32 PAC Metal",
+          },
+        ],
+      },
+      {
+        label: "Camera",
+        items: [
+          { label: "Digital Camera", value: "Sony A7 I" },
+          { label: "Film Camera", value: "Pentax S1a" },
+          { label: "Lens", value: "Sony Zeiss 35mm f/2.8" },
+          { label: "Films", value: "Kodak Portra 400 / Fujifilm Fujicolor 200" },
+        ],
+      },
+      {
+        label: "Software",
+        items: [
+          { label: "Coding Agent", value: "Claude Code / Codex" },
+          { label: "Editor", value: "Visual Studio Code" },
+          { label: "Browser", value: "Edge" },
+          { label: "Terminal", value: "Ghostty / Windows Terminal" },
+        ],
+      },
+    ],
   },
   works: [
     {

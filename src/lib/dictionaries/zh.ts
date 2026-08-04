@@ -26,6 +26,7 @@ const dictionary: Dictionary = {
     home: "/zh",
     posts: "/zh/posts",
     projects: "/zh/projects",
+    use: "/zh/use",
     about: "/zh/about",
 
     shareToX(title: string, postLink: string) {
@@ -39,9 +40,11 @@ const dictionary: Dictionary = {
     // 导航标签、页面标题和主页的板块标题都叫「文章」，「项目」同理。
     posts: "文章",
     projects: "项目",
+    use: "使用",
     about: "关于",
     postsSubtitle: "我写的东西。",
     projectsSubtitle: "我做的东西。",
+    useSubtitle: "我使用的东西。",
     fly: "飞行",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
@@ -64,6 +67,72 @@ const dictionary: Dictionary = {
     icon(label: string) {
       return `${label}的图标`;
     },
+  },
+  use: {
+    groups: [
+      {
+        label: "硬件",
+        items: [
+          { label: "手机", value: "iPhone 13 Pro Max" },
+          { label: "笔记本电脑", value: "MacBook Air 13-inch M5" },
+          { label: "显示器", value: "Samsung LS27A700NWEXXY / Dell S2721QS" },
+          { label: "扩展坞", value: "Dell D6000" },
+          { label: "鼠标", value: "Logitech MX Master 3S" },
+          { label: "键盘", value: "8BitDo Retro Fami / Keychron Q1" },
+          {
+            label: "音响",
+            value: "Marshall Stockwell 2 / Ultimate Ears Boom 3",
+          },
+          { label: "充电宝", value: "Sharge Shargeek 140W 20000mAh" },
+          { label: "手表", value: "Garmin Epix Pro (Gen 2) Sapphire 47mm" },
+        ],
+      },
+      {
+        label: "台式电脑",
+        items: [
+          { label: "处理器", value: "AMD Ryzen 7 5700G" },
+          { label: "主板", value: "ASUS Prime B550M-A WiFi II" },
+          { label: "显卡", value: "ASUS NVIDIA GeForce GTX 3060" },
+          { label: "冷却", value: "Cooler Master MasterLiquid ML240L V2" },
+          {
+            label: "机箱",
+            value: "Fractal Design Pop Mini Air RGB White Micro ATX",
+          },
+          { label: "电源", value: "Fractal Design ION Gold 750W" },
+          { label: "内存", value: "Kingston Fury Beast RGB 2x16GB" },
+          { label: "硬盘", value: "Samsung 980 Pro 1TB" },
+        ],
+      },
+      {
+        label: "飞行模拟",
+        items: [
+          {
+            label: "操纵杆",
+            value: "Thrustmaster TCA Sidestick Airbus Edition",
+          },
+          { label: "油门", value: "Winwing Ursa Minor 32 Throttle Metal" },
+          { label: "气动构型面板", value: "Winwing 32 PAC Metal" },
+        ],
+      },
+      {
+        label: "相机",
+        items: [
+          { label: "电子相机", value: "Sony A7 I" },
+          { label: "胶片相机", value: "Pentax S1a" },
+          { label: "镜头", value: "Sony Zeiss 35mm f/2.8" },
+          { label: "胶片", value: "Kodak Portra 400 / Fujifilm Fujicolor 200" },
+        ],
+      },
+      {
+        label: "软件",
+        items: [
+          { label: "编程智能体", value: "Claude Code / Codex" },
+          { label: "编辑器", value: "Visual Studio Code" },
+          { label: "浏览器", value: "Edge" },
+          { label: "终端", value: "Ghostty / Windows Terminal" },
+        ],
+      },
+    ],
   },
   works: [
     {
