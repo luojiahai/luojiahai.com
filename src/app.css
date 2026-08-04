@@ -101,20 +101,13 @@
         rgba(250, 249, 245, 0.72) 0%,
         transparent 58%
       ),
-      radial-gradient(
-        ellipse at 12% 42%,
-        rgba(94, 93, 89, 0.06) 0%,
-        transparent 38%
-      ),
       linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
     background-size:
       100% 100%,
-      100% 100%,
       40px 40px,
       40px 40px;
     background-position:
-      0 0,
       0 0,
       13px 13px,
       13px 13px;
@@ -125,11 +118,6 @@
         ellipse at 50% -8%,
         rgba(196, 104, 73, 0.055) 0%,
         transparent 54%
-      ),
-      radial-gradient(
-        ellipse at 12% 42%,
-        rgba(255, 255, 255, 0.018) 0%,
-        transparent 36%
       ),
       linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
