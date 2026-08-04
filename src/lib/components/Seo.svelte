@@ -116,20 +116,8 @@
     <link
       rel="alternate"
       type="application/rss+xml"
-      href="{feedBase}"
-      title="{dictionary.meta.websiteName} - All"
-    />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      href="{feedBase}/tech"
-      title="{dictionary.meta.websiteName} - Tech"
-    />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      href="{feedBase}/life"
-      title="{dictionary.meta.websiteName} - Life"
+      href={feedBase}
+      title={dictionary.meta.websiteName}
     />
   {/if}
 

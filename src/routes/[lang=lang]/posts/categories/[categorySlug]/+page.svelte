@@ -39,10 +39,10 @@
   <!-- Back link -->
   <div class="mb-4">
     <a
-      href={dictionary.urls[data.section]}
+      href={dictionary.urls.posts}
       class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark hover:underline"
     >
-      {dictionary.labels.allSectionPosts[data.section]}
+      {dictionary.labels.allPosts}
     </a>
   </div>
 

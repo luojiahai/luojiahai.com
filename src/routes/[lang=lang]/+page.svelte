@@ -119,24 +119,11 @@
 
   <PrintedDivider style="dashed" />
 
-  <!-- Latest Life Posts -->
-  <PrintedSection label={dictionary.labels.latestLife} labelIcon="draft">
-    <PostList posts={data.latestLife} {lang} compact />
+  <!-- Latest Posts -->
+  <PrintedSection label={dictionary.labels.posts} labelIcon="draft">
+    <PostList posts={data.latestPosts} {lang} compact />
     <a
-      href={dictionary.urls.life}
-      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
-    >
-      VIEW ALL →
-    </a>
-  </PrintedSection>
-
-  <PrintedDivider style="dashed" />
-
-  <!-- Latest Tech Posts -->
-  <PrintedSection label={dictionary.labels.latestTech} labelIcon="computer">
-    <PostList posts={data.latestTech} {lang} compact />
-    <a
-      href={dictionary.urls.tech}
+      href={dictionary.urls.posts}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
       VIEW ALL →

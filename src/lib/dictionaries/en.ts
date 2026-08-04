@@ -8,11 +8,6 @@ interface Contact {
   icon: IconName;
 }
 
-interface RecentEntry {
-  title: string;
-  summary: string;
-}
-
 interface Work {
   name: string;
   summary: string;
@@ -83,9 +78,8 @@ const dictionary = {
   },
   urls: {
     home: "/en",
+    posts: "/en/posts",
     tech: "/en/tech",
-    life: "/en/life",
-    use: "/en/use",
     about: "/en/about",
 
     shareToX(title: string, postLink: string) {
@@ -96,20 +90,12 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    tech: "Tech",
-    life: "Life",
-    use: "Use",
-    about: "About",
-    // Section header shared by the Tech and Life pages.
+    // The nav tab, the page title, and the section header all read "Posts".
     posts: "Posts",
-    latestTech: "Tech",
-    latestLife: "Life",
-    sectionSubtitle: {
-      tech: "Things about tech.",
-      life: "Things about my life.",
-    },
-    useSubtitle: "Things I'm using.",
-    activity: "Activity",
+    tech: "Tech",
+    about: "About",
+    postsSubtitle: "Things I write.",
+    techSubtitle: "Things about tech.",
     fly: "Fly",
     projects: "Projects",
     empty: "Nothing here yet.",
@@ -122,104 +108,23 @@ const dictionary = {
       plane: "Plane",
       snail: "Snail",
     },
-    backToSection: {
-      tech: "← BACK TO TECH",
-      life: "← BACK TO LIFE",
-    },
-    allSectionPosts: {
-      tech: "← ALL TECH POSTS",
-      life: "← ALL LIFE POSTS",
-    },
+    backToPosts: "← BACK TO POSTS",
+    allPosts: "← ALL POSTS",
     notFoundStatus: "Paper Tray Empty",
     notFoundTitle: "Out of Paper",
     notFoundSubtitle: "Please insert paper correctly to print content.",
     notFoundButton: "← Print Home",
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "Printed on",
-    reading: "Recent Reading",
-    watching: "Recent Watching",
-    listening: "Recent Listening",
     aboutTitle: "About",
     aboutSubtitle: "Hello, World!",
     wechatScanHint: "Scan to read on WeChat",
-    // Joins the titles in an Activity row preview.
-    listSeparator: ", ",
     entries(count: number) {
       return `${count} ${count === 1 ? "entry" : "entries"}`;
     },
     icon(label: string) {
       return `Icon for ${label}`;
     },
-  },
-  use: {
-    intro: "Things I'm using.",
-    groups: [
-      {
-        label: "Hardware",
-        items: [
-          { label: "Mobile", value: "iPhone 13 Pro Max" },
-          { label: "Laptop", value: "MacBook Air 13-inch M5" },
-          { label: "Monitor", value: "Samsung LS27A700NWEXXY / Dell S2721QS" },
-          { label: "Dock", value: "Dell D6000" },
-          { label: "Mouse", value: "Logitech MX Master 3S" },
-          { label: "Keyboard", value: "8BitDo Retro Fami / Keychron Q1" },
-          {
-            label: "Speaker",
-            value: "Marshall Stockwell 2 / Ultimate Ears Boom 3",
-          },
-          { label: "Power Bank", value: "Sharge Shargeek 140W 20000mAh" },
-          { label: "Watch", value: "Garmin Epix Pro (Gen 2) Sapphire 47mm" },
-        ],
-      },
-      {
-        label: "Desktop Computer",
-        items: [
-          { label: "Processor", value: "AMD Ryzen 7 5700G" },
-          { label: "Motherboard", value: "ASUS Prime B550M-A WiFi II" },
-          { label: "Graphics", value: "ASUS NVIDIA GeForce GTX 3060" },
-          { label: "Cooling", value: "Cooler Master MasterLiquid ML240L V2" },
-          {
-            label: "Case",
-            value: "Fractal Design Pop Mini Air RGB White Micro ATX",
-          },
-          { label: "Power Supply", value: "Fractal Design ION Gold 750W" },
-          { label: "Memory", value: "Kingston Fury Beast RGB 2x16GB" },
-          { label: "SSD", value: "Samsung 980 Pro 1TB" },
-        ],
-      },
-      {
-        label: "Flight Simulator",
-        items: [
-          {
-            label: "Joystick",
-            value: "Thrustmaster TCA Sidestick Airbus Edition",
-          },
-          { label: "Throttle", value: "Winwing Ursa Minor 32 Throttle Metal" },
-          {
-            label: "Aerodynamic Control Panel",
-            value: "Winwing 32 PAC Metal",
-          },
-        ],
-      },
-      {
-        label: "Camera",
-        items: [
-          { label: "Digital Camera", value: "Sony A7 I" },
-          { label: "Film Camera", value: "Pentax S1a" },
-          { label: "Lens", value: "Sony Zeiss 35mm f/2.8" },
-          { label: "Films", value: "Kodak Portra 400 / Fujifilm Fujicolor 200" },
-        ],
-      },
-      {
-        label: "Software",
-        items: [
-          { label: "Coding Agent", value: "Claude Code / Codex" },
-          { label: "Editor", value: "Visual Studio Code" },
-          { label: "Browser", value: "Edge" },
-          { label: "Terminal", value: "Ghostty / Windows Terminal" },
-        ],
-      },
-    ],
   },
   works: [
     {
@@ -252,45 +157,6 @@ const dictionary = {
     emailHint: "Mail lands straight in my inbox.",
     telegramHint: "DMs open, say hi anytime.",
   },
-  // Newest first: the Life page prints each list as one comma-separated line
-  // of titles, in this order, clipped where it runs out of room.
-  recent: {
-    reading: [
-      {
-        title: "The Pragmatic Programmer",
-        summary: "Andrew Hunt and David Thomas, on the craft of software.",
-      },
-    ] as RecentEntry[],
-    watching: [
-      {
-        title: "9-1-1",
-        summary: "Los Angeles first responders, one emergency call at a time.",
-      },
-      {
-        title: "Air Crash Investigation",
-        summary: "Aviation accidents, reconstructed one flight per episode.",
-      },
-    ] as RecentEntry[],
-    listening: [
-      // An artist rather than a track, so the fields read the other way round.
-      {
-        title: "space x",
-        summary: "Chinese R&B and hip-hop, best known for 0321.",
-      },
-      {
-        title: "melt our hearts",
-        summary: "Altero, Angie Robba",
-      },
-      {
-        title: "Cánh Hoa Héo Tàn",
-        summary: "Mochiii x Domino Remix",
-      },
-      {
-        title: "Every Little Part",
-        summary: "Le Youth",
-      },
-    ] as RecentEntry[],
-  },
   // Sim companions. These open outside the printer shell, since they are
   // built to sit on a second screen next to the simulator.
   fly: [
@@ -311,7 +177,7 @@ Hi there, I'm Jiahai. "luojiahai" is the Pinyin (Mandarin romanization) of my Ch
 
 I'm an INTJ. I was born and raised in Guangzhou, China, and I'm currently based in Melbourne, Australia. Unfortunately I'm not into coffee. I drink water and Coca-Cola.
 
-I'm a pragmatic computer programmer. I build useful things and contribute to open source. AI is part of my life and work. [I don't talk to people who don't use AI](/en/life/i-dont-talk-to-people-who-dont-use-ai).
+I'm a pragmatic computer programmer. I build useful things and contribute to open source. AI is part of my life and work. [I don't talk to people who don't use AI](/en/posts/i-dont-talk-to-people-who-dont-use-ai).
 
 Outside of programming, I like eating, cooking, and grocery shopping. McDonald's is my go-to restaurant. I have lots of McDonald's merch. I'm a Costco Executive member. I enjoy shopping there. Even walking the aisles and buying nothing is fine.
 

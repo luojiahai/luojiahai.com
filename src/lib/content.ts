@@ -1,8 +1,5 @@
 import { categories as allCategories, posts as allPosts } from "#velite";
 import type { Language } from "$lib/dictionaries";
-import type { Section } from "$lib/sections";
-
-export { isSection, sections, type Section } from "$lib/sections";
 
 type Localized = Record<Language, string>;
 
@@ -10,7 +7,6 @@ export interface Post {
   title: string;
   slug: string;
   lang: Language;
-  section: Section;
   date: string;
   updated?: string;
   cover?: { src: string; width: number; height: number };
@@ -28,7 +24,6 @@ export interface Post {
 
 export interface Category {
   slug: string;
-  section: Section;
   name: Localized;
   description?: Localized;
   count: Record<Language, number>;
@@ -48,7 +43,6 @@ export type PostListItem = Pick<
   | "title"
   | "slug"
   | "lang"
-  | "section"
   | "date"
   | "description"
   | "categories"
@@ -60,7 +54,6 @@ export function toListItem(post: Post): PostListItem {
     title: post.title,
     slug: post.slug,
     lang: post.lang,
-    section: post.section,
     date: post.date,
     description: post.description,
     categories: post.categories,
@@ -68,46 +61,34 @@ export function toListItem(post: Post): PostListItem {
   };
 }
 
-export function postsOf(
-  lang: Language,
-  section?: Section,
-  category?: string,
-): Post[] {
+/** The one category projection every page shares. */
+export function toCategoryItem(category: Category): Category {
+  return {
+    slug: category.slug,
+    name: category.name,
+    description: category.description,
+    count: category.count,
+    permalink: category.permalink,
+  };
+}
+
+export function postsOf(lang: Language, category?: string): Post[] {
   return posts.filter(
     (post) =>
       post.lang === lang &&
-      (!section || post.section === section) &&
       (!category || post.categories.includes(category)),
   );
 }
 
-export function findPost(
-  lang: Language,
-  section: Section,
-  slug: string,
-): Post | undefined {
-  return posts.find(
-    (post) =>
-      post.lang === lang && post.section === section && post.slug === slug,
-  );
+export function findPost(lang: Language, slug: string): Post | undefined {
+  return posts.find((post) => post.lang === lang && post.slug === slug);
 }
 
 /** The same post in other languages, for hreflang alternates. */
 export function postTranslations(post: Post): Post[] {
-  return posts.filter(
-    (other) => other.section === post.section && other.slug === post.slug,
-  );
+  return posts.filter((other) => other.slug === post.slug);
 }
 
-export function categoriesOf(section: Section): Category[] {
-  return categories.filter((category) => category.section === section);
-}
-
-export function findCategory(
-  section: Section,
-  slug: string,
-): Category | undefined {
-  return categories.find(
-    (category) => category.section === section && category.slug === slug,
-  );
+export function findCategory(slug: string): Category | undefined {
+  return categories.find((category) => category.slug === slug);
 }

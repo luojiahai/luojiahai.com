@@ -6,7 +6,6 @@ export const load: PageServerLoad = ({ params }) => {
   const lang = params.lang as Language;
 
   return {
-    latestLife: postsOf(lang, "life").slice(0, 3).map(toListItem),
-    latestTech: postsOf(lang, "tech").slice(0, 3).map(toListItem),
+    latestPosts: postsOf(lang).slice(0, 5).map(toListItem),
   };
 };

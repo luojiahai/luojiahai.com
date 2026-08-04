@@ -1,40 +1,31 @@
 import { error } from "@sveltejs/kit";
 import QRCode from "qrcode";
 import {
-  categoriesOf,
+  categories as allCategories,
   findPost,
   posts,
   postTranslations,
-  type Section,
+  toCategoryItem,
 } from "$lib/content";
 import type { Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
 export const entries: EntryGenerator = () =>
-  posts.map((post) => ({
-    lang: post.lang,
-    section: post.section,
-    slug: post.slug,
-  }));
+  posts.map((post) => ({ lang: post.lang, slug: post.slug }));
 
 export const load: PageServerLoad = async ({ params }) => {
   const lang = params.lang as Language;
-  const section = params.section as Section;
 
-  const post = findPost(lang, section, params.slug);
+  const post = findPost(lang, params.slug);
   if (!post) error(404, "Post not found");
 
   const translations = postTranslations(post)
     .filter((other) => other.lang !== lang)
     .map((other) => ({ lang: other.lang, permalink: other.permalink }));
 
-  const categories = categoriesOf(section)
+  const categories = allCategories
     .filter((category) => post.categories.includes(category.slug))
-    .map((category) => ({
-      slug: category.slug,
-      name: category.name,
-      permalink: category.permalink,
-    }));
+    .map(toCategoryItem);
 
   // Pre-render the WeChat QR code as inline SVG at build time.
   const wechatQrSvg = post.wechatLink
@@ -46,5 +37,5 @@ export const load: PageServerLoad = async ({ params }) => {
       })
     : undefined;
 
-  return { section, post, translations, categories, wechatQrSvg };
+  return { post, translations, categories, wechatQrSvg };
 };

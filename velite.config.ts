@@ -3,10 +3,9 @@ import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
 
 /**
- * Both blogs share a single content pipeline:
- *   content/tech-posts/** -> section "tech", served under /{lang}/tech
- *   content/life-posts/** -> section "life", served under /{lang}/life
- * Categories live in content/categories/{tech,life}.yml.
+ * One blog, one content pipeline:
+ *   content/posts/** -> served under /{lang}/posts
+ * Categories live in content/categories/posts.yml.
  */
 
 /**
@@ -55,16 +54,6 @@ const count = s
   })
   .default({ en: 0, zh: 0 });
 
-function sectionOfPath(path: string): "tech" | "life" {
-  if (path.startsWith("life-posts/") || path.startsWith("categories/life")) {
-    return "life";
-  }
-  if (path.startsWith("tech-posts/") || path.startsWith("categories/tech")) {
-    return "tech";
-  }
-  throw new Error(`Content outside a known section: ${path}`);
-}
-
 const categories = defineCollection({
   name: "Category",
   pattern: "categories/*.yml",
@@ -74,16 +63,13 @@ const categories = defineCollection({
       name: localized,
       description: localizedDescription,
       count,
-      path: s.path(),
     })
-    .transform(({ path, ...data }) => {
-      const section = sectionOfPath(path);
+    .transform((data) => {
       return {
         ...data,
-        section,
         permalink: {
-          en: `/en/${section}/categories/${data.slug}`,
-          zh: `/zh/${section}/categories/${data.slug}`,
+          en: `/en/posts/categories/${data.slug}`,
+          zh: `/zh/posts/categories/${data.slug}`,
         },
       };
     }),
@@ -91,7 +77,7 @@ const categories = defineCollection({
 
 const posts = defineCollection({
   name: "Post",
-  pattern: ["tech-posts/**/*.md", "life-posts/**/*.md"],
+  pattern: "posts/**/*.md",
   schema: s
     .object({
       title: s.string().max(99),
@@ -109,14 +95,11 @@ const posts = defineCollection({
       wechatLink: s.string().optional(),
       excerpt: s.excerpt(),
       content: s.markdown(),
-      path: s.path(),
     })
-    .transform(({ path, ...data }) => {
-      const section = sectionOfPath(path);
+    .transform((data) => {
       return {
         ...data,
-        section,
-        permalink: `/${data.lang}/${section}/${data.slug}`,
+        permalink: `/${data.lang}/posts/${data.slug}`,
       };
     }),
 });
@@ -134,21 +117,23 @@ export default defineConfig({
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
   prepare: ({ categories, posts }) => {
     const unknownCategories = posts
-      .flatMap((post) =>
-        post.categories.map((slug) => ({ section: post.section, slug })),
-      )
-      .filter(
-        ({ section, slug }) =>
-          !categories.some((c) => c.section === section && c.slug === slug),
-      );
+      .flatMap((post) => post.categories)
+      .filter((slug) => !categories.some((c) => c.slug === slug));
 
     if (unknownCategories.length > 0) {
-      console.error(
-        "Unknown categories found:",
-        unknownCategories
-          .map(({ section, slug }) => `${section}/${slug}`)
-          .join(", "),
-      );
+      console.error("Unknown categories found:", unknownCategories.join(", "));
+      return false;
+    }
+
+    // Translations are linked by slug alone, so a slug reused by two posts
+    // in the same language would silently shadow one of them.
+    const seen = new Set<string>();
+    const duplicates = posts
+      .map((post) => `${post.lang}/${post.slug}`)
+      .filter((key) => (seen.has(key) ? true : (seen.add(key), false)));
+
+    if (duplicates.length > 0) {
+      console.error("Duplicate post slugs found:", duplicates.join(", "));
       return false;
     }
 
@@ -158,10 +143,7 @@ export default defineConfig({
         zh: 0,
       };
       for (const post of posts) {
-        if (
-          post.section === category.section &&
-          post.categories.includes(category.slug)
-        ) {
+        if (post.categories.includes(category.slug)) {
           category.count[post.lang] += 1;
         }
       }

@@ -54,8 +54,8 @@
           url: `${baseUrl}${dictionary.urls.home}`,
         },
         {
-          name: dictionary.labels[data.section],
-          url: `${baseUrl}${dictionary.urls[data.section]}`,
+          name: dictionary.labels.posts,
+          url: `${baseUrl}${dictionary.urls.posts}`,
         },
         { name: post.title, url: postUrl },
       ],
@@ -157,10 +157,10 @@
 
   <div class="mt-6">
     <a
-      href={dictionary.urls[data.section]}
+      href={dictionary.urls.posts}
       class="section-action"
     >
-      {dictionary.labels.backToSection[data.section]}
+      {dictionary.labels.backToPosts}
     </a>
   </div>
 
