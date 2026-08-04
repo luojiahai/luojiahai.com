@@ -32,8 +32,11 @@
     </p>
   </PrintedSection>
 
-  <!-- Posts, with the categories above them -->
-  <PrintedSection label={dictionary.labels.posts} labelIcon="window">
+  <PrintedDivider style="solid" />
+
+  <!-- Posts, with the categories above them. The page title already names
+       them, so no section label. -->
+  <PrintedSection>
     <div class="mb-2 flex flex-wrap gap-1.5">
       {#each data.categories as category (category.slug)}
         <a href={category.permalink[lang]}>

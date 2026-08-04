@@ -14,24 +14,26 @@
 
 <Seo
   {lang}
-  title="{dictionary.labels.tech} - {dictionary.meta.websiteName}"
-  description={dictionary.labels.techSubtitle}
-  path={dictionary.urls.tech}
+  title="{dictionary.labels.projects} - {dictionary.meta.websiteName}"
+  description={dictionary.labels.projectsSubtitle}
+  path={dictionary.urls.projects}
 />
 
 <div>
   <!-- Header -->
   <PrintedSection>
-    <PrintedPageTitle icon="computer">
-      {dictionary.labels.tech}
+    <PrintedPageTitle icon="code">
+      {dictionary.labels.projects}
     </PrintedPageTitle>
     <p class="page-subtitle">
-      {dictionary.labels.techSubtitle}
+      {dictionary.labels.projectsSubtitle}
     </p>
   </PrintedSection>
 
-  <!-- Projects -->
-  <PrintedSection label={dictionary.labels.projects} labelIcon="code">
+  <PrintedDivider style="solid" />
+
+  <!-- Projects. The page title already names them, so no section label. -->
+  <PrintedSection>
     <ProjectList works={dictionary.works} {lang} />
   </PrintedSection>
 

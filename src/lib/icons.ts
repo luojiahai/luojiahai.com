@@ -6,7 +6,6 @@
  * generic icon kept as a filled path would read as a different weight next to
  * the stroke-based set.
  */
-import AppWindow from "@lucide/svelte/icons/app-window";
 import Code from "@lucide/svelte/icons/code";
 import ExternalLink from "@lucide/svelte/icons/external-link";
 import Mail from "@lucide/svelte/icons/mail";
@@ -21,7 +20,6 @@ import User from "@lucide/svelte/icons/user";
 
 export const icons = {
   draft: PenLine,
-  window: AppWindow,
   computer: Monitor,
   moon: Moon,
   sun: Sun,

@@ -5,8 +5,8 @@
 ## Project Structure & Module Organization
 - `src/routes/`: SvelteKit routes with `[lang=lang]/` i18n prefix. The blog
   lives under `posts/`, which covers the list, `[slug]/`, and
-  `categories/[categorySlug]/`. Standalone pages: `tech/` (Projects and Fly)
-  and `about/`.
+  `categories/[categorySlug]/`. Standalone pages: `projects/` (the project
+  list and Fly) and `about/`.
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
   `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`,
   `fly/[aircraft=aircraft]/` (prerendered flight companions).

@@ -25,7 +25,7 @@ const dictionary: Dictionary = {
   urls: {
     home: "/zh",
     posts: "/zh/posts",
-    tech: "/zh/tech",
+    projects: "/zh/projects",
     about: "/zh/about",
 
     shareToX(title: string, postLink: string) {
@@ -36,14 +36,13 @@ const dictionary: Dictionary = {
   },
   labels: {
     home: "主页",
-    // 导航标签、页面标题和板块标题都叫「文章」。
+    // 导航标签、页面标题和主页的板块标题都叫「文章」，「项目」同理。
     posts: "文章",
-    tech: "技术",
+    projects: "项目",
     about: "关于",
     postsSubtitle: "我写的东西。",
-    techSubtitle: "关于技术的东西。",
+    projectsSubtitle: "我做的东西。",
     fly: "飞行",
-    projects: "项目",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",

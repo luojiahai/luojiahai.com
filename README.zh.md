@@ -21,11 +21,11 @@
 
 ## 内容
 
-两个博客共用同一套内容管道（Velite）：
+文章走 Velite 管道：
 
-- `content/tech-posts/**` —— 技术文章，对应 `/{lang}/tech`
-- `content/life-posts/**` —— 生活文章，对应 `/{lang}/life`
-- `content/categories/{tech,life}.yml` —— 两个板块各自的分类
+- `content/posts/YYYY-MM-DD title/<lang>.md` —— 每个译文一个文件，图片放在
+  同一目录，对应 `/{lang}/posts`
+- `content/categories/posts.yml` —— 文章可用的分类
 
 ## 开发与部署
 

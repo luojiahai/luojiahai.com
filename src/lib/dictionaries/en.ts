@@ -79,7 +79,7 @@ const dictionary = {
   urls: {
     home: "/en",
     posts: "/en/posts",
-    tech: "/en/tech",
+    projects: "/en/projects",
     about: "/en/about",
 
     shareToX(title: string, postLink: string) {
@@ -90,14 +90,14 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    // The nav tab, the page title, and the section header all read "Posts".
+    // The nav tab, the page title, and the home page's section header all
+    // read "Posts"; the same holds for "Projects".
     posts: "Posts",
-    tech: "Tech",
+    projects: "Projects",
     about: "About",
     postsSubtitle: "Things I write.",
-    techSubtitle: "Things about tech.",
+    projectsSubtitle: "Things I build.",
     fly: "Fly",
-    projects: "Projects",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",

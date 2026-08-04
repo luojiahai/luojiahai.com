@@ -22,11 +22,11 @@ checklist page built from the notes in `src/lib/fly/<aircraft>/`.
 
 ## Content
 
-Both blogs share one content pipeline (Velite):
+Posts run through Velite:
 
-- `content/tech-posts/**` — tech posts, served under `/{lang}/tech`
-- `content/life-posts/**` — life posts, served under `/{lang}/life`
-- `content/categories/{tech,life}.yml` — categories for each section
+- `content/posts/YYYY-MM-DD title/<lang>.md` — one file per translation,
+  images alongside, served under `/{lang}/posts`
+- `content/categories/posts.yml` — the categories those posts can use
 
 ## Develop & Deploy
 

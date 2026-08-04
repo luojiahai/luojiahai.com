@@ -110,7 +110,7 @@
   <PrintedSection label={dictionary.labels.projects} labelIcon="code">
     <ProjectList {works} {lang} />
     <a
-      href={dictionary.urls.tech}
+      href={dictionary.urls.projects}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
       VIEW ALL →
