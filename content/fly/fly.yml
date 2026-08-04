@@ -1,0 +1,7 @@
+# The name and the URL belong to the aircraft registry (src/params/aircraft.ts);
+# only the blurb lives here. `slug` is checked against that registry in Velite's
+# prepare step, so a typo fails the build rather than prerendering a dead link.
+- slug: fbw-a32nx
+  description:
+    en: Airbus A320neo (A320-251N) built by FlyByWire Simulations.
+    zh: 由 FlyByWire Simulations 制作的空客 A320neo（A320-251N）。

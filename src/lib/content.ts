@@ -1,11 +1,13 @@
 import {
   categories as allCategories,
+  fly as allFly,
   pages as allPages,
   posts as allPosts,
   projects as allProjects,
   use as allUseGroups,
 } from "#velite";
 import type { Language } from "$lib/dictionaries";
+import type { AircraftSlug } from "../params/aircraft";
 
 type Localized = Record<Language, string>;
 
@@ -77,6 +79,17 @@ export type UseGroupItem = {
   items: { label: string; value: string }[];
 };
 
+/**
+ * A flight companion. The name and URL come from the aircraft registry, which
+ * `slug` is validated against in Velite's prepare step.
+ */
+export interface FlyEntry {
+  slug: AircraftSlug;
+  description: Localized;
+}
+
+export type FlyItem = Omit<FlyEntry, "description"> & { description: string };
+
 /** All published posts, newest first. Drafts are only visible in dev. */
 export const posts: Post[] = (allPosts as unknown as Post[])
   .filter((post) => import.meta.env.DEV || !post.draft)
@@ -89,6 +102,8 @@ export const categories: Category[] = allCategories as unknown as Category[];
 export const projects: Project[] = allProjects as unknown as Project[];
 
 export const useGroups: UseGroup[] = allUseGroups as unknown as UseGroup[];
+
+export const fly: FlyEntry[] = allFly as unknown as FlyEntry[];
 
 /** The lightweight shape sent to list pages (no rendered content). */
 export type PostListItem = Pick<
@@ -162,6 +177,14 @@ export function useGroupsOf(lang: Language): UseGroupItem[] {
       label: item.label[lang],
       value: item.value,
     })),
+  }));
+}
+
+/** The flight companions, in authored order, with the blurb resolved. */
+export function flyOf(lang: Language): FlyItem[] {
+  return fly.map((entry) => ({
+    ...entry,
+    description: entry.description[lang],
   }));
 }
 

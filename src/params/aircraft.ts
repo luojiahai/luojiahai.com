@@ -4,8 +4,9 @@ import type { ParamMatcher } from "@sveltejs/kit";
  * The aircraft that have a flight companion, one page each at /fly/<slug>.
  *
  * Names are product names rather than prose, so they are the same in every
- * language and live here instead of in the dictionaries. The dictionaries
- * carry only the translated summary, keyed by slug.
+ * language and live here instead of in the content. `content/fly/fly.yml`
+ * carries only the translated blurb, keyed by slug - and Velite's prepare
+ * step checks those slugs against this list.
  *
  * Deliberately free of the checklist payloads: this module ships to the
  * browser as part of the param matcher, and each payload is ~200 kB.

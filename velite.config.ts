@@ -1,6 +1,7 @@
 import type { Element, Parent, Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
+import { aircraft } from "./src/params/aircraft";
 
 /**
  * One blog, one content pipeline:
@@ -174,6 +175,19 @@ const use = defineCollection({
   }),
 });
 
+/**
+ * The flight companions, listed in the Fly section of /{lang}/projects. The
+ * name and URL come from the aircraft registry; only the blurb is here.
+ */
+const fly = defineCollection({
+  name: "FlyEntry",
+  pattern: "fly/*.yml",
+  schema: s.object({
+    slug: s.string(),
+    description: localized(100),
+  }),
+});
+
 export default defineConfig({
   root: "content",
   output: {
@@ -183,9 +197,9 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { categories, pages, posts, projects, use },
+  collections: { categories, fly, pages, posts, projects, use },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
-  prepare: ({ categories, pages, posts, projects, use }) => {
+  prepare: ({ categories, fly, pages, posts, projects, use }) => {
     const unknownCategories = posts
       .flatMap((post) => post.categories)
       .filter((slug) => !categories.some((c) => c.slug === slug));
@@ -224,6 +238,24 @@ export default defineConfig({
       ),
     );
     if (!itemsOk) return false;
+
+    const flyOk = reportDuplicates(
+      "fly slugs",
+      fly.map((entry) => entry.slug),
+    );
+    if (!flyOk) return false;
+
+    // In the dictionaries this slug was checked against AircraftSlug at compile
+    // time. YAML gives that up, so check it here: an unknown slug would render
+    // a nameless row linking to a route the param matcher rejects.
+    const unknownAircraft = fly
+      .map((entry) => entry.slug)
+      .filter((slug) => !aircraft.some((entry) => entry.slug === slug));
+
+    if (unknownAircraft.length > 0) {
+      console.error("Unknown aircraft found:", unknownAircraft.join(", "));
+      return false;
+    }
 
     // Unlike posts, a page renders at a fixed URL in every language, so a
     // missing translation is a broken route rather than one fewer list entry.
