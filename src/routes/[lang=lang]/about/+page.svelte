@@ -11,13 +11,12 @@
   let dictionary = $derived(getDictionary(lang));
   let subtitle = $derived(dictionary.labels.aboutSubtitle.trim());
 
-  // Convert the simple markdown-ish about text to HTML.
+  // Convert the simple markdown-ish about text to HTML. The prose is one
+  // flat run of paragraphs, so this handles links, code spans, and paragraph
+  // breaks only - no headings.
   let aboutHtml = $derived(
     dictionary.aboutContent
       .trim()
-      .replace(/### (.+)/g, "<h3>$1</h3>")
-      .replace(/## (.+)/g, "<h2>$1</h2>")
-      .replace(/# (.+)/g, "<h1>$1</h1>")
       .replace(
         /\[([^\]]+)\]\(([^)]+)\)/g,
         '<a href="$2" target="_blank" rel="noopener">$1</a>',
@@ -26,8 +25,6 @@
       .replace(/\n\n/g, "</p><p>")
       .replace(/^/, "<p>")
       .replace(/$/, "</p>")
-      .replace(/<p><h([123])>/g, "<h$1>")
-      .replace(/<\/h([123])><\/p>/g, "</h$1>")
       .replace(/<p><\/p>/g, ""),
   );
 </script>
