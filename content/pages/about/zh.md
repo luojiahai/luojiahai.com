@@ -7,6 +7,8 @@ description: 关于我的东西。
 
 这是我的网站，不定期更新，分享一些随想随记，什么内容都有可能出现。「luojiahai」是我中文名字罗嘉海的拼音，也是我在互联网上的常用 ID。
 
+<div class="content-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="luojiahai"><path fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="square" d="M22 32h84M22 96h84M22 64c14-18 28-18 42 0s28 18 42 0"/></svg></div>
+
 我是 INTJ（内向、直觉、思考、判断四种特质组成的人格类型）。我在中国广州出生长大，目前住在澳大利亚墨尔本。我是一名务实的计算机程序员，我做有用的东西。
 
 编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我最喜欢的餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
