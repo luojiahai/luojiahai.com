@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Three-Tier Memory Architecture"
 slug: inside-claude-code-three-tier-memory-architecture
 lang: en
+archived: true
 date: "2026-04-13"
 updated: "2026-07-25"
 categories:

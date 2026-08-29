@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Retrieval Strategy"
 slug: inside-claude-code-retrieval-strategy
 lang: en
+archived: true
 date: "2026-04-11"
 updated: "2026-07-25"
 categories:

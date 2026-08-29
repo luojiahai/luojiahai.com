@@ -2,6 +2,7 @@
 title: "Mastering Claude Code in 30 minutes"
 slug: mastering-claude-code-in-30-minutes
 lang: en
+archived: true
 date: "2026-01-01"
 categories:
   - ai

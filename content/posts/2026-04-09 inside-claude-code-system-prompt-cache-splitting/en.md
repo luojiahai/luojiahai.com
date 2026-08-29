@@ -2,6 +2,7 @@
 title: "Inside Claude Code: System Prompt Cache Splitting"
 slug: inside-claude-code-system-prompt-cache-splitting
 lang: en
+archived: true
 date: "2026-04-09"
 updated: "2026-07-25"
 categories:

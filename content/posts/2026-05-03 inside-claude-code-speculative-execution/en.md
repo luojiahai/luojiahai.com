@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Speculative Execution"
 slug: inside-claude-code-speculative-execution
 lang: en
+archived: true
 date: "2026-05-03"
 updated: "2026-07-25"
 categories:

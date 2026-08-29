@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Security Layer"
 slug: inside-claude-code-security-layer
 lang: en
+archived: true
 date: "2026-04-17"
 updated: "2026-07-25"
 categories:

@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Coordinators and Swarms"
 slug: inside-claude-code-multi-agent-swarm
 lang: en
+archived: true
 date: "2026-05-07"
 updated: "2026-07-25"
 categories:

@@ -123,7 +123,8 @@ as an in-repo backstop.
 ## Content Notes
 - Post frontmatter (`velite.config.ts`): required `title` (≤99 chars),
   `slug`, `lang`, `date`, `categories`; optional `updated`, `cover`, `video`,
-  `description` (≤999), `keywords`, `draft`, `featured`, `wechatLink`.
+  `description` (≤999), `keywords`, `draft`, `archived`, `featured`,
+  `wechatLink`.
   Translations are linked by matching `slug`.
 - Page frontmatter (`velite.config.ts`): required `slug`, `lang`, `title`
   (≤99 chars); optional `description` (≤999). A page missing a translation
@@ -150,7 +151,9 @@ as an in-repo backstop.
   duplicate is a broken page rather than a cosmetic slip. Adding a collection
   with a keyed `{#each}` means adding a row to the `keyed` array.
 - `draft: true` posts render under `pnpm dev` only; they are dropped from the
-  production build (`src/lib/content.ts`).
+  production build (`src/lib/content.ts`). `archived: true` posts stay in
+  the repo but never render, in dev or production, and are left out of the
+  category counts; the source and its images are kept, nothing else.
 
 ## Coding Style & Naming Conventions
 - Language: TypeScript (strict). Framework: SvelteKit 2 + Svelte 5 (runes).

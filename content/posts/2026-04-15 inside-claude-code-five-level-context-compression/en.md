@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Five-Level Context Compression"
 slug: inside-claude-code-five-level-context-compression
 lang: en
+archived: true
 date: "2026-04-15"
 updated: "2026-07-25"
 categories:

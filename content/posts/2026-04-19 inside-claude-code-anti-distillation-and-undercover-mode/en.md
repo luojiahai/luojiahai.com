@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Anti-Distillation and Undercover Mode"
 slug: inside-claude-code-anti-distillation-and-undercover-mode
 lang: en
+archived: true
 date: "2026-04-19"
 updated: "2026-07-25"
 categories:
