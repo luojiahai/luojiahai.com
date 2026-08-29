@@ -22,6 +22,7 @@ export interface Post {
   description?: string;
   keywords?: string[];
   draft: boolean;
+  archived: boolean;
   featured: boolean;
   categories: string[];
   wechatLink?: string;
@@ -90,8 +91,12 @@ export interface FlyEntry {
 
 export type FlyItem = Omit<FlyEntry, "description"> & { description: string };
 
-/** All published posts, newest first. Drafts are only visible in dev. */
+/**
+ * All published posts, newest first. Drafts are only visible in dev; archived
+ * posts stay in the repo but never render.
+ */
 export const posts: Post[] = (allPosts as unknown as Post[])
+  .filter((post) => !post.archived)
   .filter((post) => import.meta.env.DEV || !post.draft)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 

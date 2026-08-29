@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Overview"
 slug: inside-claude-code-overview
 lang: en
+archived: true
 date: "2026-04-01"
 updated: "2026-07-25"
 categories:

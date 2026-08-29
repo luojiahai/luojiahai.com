@@ -2,6 +2,7 @@
 title: "Inside Claude Code: The Agent Loop"
 slug: inside-claude-code-the-agent-loop
 lang: en
+archived: true
 date: "2026-04-03"
 updated: "2026-07-25"
 categories:

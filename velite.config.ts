@@ -106,6 +106,7 @@ const posts = defineCollection({
       description: s.string().max(999).optional(),
       keywords: s.array(s.string()).optional(),
       draft: s.boolean().default(false),
+      archived: s.boolean().default(false),
       featured: s.boolean().default(false),
       categories: s.array(s.string()),
       wechatLink: s.string().optional(),
@@ -267,6 +268,7 @@ export default defineConfig({
         zh: 0,
       };
       for (const post of posts) {
+        if (post.archived) continue;
         if (post.categories.includes(category.slug)) {
           category.count[post.lang] += 1;
         }

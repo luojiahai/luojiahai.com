@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Tool Design"
 slug: inside-claude-code-tool-design
 lang: en
+archived: true
 date: "2026-04-05"
 updated: "2026-07-25"
 categories:

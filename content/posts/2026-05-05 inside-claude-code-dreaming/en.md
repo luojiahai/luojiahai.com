@@ -2,6 +2,7 @@
 title: "Inside Claude Code: Dreaming"
 slug: inside-claude-code-dreaming
 lang: en
+archived: true
 date: "2026-05-05"
 updated: "2026-07-25"
 categories:
