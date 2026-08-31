@@ -1,4 +1,12 @@
 # Array order is display order; the home page shows the first three.
+- slug: aileron
+  name: Aileron
+  description:
+    en: Rigorous agentic engineering workflows for Claude Code.
+    zh: 为 Claude Code 打造的严谨智能体工程工作流。
+  image: /static/aileron.svg
+  link: https://github.com/luojiahai/aileron
+
 - slug: code-by-wire
   name: Code-by-wire
   description:

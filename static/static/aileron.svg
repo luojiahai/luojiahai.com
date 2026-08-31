@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Aileron project icon</title>
+  <desc id="desc">A white wing cross-section on Airbus blue, its amber trailing-edge aileron deflected downward.</desc>
+  <rect width="512" height="512" fill="#00205b"/>
+
+  <g transform="translate(260 262) scale(1.18 1.5) translate(-260 -262)">
+    <path
+      fill="#ffffff"
+      d="M80 268C80 238 116 200 172 201C236 203 302 222 343 248L343 280C288 288 200 290 142 285C112 283 80 286 80 268Z"
+    />
+    <path
+      fill="#ffb02e"
+      transform="rotate(22 343 248)"
+      d="M356 249Q400 258 440 268L440 280Q400 282 368 281Z"
+    />
+  </g>
+</svg>
