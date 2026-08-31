@@ -45,8 +45,8 @@ const dictionary = {
     baseUrl: "https://luojiahai.com",
     name: "Luo, Jiahai",
     websiteName: "luojiahai",
-    motto: "Hello, World!",
-    mottos: ["Hello, World!"],
+    motto: "The sky is not the limit.",
+    mottos: ["The sky is not the limit."],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
@@ -90,7 +90,7 @@ const dictionary = {
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
-    brandTagline: "Hello, World!",
+    brandTagline: "The sky is not the limit.",
     backToPosts: "← BACK TO POSTS",
     allPosts: "← ALL POSTS",
     notFoundStatus: "Paper Tray Empty",
