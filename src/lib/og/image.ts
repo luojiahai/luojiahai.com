@@ -214,7 +214,7 @@ function brandingFooter(options: OgImageOptions, large?: boolean): Node {
           opacity: 0.8,
         },
       },
-      options.brandTagline || "Hello, World!",
+      options.brandTagline || "The sky is not the limit.",
     ),
   );
 }

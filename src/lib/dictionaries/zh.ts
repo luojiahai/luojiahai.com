@@ -5,8 +5,8 @@ const dictionary: Dictionary = {
     baseUrl: "https://luojiahai.com",
     name: "罗嘉海",
     websiteName: "luojiahai",
-    motto: "你好，世界！",
-    mottos: ["你好，世界！"],
+    motto: "天空不是极限。",
+    mottos: ["天空不是极限。"],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
@@ -49,7 +49,7 @@ const dictionary: Dictionary = {
     empty: "这里还没有内容。",
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",
-    brandTagline: "Hello, World!",
+    brandTagline: "The sky is not the limit.",
     backToPosts: "← 返回文章",
     allPosts: "← 全部文章",
     notFoundStatus: "纸空了",
