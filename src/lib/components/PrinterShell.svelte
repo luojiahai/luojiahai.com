@@ -55,7 +55,16 @@
     return pathname.startsWith(href);
   }
 
-  function onNavPress(href: string) {
+  function onNavPress(event: MouseEvent, href: string) {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
     pendingNavHref = isActive(href) ? null : href;
   }
 
@@ -281,7 +290,7 @@
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                onclick={() => onNavPress(item.href)}
+                onclick={(event) => onNavPress(event, item.href)}
                 class={[
                   "printer-btn whitespace-nowrap",
                   (pendingNavHref
