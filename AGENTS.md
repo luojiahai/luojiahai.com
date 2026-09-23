@@ -135,6 +135,10 @@ as an in-repo backstop.
 - Page frontmatter (`velite.config.ts`): required `slug`, `lang`, `title`
   (≤99 chars); optional `description` (≤999). A page missing a translation
   aborts the build in the Velite `prepare` step.
+- Every cap and required field below is enforced: Velite runs with
+  `strict: true`, so a schema violation fails `pnpm build` (and CI) instead
+  of being logged and shipped. `prepare` gathers every cross-collection
+  problem it finds and throws them as one error.
 - Project entries (`content/projects/projects.yml`): required `slug`, `name`,
   `description` (`{ en, zh }`, ≤100 chars each), `link`; optional `image`, a
   path into `static/static/` that nothing validates. The blurb renders
@@ -144,9 +148,11 @@ as an in-repo backstop.
   `value` (≤60). `value` is a product name, so it is plain, not localized;
   listing something with a language-specific name means widening the schema.
 - Fly entries (`content/fly/fly.yml`): `slug` and `description`
-  (`{ en, zh }`, ≤100). The name and URL come from `src/params/aircraft.ts`,
-  and `prepare` rejects a slug that isn't in that registry — otherwise the
-  row renders nameless and links to a route the param matcher refuses.
+  (`{ en, zh }`, ≤100). The name and URL come from `src/params/aircraft.ts`.
+  The schema rejects a slug that isn't in that registry (the row would render
+  nameless and link to a route the param matcher refuses), and `prepare`
+  rejects a registered aircraft with no row (its page would prerender with
+  nothing linking to it).
 - Every `categories` entry must exist in `content/categories/posts.yml`, or
   the Velite `prepare` step aborts the build. Category `name` is capped at
   20 chars, `description` at 100.
