@@ -167,7 +167,13 @@
 
   afterNavigate((navigation) => {
     pendingNavHref = null;
-    if (navigation.type === "enter" || !paperElement) return;
+    if (
+      navigation.type === "enter" ||
+      !paperElement ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
 
     paperElement.animate(generatePaperFeedKeyframes(), {
       duration: 350 + Math.random() * 200, // 350-550ms, snappy
@@ -262,7 +268,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(217,119,87,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
+                  class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(217,119,87,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div
