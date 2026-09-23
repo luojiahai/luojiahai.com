@@ -872,6 +872,7 @@
 
   document.addEventListener("keydown", e => {
     if (e.target.matches("input, textarea, select")) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     const shortcut = REFS.find(r => r.key === e.key.toLowerCase());
     if (shortcut) {
