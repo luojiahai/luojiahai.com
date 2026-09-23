@@ -33,8 +33,6 @@ const SHORT = {
   "7-approach-and-ils-landing": "Approach and Landing",
 };
 
-const REF_IDS = new Set(["lights", "abbreviations", "atc"]);
-
 /* ------------------------------------------------------------------ *
  * inline markdown -> fragment nodes the template can render safely
  * ------------------------------------------------------------------ */
@@ -409,7 +407,7 @@ function matrixGroups(md, withFulls = true) {
 
 function buildLights() {
   return {
-    id: "lights", num: "L", title: "Lights by Phase", short: "Lights",
+    num: "L", title: "Lights by Phase", short: "Lights",
     groups: matrixGroups(read("lights.md")),
   };
 }
@@ -421,7 +419,7 @@ function buildLights() {
 
 function buildAbbreviations() {
   return {
-    id: "abbreviations", num: "G",
+    num: "G",
     title: "Airbus Terms and Abbreviations", short: "Abbreviations",
     groups: matrixGroups(read("abbreviations.md"), false),
   };
@@ -513,7 +511,7 @@ function buildATC() {
   for (const k of used) if (!seen.has(k)) tokens.push({ key: k, label: k.toLowerCase() });
 
   return {
-    phase: { id: "atc", num: "A", kind: "atc", title: "ATC Communications", short: "Radio", chain, groups },
+    sheet: { num: "A", title: "ATC Communications", short: "Radio", chain, groups },
     tokens,
   };
 }
@@ -526,20 +524,12 @@ function buildATC() {
 if (PROCEDURES.length > 9) {
   throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
 }
-const shadowed = PROCEDURES.filter(s => REF_IDS.has(s));
-if (shadowed.length) {
-  throw new Error(`procedure id shadows a reference sheet: ${shadowed.join(", ")}`);
-}
 
 const abbreviations = buildAbbreviations();
 const atc = buildATC();
 const data = {
-  phases: [
-    ...PROCEDURES.map((s, n) => buildProcedure(s, n + 1)),
-    buildLights(),
-    abbreviations,
-    atc.phase,
-  ],
+  phases: PROCEDURES.map((s, n) => buildProcedure(s, n + 1)),
+  refs: { lights: buildLights(), abbreviations, atc: atc.sheet },
   tokens: atc.tokens,
   names: Object.fromEntries(Object.entries(NAMES).filter(([, v]) => v)),
 };
@@ -561,11 +551,11 @@ const outPath = outFlag > -1
 const json = JSON.stringify(data);
 writeFileSync(outPath, json + "\n");
 
-const turns = atc.phase.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
+const turns = atc.sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
 const absRows = abbreviations.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix").flatMap(b => b.rows)).length;
 
 console.log(`wrote ${outPath.replace(ROOT + "/", "")}`);
-console.log(`  ${data.phases.length} phases · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
+console.log(`  ${data.phases.length} phases · ${Object.keys(data.refs).length} reference sheets · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
 const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
 console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
 const named = items.filter(i => i.full).length;

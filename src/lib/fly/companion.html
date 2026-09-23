@@ -516,9 +516,9 @@
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
-  /* The three reference sheets ride in the same payload as the procedures but
-     carry no ticks, so they stay out of the flight spine and open in the
-     drawer instead. Keyed by the shortcut that opens each one.
+  /* The three reference sheets carry no ticks, so the payload ships them
+     under refs, apart from the procedures, and they open in the drawer
+     instead of the flight spine. Keyed by the shortcut that opens each one.
 
      Icon markup is copied verbatim from @lucide/svelte 1.28.0 (24x24,
      stroke-based), out of dist/icons/<name>.svelte. It's inlined rather than
@@ -545,12 +545,11 @@
   ];
   const iconSVG = inner =>
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
-  const isRef = id => REFS.some(r => r.id === id);
 
   let DATA, procedures = [], ticks = load(LS.ticks, {}), fields = load(LS.fields, {});
   let current, cursor = -1, openRefId = null;
 
-  const refPhase = id => DATA.phases.find(p => p.id === id);
+  const refSheet = id => DATA.refs[id];
   const dialog = () => document.getElementById("ref");
 
   const esc = s => String(s)
@@ -619,7 +618,7 @@
 
   function renderRefNav() {
     document.getElementById("ref-nav").innerHTML = REFS.map(r => {
-      const p = refPhase(r.id);
+      const p = refSheet(r.id);
       if (!p) return "";
       return '<button data-ref="' + r.id + '"><span class="ico">' + iconSVG(r.icon) +
         '</span><span class="lbl">' + esc(p.short) + '</span><span class="key">' +
@@ -691,13 +690,13 @@
 
   /* ---------- reference drawer ---------- */
   function renderRef(id) {
-    const p = refPhase(id);
+    const p = refSheet(id);
     if (!p) return;
     openRefId = id;
 
     document.getElementById("ref-tabs").innerHTML = REFS.map(r =>
       '<button class="ref-tab" role="tab" data-ref="' + r.id + '" aria-selected="' +
-      (r.id === id) + '">' + esc(refPhase(r.id).short) + "</button>").join("");
+      (r.id === id) + '">' + esc(refSheet(r.id).short) + "</button>").join("");
 
     let html = "<h1>" + esc(p.title) + "</h1>";
 
@@ -705,7 +704,7 @@
       html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
         'spellcheck="false" aria-label="Filter abbreviations">';
     }
-    if (p.kind === "atc") {
+    if (id === "atc") {
       if (p.chain) {
         html += '<div class="chain">' + p.chain.map((c, i) =>
           (i ? "<i>-&gt;</i>" : "") + "<b>" + esc(c) + "</b>").join("") + "</div>";
@@ -861,7 +860,7 @@
   /* Worksheet values substitute into the calls as you type, so the drawer
      reads as the sentence you will actually say. */
   function renderSays() {
-    const p = refPhase("atc");
+    const p = refSheet("atc");
     if (!p) return;
     const turns = (p.groups || []).flatMap(g =>
       (g.blocks || []).filter(b => b.type === "exchange").flatMap(b => b.turns));
@@ -902,7 +901,7 @@
   trackHeader();
   try {
     DATA = JSON.parse(document.getElementById("data").textContent);
-    procedures = DATA.phases.filter(p => !isRef(p.id));
+    procedures = DATA.phases;
     current = load(LS.phase, procedures[0].id);
     if (!procedures.some(p => p.id === current)) current = procedures[0].id;
     renderNav();
