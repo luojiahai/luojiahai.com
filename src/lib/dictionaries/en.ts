@@ -45,8 +45,8 @@ const dictionary = {
     baseUrl: "https://luojiahai.com",
     name: "Luo, Jiahai",
     websiteName: "luojiahai",
-    motto: "The sky is not the limit.",
-    mottos: ["The sky is not the limit."],
+    motto: "Hello, World!",
+    mottos: ["Hello, World!"],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
