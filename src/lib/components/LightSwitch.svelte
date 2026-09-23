@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Dictionary } from "$lib/dictionaries";
+
   /**
    * Desktop-only light switch: a pull cord on the right edge of the screen
    * toggles dark mode via a Braun/TE-style pendant lamp hanging on the left —
@@ -15,12 +17,12 @@
   let {
     isDark,
     ontoggle,
-    lang = "en",
+    dictionary,
   }: {
     isDark: boolean;
     /** Called mid-transition, while the screen is fully black. */
     ontoggle: (dark: boolean) => void;
-    lang?: string;
+    dictionary: Dictionary;
   } = $props();
 
   let busy = $state(false);
@@ -28,13 +30,7 @@
   let blackoutElement: HTMLDivElement | undefined = $state();
 
   let title = $derived(
-    isDark
-      ? lang === "zh"
-        ? "拉绳关灯"
-        : "Pull the cord to turn the light off"
-      : lang === "zh"
-        ? "拉绳开灯"
-        : "Pull the cord to turn the light on",
+    isDark ? dictionary.labels.lightSwitchOff : dictionary.labels.lightSwitchOn,
   );
 
   // Blackout opacity over time — an old bulb sputtering awake…

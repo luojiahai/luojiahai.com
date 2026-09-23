@@ -100,6 +100,18 @@ const dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "Printed on",
     wechatScanHint: "Scan to read on WeChat",
+    shareToX: "Share to X",
+    aboutSignOff: "That's about it~",
+    skipToContent: "Skip to main content",
+    primaryNavigation: "Primary navigation",
+    // Offered to a reader of the other language, so it is written in theirs.
+    switchLanguage: "切换到中文",
+    colorModes: { system: "System", light: "Light", dark: "Dark" },
+    colorMode(mode: string) {
+      return `Color mode: ${mode}`;
+    },
+    lightSwitchOn: "Pull the cord to turn the light on",
+    lightSwitchOff: "Pull the cord to turn the light off",
     entries(count: number) {
       return `${count} ${count === 1 ? "entry" : "entries"}`;
     },

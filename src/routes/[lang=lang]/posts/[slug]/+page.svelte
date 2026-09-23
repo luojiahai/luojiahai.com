@@ -149,7 +149,7 @@
       target="_blank"
       rel="noopener"
       class="text-printer-ink-light dark:text-printer-ink-dark/40 hover:text-printer-ink dark:hover:text-printer-ink-dark transition-colors"
-      aria-label="Share to X"
+      aria-label={dictionary.labels.shareToX}
     >
       <Icon name="x" class="w-4 h-4" />
     </a>

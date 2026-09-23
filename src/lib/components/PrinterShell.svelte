@@ -3,7 +3,7 @@
   import { page } from "$app/state";
   import { onMount } from "svelte";
   import type { Component, Snippet } from "svelte";
-  import type { Dictionary, Language } from "$lib/dictionaries";
+  import { getDictionary, type Dictionary, type Language } from "$lib/dictionaries";
   import { mascot, type Mascot } from "$lib/site-config";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
@@ -123,6 +123,7 @@
   // svelte-ignore state_referenced_locally -- initial value; kept in sync by the effect below
   let displayLang = $state<string>(lang);
   let langSwitchTimer: ReturnType<typeof setTimeout> | undefined;
+  let displayDictionary = $derived(getDictionary(displayLang));
 
   $effect(() => {
     displayLang = lang;
@@ -193,13 +194,13 @@
 </script>
 
 <a class="skip-link" href="#main-content">
-  {lang === "zh" ? "跳到主要内容" : "Skip to main content"}
+  {dictionary.labels.skipToContent}
 </a>
 
 <!-- Desktop-only pull-cord light switch (bulb top-left, cord top-right) -->
 <LightSwitch
   {isDark}
-  lang={displayLang}
+  dictionary={displayDictionary}
   ontoggle={(dark) => setColorMode(dark ? "dark" : "light")}
 />
 
@@ -290,7 +291,7 @@
         >
           <nav
             class="relative flex w-full flex-1 flex-wrap items-center gap-2 py-1.5 sm:gap-2.5"
-            aria-label={lang === "zh" ? "主导航" : "Primary navigation"}
+            aria-label={dictionary.labels.primaryNavigation}
           >
             {#each navItems as item (item.href)}
               <a
@@ -317,7 +318,7 @@
               ]}
               value={displayLang}
               onchange={switchToLanguage}
-              title={displayLang === "en" ? "切换到中文" : "Switch to English"}
+              title={displayDictionary.labels.switchLanguage}
             />
             <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
             <div class="lg:hidden">
@@ -330,11 +331,9 @@
                 value={colorMode}
                 onchange={(mode) => setColorMode(mode as ColorMode)}
                 labelLayout="inline"
-                title={colorMode === "system"
-                  ? "System"
-                  : colorMode === "light"
-                    ? "Light"
-                    : "Dark"}
+                title={dictionary.labels.colorMode(
+                  dictionary.labels.colorModes[colorMode],
+                )}
               />
             </div>
           </div>

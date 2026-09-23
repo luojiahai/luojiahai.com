@@ -59,6 +59,17 @@ const dictionary: Dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "打印于",
     wechatScanHint: "微信扫码阅读原文",
+    shareToX: "分享到 X",
+    aboutSignOff: "就酱～",
+    skipToContent: "跳到主要内容",
+    primaryNavigation: "主导航",
+    switchLanguage: "Switch to English",
+    colorModes: { system: "跟随系统", light: "浅色", dark: "深色" },
+    colorMode(mode: string) {
+      return `颜色模式：${mode}`;
+    },
+    lightSwitchOn: "拉绳开灯",
+    lightSwitchOff: "拉绳关灯",
     entries(count: number) {
       return `${count} 条`;
     },
