@@ -556,11 +556,9 @@
     .replace(/[—–]/g, "-")
     .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const nameOf = v => (DATA.names || {})[String(v).trim().toUpperCase().replace(/\s+/g, " ")] || null;
-
   const inline = frag => (frag || []).map(n => {
     if (n.t === "text") return esc(n.v);
-    if (n.t === "b") { const f = nameOf(n.v); return f ? '<b data-tip="' + esc(f) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>"; }
+    if (n.t === "b") return n.tip ? '<b data-tip="' + esc(n.tip) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>";
     if (n.t === "i") return "<i>" + esc(n.v) + "</i>";
     if (n.t === "sub") return "<sub>" + esc(n.v) + "</sub>";
     if (n.t === "link") return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + esc(n.v) + "</a>";

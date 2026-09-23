@@ -40,7 +40,11 @@ const SHORT = {
 function parseInline(md, resolveHref = () => null) {
   const out = [];
   let rest = String(md).replace(/\[\^[^\]]+\]/g, ""); // drop footnote markers
-  const push = (t, v, href) => { if (v !== "") out.push(href ? { t, v, href } : { t, v }); };
+  const push = (t, v, href) => {
+    if (v === "") return;
+    const tip = t === "b" ? nameOf(v) : null;
+    out.push(href ? { t, v, href } : tip ? { t, v, tip } : { t, v });
+  };
 
   // New branches go on the end: the dispatch below is positional, so inserting
   // a group in the middle silently shifts every branch after it.
@@ -89,6 +93,7 @@ const stripMd = md =>
  * ------------------------------------------------------------------ */
 
 const duplicateNames = [];
+const nameKey = s => String(s).trim().toUpperCase().replace(/\s+/g, " ");
 
 function buildNames() {
   const names = {};
@@ -99,7 +104,7 @@ function buildNames() {
     const name = stripMd(cells[0]);
     const full = stripMd(cells[1]);
     if (!name || /^-+$/.test(name) || name === "Name") continue;
-    const key = name.toUpperCase().replace(/\s+/g, " ");
+    const key = nameKey(name);
     const value = !full || /^[-–—]$/.test(full) ? null : full;
     if (key in names && names[key] !== value) duplicateNames.push(key);
     names[key] = value;
@@ -108,7 +113,7 @@ function buildNames() {
 }
 
 const NAMES = buildNames();
-const nameOf = s => NAMES[String(s).trim().toUpperCase().replace(/\s+/g, " ")] ?? null;
+const nameOf = s => NAMES[nameKey(s)] ?? null;
 
 /* ------------------------------------------------------------------ *
  * controls.md -> docs URL, resolved within the linked section
@@ -528,7 +533,6 @@ const data = {
   phases: PROCEDURES.map((s, n) => buildProcedure(s, n + 1)),
   refs: { lights: buildLights(), abbreviations, atc: atc.sheet },
   tokens: atc.tokens,
-  names: Object.fromEntries(Object.entries(NAMES).filter(([, v]) => v)),
 };
 
 const items = data.phases.flatMap(p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items)));
@@ -557,12 +561,12 @@ const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
 console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
 const named = items.filter(i => i.full).length;
 console.log(`  ${named}/${items.length} items carry a full control name`);
-console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.keys(data.names).length} names · ${absRows} abbreviation rows`);
+console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
 const unnamed = items.filter(i => !i.full).map(i => stripMd(i.control.map(n => n.v).join("")));
 if (unnamed.length) console.log(`  no full name: ${[...new Set(unnamed)].join(", ")}`);
 if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
 if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
 // names.md is meant to cover the whole control inventory, not just what the
 // procedures happen to link today
-const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(l.toUpperCase().replace(/\s+/g, " ") in NAMES));
+const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(nameKey(l) in NAMES));
 if (uncovered.length) console.log(`  controls.md labels missing from names.md: ${uncovered.join(", ")}`);
