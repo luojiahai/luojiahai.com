@@ -14,12 +14,16 @@ import type { EntryGenerator, RequestHandler } from "./$types";
 export const prerender = true;
 
 /** Static pages under each language, with their page-layout OG options. */
-const PAGE_EMOJIS: Record<string, string> = {
+const PAGE_EMOJIS = {
   posts: "📝",
   projects: "🛠",
   use: "🧰",
   about: "👋",
 };
+
+type StaticPage = keyof typeof PAGE_EMOJIS;
+
+const isStaticPage = (page: string): page is StaticPage => page in PAGE_EMOJIS;
 
 export const entries: EntryGenerator = () => [
   ...languages.map((lang) => ({ path: `${lang}.png` })),
@@ -61,27 +65,22 @@ function resolveOptions(path: string): OgImageOptions | undefined {
 
   // Static pages. About's title and subtitle live in its markdown source
   // (content/pages/about), not in the dictionaries.
-  if (page in PAGE_EMOJIS) {
+  if (isStaticPage(page)) {
+    const { labels } = dictionary;
     const about = findPage(lang, "about");
-    const titles: Record<string, string | undefined> = {
-      posts: dictionary.labels.posts,
-      projects: dictionary.labels.projects,
-      use: dictionary.labels.use,
-      about: about?.title,
+    const text: Record<StaticPage, { title?: string; subtitle?: string }> = {
+      posts: { title: labels.posts, subtitle: labels.postsSubtitle },
+      projects: { title: labels.projects, subtitle: labels.projectsSubtitle },
+      use: { title: labels.use, subtitle: labels.useSubtitle },
+      about: { title: about?.title, subtitle: about?.description },
     };
-    const descriptions: Record<string, string | undefined> = {
-      posts: dictionary.labels.postsSubtitle,
-      projects: dictionary.labels.projectsSubtitle,
-      use: dictionary.labels.useSubtitle,
-      about: about?.description,
-    };
-    const title = titles[page];
+    const { title, subtitle } = text[page];
     // No title means the page's markdown source is missing, and an OG image
     // with a blank headline is worse than none.
     if (title === undefined) return undefined;
     return {
       title,
-      subtitle: descriptions[page],
+      subtitle,
       emoji: PAGE_EMOJIS[page],
       type: "page",
       ...branding,
@@ -105,7 +104,7 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     return {
       title: post.title,
       description: post.description,
-      category: post.categories[0],
+      category: findCategory(post.categories[0])?.name[lang],
       date: displayDate(post.date, "en-US"),
       type: "post",
       ...branding,
