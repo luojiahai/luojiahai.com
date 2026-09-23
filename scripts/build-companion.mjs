@@ -243,16 +243,16 @@ function parseSections(md) {
   let i = 0;
 
   const ensure = () => {
-    if (!g) { g = { title: "", level: 2, blocks: [] }; groups.push(g); }
+    if (!g) { g = { title: "", blocks: [] }; groups.push(g); }
     return g;
   };
 
   while (i < lines.length) {
     const line = lines[i];
 
-    const h = line.match(/^(#{2,3})\s+(.*)$/);
+    const h = line.match(/^#{2,3}\s+(.*)$/);
     if (h) {
-      g = { title: stripMd(h[2]), level: h[1].length, blocks: [] };
+      g = { title: stripMd(h[1]), blocks: [] };
       groups.push(g);
       i++;
       continue;
@@ -346,7 +346,6 @@ function buildProcedure(slug, num) {
   const title = stripMd((md.match(/^#\s+(.*)$/m) || [])[1] || slug);
   const groups = parseSections(md).map(g => ({
     title: g.title,
-    level: g.level,
     blocks: g.blocks.map(b => {
       if (b.kind !== "table") return b;
       const head = b.head.map(h => h.toLowerCase());
@@ -354,13 +353,13 @@ function buildProcedure(slug, num) {
       if (!isChecklist) return { type: "para", frag: parseInline(b.head.join(" · "), controlHref) };
       return {
         type: "items",
+        conditionLabel: b.head[2] || null,
         items: b.body.map(r => ({
           id: itemId(slug, r[0], r[1] || ""),
           control: parseInline(r[0], controlHref),
           full: controlFull(r[0]),
           action: parseInline(r[1] || "", controlHref),
           condition: r[2] && r[2] !== "–" && r[2] !== "-" ? parseInline(r[2], controlHref) : null,
-          conditionLabel: b.head[2] || null,
         })),
       };
     }),
@@ -391,7 +390,6 @@ function buildProcedure(slug, num) {
 function matrixGroups(md, withFulls = true) {
   return parseSections(md).map(g => ({
     title: g.title,
-    level: g.level,
     blocks: g.blocks.map(b => {
       if (b.kind !== "table") return b;
       return {
@@ -407,7 +405,7 @@ function matrixGroups(md, withFulls = true) {
 
 function buildLights() {
   return {
-    num: "L", title: "Lights by Phase", short: "Lights",
+    title: "Lights by Phase", short: "Lights",
     groups: matrixGroups(read("lights.md")),
   };
 }
@@ -419,7 +417,6 @@ function buildLights() {
 
 function buildAbbreviations() {
   return {
-    num: "G",
     title: "Airbus Terms and Abbreviations", short: "Abbreviations",
     groups: matrixGroups(read("abbreviations.md"), false),
   };
@@ -468,7 +465,7 @@ function buildATC() {
         while (i < lines.length && !/^##\s/.test(lines[i])) i++;
         continue;
       }
-      g = { title: title.replace(/^\d+\s+·\s+/, ""), level: 2, blocks: [] };
+      g = { title: title.replace(/^\d+\s+·\s+/, ""), blocks: [] };
       groups.push(g); ex = null; i++;
       continue;
     }
@@ -511,7 +508,7 @@ function buildATC() {
   for (const k of used) if (!seen.has(k)) tokens.push({ key: k, label: k.toLowerCase() });
 
   return {
-    sheet: { num: "A", title: "ATC Communications", short: "Radio", chain, groups },
+    sheet: { title: "ATC Communications", short: "Radio", chain, groups },
     tokens,
   };
 }

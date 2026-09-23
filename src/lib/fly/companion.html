@@ -627,9 +627,8 @@
   }
 
   function itemsHTML(block) {
-    const label = block.items[0] && block.items[0].conditionLabel || "";
     return '<div class="items-head" aria-hidden="true"><span></span><span>Control</span><span>Action</span><span>' +
-      esc(label) + "</span></div><ul class=\"items\">" + block.items.map(i =>
+      esc(block.conditionLabel || "") + "</span></div><ul class=\"items\">" + block.items.map(i =>
       '<li data-done="' + !!ticks[i.id] + '" data-item="' + esc(i.id) + '">' +
         '<label><input type="checkbox"' + (ticks[i.id] ? " checked" : "") + ' data-id="' + esc(i.id) + '">' +
         '<span class="box" aria-hidden="true"><i></i></span>' +
