@@ -1,8 +1,8 @@
+import { SITE_URL } from "$lib/site-config";
 import type { Dictionary } from "./en";
 
 const dictionary: Dictionary = {
   meta: {
-    baseUrl: "https://luojiahai.com",
     name: "罗嘉海",
     websiteName: "luojiahai",
     motto: "你好，世界！",
@@ -32,7 +32,7 @@ const dictionary: Dictionary = {
     shareToX(title: string, postLink: string) {
       return `https://twitter.com/share?text=${encodeURIComponent(
         `我正在看「${title}」 @luojiahai`,
-      )}&url=${encodeURIComponent(`https://luojiahai.com${postLink}`)}`;
+      )}&url=${encodeURIComponent(`${SITE_URL}${postLink}`)}`;
     },
   },
   labels: {

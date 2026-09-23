@@ -8,6 +8,7 @@ import {
   type TelegramStats,
   type XStats,
 } from "$lib/social";
+import { SITE_URL } from "$lib/site-config";
 import type { RequestHandler } from "./$types";
 
 // Live profile stats for the social hover cards. Served by the worker so
@@ -24,7 +25,7 @@ const KV_KEY = "social-stats:v1";
 /** Days of contribution history to expose (18 weeks). */
 const HEATMAP_DAYS = 126;
 
-const USER_AGENT = "luojiahai.com-social-card (+https://luojiahai.com)";
+const USER_AGENT = `luojiahai.com-social-card (+${SITE_URL})`;
 
 type GitHubProfile = Pick<
   GitHubStats,

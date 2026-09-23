@@ -1,5 +1,8 @@
 /** Site-wide configuration. */
 
+/** The production origin, for every absolute URL the site prints. */
+export const SITE_URL = "https://luojiahai.com";
+
 /**
  * The critters available to ride the printer shell's top edge — the deck.
  */

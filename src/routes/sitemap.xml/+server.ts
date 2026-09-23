@@ -1,11 +1,10 @@
 import { categories, posts } from "$lib/content";
 import { getDictionary, languages } from "$lib/dictionaries";
+import { SITE_URL } from "$lib/site-config";
 import { aircraft } from "../../params/aircraft";
 import type { RequestHandler } from "./$types";
 
 export const prerender = true;
-
-const BASE_URL = "https://luojiahai.com";
 
 interface SitemapUrl {
   loc: string;
@@ -52,7 +51,7 @@ export const GET: RequestHandler = () => {
   const urls = [...basicUrls, ...companionUrls, ...categoryUrls, ...postUrls]
     .map(
       (item) => `  <url>
-    <loc>${BASE_URL}${item.loc}</loc>${item.lastmod ? `\n    <lastmod>${item.lastmod}</lastmod>` : ""}
+    <loc>${SITE_URL}${item.loc}</loc>${item.lastmod ? `\n    <lastmod>${item.lastmod}</lastmod>` : ""}
     <priority>${item.priority}</priority>
   </url>`,
     )

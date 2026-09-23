@@ -1,4 +1,4 @@
-const BASE_URL = "https://luojiahai.com";
+import { SITE_URL } from "$lib/site-config";
 
 interface JsonLdWebSite {
   name: string;
@@ -20,7 +20,7 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
     publisher: {
       "@type": "Person",
       name: "Luo, Jiahai",
-      url: BASE_URL,
+      url: SITE_URL,
       sameAs: [
         "https://x.com/luojiahai",
         "https://github.com/luojiahai",
@@ -64,12 +64,12 @@ export function generateBlogPostingJsonLd(
     author: {
       "@type": "Person",
       name: "Luo, Jiahai",
-      url: BASE_URL,
+      url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
       name: "Luo, Jiahai",
-      url: BASE_URL,
+      url: SITE_URL,
     },
     mainEntityOfPage: {
       "@type": "WebPage",
