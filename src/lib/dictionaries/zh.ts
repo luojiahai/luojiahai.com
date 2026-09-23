@@ -5,8 +5,8 @@ const dictionary: Dictionary = {
     baseUrl: "https://luojiahai.com",
     name: "罗嘉海",
     websiteName: "luojiahai",
-    motto: "天空不是极限。",
-    mottos: ["天空不是极限。"],
+    motto: "你好，世界！",
+    mottos: ["你好，世界！"],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
