@@ -513,7 +513,7 @@ function buildATC() {
   for (const k of used) if (!seen.has(k)) tokens.push({ key: k, label: k.toLowerCase() });
 
   return {
-    phase: { id: "atc", num: "A", kind: "atc", title: "ATC Communications", short: "ATC", chain, groups },
+    phase: { id: "atc", num: "A", kind: "atc", title: "ATC Communications", short: "Radio", chain, groups },
     tokens,
   };
 }
