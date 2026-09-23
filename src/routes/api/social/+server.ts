@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import {
-  normalizeSocialStats,
+  isSocialStats,
+  SOCIAL_STATS_VERSION,
   socialFallback,
   type GitHubStats,
   type InstagramStats,
@@ -231,17 +232,17 @@ async function fetchInstagramProfile(): Promise<InstagramStats> {
   };
 }
 
-export const GET: RequestHandler = async ({ request, platform }) => {
+export const GET: RequestHandler = async ({ url, platform }) => {
+  // Keyed by path and shape version only. Were the raw URL the key, every
+  // new query string would miss and fan out to all five upstreams and KV.
+  const cacheKey = `${url.origin}${url.pathname}?v=${SOCIAL_STATS_VERSION}`;
   const cache = platform?.caches?.default;
-  const cached = await cache?.match(request.url);
+  const cached = await cache?.match(cacheKey);
   if (cached) return cached;
 
   const kv = platform?.env?.SOCIAL_CACHE;
-  const lastGood = (await kv
-    ?.get(KV_KEY, "json")
-    .catch(() => null)) as SocialStats | null;
-  // Normalization backfills fields that old KV snapshots may predate.
-  const base = normalizeSocialStats(lastGood ?? socialFallback);
+  const lastGood = await kv?.get(KV_KEY, "json").catch(() => null);
+  const base = isSocialStats(lastGood) ? lastGood : socialFallback;
 
   const [profile, contributions, x, telegram, instagram] =
     await Promise.allSettled([
@@ -284,7 +285,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
   });
 
   if (anyFresh && cache) {
-    platform?.context?.waitUntil(cache.put(request.url, response.clone()));
+    platform?.context?.waitUntil(cache.put(cacheKey, response.clone()));
   }
 
   return response;

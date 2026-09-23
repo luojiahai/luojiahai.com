@@ -22,13 +22,15 @@ function parsePath(path: string): { lang: Language } | undefined {
   return undefined;
 }
 
-export const GET: RequestHandler = async ({ params, request, platform, url }) => {
+export const GET: RequestHandler = async ({ params, platform, url }) => {
   const parsed = parsePath(params.path);
   if (!parsed) error(404, "Unknown feed");
 
-  // Serve from the Cloudflare edge cache when possible.
+  // Serve from the Cloudflare edge cache when possible, keyed without the
+  // query string so a stray parameter can't mint a new entry.
+  const cacheKey = `${url.origin}${url.pathname}`;
   const cache = platform?.caches?.default;
-  const cached = await cache?.match(request.url);
+  const cached = await cache?.match(cacheKey);
   if (cached) return cached;
 
   const { lang } = parsed;
@@ -57,7 +59,7 @@ export const GET: RequestHandler = async ({ params, request, platform, url }) =>
   });
 
   if (cache) {
-    platform?.context?.waitUntil(cache.put(request.url, response.clone()));
+    platform?.context?.waitUntil(cache.put(cacheKey, response.clone()));
   }
 
   return response;

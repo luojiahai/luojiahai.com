@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
 import {
-  normalizeSocialStats,
+  isSocialStats,
+  SOCIAL_STATS_VERSION,
   socialFallback,
   type SocialStats,
 } from "./social";
@@ -20,14 +21,12 @@ export function ensureSocialStats(): void {
   if (!browser || started) return;
   started = true;
 
-  // The query string versions the payload shape past stale edge-cache
-  // entries from earlier deploys.
-  fetch("/api/social?v=4", { headers: { accept: "application/json" } })
+  fetch(`/api/social?v=${SOCIAL_STATS_VERSION}`, {
+    headers: { accept: "application/json" },
+  })
     .then((res) => (res.ok ? res.json() : null))
-    .then((data: SocialStats | null) => {
-      if (data?.github?.levels && data.x && data.telegram) {
-        social.stats = normalizeSocialStats(data);
-      }
+    .then((data: unknown) => {
+      if (isSocialStats(data)) social.stats = data;
     })
     .catch(() => {
       // Keep the snapshot values.
