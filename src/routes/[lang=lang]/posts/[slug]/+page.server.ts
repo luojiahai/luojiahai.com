@@ -5,16 +5,14 @@ import {
   findPost,
   posts,
   postTranslations,
-  toCategoryItem,
 } from "$lib/content";
-import type { Language } from "$lib/dictionaries";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
 export const entries: EntryGenerator = () =>
   posts.map((post) => ({ lang: post.lang, slug: post.slug }));
 
 export const load: PageServerLoad = async ({ params }) => {
-  const lang = params.lang as Language;
+  const { lang } = params;
 
   const post = findPost(lang, params.slug);
   if (!post) error(404, "Post not found");
@@ -24,8 +22,7 @@ export const load: PageServerLoad = async ({ params }) => {
     .map((other) => ({ lang: other.lang, permalink: other.permalink }));
 
   const categories = allCategories
-    .filter((category) => post.categories.includes(category.slug))
-    .map(toCategoryItem);
+    .filter((category) => post.categories.includes(category.slug));
 
   // Pre-render the WeChat QR code as inline SVG at build time.
   const wechatQrSvg = post.wechatLink

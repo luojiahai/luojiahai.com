@@ -20,5 +20,5 @@ export const aircraftNames: Record<AircraftSlug, string> = Object.fromEntries(
   aircraft.map((entry) => [entry.slug, entry.name]),
 ) as Record<AircraftSlug, string>;
 
-export const match: ParamMatcher = (param): param is AircraftSlug =>
-  aircraft.some((entry) => entry.slug === param);
+export const match = ((param: string): param is AircraftSlug =>
+  aircraft.some((entry) => entry.slug === param)) satisfies ParamMatcher;

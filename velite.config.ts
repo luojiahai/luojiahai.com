@@ -1,7 +1,7 @@
 import type { Element, Parent, Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
-import { aircraft } from "./src/params/aircraft";
+import { aircraft, match as isAircraft } from "./src/params/aircraft";
 
 /**
  * One blog, one content pipeline:
@@ -63,13 +63,6 @@ function reportDuplicates(what: string, keys: string[]): boolean {
   return false;
 }
 
-const count = s
-  .object({
-    en: s.number(),
-    zh: s.number(),
-  })
-  .default({ en: 0, zh: 0 });
-
 const categories = defineCollection({
   name: "Category",
   pattern: "categories/*.yml",
@@ -78,7 +71,6 @@ const categories = defineCollection({
       slug: s.string(),
       name: localized(20),
       description: localized(100).optional(),
-      count,
     })
     .transform((data) => {
       return {
@@ -183,7 +175,7 @@ const fly = defineCollection({
   name: "FlyEntry",
   pattern: "fly/*.yml",
   schema: s.object({
-    slug: s.string(),
+    slug: s.string().refine(isAircraft, "Unknown aircraft"),
     description: localized(100),
   }),
 });
@@ -260,19 +252,6 @@ export default defineConfig({
     if (missingPages.length > 0) {
       console.error("Missing page translations:", missingPages.join(", "));
       return false;
-    }
-
-    for (const category of categories) {
-      category.count = {
-        en: 0,
-        zh: 0,
-      };
-      for (const post of posts) {
-        if (post.archived) continue;
-        if (post.categories.includes(category.slug)) {
-          category.count[post.lang] += 1;
-        }
-      }
     }
   },
 });

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getDictionary, type Language } from "$lib/dictionaries";
+  import { getDictionary, languageOf } from "$lib/dictionaries";
 
-  let lang = $derived((page.params.lang ?? "en") as Language);
+  let lang = $derived(languageOf(page.url));
   let dictionary = $derived(getDictionary(lang));
 </script>
 

@@ -45,9 +45,15 @@
   `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
   script only mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
-  categories, projects, use, fly). Collections with inline-localized fields
-  expose a `…Of(lang)` accessor that resolves `{ en, zh }` down to plain
-  strings; the raw localized arrays are module-private, so routes and
+  categories, projects, use, fly). The types are Velite's own, generated from
+  the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
+  change reaches every consumer with no interface to copy by hand. That only
+  holds while the `#velite` alias names the `.velite` directory; pointed at
+  `index.js`, TypeScript infers from the JSON and loses the literal types.
+  Category post counts are derived here from the published posts, so drafts
+  and archived posts never inflate them. Collections with inline-localized
+  fields expose a `…Of(lang)` accessor that resolves `{ en, zh }` down to
+  plain strings; the raw localized arrays are module-private, so routes and
   components never see that shape.
 - `content/`: source content. Posts in `content/posts/YYYY-MM-DD title/`;
   each post directory holds one `<lang>.md` per translation (`en.md`,
@@ -152,8 +158,8 @@ as an in-repo backstop.
   with a keyed `{#each}` means adding a row to the `keyed` array.
 - `draft: true` posts render under `pnpm dev` only; they are dropped from the
   production build (`src/lib/content.ts`). `archived: true` posts stay in
-  the repo but never render, in dev or production, and are left out of the
-  category counts; the source and its images are kept, nothing else.
+  the repo but never render, in dev or production; the source and its
+  images are kept, nothing else.
 
 ## Coding Style & Naming Conventions
 - Language: TypeScript (strict). Framework: SvelteKit 2 + Svelte 5 (runes).
