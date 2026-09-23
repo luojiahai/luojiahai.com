@@ -20,6 +20,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Flight Companion Payload
+        run: |
+          pnpm fly
+          git diff --exit-code -- src/lib/fly
+
       - name: Check
         run: pnpm check
 

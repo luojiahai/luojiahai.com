@@ -99,7 +99,9 @@
 - `pnpm deploy`: Build + deploy to Cloudflare Workers.
 - `pnpm upload`: Build + upload a Workers preview version (no production
   release).
-CI runs check and build on push via `.github/workflows/ci.yml`. Deployment is
+CI runs check and build on push via `.github/workflows/ci.yml`, after
+rerunning `pnpm fly` and failing if that changes anything under
+`src/lib/fly/`, so a note committed without its payload fails. Deployment is
 handled by Cloudflare Workers Builds (Git integration): its dashboard deploy
 commands run `wrangler deploy` on main (production) and
 `wrangler versions upload` on other branches (preview only).

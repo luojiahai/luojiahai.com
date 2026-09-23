@@ -1,7 +1,8 @@
 # FlyByWire A32NX — companion notes
 
 The source of truth for `src/lib/fly/fbw-a32nx.json`. Edit the markdown, run
-`pnpm fly`, and commit the regenerated payload alongside the notes.
+`pnpm fly`, and commit the regenerated payload alongside the notes. CI reruns
+`pnpm fly` and fails if the committed payload is stale.
 
 ```sh
 pnpm fly            # -> src/lib/fly/fbw-a32nx.json
