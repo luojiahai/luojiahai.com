@@ -102,6 +102,21 @@
   };
 </script>
 
+{#snippet statCell(label: string, value: number)}
+  <div>
+    <div
+      class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
+    >
+      {formatCount(value)}
+    </div>
+    <div
+      class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
+    >
+      {label}
+    </div>
+  </div>
+{/snippet}
+
 <!-- Mouse handlers only track hover intent; keyboard access goes through
   the anchor's focus/blur, so the wrapper stays presentational. -->
 <span
@@ -172,24 +187,12 @@
           </div>
 
           <div class="grid grid-cols-3 gap-2 mb-2.5">
-            {#each [
-              [dictionary.social.followers, stats.github.followers],
-              [dictionary.social.repos, stats.github.publicRepos],
-              [dictionary.social.contributions, stats.github.totalContributions],
-            ] as [label, value] (label)}
-              <div>
-                <div
-                  class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
-                >
-                  {formatCount(value as number)}
-                </div>
-                <div
-                  class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
-                >
-                  {label}
-                </div>
-              </div>
-            {/each}
+            {@render statCell(dictionary.social.followers, stats.github.followers)}
+            {@render statCell(dictionary.social.repos, stats.github.publicRepos)}
+            {@render statCell(
+              dictionary.social.contributions,
+              stats.github.totalContributions,
+            )}
           </div>
 
           <!-- Dot-matrix contribution heatmap -->
@@ -211,18 +214,6 @@
           </div>
         {:else if kind === "x" || kind === "instagram"}
           {@const profile = stats[kind]}
-          {@const cells =
-            kind === "x"
-              ? [
-                  [dictionary.social.followers, stats.x.followers],
-                  [dictionary.social.following, stats.x.following],
-                  [dictionary.social.posts, stats.x.posts],
-                ]
-              : [
-                  [dictionary.social.followers, stats.instagram.followers],
-                  [dictionary.social.following, stats.instagram.following],
-                  [dictionary.social.posts, stats.instagram.posts],
-                ]}
           <div class="flex items-baseline gap-1.5">
             <span
               class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
@@ -248,20 +239,9 @@
           <div
             class="grid grid-cols-3 gap-2 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
-            {#each cells as [label, value] (label)}
-              <div>
-                <div
-                  class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
-                >
-                  {formatCount(value as number)}
-                </div>
-                <div
-                  class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
-                >
-                  {label}
-                </div>
-              </div>
-            {/each}
+            {@render statCell(dictionary.social.followers, profile.followers)}
+            {@render statCell(dictionary.social.following, profile.following)}
+            {@render statCell(dictionary.social.posts, profile.posts)}
           </div>
         {:else if kind === "telegram"}
           <div class="flex items-baseline gap-1.5">
