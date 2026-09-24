@@ -23,10 +23,12 @@
   only source of the Abbreviations sheet), `lights.md` and
   `atc-communications.md`; see that directory's `README.md`. `pnpm fly`
   (`scripts/build-companion.mjs`) regenerates `<slug>.json` from them; commit
-  the regenerated payload. At most nine procedure phases — the companion binds
-  the digits 1-9. Adding an aircraft means a `src/params/aircraft.ts` entry, a
-  notes directory, a `PROCEDURES` array, a `payloads` row in the endpoint, and
-  a row in `content/fly/fly.yml`.
+  the regenerated payload. The procedure list comes from the notes' `1-`…`9-`
+  filename prefixes, which must run from 1 with no gaps or repeats; at most
+  nine, since the companion binds the digits 1-9. Adding an aircraft means a
+  `src/params/aircraft.ts` entry, a notes directory, pointing
+  `scripts/build-companion.mjs` at it (the script handles one aircraft), a
+  `payloads` row in the endpoint, and a row in `content/fly/fly.yml`.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,

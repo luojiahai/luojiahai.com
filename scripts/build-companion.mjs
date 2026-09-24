@@ -7,7 +7,7 @@
 // FlyByWire's A32NX beginner guide.
 //
 // Usage: node scripts/build-companion.mjs [--out src/lib/fly/fbw-a32nx.json]
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,17 +15,13 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTES = resolve(ROOT, "src/lib/fly/fbw-a32nx");
 const read = p => readFileSync(resolve(NOTES, p), "utf8");
 
-const PROCEDURES = [
-  "1-preflight",
-  "2-starting-the-aircraft",
-  "3-preparing-the-mcdu",
-  "4-engine-start-and-taxi",
-  "5-takeoff-climb-and-cruise",
-  "6-descent-planning-and-descent",
-  "7-approach-and-ils-landing",
-  "8-after-landing-and-taxi-to-gate",
-  "9-powering-down",
-];
+// The numeric filename prefix orders the procedures and picks the digit that
+// opens each one.
+const PROCEDURES = readdirSync(NOTES)
+  .map(file => file.match(/^(\d+)-.+\.md$/))
+  .filter(Boolean)
+  .map(m => ({ file: m[0], slug: m[0].slice(0, -3), num: Number(m[1]) }))
+  .sort((a, b) => a.num - b.num);
 
 // The rail is 208px wide (--rail); these titles wrap to three lines without help.
 const SHORT = {
@@ -522,6 +518,10 @@ function buildATC() {
  * emit
  * ------------------------------------------------------------------ */
 
+if (PROCEDURES.some((p, i) => p.num !== i + 1)) {
+  const files = PROCEDURES.map(p => p.file).join(", ");
+  throw new Error(`procedure notes must be numbered 1-${PROCEDURES.length} with no gaps or repeats: ${files}`);
+}
 // The companion binds the digits 1-9 to phases, so a tenth would be unreachable.
 if (PROCEDURES.length > 9) {
   throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
@@ -530,7 +530,7 @@ if (PROCEDURES.length > 9) {
 const abbreviations = buildAbbreviations();
 const atc = buildATC();
 const data = {
-  phases: PROCEDURES.map((s, n) => buildProcedure(s, n + 1)),
+  phases: PROCEDURES.map(p => buildProcedure(p.slug, p.num)),
   refs: { lights: buildLights(), abbreviations, atc: atc.sheet },
   tokens: atc.tokens,
 };

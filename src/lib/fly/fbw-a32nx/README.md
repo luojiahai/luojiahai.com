@@ -27,8 +27,10 @@ disagree, the guide wins.
 | `8-after-landing-and-taxi-to-gate.md` | `after-landing/` |
 | `9-powering-down.md` | `powering-down/` |
 
-Nine is the ceiling: the companion binds the digits 1-9 to phases, and the
-generator throws if a tenth is added.
+The generator finds the procedure notes by their numeric prefix, which sets
+both their order and the digit that opens each one, so the prefixes must run
+from 1 with no gaps or repeats. Nine is the ceiling: the companion binds the
+digits 1-9 to phases, and the generator throws if a tenth is added.
 
 The three reference sheets:
 
