@@ -110,25 +110,16 @@
       localStorage.setItem("color-mode", mode);
     } catch {}
     document.documentElement.dataset.colorMode = mode;
-    const dark =
-      mode === "dark" ||
-      (mode === "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    applyDark(dark);
+    applyDark(isDark);
   }
 
   // ------------------------------------------------------------------
   // Language switch — let the dial animate before navigating.
   // ------------------------------------------------------------------
   const LANGUAGE_DIAL_ANIMATION_MS = 220;
-  // svelte-ignore state_referenced_locally -- initial value; kept in sync by the effect below
-  let displayLang = $state<string>(lang);
+  let displayLang = $derived<string>(lang);
   let langSwitchTimer: ReturnType<typeof setTimeout> | undefined;
   let displayDictionary = $derived(getDictionary(displayLang));
-
-  $effect(() => {
-    displayLang = lang;
-  });
 
   function switchToLanguage(newLang: string) {
     if (newLang === displayLang) return;
