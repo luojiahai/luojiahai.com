@@ -35,7 +35,7 @@
 
   <!-- Projects. The page title already names them, so no section label. -->
   <PrintedSection>
-    <ProjectList projects={data.projects} {lang} />
+    <ProjectList projects={data.projects} />
   </PrintedSection>
 
   <PrintedDivider style="dashed" />

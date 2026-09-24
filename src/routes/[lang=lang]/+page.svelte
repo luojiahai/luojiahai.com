@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { getDictionary } from "$lib/dictionaries";
-  import type { IconName } from "$lib/icons";
   import { generateWebSiteJsonLd } from "$lib/json-ld";
   import { SITE_URL } from "$lib/site-config";
-  import type { SocialCardKind } from "$lib/social";
+  import { socialCardIcons } from "$lib/social";
   import Icon from "$lib/components/Icon.svelte";
   import PostList from "$lib/components/PostList.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
@@ -19,24 +17,7 @@
   let lang = $derived(data.lang);
   let dictionary = $derived(getDictionary(lang));
 
-  // Prerendered pages show the first motto; rotate randomly per visit.
-  let mottoIndex = $state(0);
-  onMount(() => {
-    mottoIndex = Math.floor(Math.random() * dictionary.meta.mottos.length);
-  });
-  let motto = $derived(dictionary.meta.mottos[mottoIndex] ?? dictionary.meta.motto);
-
   const printedOn = new Date().toISOString().split("T")[0];
-
-  // Contacts whose icon maps to a hover-card kind get a SocialHoverCard;
-  // the rest render as plain links.
-  const cardKinds: Partial<Record<IconName, SocialCardKind>> = {
-    x: "x",
-    github: "github",
-    mail: "email",
-    send: "telegram",
-    instagram: "instagram",
-  };
 </script>
 
 <Seo
@@ -66,39 +47,24 @@
     <p
       class="mt-3 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
     >
-      {motto}
+      {dictionary.meta.motto}
     </p>
 
     <!-- Contact strip -->
     <div class="mt-4 flex flex-wrap gap-2">
       {#each dictionary.contacts as contact (contact.link)}
-        {@const kind = cardKinds[contact.icon]}
-        {@const linkClass =
-          "inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"}
-        {#if kind}
-          <SocialHoverCard
-            {kind}
-            href={contact.link}
-            {lang}
-            {dictionary}
-            align="left"
-            side="bottom"
-            class={linkClass}
-          >
-            <Icon name={contact.icon} class="h-3 w-3" />
-            {contact.label}
-          </SocialHoverCard>
-        {:else}
-          <a
-            href={contact.link}
-            target="_blank"
-            rel="noopener"
-            class={linkClass}
-          >
-            <Icon name={contact.icon} class="h-3 w-3" />
-            {contact.label}
-          </a>
-        {/if}
+        <SocialHoverCard
+          kind={contact.kind}
+          href={contact.link}
+          {lang}
+          {dictionary}
+          align="left"
+          side="bottom"
+          class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
+        >
+          <Icon name={socialCardIcons[contact.kind]} class="h-3 w-3" />
+          {contact.label}
+        </SocialHoverCard>
       {/each}
     </div>
   </PrintedSection>
@@ -107,7 +73,7 @@
 
   <!-- Projects section -->
   <PrintedSection label={dictionary.labels.projects} labelIcon="code">
-    <ProjectList projects={data.projects} {lang} />
+    <ProjectList projects={data.projects} />
     <a
       href={dictionary.urls.projects}
       class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"

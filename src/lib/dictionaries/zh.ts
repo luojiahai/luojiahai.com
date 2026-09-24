@@ -6,7 +6,6 @@ const dictionary: Dictionary = {
     name: "罗嘉海",
     websiteName: "luojiahai",
     motto: "你好，世界！",
-    mottos: ["你好，世界！"],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
@@ -73,40 +72,32 @@ const dictionary: Dictionary = {
     entries(count: number) {
       return `${count} 条`;
     },
-    icon(label: string) {
-      return `${label}的图标`;
-    },
   },
   contacts: [
     {
       label: "X (Twitter)",
-      name: "@luojiahai",
       link: "https://x.com/luojiahai",
-      icon: "x",
+      kind: "x",
     },
     {
       label: "GitHub",
-      name: "@luojiahai",
       link: "https://github.com/luojiahai",
-      icon: "github",
+      kind: "github",
     },
     {
       label: "邮箱",
-      name: "hi@luojiahai.com",
       link: "mailto:hi@luojiahai.com",
-      icon: "mail",
+      kind: "email",
     },
     {
       label: "Telegram",
-      name: "@luojiahai",
       link: "https://t.me/luojiahai",
-      icon: "send",
+      kind: "telegram",
     },
     {
       label: "Instagram",
-      name: "@luojiahai",
       link: "https://instagram.com/luojiahai",
-      icon: "instagram",
+      kind: "instagram",
     },
   ],
   social: {
