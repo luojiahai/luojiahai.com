@@ -82,9 +82,11 @@
   regenerated files. `assets/logo.svg` is the original bare-glyph logo,
   kept for reference and not served.
 - Root config: `svelte.config.js`, `vite.config.ts`, `velite.config.ts`,
-  `wrangler.jsonc`, `tsconfig.json`, `pnpm-workspace.yaml` (build allowlist
-  plus `minimumReleaseAgeExclude` — a just-published dependency stays blocked
-  until it is listed there).
+  `wrangler.jsonc`, `tsconfig.json`, `pnpm-workspace.yaml` (the build
+  allowlist). pnpm blocks a just-published dependency until it clears the
+  release-age window; to take one early, list it under
+  `minimumReleaseAgeExclude`, and delete the entry once it has aged out.
+  `pnpm install` reports whether the lockfile passes the policy without it.
 
 ## Build, Test, and Development Commands
 - `pnpm install`: Install dependencies (pnpm only; no npm/yarn lockfiles).
