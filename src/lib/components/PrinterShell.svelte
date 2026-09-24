@@ -382,7 +382,7 @@
 
           <!-- Perforation marks -->
           <div
-            class="absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
+            class="paper-perforation absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
           >
             {#each Array.from({ length: 60 }), i (i)}
               <div
@@ -391,7 +391,7 @@
             {/each}
           </div>
           <div
-            class="absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
+            class="paper-perforation absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
           >
             {#each Array.from({ length: 60 }), i (i)}
               <div

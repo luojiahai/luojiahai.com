@@ -253,6 +253,11 @@
   .printer-paper-area:has([data-not-found]) > .paper-edge-top {
     display: none;
   }
+  /* !important: the perforation columns' own flex utility sits in a later
+     cascade layer. */
+  .printer-paper-area:has([data-not-found]) > :is(.paper-perforation, footer) {
+    display: none !important;
+  }
   .printer-paper-wrap:has(.printer-paper-area [data-not-found])
     > .paper-top-occlusion {
     display: none;
