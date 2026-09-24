@@ -377,7 +377,7 @@
           class="printer-paper-area thermal-texture relative z-0 flex min-h-[62vh] flex-col overflow-hidden bg-printer-paper shadow-[0_18px_36px_rgba(75,57,43,0.14),0_3px_8px_rgba(75,57,43,0.12)] dark:border dark:border-white/[0.04] dark:bg-printer-paper-dark dark:shadow-[0_20px_42px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.34)]"
         >
           <div
-            class="absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
+            class="paper-edge-top absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
           ></div>
 
           <!-- Perforation marks -->

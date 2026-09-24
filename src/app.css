@@ -250,18 +250,11 @@
   }
 
   /* Hide paper-specific elements in tray mode */
-  .printer-paper-area:has([data-not-found]) > .absolute.-top-1 {
+  .printer-paper-area:has([data-not-found]) > .paper-edge-top {
     display: none;
   }
   .printer-paper-wrap:has(.printer-paper-area [data-not-found])
     > .paper-top-occlusion {
-    display: none;
-  }
-  .printer-paper-area:has([data-not-found]) > .absolute.left-0.top-0.bottom-0,
-  .printer-paper-area:has([data-not-found]) > .absolute.right-0.top-0.bottom-0 {
-    display: none;
-  }
-  .printer-paper-area:has([data-not-found]) > div:last-child {
     display: none;
   }
   .printer-paper-area:has([data-not-found]) + .paper-edge-bottom {
