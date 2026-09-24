@@ -516,9 +516,9 @@
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
-  /* The three reference sheets ride in the same payload as the procedures but
-     carry no ticks, so they stay out of the flight spine and open in the
-     drawer instead. Keyed by the shortcut that opens each one.
+  /* The three reference sheets carry no ticks, so the payload ships them
+     under refs, apart from the procedures, and they open in the drawer
+     instead of the flight spine. Keyed by the shortcut that opens each one.
 
      Icon markup is copied verbatim from @lucide/svelte 1.28.0 (24x24,
      stroke-based), out of dist/icons/<name>.svelte. It's inlined rather than
@@ -528,40 +528,37 @@
      them has to be re-copied here by hand. */
   const REFS = [
     {
-      id: "lights", tab: "Lights", key: "l",
+      id: "lights", key: "l",
       // lucide "lightbulb"
       icon: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
     },
     {
-      id: "abbreviations", tab: "Abbreviations", key: "a",
+      id: "abbreviations", key: "a",
       // lucide "book-open"
       icon: '<path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/>',
     },
     {
-      id: "atc", tab: "Radio", key: "r",
+      id: "atc", key: "r",
       // lucide "radio"
       icon: '<path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/>',
     },
   ];
   const iconSVG = inner =>
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
-  const isRef = id => REFS.some(r => r.id === id);
 
   let DATA, procedures = [], ticks = load(LS.ticks, {}), fields = load(LS.fields, {});
   let current, cursor = -1, openRefId = null;
 
-  const refPhase = id => DATA.phases.find(p => p.id === id);
+  const refSheet = id => DATA.refs[id];
   const dialog = () => document.getElementById("ref");
 
   const esc = s => String(s)
     .replace(/[—–]/g, "-")
     .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const nameOf = v => (DATA.names || {})[String(v).trim().toUpperCase().replace(/\s+/g, " ")] || null;
-
   const inline = frag => (frag || []).map(n => {
     if (n.t === "text") return esc(n.v);
-    if (n.t === "b") { const f = nameOf(n.v); return f ? '<b data-tip="' + esc(f) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>"; }
+    if (n.t === "b") return n.tip ? '<b data-tip="' + esc(n.tip) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>";
     if (n.t === "i") return "<i>" + esc(n.v) + "</i>";
     if (n.t === "sub") return "<sub>" + esc(n.v) + "</sub>";
     if (n.t === "link") return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + esc(n.v) + "</a>";
@@ -619,7 +616,7 @@
 
   function renderRefNav() {
     document.getElementById("ref-nav").innerHTML = REFS.map(r => {
-      const p = refPhase(r.id);
+      const p = refSheet(r.id);
       if (!p) return "";
       return '<button data-ref="' + r.id + '"><span class="ico">' + iconSVG(r.icon) +
         '</span><span class="lbl">' + esc(p.short) + '</span><span class="key">' +
@@ -628,9 +625,8 @@
   }
 
   function itemsHTML(block) {
-    const label = block.items[0] && block.items[0].conditionLabel || "";
     return '<div class="items-head" aria-hidden="true"><span></span><span>Control</span><span>Action</span><span>' +
-      esc(label) + "</span></div><ul class=\"items\">" + block.items.map(i =>
+      esc(block.conditionLabel || "") + "</span></div><ul class=\"items\">" + block.items.map(i =>
       '<li data-done="' + !!ticks[i.id] + '" data-item="' + esc(i.id) + '">' +
         '<label><input type="checkbox"' + (ticks[i.id] ? " checked" : "") + ' data-id="' + esc(i.id) + '">' +
         '<span class="box" aria-hidden="true"><i></i></span>' +
@@ -691,13 +687,13 @@
 
   /* ---------- reference drawer ---------- */
   function renderRef(id) {
-    const p = refPhase(id);
+    const p = refSheet(id);
     if (!p) return;
     openRefId = id;
 
     document.getElementById("ref-tabs").innerHTML = REFS.map(r =>
       '<button class="ref-tab" role="tab" data-ref="' + r.id + '" aria-selected="' +
-      (r.id === id) + '">' + esc(r.tab) + "</button>").join("");
+      (r.id === id) + '">' + esc(refSheet(r.id).short) + "</button>").join("");
 
     let html = "<h1>" + esc(p.title) + "</h1>";
 
@@ -705,7 +701,7 @@
       html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
         'spellcheck="false" aria-label="Filter abbreviations">';
     }
-    if (p.kind === "atc") {
+    if (id === "atc") {
       if (p.chain) {
         html += '<div class="chain">' + p.chain.map((c, i) =>
           (i ? "<i>-&gt;</i>" : "") + "<b>" + esc(c) + "</b>").join("") + "</div>";
@@ -861,7 +857,7 @@
   /* Worksheet values substitute into the calls as you type, so the drawer
      reads as the sentence you will actually say. */
   function renderSays() {
-    const p = refPhase("atc");
+    const p = refSheet("atc");
     if (!p) return;
     const turns = (p.groups || []).flatMap(g =>
       (g.blocks || []).filter(b => b.type === "exchange").flatMap(b => b.turns));
@@ -872,6 +868,7 @@
 
   document.addEventListener("keydown", e => {
     if (e.target.matches("input, textarea, select")) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     const shortcut = REFS.find(r => r.key === e.key.toLowerCase());
     if (shortcut) {
@@ -901,7 +898,7 @@
   trackHeader();
   try {
     DATA = JSON.parse(document.getElementById("data").textContent);
-    procedures = DATA.phases.filter(p => !isRef(p.id));
+    procedures = DATA.phases;
     current = load(LS.phase, procedures[0].id);
     if (!procedures.some(p => p.id === current)) current = procedures[0].id;
     renderNav();

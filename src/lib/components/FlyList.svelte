@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { FlyItem } from "$lib/content";
-  import { aircraftNames } from "../../params/aircraft";
+  import { aircraft } from "../../params/aircraft";
   import Icon from "./Icon.svelte";
   import PrintedEmpty from "./PrintedEmpty.svelte";
 
@@ -11,7 +11,7 @@
   let rows = $derived(
     entries.map((entry) => ({
       slug: entry.slug,
-      name: aircraftNames[entry.slug],
+      name: aircraft.find((a) => a.slug === entry.slug)?.name,
       description: entry.description,
       href: `/fly/${entry.slug}`,
     })),

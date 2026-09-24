@@ -16,9 +16,5 @@ export const aircraft = [{ slug: "fbw-a32nx", name: "FlyByWire A32NX" }] as cons
 export type Aircraft = (typeof aircraft)[number];
 export type AircraftSlug = Aircraft["slug"];
 
-export const aircraftNames: Record<AircraftSlug, string> = Object.fromEntries(
-  aircraft.map((entry) => [entry.slug, entry.name]),
-) as Record<AircraftSlug, string>;
-
 export const match = ((param: string): param is AircraftSlug =>
   aircraft.some((entry) => entry.slug === param)) satisfies ParamMatcher;

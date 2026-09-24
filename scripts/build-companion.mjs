@@ -5,9 +5,7 @@
 // The markdown stays the source of truth: edit the procedure notes, re-run the
 // script, and the interactive checklist follows. The notes themselves follow
 // FlyByWire's A32NX beginner guide.
-//
-// Usage: node scripts/build-companion.mjs [--out src/lib/fly/fbw-a32nx.json]
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,25 +13,19 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTES = resolve(ROOT, "src/lib/fly/fbw-a32nx");
 const read = p => readFileSync(resolve(NOTES, p), "utf8");
 
-const PROCEDURES = [
-  "1-preflight",
-  "2-starting-the-aircraft",
-  "3-preparing-the-mcdu",
-  "4-engine-start-and-taxi",
-  "5-takeoff-climb-and-cruise",
-  "6-descent-planning-and-descent",
-  "7-approach-and-ils-landing",
-  "8-after-landing-and-taxi-to-gate",
-  "9-powering-down",
-];
+// The numeric filename prefix orders the procedures and picks the digit that
+// opens each one.
+const PROCEDURES = readdirSync(NOTES)
+  .map(file => file.match(/^(\d+)-.+\.md$/))
+  .filter(Boolean)
+  .map(m => ({ file: m[0], slug: m[0].slice(0, -3), num: Number(m[1]) }))
+  .sort((a, b) => a.num - b.num);
 
 // The rail is 208px wide (--rail); these titles wrap to three lines without help.
 const SHORT = {
   "6-descent-planning-and-descent": "Descent",
   "7-approach-and-ils-landing": "Approach and Landing",
 };
-
-const REF_IDS = new Set(["lights", "abbreviations", "atc"]);
 
 /* ------------------------------------------------------------------ *
  * inline markdown -> fragment nodes the template can render safely
@@ -42,7 +34,11 @@ const REF_IDS = new Set(["lights", "abbreviations", "atc"]);
 function parseInline(md, resolveHref = () => null) {
   const out = [];
   let rest = String(md).replace(/\[\^[^\]]+\]/g, ""); // drop footnote markers
-  const push = (t, v, href) => { if (v !== "") out.push(href ? { t, v, href } : { t, v }); };
+  const push = (t, v, href) => {
+    if (v === "") return;
+    const tip = t === "b" ? nameOf(v) : null;
+    out.push(href ? { t, v, href } : tip ? { t, v, tip } : { t, v });
+  };
 
   // New branches go on the end: the dispatch below is positional, so inserting
   // a group in the middle silently shifts every branch after it.
@@ -91,6 +87,7 @@ const stripMd = md =>
  * ------------------------------------------------------------------ */
 
 const duplicateNames = [];
+const nameKey = s => String(s).trim().toUpperCase().replace(/\s+/g, " ");
 
 function buildNames() {
   const names = {};
@@ -101,7 +98,7 @@ function buildNames() {
     const name = stripMd(cells[0]);
     const full = stripMd(cells[1]);
     if (!name || /^-+$/.test(name) || name === "Name") continue;
-    const key = name.toUpperCase().replace(/\s+/g, " ");
+    const key = nameKey(name);
     const value = !full || /^[-–—]$/.test(full) ? null : full;
     if (key in names && names[key] !== value) duplicateNames.push(key);
     names[key] = value;
@@ -110,7 +107,7 @@ function buildNames() {
 }
 
 const NAMES = buildNames();
-const nameOf = s => NAMES[String(s).trim().toUpperCase().replace(/\s+/g, " ")] ?? null;
+const nameOf = s => NAMES[nameKey(s)] ?? null;
 
 /* ------------------------------------------------------------------ *
  * controls.md -> docs URL, resolved within the linked section
@@ -222,9 +219,13 @@ function controlHref(text, target) {
  * map does not carry has no name, and the run prints it.
  * ------------------------------------------------------------------ */
 
+const nameless = new Set();
+
 function controlFull(cell) {
   const m = String(cell).match(/\[([^\]]+)\]\(controls\.md#[^)]+\)/);
-  return nameOf(m ? m[1] : stripMd(cell));
+  const label = m ? m[1] : stripMd(cell);
+  if (!(nameKey(label) in NAMES)) nameless.add(label);
+  return nameOf(label);
 }
 
 /* ------------------------------------------------------------------ *
@@ -245,16 +246,16 @@ function parseSections(md) {
   let i = 0;
 
   const ensure = () => {
-    if (!g) { g = { title: "", level: 2, blocks: [] }; groups.push(g); }
+    if (!g) { g = { title: "", blocks: [] }; groups.push(g); }
     return g;
   };
 
   while (i < lines.length) {
     const line = lines[i];
 
-    const h = line.match(/^(#{2,3})\s+(.*)$/);
+    const h = line.match(/^#{2,3}\s+(.*)$/);
     if (h) {
-      g = { title: stripMd(h[2]), level: h[1].length, blocks: [] };
+      g = { title: stripMd(h[1]), blocks: [] };
       groups.push(g);
       i++;
       continue;
@@ -348,7 +349,6 @@ function buildProcedure(slug, num) {
   const title = stripMd((md.match(/^#\s+(.*)$/m) || [])[1] || slug);
   const groups = parseSections(md).map(g => ({
     title: g.title,
-    level: g.level,
     blocks: g.blocks.map(b => {
       if (b.kind !== "table") return b;
       const head = b.head.map(h => h.toLowerCase());
@@ -356,13 +356,13 @@ function buildProcedure(slug, num) {
       if (!isChecklist) return { type: "para", frag: parseInline(b.head.join(" · "), controlHref) };
       return {
         type: "items",
+        conditionLabel: b.head[2] || null,
         items: b.body.map(r => ({
           id: itemId(slug, r[0], r[1] || ""),
           control: parseInline(r[0], controlHref),
           full: controlFull(r[0]),
           action: parseInline(r[1] || "", controlHref),
           condition: r[2] && r[2] !== "–" && r[2] !== "-" ? parseInline(r[2], controlHref) : null,
-          conditionLabel: b.head[2] || null,
         })),
       };
     }),
@@ -393,7 +393,6 @@ function buildProcedure(slug, num) {
 function matrixGroups(md, withFulls = true) {
   return parseSections(md).map(g => ({
     title: g.title,
-    level: g.level,
     blocks: g.blocks.map(b => {
       if (b.kind !== "table") return b;
       return {
@@ -409,7 +408,7 @@ function matrixGroups(md, withFulls = true) {
 
 function buildLights() {
   return {
-    id: "lights", num: "L", title: "Lights by Phase", short: "Lights",
+    title: "Lights by Phase", short: "Lights",
     groups: matrixGroups(read("lights.md")),
   };
 }
@@ -421,7 +420,6 @@ function buildLights() {
 
 function buildAbbreviations() {
   return {
-    id: "abbreviations", num: "G",
     title: "Airbus Terms and Abbreviations", short: "Abbreviations",
     groups: matrixGroups(read("abbreviations.md"), false),
   };
@@ -470,7 +468,7 @@ function buildATC() {
         while (i < lines.length && !/^##\s/.test(lines[i])) i++;
         continue;
       }
-      g = { title: title.replace(/^\d+\s+·\s+/, ""), level: 2, blocks: [] };
+      g = { title: title.replace(/^\d+\s+·\s+/, ""), blocks: [] };
       groups.push(g); ex = null; i++;
       continue;
     }
@@ -513,7 +511,7 @@ function buildATC() {
   for (const k of used) if (!seen.has(k)) tokens.push({ key: k, label: k.toLowerCase() });
 
   return {
-    phase: { id: "atc", num: "A", kind: "atc", title: "ATC Communications", short: "ATC", chain, groups },
+    sheet: { title: "ATC Communications", short: "Radio", chain, groups },
     tokens,
   };
 }
@@ -522,26 +520,21 @@ function buildATC() {
  * emit
  * ------------------------------------------------------------------ */
 
+if (PROCEDURES.some((p, i) => p.num !== i + 1)) {
+  const files = PROCEDURES.map(p => p.file).join(", ");
+  throw new Error(`procedure notes must be numbered 1-${PROCEDURES.length} with no gaps or repeats: ${files}`);
+}
 // The companion binds the digits 1-9 to phases, so a tenth would be unreachable.
 if (PROCEDURES.length > 9) {
   throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
-}
-const shadowed = PROCEDURES.filter(s => REF_IDS.has(s));
-if (shadowed.length) {
-  throw new Error(`procedure id shadows a reference sheet: ${shadowed.join(", ")}`);
 }
 
 const abbreviations = buildAbbreviations();
 const atc = buildATC();
 const data = {
-  phases: [
-    ...PROCEDURES.map((s, n) => buildProcedure(s, n + 1)),
-    buildLights(),
-    abbreviations,
-    atc.phase,
-  ],
+  phases: PROCEDURES.map(p => buildProcedure(p.slug, p.num)),
+  refs: { lights: buildLights(), abbreviations, atc: atc.sheet },
   tokens: atc.tokens,
-  names: Object.fromEntries(Object.entries(NAMES).filter(([, v]) => v)),
 };
 
 const items = data.phases.flatMap(p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items)));
@@ -551,31 +544,27 @@ if (new Set(ids).size !== ids.length) {
   throw new Error(`duplicate item ids: ${[...new Set(dupes)].join(", ")}`);
 }
 
-const outFlag = process.argv.indexOf("--out");
-const outPath = outFlag > -1
-  ? resolve(process.cwd(), process.argv[outFlag + 1])
-  : resolve(ROOT, "src/lib/fly/fbw-a32nx.json");
+const outPath = resolve(ROOT, "src/lib/fly/fbw-a32nx.json");
 
 // The endpoint escapes "</" when it inlines this into a <script> block; escaping
 // it here too would double up and render a literal backslash on the page.
 const json = JSON.stringify(data);
 writeFileSync(outPath, json + "\n");
 
-const turns = atc.phase.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
+const turns = atc.sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
 const absRows = abbreviations.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix").flatMap(b => b.rows)).length;
 
 console.log(`wrote ${outPath.replace(ROOT + "/", "")}`);
-console.log(`  ${data.phases.length} phases · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
+console.log(`  ${data.phases.length} phases · ${Object.keys(data.refs).length} reference sheets · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
 const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
 console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
 const named = items.filter(i => i.full).length;
 console.log(`  ${named}/${items.length} items carry a full control name`);
-console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.keys(data.names).length} names · ${absRows} abbreviation rows`);
-const unnamed = items.filter(i => !i.full).map(i => stripMd(i.control.map(n => n.v).join("")));
-if (unnamed.length) console.log(`  no full name: ${[...new Set(unnamed)].join(", ")}`);
+console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
+if (nameless.size) console.log(`  no full name: ${[...nameless].join(", ")}`);
 if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
 if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
 // names.md is meant to cover the whole control inventory, not just what the
 // procedures happen to link today
-const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(l.toUpperCase().replace(/\s+/g, " ") in NAMES));
+const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(nameKey(l) in NAMES));
 if (uncovered.length) console.log(`  controls.md labels missing from names.md: ${uncovered.join(", ")}`);
