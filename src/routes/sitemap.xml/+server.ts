@@ -12,17 +12,18 @@ interface SitemapUrl {
   priority: number;
 }
 
+// Only posts carry a lastmod. The other pages have no modification date of
+// their own, and stamping them with the build time on every deploy teaches
+// crawlers to ignore lastmod altogether, the posts' included.
 export const GET: RequestHandler = () => {
-  const now = new Date().toISOString();
-
   const basicUrls: SitemapUrl[] = languages.flatMap((lang) => {
     const dictionary = getDictionary(lang);
     return [
-      { loc: dictionary.urls.home, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.posts, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.projects, lastmod: now, priority: 1 },
-      { loc: dictionary.urls.use, lastmod: now, priority: 0.8 },
-      { loc: dictionary.urls.about, lastmod: now, priority: 0.8 },
+      { loc: dictionary.urls.home, priority: 1 },
+      { loc: dictionary.urls.posts, priority: 1 },
+      { loc: dictionary.urls.projects, priority: 1 },
+      { loc: dictionary.urls.use, priority: 0.8 },
+      { loc: dictionary.urls.about, priority: 0.8 },
     ];
   });
 
@@ -30,14 +31,12 @@ export const GET: RequestHandler = () => {
   // once rather than per language.
   const companionUrls: SitemapUrl[] = aircraft.map((entry) => ({
     loc: `/fly/${entry.slug}`,
-    lastmod: now,
     priority: 0.6,
   }));
 
   const categoryUrls: SitemapUrl[] = categories.flatMap((category) =>
     languages.map((lang) => ({
       loc: category.permalink[lang],
-      lastmod: now,
       priority: 0.7,
     })),
   );
