@@ -5,8 +5,6 @@
 // The markdown stays the source of truth: edit the procedure notes, re-run the
 // script, and the interactive checklist follows. The notes themselves follow
 // FlyByWire's A32NX beginner guide.
-//
-// Usage: node scripts/build-companion.mjs [--out src/lib/fly/fbw-a32nx.json]
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -221,9 +219,13 @@ function controlHref(text, target) {
  * map does not carry has no name, and the run prints it.
  * ------------------------------------------------------------------ */
 
+const nameless = new Set();
+
 function controlFull(cell) {
   const m = String(cell).match(/\[([^\]]+)\]\(controls\.md#[^)]+\)/);
-  return nameOf(m ? m[1] : stripMd(cell));
+  const label = m ? m[1] : stripMd(cell);
+  if (!(nameKey(label) in NAMES)) nameless.add(label);
+  return nameOf(label);
 }
 
 /* ------------------------------------------------------------------ *
@@ -542,10 +544,7 @@ if (new Set(ids).size !== ids.length) {
   throw new Error(`duplicate item ids: ${[...new Set(dupes)].join(", ")}`);
 }
 
-const outFlag = process.argv.indexOf("--out");
-const outPath = outFlag > -1
-  ? resolve(process.cwd(), process.argv[outFlag + 1])
-  : resolve(ROOT, "src/lib/fly/fbw-a32nx.json");
+const outPath = resolve(ROOT, "src/lib/fly/fbw-a32nx.json");
 
 // The endpoint escapes "</" when it inlines this into a <script> block; escaping
 // it here too would double up and render a literal backslash on the page.
@@ -562,8 +561,7 @@ console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
 const named = items.filter(i => i.full).length;
 console.log(`  ${named}/${items.length} items carry a full control name`);
 console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
-const unnamed = items.filter(i => !i.full).map(i => stripMd(i.control.map(n => n.v).join("")));
-if (unnamed.length) console.log(`  no full name: ${[...new Set(unnamed)].join(", ")}`);
+if (nameless.size) console.log(`  no full name: ${[...nameless].join(", ")}`);
 if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
 if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
 // names.md is meant to cover the whole control inventory, not just what the
