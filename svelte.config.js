@@ -7,7 +7,7 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
-      "#velite": ".velite/index.js",
+      "#velite": ".velite",
     },
     prerender: {
       // Everything on this site is derived from build-time content. The only

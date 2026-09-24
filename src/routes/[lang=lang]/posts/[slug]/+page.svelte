@@ -5,6 +5,7 @@
     generateBlogPostingJsonLd,
     generateBreadcrumbJsonLd,
   } from "$lib/json-ld";
+  import { SITE_URL } from "$lib/site-config";
   import Icon from "$lib/components/Icon.svelte";
   import PostContent from "$lib/components/PostContent.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
@@ -17,8 +18,7 @@
   let lang = $derived(data.lang);
   let post = $derived(data.post);
   let dictionary = $derived(getDictionary(lang));
-  let baseUrl = $derived(dictionary.meta.baseUrl);
-  let postUrl = $derived(`${baseUrl}${post.permalink}`);
+  let postUrl = $derived(`${SITE_URL}${post.permalink}`);
 </script>
 
 <Seo
@@ -43,7 +43,7 @@
       url: postUrl,
       datePublished: post.date,
       dateModified: post.updated,
-      image: post.cover?.src ? `${baseUrl}${post.cover.src}` : undefined,
+      image: post.cover?.src ? `${SITE_URL}${post.cover.src}` : undefined,
       categories: post.categories,
       lang,
     }),
@@ -51,11 +51,11 @@
       items: [
         {
           name: dictionary.labels.home,
-          url: `${baseUrl}${dictionary.urls.home}`,
+          url: `${SITE_URL}${dictionary.urls.home}`,
         },
         {
           name: dictionary.labels.posts,
-          url: `${baseUrl}${dictionary.urls.posts}`,
+          url: `${SITE_URL}${dictionary.urls.posts}`,
         },
         { name: post.title, url: postUrl },
       ],

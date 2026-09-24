@@ -1,7 +1,7 @@
 import type { Element, Parent, Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
-import { aircraft } from "./src/params/aircraft";
+import { aircraft, match as isAircraft } from "./src/params/aircraft";
 
 /**
  * One blog, one content pipeline:
@@ -56,20 +56,6 @@ function duplicates(keys: string[]): string[] {
   ];
 }
 
-function reportDuplicates(what: string, keys: string[]): boolean {
-  const found = duplicates(keys);
-  if (found.length === 0) return true;
-  console.error(`Duplicate ${what} found:`, found.join(", "));
-  return false;
-}
-
-const count = s
-  .object({
-    en: s.number(),
-    zh: s.number(),
-  })
-  .default({ en: 0, zh: 0 });
-
 const categories = defineCollection({
   name: "Category",
   pattern: "categories/*.yml",
@@ -78,7 +64,6 @@ const categories = defineCollection({
       slug: s.string(),
       name: localized(20),
       description: localized(100).optional(),
-      count,
     })
     .transform((data) => {
       return {
@@ -183,7 +168,7 @@ const fly = defineCollection({
   name: "FlyEntry",
   pattern: "fly/*.yml",
   schema: s.object({
-    slug: s.string(),
+    slug: s.string().refine(isAircraft, "Unknown aircraft"),
     description: localized(100),
   }),
 });
@@ -199,15 +184,21 @@ export default defineConfig({
   },
   collections: { categories, fly, pages, posts, projects, use },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
+  // Without strict, a schema violation is only logged and the document still
+  // ships, so every cap above would be advisory.
+  strict: true,
   prepare: ({ categories, fly, pages, posts, projects, use }) => {
-    const unknownCategories = posts
-      .flatMap((post) => post.categories)
-      .filter((slug) => !categories.some((c) => c.slug === slug));
+    const problems: string[] = [];
+    const report = (what: string, found: string[]) => {
+      if (found.length > 0) problems.push(`${what}: ${found.join(", ")}`);
+    };
 
-    if (unknownCategories.length > 0) {
-      console.error("Unknown categories found:", unknownCategories.join(", "));
-      return false;
-    }
+    report(
+      "Unknown categories",
+      [...new Set(posts.flatMap((post) => post.categories))].filter(
+        (slug) => !categories.some((category) => category.slug === slug),
+      ),
+    );
 
     // Every list page keys its `{#each}` by the key named here, and Svelte
     // throws on a repeated key - so a duplicate is a broken page, not a
@@ -228,51 +219,30 @@ export default defineConfig({
       ),
       ["fly slugs", fly.map((entry) => entry.slug)],
     ] as const;
+    for (const [what, keys] of keyed) report(`Duplicate ${what}`, duplicates(keys));
 
-    // Report every collection before bailing, so one run lists all the work.
-    const keysOk = keyed
-      .map(([what, keys]) => reportDuplicates(what, keys))
-      .every(Boolean);
-    if (!keysOk) return false;
-
-    // In the dictionaries this slug was checked against AircraftSlug at compile
-    // time. YAML gives that up, so check it here: an unknown slug would render
-    // a nameless row linking to a route the param matcher rejects.
-    const unknownAircraft = fly
-      .map((entry) => entry.slug)
-      .filter((slug) => !aircraft.some((entry) => entry.slug === slug));
-
-    if (unknownAircraft.length > 0) {
-      console.error("Unknown aircraft found:", unknownAircraft.join(", "));
-      return false;
-    }
+    // The schema rejects a fly.yml slug missing from the registry; this is the
+    // other direction. An aircraft with no row still prerenders its page, but
+    // nothing links to it.
+    report(
+      "Aircraft missing from content/fly/fly.yml",
+      aircraft
+        .map((entry) => entry.slug)
+        .filter((slug) => !fly.some((entry) => entry.slug === slug)),
+    );
 
     // Unlike posts, a page renders at a fixed URL in every language, so a
     // missing translation is a broken route rather than one fewer list entry.
     const pageKeys = new Set(pages.map((page) => `${page.lang}/${page.slug}`));
-    const missingPages = [...new Set(pages.map((page) => page.slug))].flatMap(
-      (slug) =>
+    report(
+      "Missing page translations",
+      [...new Set(pages.map((page) => page.slug))].flatMap((slug) =>
         lang.options
           .filter((language) => !pageKeys.has(`${language}/${slug}`))
           .map((language) => `pages/${slug}/${language}.md`),
+      ),
     );
 
-    if (missingPages.length > 0) {
-      console.error("Missing page translations:", missingPages.join(", "));
-      return false;
-    }
-
-    for (const category of categories) {
-      category.count = {
-        en: 0,
-        zh: 0,
-      };
-      for (const post of posts) {
-        if (post.archived) continue;
-        if (post.categories.includes(category.slug)) {
-          category.count[post.lang] += 1;
-        }
-      }
-    }
+    if (problems.length > 0) throw new Error(problems.join("\n"));
   },
 });

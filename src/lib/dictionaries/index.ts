@@ -19,6 +19,12 @@ export function isLanguage(value: string): value is Language {
   return value in dictionaries;
 }
 
+/** The language a URL is in, falling back to the default outside /{lang}/. */
+export function languageOf(url: URL): Language {
+  const segment = url.pathname.split("/")[1] ?? "";
+  return isLanguage(segment) ? segment : defaultLanguage;
+}
+
 export function getDictionary(lang: string): Dictionary {
   return dictionaries[isLanguage(lang) ? lang : defaultLanguage];
 }

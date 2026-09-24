@@ -1,15 +1,14 @@
+import { SITE_URL } from "$lib/site-config";
 import type { RequestHandler } from "./$types";
 
 export const prerender = true;
-
-const BASE_URL = "https://luojiahai.com";
 
 export const GET: RequestHandler = () => {
   const content = `User-Agent: *
 Allow: /
 
-Host: ${BASE_URL}
-Sitemap: ${BASE_URL}/sitemap.xml
+Host: ${SITE_URL}
+Sitemap: ${SITE_URL}/sitemap.xml
 `;
 
   return new Response(content, {

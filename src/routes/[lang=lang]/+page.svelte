@@ -3,6 +3,7 @@
   import { getDictionary } from "$lib/dictionaries";
   import type { IconName } from "$lib/icons";
   import { generateWebSiteJsonLd } from "$lib/json-ld";
+  import { SITE_URL } from "$lib/site-config";
   import type { SocialCardKind } from "$lib/social";
   import Icon from "$lib/components/Icon.svelte";
   import PostList from "$lib/components/PostList.svelte";
@@ -48,7 +49,7 @@
     generateWebSiteJsonLd({
       name: dictionary.meta.websiteName,
       alternateName: "luojiahai",
-      url: `${dictionary.meta.baseUrl}${dictionary.urls.home}`,
+      url: `${SITE_URL}${dictionary.urls.home}`,
       description: dictionary.meta.motto,
     }),
   ]}

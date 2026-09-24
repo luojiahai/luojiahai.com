@@ -1,8 +1,7 @@
 <script lang="ts">
   import { getDictionary, languages, defaultLanguage } from "$lib/dictionaries";
   import type { Language } from "$lib/dictionaries";
-
-  const BASE_URL = "https://luojiahai.com";
+  import { SITE_URL } from "$lib/site-config";
 
   let {
     lang,
@@ -39,8 +38,8 @@
   } = $props();
 
   let dictionary = $derived(getDictionary(lang));
-  let url = $derived(`${BASE_URL}${path}`);
-  let image = $derived(`${BASE_URL}/og${path}.png`);
+  let url = $derived(`${SITE_URL}${path}`);
+  let image = $derived(`${SITE_URL}/og${path}.png`);
   let allKeywords = $derived(dictionary.meta.fillKeywords(keywords));
   let feedBase = $derived(lang === "zh" ? "/feed/zh" : "/feed");
 
@@ -48,7 +47,7 @@
     const entries = languages.map((other) => {
       const alternate =
         alternates?.[other] ?? path.replace(/^\/(en|zh)(?=\/|$)/, `/${other}`);
-      return [other, `${BASE_URL}${alternate}`] as const;
+      return [other, `${SITE_URL}${alternate}`] as const;
     });
     const defaultEntry = entries.find(([other]) => other === defaultLanguage);
     return defaultEntry

@@ -1,114 +1,42 @@
 import {
   categories as allCategories,
-  fly as allFly,
-  pages as allPages,
+  fly,
+  pages,
   posts as allPosts,
-  projects as allProjects,
-  use as allUseGroups,
+  projects,
+  use as useGroups,
+  type Post,
 } from "#velite";
-import type { Language } from "$lib/dictionaries";
-import type { AircraftSlug } from "../params/aircraft";
+import { languages, type Language } from "$lib/dictionaries";
 
-type Localized = Record<Language, string>;
-
-export interface Post {
-  title: string;
-  slug: string;
-  lang: Language;
-  date: string;
-  updated?: string;
-  cover?: { src: string; width: number; height: number };
-  video?: string;
-  description?: string;
-  keywords?: string[];
-  draft: boolean;
-  archived: boolean;
-  featured: boolean;
-  categories: string[];
-  wechatLink?: string;
-  excerpt: string;
-  content: string;
-  permalink: string;
-}
-
-/** A standalone page's prose, rendered by a hand-written route. */
-export interface Page {
-  slug: string;
-  lang: Language;
-  title: string;
-  description?: string;
-  content: string;
-}
-
-export interface Category {
-  slug: string;
-  name: Localized;
-  description?: Localized;
-  count: Record<Language, number>;
-  permalink: Localized;
-}
-
-/** A thing I build. Only the blurb varies by language. */
-export interface Project {
-  slug: string;
-  name: string;
-  description: Localized;
-  image?: string;
-  link: string;
-}
-
-/** A project with its blurb resolved, which is all a list row needs. */
-export type ProjectItem = Omit<Project, "description"> & {
-  description: string;
-};
-
-/** One labelled row of the gear list. `value` is a product name, never translated. */
-export interface UseItem {
-  label: Localized;
-  value: string;
-}
-
-export interface UseGroup {
-  slug: string;
-  label: Localized;
-  items: UseItem[];
-}
-
-export type ResolvedUseGroup = {
-  slug: string;
-  label: string;
-  items: { label: string; value: string }[];
-};
-
-/**
- * A flight companion. The name and URL come from the aircraft registry, which
- * `slug` is validated against in Velite's prepare step.
- */
-export interface FlyEntry {
-  slug: AircraftSlug;
-  description: Localized;
-}
-
-export type FlyItem = Omit<FlyEntry, "description"> & { description: string };
+export type { Post } from "#velite";
 
 /**
  * All published posts, newest first. Drafts are only visible in dev; archived
  * posts stay in the repo but never render.
  */
-export const posts: Post[] = (allPosts as unknown as Post[])
+export const posts: Post[] = allPosts
   .filter((post) => !post.archived)
   .filter((post) => import.meta.env.DEV || !post.draft)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-export const pages: Page[] = allPages as unknown as Page[];
+/**
+ * Every category, with its post count per language. The count is derived from
+ * `posts` so it agrees with the lists it summarizes.
+ */
+export const categories = allCategories.map((category) => ({
+  ...category,
+  count: Object.fromEntries(
+    languages.map((lang) => [
+      lang,
+      posts.filter(
+        (post) => post.lang === lang && post.categories.includes(category.slug),
+      ).length,
+    ]),
+  ) as Record<Language, number>,
+}));
 
-export const categories: Category[] = allCategories as unknown as Category[];
-
-const projects: Project[] = allProjects as unknown as Project[];
-
-const useGroups: UseGroup[] = allUseGroups as unknown as UseGroup[];
-
-const fly: FlyEntry[] = allFly as unknown as FlyEntry[];
+export type Category = (typeof categories)[number];
 
 /** The lightweight shape sent to list pages (no rendered content). */
 export type PostListItem = Pick<
@@ -134,17 +62,6 @@ export function toListItem(post: Post): PostListItem {
   };
 }
 
-/** The one category projection every page shares. */
-export function toCategoryItem(category: Category): Category {
-  return {
-    slug: category.slug,
-    name: category.name,
-    description: category.description,
-    count: category.count,
-    permalink: category.permalink,
-  };
-}
-
 export function postsOf(lang: Language, category?: string): Post[] {
   return posts.filter(
     (post) =>
@@ -166,15 +83,17 @@ export function postTranslations(post: Post): Post[] {
  * Every project, in authored order, with the blurb resolved for `lang`. The
  * `{ en, zh }` shape stops here so routes and components never see it.
  */
-export function projectsOf(lang: Language): ProjectItem[] {
+export function projectsOf(lang: Language) {
   return projects.map((project) => ({
     ...project,
     description: project.description[lang],
   }));
 }
 
+export type ProjectItem = ReturnType<typeof projectsOf>[number];
+
 /** The gear list, in authored order, with every label resolved for `lang`. */
-export function useGroupsOf(lang: Language): ResolvedUseGroup[] {
+export function useGroupsOf(lang: Language) {
   return useGroups.map((group) => ({
     slug: group.slug,
     label: group.label[lang],
@@ -185,15 +104,20 @@ export function useGroupsOf(lang: Language): ResolvedUseGroup[] {
   }));
 }
 
-/** The flight companions, in authored order, with the blurb resolved. */
-export function flyOf(lang: Language): FlyItem[] {
+/**
+ * The flight companions, in authored order, with the blurb resolved. The name
+ * and URL come from the aircraft registry, keyed by `slug`.
+ */
+export function flyOf(lang: Language) {
   return fly.map((entry) => ({
     ...entry,
     description: entry.description[lang],
   }));
 }
 
-export function findPage(lang: Language, slug: string): Page | undefined {
+export type FlyItem = ReturnType<typeof flyOf>[number];
+
+export function findPage(lang: Language, slug: string) {
   return pages.find((page) => page.lang === lang && page.slug === slug);
 }
 

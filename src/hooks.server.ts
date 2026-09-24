@@ -24,6 +24,7 @@ function preferredLanguage(acceptLanguage: string | null): string {
         .find((param) => param.startsWith("q="));
       return { tag: tag.toLowerCase(), q: quality ? Number(quality.slice(2)) : 1 };
     })
+    .filter(({ q }) => q > 0)
     .sort((a, b) => b.q - a.q);
 
   for (const { tag } of ranked) {

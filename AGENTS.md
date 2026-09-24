@@ -38,16 +38,24 @@
   field; and `social`, which is hover-card chrome, meaningless outside
   `SocialHoverCard.svelte`. Anything with a reader as its audience — prose,
   a list, a blurb — goes in `content/`.
-- `src/lib/site-config.ts`: the deck mascots (`none`, `plane`, `snail`) and
+- `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
+  (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
+  deck mascots (`none`, `plane`, `snail`) and
   the `mascot` flag picking which one rides the printer's top edge — an
   in-code setting, not a visitor preference. A mascot exists in three places
   that must agree: this list, its styles in `app.css`, and the
   `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
   script only mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
-  categories, projects, use, fly). Collections with inline-localized fields
-  expose a `…Of(lang)` accessor that resolves `{ en, zh }` down to plain
-  strings; the raw localized arrays are module-private, so routes and
+  categories, projects, use, fly). The types are Velite's own, generated from
+  the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
+  change reaches every consumer with no interface to copy by hand. That only
+  holds while the `#velite` alias names the `.velite` directory; pointed at
+  `index.js`, TypeScript infers from the JSON and loses the literal types.
+  Category post counts are derived here from the published posts, so drafts
+  and archived posts never inflate them. Collections with inline-localized
+  fields expose a `…Of(lang)` accessor that resolves `{ en, zh }` down to
+  plain strings; the raw localized arrays are module-private, so routes and
   components never see that shape.
 - `content/`: source content. Posts in `content/posts/YYYY-MM-DD title/`;
   each post directory holds one `<lang>.md` per translation (`en.md`,
@@ -74,9 +82,11 @@
   regenerated files. `assets/logo.svg` is the original bare-glyph logo,
   kept for reference and not served.
 - Root config: `svelte.config.js`, `vite.config.ts`, `velite.config.ts`,
-  `wrangler.jsonc`, `tsconfig.json`, `pnpm-workspace.yaml` (build allowlist
-  plus `minimumReleaseAgeExclude` — a just-published dependency stays blocked
-  until it is listed there).
+  `wrangler.jsonc`, `tsconfig.json`, `pnpm-workspace.yaml` (the build
+  allowlist). pnpm blocks a just-published dependency until it clears the
+  release-age window; to take one early, list it under
+  `minimumReleaseAgeExclude`, and delete the entry once it has aged out.
+  `pnpm install` reports whether the lockfile passes the policy without it.
 
 ## Build, Test, and Development Commands
 - `pnpm install`: Install dependencies (pnpm only; no npm/yarn lockfiles).
@@ -129,6 +139,10 @@ as an in-repo backstop.
 - Page frontmatter (`velite.config.ts`): required `slug`, `lang`, `title`
   (≤99 chars); optional `description` (≤999). A page missing a translation
   aborts the build in the Velite `prepare` step.
+- Every cap and required field below is enforced: Velite runs with
+  `strict: true`, so a schema violation fails `pnpm build` (and CI) instead
+  of being logged and shipped. `prepare` gathers every cross-collection
+  problem it finds and throws them as one error.
 - Project entries (`content/projects/projects.yml`): required `slug`, `name`,
   `description` (`{ en, zh }`, ≤100 chars each), `link`; optional `image`, a
   path into `static/static/` that nothing validates. The blurb renders
@@ -138,9 +152,11 @@ as an in-repo backstop.
   `value` (≤60). `value` is a product name, so it is plain, not localized;
   listing something with a language-specific name means widening the schema.
 - Fly entries (`content/fly/fly.yml`): `slug` and `description`
-  (`{ en, zh }`, ≤100). The name and URL come from `src/params/aircraft.ts`,
-  and `prepare` rejects a slug that isn't in that registry — otherwise the
-  row renders nameless and links to a route the param matcher refuses.
+  (`{ en, zh }`, ≤100). The name and URL come from `src/params/aircraft.ts`.
+  The schema rejects a slug that isn't in that registry (the row would render
+  nameless and link to a route the param matcher refuses), and `prepare`
+  rejects a registered aircraft with no row (its page would prerender with
+  nothing linking to it).
 - Every `categories` entry must exist in `content/categories/posts.yml`, or
   the Velite `prepare` step aborts the build. Category `name` is capped at
   20 chars, `description` at 100.
@@ -152,8 +168,8 @@ as an in-repo backstop.
   with a keyed `{#each}` means adding a row to the `keyed` array.
 - `draft: true` posts render under `pnpm dev` only; they are dropped from the
   production build (`src/lib/content.ts`). `archived: true` posts stay in
-  the repo but never render, in dev or production, and are left out of the
-  category counts; the source and its images are kept, nothing else.
+  the repo but never render, in dev or production; the source and its
+  images are kept, nothing else.
 
 ## Coding Style & Naming Conventions
 - Language: TypeScript (strict). Framework: SvelteKit 2 + Svelte 5 (runes).

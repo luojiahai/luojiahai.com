@@ -1,4 +1,4 @@
-const BASE_URL = "https://luojiahai.com";
+import { SITE_URL } from "$lib/site-config";
 
 interface FeedItem {
   title: string;
@@ -28,7 +28,7 @@ function escapeXml(str: string): string {
 
 export function generateRssFeed(options: FeedOptions): string {
   const { title, description, link, language = "en", items } = options;
-  const feedUrl = `${BASE_URL}${link}`;
+  const feedUrl = `${SITE_URL}${link}`;
   const pubDate =
     items.length > 0
       ? new Date(items[0].date).toUTCString()
@@ -36,7 +36,7 @@ export function generateRssFeed(options: FeedOptions): string {
 
   const itemsXml = items
     .map((item) => {
-      const itemUrl = `${BASE_URL}${item.link}`;
+      const itemUrl = `${SITE_URL}${item.link}`;
       const categories = (item.categories ?? [])
         .map((cat) => `      <category>${escapeXml(cat)}</category>`)
         .join("\n");
@@ -54,7 +54,7 @@ export function generateRssFeed(options: FeedOptions): string {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(title)}</title>
-    <link>${BASE_URL}</link>
+    <link>${SITE_URL}</link>
     <description>${escapeXml(description)}</description>
     <language>${language}</language>
     <lastBuildDate>${pubDate}</lastBuildDate>

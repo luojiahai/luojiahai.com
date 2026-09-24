@@ -1,4 +1,5 @@
 import type { IconName } from "$lib/icons";
+import { SITE_URL } from "$lib/site-config";
 
 interface Contact {
   label: string;
@@ -42,7 +43,6 @@ const contacts: Contact[] = [
 
 const dictionary = {
   meta: {
-    baseUrl: "https://luojiahai.com",
     name: "Luo, Jiahai",
     websiteName: "luojiahai",
     motto: "Hello, World!",
@@ -72,7 +72,7 @@ const dictionary = {
     shareToX(title: string, postLink: string) {
       return `https://twitter.com/share?text=${encodeURIComponent(
         `I am reading ${title.toLocaleUpperCase()} @luojiahai`,
-      )}&url=${encodeURIComponent(`https://luojiahai.com${postLink}`)}`;
+      )}&url=${encodeURIComponent(`${SITE_URL}${postLink}`)}`;
     },
   },
   labels: {

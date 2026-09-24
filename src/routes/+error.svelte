@@ -1,11 +1,8 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getDictionary, isLanguage, defaultLanguage } from "$lib/dictionaries";
+  import { getDictionary, languageOf } from "$lib/dictionaries";
 
-  let lang = $derived.by(() => {
-    const param = page.params.lang ?? page.url.pathname.split("/")[1];
-    return param && isLanguage(param) ? param : defaultLanguage;
-  });
+  let lang = $derived(languageOf(page.url));
   let dictionary = $derived(getDictionary(lang));
 </script>
 

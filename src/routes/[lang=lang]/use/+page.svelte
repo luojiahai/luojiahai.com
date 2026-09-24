@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { getDictionary, type Language } from "$lib/dictionaries";
+  import { getDictionary } from "$lib/dictionaries";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
@@ -8,7 +7,7 @@
 
   let { data } = $props();
 
-  let lang = $derived(page.params.lang as Language);
+  let lang = $derived(data.lang);
   let dictionary = $derived(getDictionary(lang));
 </script>
 
