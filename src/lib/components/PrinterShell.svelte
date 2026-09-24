@@ -3,8 +3,9 @@
   import { page } from "$app/state";
   import { onMount } from "svelte";
   import type { Component, Snippet } from "svelte";
-  import type { Dictionary, Language } from "$lib/dictionaries";
+  import { getDictionary, type Dictionary, type Language } from "$lib/dictionaries";
   import { mascot, type Mascot } from "$lib/site-config";
+  import type { SocialCardKind } from "$lib/social";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
@@ -55,7 +56,16 @@
     return pathname.startsWith(href);
   }
 
-  function onNavPress(href: string) {
+  function onNavPress(event: MouseEvent, href: string) {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
     pendingNavHref = isActive(href) ? null : href;
   }
 
@@ -100,24 +110,16 @@
       localStorage.setItem("color-mode", mode);
     } catch {}
     document.documentElement.dataset.colorMode = mode;
-    const dark =
-      mode === "dark" ||
-      (mode === "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    applyDark(dark);
+    applyDark(isDark);
   }
 
   // ------------------------------------------------------------------
   // Language switch — let the dial animate before navigating.
   // ------------------------------------------------------------------
   const LANGUAGE_DIAL_ANIMATION_MS = 220;
-  // svelte-ignore state_referenced_locally -- initial value; kept in sync by the effect below
-  let displayLang = $state<string>(lang);
+  let displayLang = $derived<string>(lang);
   let langSwitchTimer: ReturnType<typeof setTimeout> | undefined;
-
-  $effect(() => {
-    displayLang = lang;
-  });
+  let displayDictionary = $derived(getDictionary(displayLang));
 
   function switchToLanguage(newLang: string) {
     if (newLang === displayLang) return;
@@ -158,7 +160,13 @@
 
   afterNavigate((navigation) => {
     pendingNavHref = null;
-    if (navigation.type === "enter" || !paperElement) return;
+    if (
+      navigation.type === "enter" ||
+      !paperElement ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
 
     paperElement.animate(generatePaperFeedKeyframes(), {
       duration: 350 + Math.random() * 200, // 350-550ms, snappy
@@ -175,16 +183,26 @@
   });
 
   const currentYear = new Date().getFullYear();
+
+  const footerLinks: {
+    kind: SocialCardKind;
+    label: string;
+    align?: "right";
+  }[] = [
+    { kind: "x", label: "X" },
+    { kind: "github", label: "GitHub" },
+    { kind: "email", label: "Email", align: "right" },
+  ];
 </script>
 
 <a class="skip-link" href="#main-content">
-  {lang === "zh" ? "跳到主要内容" : "Skip to main content"}
+  {dictionary.labels.skipToContent}
 </a>
 
 <!-- Desktop-only pull-cord light switch (bulb top-left, cord top-right) -->
 <LightSwitch
   {isDark}
-  lang={displayLang}
+  dictionary={displayDictionary}
   ontoggle={(dark) => setColorMode(dark ? "dark" : "light")}
 />
 
@@ -253,7 +271,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="h-2.5 w-2.5 animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(217,119,87,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
+                  class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_rgba(217,119,87,0.5),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div
@@ -275,13 +293,13 @@
         >
           <nav
             class="relative flex w-full flex-1 flex-wrap items-center gap-2 py-1.5 sm:gap-2.5"
-            aria-label={lang === "zh" ? "主导航" : "Primary navigation"}
+            aria-label={dictionary.labels.primaryNavigation}
           >
             {#each navItems as item (item.href)}
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                onclick={() => onNavPress(item.href)}
+                onclick={(event) => onNavPress(event, item.href)}
                 class={[
                   "printer-btn whitespace-nowrap",
                   (pendingNavHref
@@ -302,7 +320,7 @@
               ]}
               value={displayLang}
               onchange={switchToLanguage}
-              title={displayLang === "en" ? "切换到中文" : "Switch to English"}
+              title={displayDictionary.labels.switchLanguage}
             />
             <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
             <div class="lg:hidden">
@@ -315,11 +333,9 @@
                 value={colorMode}
                 onchange={(mode) => setColorMode(mode as ColorMode)}
                 labelLayout="inline"
-                title={colorMode === "system"
-                  ? "System"
-                  : colorMode === "light"
-                    ? "Light"
-                    : "Dark"}
+                title={dictionary.labels.colorMode(
+                  dictionary.labels.colorModes[colorMode],
+                )}
               />
             </div>
           </div>
@@ -363,12 +379,12 @@
           class="printer-paper-area thermal-texture relative z-0 flex min-h-[62vh] flex-col overflow-hidden bg-printer-paper shadow-[0_18px_36px_rgba(75,57,43,0.14),0_3px_8px_rgba(75,57,43,0.12)] dark:border dark:border-white/[0.04] dark:bg-printer-paper-dark dark:shadow-[0_20px_42px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.34)]"
         >
           <div
-            class="absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
+            class="paper-edge-top absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
           ></div>
 
           <!-- Perforation marks -->
           <div
-            class="absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
+            class="paper-perforation absolute left-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
           >
             {#each Array.from({ length: 60 }), i (i)}
               <div
@@ -377,7 +393,7 @@
             {/each}
           </div>
           <div
-            class="absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
+            class="paper-perforation absolute right-0 top-0 bottom-0 w-4 flex flex-col items-center justify-start gap-6 pt-4 opacity-20 pointer-events-none"
           >
             {#each Array.from({ length: 60 }), i (i)}
               <div
@@ -408,34 +424,23 @@
               <div
                 class="font-mono text-[10px] tracking-widest uppercase flex items-center gap-4 order-1 sm:order-2"
               >
-                <SocialHoverCard
-                  kind="x"
-                  href="https://x.com/luojiahai"
-                  {lang}
-                  {dictionary}
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  X
-                </SocialHoverCard>
-                <SocialHoverCard
-                  kind="github"
-                  href="https://github.com/luojiahai"
-                  {lang}
-                  {dictionary}
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  GitHub
-                </SocialHoverCard>
-                <SocialHoverCard
-                  kind="email"
-                  href="mailto:hi@luojiahai.com"
-                  {lang}
-                  {dictionary}
-                  align="right"
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  Email
-                </SocialHoverCard>
+                {#each footerLinks as { kind, label, align } (kind)}
+                  {@const contact = dictionary.contacts.find(
+                    (contact) => contact.kind === kind,
+                  )}
+                  {#if contact}
+                    <SocialHoverCard
+                      {kind}
+                      href={contact.link}
+                      {lang}
+                      {dictionary}
+                      {align}
+                      class="hover:text-printer-accent transition-colors"
+                    >
+                      {label}
+                    </SocialHoverCard>
+                  {/if}
+                {/each}
               </div>
             </div>
           </footer>

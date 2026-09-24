@@ -1,43 +1,37 @@
-import type { IconName } from "$lib/icons";
 import { SITE_URL } from "$lib/site-config";
+import type { SocialCardKind } from "$lib/social";
 
 interface Contact {
   label: string;
-  name: string;
   link: string;
-  icon: IconName;
+  kind: SocialCardKind;
 }
 
 const contacts: Contact[] = [
   {
     label: "X (Twitter)",
-    name: "@luojiahai",
     link: "https://x.com/luojiahai",
-    icon: "x",
+    kind: "x",
   },
   {
     label: "GitHub",
-    name: "@luojiahai",
     link: "https://github.com/luojiahai",
-    icon: "github",
+    kind: "github",
   },
   {
     label: "Email",
-    name: "hi@luojiahai.com",
     link: "mailto:hi@luojiahai.com",
-    icon: "mail",
+    kind: "email",
   },
   {
     label: "Telegram",
-    name: "@luojiahai",
     link: "https://t.me/luojiahai",
-    icon: "send",
+    kind: "telegram",
   },
   {
     label: "Instagram",
-    name: "@luojiahai",
     link: "https://instagram.com/luojiahai",
-    icon: "instagram",
+    kind: "instagram",
   },
 ];
 
@@ -46,7 +40,6 @@ const dictionary = {
     name: "Luo, Jiahai",
     websiteName: "luojiahai",
     motto: "Hello, World!",
-    mottos: ["Hello, World!"],
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
@@ -100,11 +93,20 @@ const dictionary = {
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
     printedOn: "Printed on",
     wechatScanHint: "Scan to read on WeChat",
+    shareToX: "Share to X",
+    aboutSignOff: "That's about it~",
+    skipToContent: "Skip to main content",
+    primaryNavigation: "Primary navigation",
+    // Offered to a reader of the other language, so it is written in theirs.
+    switchLanguage: "切换到中文",
+    colorModes: { system: "System", light: "Light", dark: "Dark" },
+    colorMode(mode: string) {
+      return `Color mode: ${mode}`;
+    },
+    lightSwitchOn: "Pull the cord to turn the light on",
+    lightSwitchOff: "Pull the cord to turn the light off",
     entries(count: number) {
       return `${count} ${count === 1 ? "entry" : "entries"}`;
-    },
-    icon(label: string) {
-      return `Icon for ${label}`;
     },
   },
   contacts,

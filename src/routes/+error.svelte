@@ -49,7 +49,7 @@
   <!-- Error status strip -->
   <div class="flex items-center gap-2 mb-8 relative z-10">
     <div
-      class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark animate-pulse"
+      class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark motion-safe:animate-pulse"
     ></div>
     <span
       class="font-mono text-[10px] tracking-[0.3em] uppercase text-printer-accent dark:text-printer-accent-dark"
@@ -57,7 +57,7 @@
       {dictionary.labels.notFoundStatus}
     </span>
     <div
-      class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark animate-pulse"
+      class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark motion-safe:animate-pulse"
     ></div>
   </div>
 
@@ -142,7 +142,7 @@
         d="M100 25 L100 48"
         stroke="currentColor"
         stroke-width="1.5"
-        class="text-printer-ink/30 dark:text-printer-ink-dark/30 animate-bounce"
+        class="text-printer-ink/30 dark:text-printer-ink-dark/30 motion-safe:animate-bounce"
         style:animation-duration="2s"
       />
       <path
@@ -150,7 +150,7 @@
         stroke="currentColor"
         stroke-width="1.5"
         stroke-linejoin="round"
-        class="text-printer-ink/30 dark:text-printer-ink-dark/30 animate-bounce"
+        class="text-printer-ink/30 dark:text-printer-ink-dark/30 motion-safe:animate-bounce"
         style:animation-duration="2s"
       />
       <!-- Small page icon (ghost of missing paper) -->

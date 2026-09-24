@@ -1,3 +1,4 @@
+import type { IconName } from "./icons";
 import fallback from "./social-fallback.json";
 
 /**
@@ -57,6 +58,15 @@ export interface SocialStats {
 
 /** Card variants supported by SocialHoverCard. */
 export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
+
+/** The icon each card kind is drawn with, on its link and in the card. */
+export const socialCardIcons: Record<SocialCardKind, IconName> = {
+  github: "github",
+  x: "x",
+  telegram: "send",
+  instagram: "instagram",
+  email: "mail",
+};
 
 export const socialFallback: SocialStats = fallback;
 

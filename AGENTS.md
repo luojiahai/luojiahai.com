@@ -34,12 +34,13 @@
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
   `zh.ts` must match). Keep keys in sync. **Page content belongs in
   `content/`; the dictionaries hold UI strings and typed config only.** Two
-  deliberate exceptions stay put: `contacts`, because `icon` binds to
-  `IconName` and the home page maps those same names to `SocialCardKind`, so
-  moving it to YAML would sever two type-checked links to translate one
-  field; and `social`, which is hover-card chrome, meaningless outside
-  `SocialHoverCard.svelte`. Anything with a reader as its audience — prose,
-  a list, a blurb — goes in `content/`.
+  deliberate exceptions stay put: `contacts`, because `kind` binds to
+  `SocialCardKind`, which picks both the hover card and its icon
+  (`socialCardIcons` in `src/lib/social.ts`), so moving it to YAML would
+  sever that type-checked link to translate one field; and `social`, which
+  is hover-card chrome, meaningless outside `SocialHoverCard.svelte`.
+  Anything with a reader as its audience — prose, a list, a blurb — goes in
+  `content/`.
 - `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
   (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
   deck mascots (`none`, `plane`, `snail`) and

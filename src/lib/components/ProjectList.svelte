@@ -1,17 +1,8 @@
 <script lang="ts">
   import type { ProjectItem } from "$lib/content";
-  import { getDictionary, type Language } from "$lib/dictionaries";
   import PrintedEmpty from "./PrintedEmpty.svelte";
 
-  let {
-    projects,
-    lang,
-  }: {
-    projects: ProjectItem[];
-    lang: Language;
-  } = $props();
-
-  let dictionary = $derived(getDictionary(lang));
+  let { projects }: { projects: ProjectItem[] } = $props();
 </script>
 
 <div class="flex flex-col">
@@ -26,7 +17,7 @@
         <img
           class="h-10 w-10 shrink-0 border border-printer-ink/10 dark:border-printer-ink-dark/10"
           src={project.image}
-          alt={dictionary.labels.icon(project.name)}
+          alt=""
           width="40"
           height="40"
           loading="lazy"

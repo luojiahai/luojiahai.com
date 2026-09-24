@@ -3,7 +3,7 @@
   import type { Snippet } from "svelte";
   import { fly } from "svelte/transition";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import type { SocialCardKind } from "$lib/social";
+  import { socialCardIcons, type SocialCardKind } from "$lib/social";
   import { ensureSocialStats, social } from "$lib/social-state.svelte";
   import Icon from "./Icon.svelte";
 
@@ -87,13 +87,13 @@
 
   const postmark = new Date().toISOString().split("T")[0];
 
-  const kindMeta = {
-    github: { icon: "github", label: "GITHUB" },
-    x: { icon: "x", label: "X" },
-    telegram: { icon: "send", label: "TELEGRAM" },
-    instagram: { icon: "instagram", label: "INSTAGRAM" },
-    email: { icon: "mail", label: "MAIL" },
-  } as const;
+  const kindLabels: Record<SocialCardKind, string> = {
+    github: "GITHUB",
+    x: "X",
+    telegram: "TELEGRAM",
+    instagram: "INSTAGRAM",
+    email: "MAIL",
+  };
 
   const alignClasses = {
     center: "left-1/2 -translate-x-1/2",
@@ -101,6 +101,21 @@
     right: "right-0",
   };
 </script>
+
+{#snippet statCell(label: string, value: number)}
+  <div>
+    <div
+      class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
+    >
+      {formatCount(value)}
+    </div>
+    <div
+      class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
+    >
+      {label}
+    </div>
+  </div>
+{/snippet}
 
 <!-- Mouse handlers only track hover intent; keyboard access goes through
   the anchor's focus/blur, so the wrapper stays presentational. -->
@@ -147,8 +162,8 @@
           <span
             class="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
           >
-            <Icon name={kindMeta[kind].icon} class="w-3 h-3 shrink-0" />
-            {kindMeta[kind].label}
+            <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
+            {kindLabels[kind]}
           </span>
           <span
             class="font-mono text-[10px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
@@ -172,24 +187,12 @@
           </div>
 
           <div class="grid grid-cols-3 gap-2 mb-2.5">
-            {#each [
-              [dictionary.social.followers, stats.github.followers],
-              [dictionary.social.repos, stats.github.publicRepos],
-              [dictionary.social.contributions, stats.github.totalContributions],
-            ] as [label, value] (label)}
-              <div>
-                <div
-                  class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
-                >
-                  {formatCount(value as number)}
-                </div>
-                <div
-                  class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
-                >
-                  {label}
-                </div>
-              </div>
-            {/each}
+            {@render statCell(dictionary.social.followers, stats.github.followers)}
+            {@render statCell(dictionary.social.repos, stats.github.publicRepos)}
+            {@render statCell(
+              dictionary.social.contributions,
+              stats.github.totalContributions,
+            )}
           </div>
 
           <!-- Dot-matrix contribution heatmap -->
@@ -211,18 +214,6 @@
           </div>
         {:else if kind === "x" || kind === "instagram"}
           {@const profile = stats[kind]}
-          {@const cells =
-            kind === "x"
-              ? [
-                  [dictionary.social.followers, stats.x.followers],
-                  [dictionary.social.following, stats.x.following],
-                  [dictionary.social.posts, stats.x.posts],
-                ]
-              : [
-                  [dictionary.social.followers, stats.instagram.followers],
-                  [dictionary.social.following, stats.instagram.following],
-                  [dictionary.social.posts, stats.instagram.posts],
-                ]}
           <div class="flex items-baseline gap-1.5">
             <span
               class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
@@ -248,20 +239,9 @@
           <div
             class="grid grid-cols-3 gap-2 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
-            {#each cells as [label, value] (label)}
-              <div>
-                <div
-                  class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
-                >
-                  {formatCount(value as number)}
-                </div>
-                <div
-                  class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
-                >
-                  {label}
-                </div>
-              </div>
-            {/each}
+            {@render statCell(dictionary.social.followers, profile.followers)}
+            {@render statCell(dictionary.social.following, profile.following)}
+            {@render statCell(dictionary.social.posts, profile.posts)}
           </div>
         {:else if kind === "telegram"}
           <div class="flex items-baseline gap-1.5">
