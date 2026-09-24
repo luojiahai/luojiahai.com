@@ -5,6 +5,7 @@
   import type { Component, Snippet } from "svelte";
   import { getDictionary, type Dictionary, type Language } from "$lib/dictionaries";
   import { mascot, type Mascot } from "$lib/site-config";
+  import type { SocialCardKind } from "$lib/social";
   import PrinterPlane from "./PrinterPlane.svelte";
   import PrinterSnail from "./PrinterSnail.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
@@ -191,6 +192,16 @@
   });
 
   const currentYear = new Date().getFullYear();
+
+  const footerLinks: {
+    kind: SocialCardKind;
+    label: string;
+    align?: "right";
+  }[] = [
+    { kind: "x", label: "X" },
+    { kind: "github", label: "GitHub" },
+    { kind: "email", label: "Email", align: "right" },
+  ];
 </script>
 
 <a class="skip-link" href="#main-content">
@@ -422,34 +433,23 @@
               <div
                 class="font-mono text-[10px] tracking-widest uppercase flex items-center gap-4 order-1 sm:order-2"
               >
-                <SocialHoverCard
-                  kind="x"
-                  href="https://x.com/luojiahai"
-                  {lang}
-                  {dictionary}
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  X
-                </SocialHoverCard>
-                <SocialHoverCard
-                  kind="github"
-                  href="https://github.com/luojiahai"
-                  {lang}
-                  {dictionary}
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  GitHub
-                </SocialHoverCard>
-                <SocialHoverCard
-                  kind="email"
-                  href="mailto:hi@luojiahai.com"
-                  {lang}
-                  {dictionary}
-                  align="right"
-                  class="hover:text-printer-accent transition-colors"
-                >
-                  Email
-                </SocialHoverCard>
+                {#each footerLinks as { kind, label, align } (kind)}
+                  {@const contact = dictionary.contacts.find(
+                    (contact) => contact.kind === kind,
+                  )}
+                  {#if contact}
+                    <SocialHoverCard
+                      {kind}
+                      href={contact.link}
+                      {lang}
+                      {dictionary}
+                      {align}
+                      class="hover:text-printer-accent transition-colors"
+                    >
+                      {label}
+                    </SocialHoverCard>
+                  {/if}
+                {/each}
               </div>
             </div>
           </footer>

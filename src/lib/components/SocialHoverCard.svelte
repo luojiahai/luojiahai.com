@@ -3,7 +3,7 @@
   import type { Snippet } from "svelte";
   import { fly } from "svelte/transition";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import type { SocialCardKind } from "$lib/social";
+  import { socialCardIcons, type SocialCardKind } from "$lib/social";
   import { ensureSocialStats, social } from "$lib/social-state.svelte";
   import Icon from "./Icon.svelte";
 
@@ -87,13 +87,13 @@
 
   const postmark = new Date().toISOString().split("T")[0];
 
-  const kindMeta = {
-    github: { icon: "github", label: "GITHUB" },
-    x: { icon: "x", label: "X" },
-    telegram: { icon: "send", label: "TELEGRAM" },
-    instagram: { icon: "instagram", label: "INSTAGRAM" },
-    email: { icon: "mail", label: "MAIL" },
-  } as const;
+  const kindLabels: Record<SocialCardKind, string> = {
+    github: "GITHUB",
+    x: "X",
+    telegram: "TELEGRAM",
+    instagram: "INSTAGRAM",
+    email: "MAIL",
+  };
 
   const alignClasses = {
     center: "left-1/2 -translate-x-1/2",
@@ -147,8 +147,8 @@
           <span
             class="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
           >
-            <Icon name={kindMeta[kind].icon} class="w-3 h-3 shrink-0" />
-            {kindMeta[kind].label}
+            <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
+            {kindLabels[kind]}
           </span>
           <span
             class="font-mono text-[10px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
