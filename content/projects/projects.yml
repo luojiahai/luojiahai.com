@@ -1,4 +1,12 @@
 # Array order is display order; the home page shows the first three.
+- slug: wanli
+  name: Wanli
+  description:
+    en: "A trip planner for iPhone: plan your days and see the route they make on the map."
+    zh: iPhone 行程规划 App：按天安排行程，整条路线在地图上一目了然。
+  image: /static/wanli.svg
+  link: https://wanli.liyu.dev
+
 - slug: aileron
   name: Aileron
   description:
