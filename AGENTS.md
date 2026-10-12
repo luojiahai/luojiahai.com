@@ -148,7 +148,8 @@ as an in-repo backstop.
   `strict: true`, so a schema violation fails `pnpm build` (and CI) instead
   of being logged and shipped. `prepare` gathers every cross-collection
   problem it finds and throws them as one error.
-- Project entries (`content/projects/projects.yml`): required `slug`, `name`,
+- Project entries (`content/projects/projects.yml`): required `slug`, `name`
+  (plain, or `{ en, zh }` for a product named per language),
   `description` (`{ en, zh }`, ≤100 chars each), `link`; optional `image`, a
   path into `static/static/` that nothing validates. The blurb renders
   `line-clamp-1`, so keep it well under the cap.

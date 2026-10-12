@@ -80,12 +80,14 @@ export function postTranslations(post: Post): Post[] {
 }
 
 /**
- * Every project, in authored order, with the blurb resolved for `lang`. The
- * `{ en, zh }` shape stops here so routes and components never see it.
+ * Every project, in authored order, with the name and blurb resolved for
+ * `lang`. The `{ en, zh }` shape stops here so routes and components never see
+ * it.
  */
 export function projectsOf(lang: Language) {
   return projects.map((project) => ({
     ...project,
+    name: typeof project.name === "string" ? project.name : project.name[lang],
     description: project.description[lang],
   }));
 }

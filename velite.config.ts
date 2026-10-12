@@ -124,16 +124,17 @@ const pages = defineCollection({
 });
 
 /**
- * The things I build, listed on /{lang}/projects and the home page. Names,
- * links and image paths are the same in every language, so only the blurb is
- * localized. Array order is display order.
+ * The things I build, listed on /{lang}/projects and the home page. Links and
+ * image paths are the same in every language; the blurb is localized, and so
+ * is a name only when the product has one per language. Array order is
+ * display order.
  */
 const projects = defineCollection({
   name: "Project",
   pattern: "projects/*.yml",
   schema: s.object({
     slug: s.string(),
-    name: s.string(),
+    name: s.union([s.string(), s.object({ en: s.string(), zh: s.string() })]),
     description: localized(100),
     image: s.string().optional(),
     link: s.string(),
