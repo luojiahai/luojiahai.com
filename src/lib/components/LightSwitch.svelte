@@ -121,10 +121,10 @@
     <svg width="100" height="190" viewBox="0 0 100 190" fill="none" class="bulb-svg relative block">
       <defs>
         <radialGradient id="light-switch-diffuser" cx="0.5" cy="0.42" r="0.75">
-          <stop offset="0" stop-color="#faf9f5" />
-          <stop offset="0.5" stop-color="#f0eee6" />
-          <stop offset="0.85" stop-color="#e3dacc" />
-          <stop offset="1" stop-color="#d97757" />
+          <stop offset="0" style="stop-color: var(--lamp-diffuser-0)" />
+          <stop offset="0.5" style="stop-color: var(--lamp-diffuser-1)" />
+          <stop offset="0.85" style="stop-color: var(--lamp-diffuser-2)" />
+          <stop offset="1" style="stop-color: var(--lamp-diffuser-3)" />
         </radialGradient>
         <!-- horizontal sheen that makes the flat drum read as a cylinder -->
         <linearGradient id="light-switch-cyl" x1="0" y1="0" x2="1" y2="0">
@@ -219,6 +219,19 @@
   :global(:root) {
     --lamp-offset: 64px;
     --lamp-x: calc(50% - 448px - var(--lamp-offset));
+
+    /* The light's own incandescent palette, kept apart from the printer
+       tokens; the lamp's hardware and accent ring still use those. */
+    --lamp-diffuser-0: #fff8dd;
+    --lamp-diffuser-1: #ffeaae;
+    --lamp-diffuser-2: #ffcd78;
+    --lamp-diffuser-3: #ffb45a;
+    --lamp-rim: rgba(255, 226, 170, 0.55);
+    --lamp-shadow: rgba(255, 190, 100, 0.4);
+    --lamp-glow-core: rgba(255, 216, 130, 0.55);
+    --lamp-glow-edge: rgba(255, 190, 100, 0.2);
+    --lamp-warmth-core: rgba(255, 190, 110, 0.14);
+    --lamp-warmth-edge: rgba(255, 185, 105, 0.05);
   }
 
   /* ---------------- room lighting ---------------- */
@@ -254,8 +267,8 @@
   .lamp-warmth {
     background: radial-gradient(
       620px circle at var(--lamp-x) 135px,
-      rgba(217, 119, 87, 0.15),
-      rgba(217, 119, 87, 0.055) 45%,
+      var(--lamp-warmth-core),
+      var(--lamp-warmth-edge) 45%,
       transparent 72%
     );
     mix-blend-mode: screen;
@@ -289,7 +302,7 @@
     transition: filter 130ms ease-out;
   }
   :global(.dark) .bulb-svg {
-    filter: drop-shadow(0 0 18px rgba(217, 119, 87, 0.3));
+    filter: drop-shadow(0 0 18px var(--lamp-shadow));
   }
 
   .bulb-glow {
@@ -300,8 +313,8 @@
     border-radius: 9999px;
     background: radial-gradient(
       closest-side,
-      rgba(240, 238, 230, 0.55),
-      rgba(217, 119, 87, 0.2) 55%,
+      var(--lamp-glow-core),
+      var(--lamp-glow-edge) 55%,
       transparent 100%
     );
     filter: blur(6px);
@@ -355,7 +368,7 @@
     fill: var(--color-printer-accent-dark);
   }
   .bulb-glass {
-    stroke: rgba(217, 119, 87, 0.58);
+    stroke: var(--lamp-rim);
     stroke-width: 0.8;
   }
   /* Frosted off-white overlay revealed the instant the lamp dies */
