@@ -23,7 +23,7 @@ taxiway and give you a direction to face:
 > *Callsign*, ground. You are clear to push and start onto Alpha 3 facing east.
 
 Request pushback clearance —
-[ATC Communications › Ground](atc-communications.md#2--ground-pushback-and-taxi).
+[ATC Communications › Ground](../shared/atc-communications.md#2--ground-pushback-and-taxi).
 
 | Control | Action | Condition |
 | --- | --- | --- |

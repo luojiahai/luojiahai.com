@@ -17,18 +17,23 @@
   `<slug>/*.md` is the source of truth for that aircraft — for the A32NX, nine
   numbered procedure notes following FlyByWire's beginner guide, plus
   `controls.md` (docs deep links), `names.md` (the one full-name map, for the
-  name under each control and the tooltip on a bolded setting),
-  `abbreviations.md` (a verbatim copy of FlyByWire's Airbus Terms and
-  Abbreviations page, refreshed by re-downloading, not by editing, and the
-  only source of the Abbreviations sheet), `lights.md` and
-  `atc-communications.md`; see that directory's `README.md`. `pnpm fly`
-  (`scripts/build-companion.mjs`) regenerates `<slug>.json` from them; commit
-  the regenerated payload. The procedure list comes from the notes' `1-`…`9-`
-  filename prefixes, which must run from 1 with no gaps or repeats; at most
-  nine, since the companion binds the digits 1-9. Adding an aircraft means a
-  `src/params/aircraft.ts` entry, a notes directory, pointing
-  `scripts/build-companion.mjs` at it (the script handles one aircraft), a
-  `payloads` row in the endpoint, and a row in `content/fly/fly.yml`.
+  name under each control and the tooltip on a bolded setting) and
+  `lights.md`. `shared/` holds the sheets every aircraft uses, read when the
+  aircraft's own directory lacks the file: `abbreviations.md` (a verbatim
+  copy of FlyByWire's Airbus Terms and Abbreviations page, refreshed by
+  re-downloading, not by editing, and the only source of the Abbreviations
+  sheet) and `atc-communications.md`. The shared conventions are in
+  `src/lib/fly/README.md`, the per-aircraft sources in `<slug>/README.md`.
+  `pnpm fly` (`scripts/build-companion.mjs`) regenerates `<slug>.json` for
+  every aircraft in `src/params/aircraft.ts`; commit the regenerated
+  payloads. The procedure list comes from the notes' `1-`…`9-` filename
+  prefixes, which must run from 1 with no gaps or repeats; at most nine,
+  since the companion binds the digits 1-9. Adding an aircraft means a
+  `src/params/aircraft.ts` entry, a notes directory, an entry in the
+  script's `AIRCRAFT` map (per-aircraft settings; a registered aircraft
+  without one fails the run), a `payloads` row in
+  `src/routes/fly/[aircraft=aircraft]/+server.ts`, and a row in
+  `content/fly/fly.yml`.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
@@ -95,8 +100,9 @@
 - `pnpm install`: Install dependencies (pnpm only; no npm/yarn lockfiles).
 - `pnpm dev`: Start local dev server (runs Velite in watch mode).
 - `pnpm check`: svelte-check type checking. Run before PRs.
-- `pnpm fly`: Regenerate the flight companion payloads from
-  `src/lib/fly/<slug>/`; commit the regenerated JSON.
+- `pnpm fly`: Regenerate every registered aircraft's flight companion
+  payload from `src/lib/fly/<slug>/` and `src/lib/fly/shared/`; commit the
+  regenerated JSON.
 - `pnpm build`: Production build; prerenders every page and OG image.
 - `pnpm preview`: Build + preview in the Workers runtime (wrangler dev).
 - `pnpm deploy`: Build + deploy to Cloudflare Workers.

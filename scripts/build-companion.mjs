@@ -1,51 +1,76 @@
-// Regenerates the A32NX flight companion payload in src/lib/fly/ from the
-// markdown notes in src/lib/fly/fbw-a32nx/.
+// Regenerates every flight companion payload. For each aircraft registered in
+// src/params/aircraft.ts it reads the markdown notes in src/lib/fly/<slug>/
+// and writes src/lib/fly/<slug>.json. A sheet the aircraft's directory does
+// not carry is read from src/lib/fly/shared/.
 // Run with: pnpm fly
 //
-// The markdown stays the source of truth: edit the procedure notes, re-run the
-// script, and the interactive checklist follows. The notes themselves follow
-// FlyByWire's A32NX beginner guide.
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+// The markdown stays the source of truth: edit the notes, re-run the script,
+// and the interactive checklist follows.
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const NOTES = resolve(ROOT, "src/lib/fly/fbw-a32nx");
-const read = p => readFileSync(resolve(NOTES, p), "utf8");
+const FLY = resolve(ROOT, "src/lib/fly");
 
-// The numeric filename prefix orders the procedures and picks the digit that
-// opens each one.
-const PROCEDURES = readdirSync(NOTES)
-  .map(file => file.match(/^(\d+)-.+\.md$/))
-  .filter(Boolean)
-  .map(m => ({ file: m[0], slug: m[0].slice(0, -3), num: Number(m[1]) }))
-  .sort((a, b) => a.num - b.num);
+// Read as text rather than imported, so the script runs on plain Node.
+const SLUGS = [...readFileSync(resolve(ROOT, "src/params/aircraft.ts"), "utf8")
+  .matchAll(/\bslug:\s*"([^"]+)"/g)].map(m => m[1]);
+if (!SLUGS.length) throw new Error("found no aircraft slugs in src/params/aircraft.ts");
 
-// These titles wrap to three lines in the phase rail without a shorter label.
-const RAIL_TITLES = {
-  "6-descent-planning-and-descent": "Descent",
-  "7-approach-and-ils-landing": "Approach and Landing",
+const AIRCRAFT = {
+  "fbw-a32nx": {
+    // These titles wrap to three lines in the phase rail without a shorter label.
+    railTitles: {
+      "6-descent-planning-and-descent": "Descent",
+      "7-approach-and-ils-landing": "Approach and Landing",
+    },
+    phaseLightColumns: {
+      "2-starting-the-aircraft": ["Prep"],
+      "4-engine-start-and-taxi": ["Start and Taxi"],
+      "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
+      "6-descent-planning-and-descent": ["Descent 10,000 ft"],
+      "7-approach-and-ils-landing": ["Final (G/S green)"],
+      "8-after-landing-and-taxi-to-gate": ["After Landing"],
+      "9-powering-down": ["Shutdown"],
+    },
+    aliases: { PERF: "APPROACH" },
+  },
+  "fbw-a380x": {
+    railTitles: {},
+    phaseLightColumns: {
+      "2-cockpit-preparation": ["Prep"],
+      "4-engine-start-and-taxi": ["Start and Taxi"],
+      "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
+      "6-descent": ["Descent 10,000 ft"],
+      "7-landing": ["Final (G/S green)"],
+      "8-after-landing-and-taxi-to-gate": ["After Landing"],
+      "9-powering-down": ["Shutdown"],
+    },
+    aliases: {},
+  },
 };
 
-const PHASE_LIGHT_COLUMNS = {
-  "2-starting-the-aircraft": ["Prep"],
-  "4-engine-start-and-taxi": ["Start and Taxi"],
-  "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
-  "6-descent-planning-and-descent": ["Descent 10,000 ft"],
-  "7-approach-and-ils-landing": ["Final (G/S green)"],
-  "8-after-landing-and-taxi-to-gate": ["After Landing"],
-  "9-powering-down": ["Shutdown"],
+// Per-aircraft state, reset at the start of each buildAircraft run so one
+// aircraft's names, links and item ids never carry into the next.
+let NOTES, CONFIG, NAMES, CONTROL_LABELS, lookupControl;
+let duplicateNames, unresolved, nameless, idSeen, unknownVerbs;
+
+const read = p => {
+  const own = resolve(NOTES, p);
+  return readFileSync(existsSync(own) ? own : resolve(FLY, "shared", p), "utf8");
 };
 
 const VERIFY_VERBS = new Set([
   "verify", "check", "checked", "confirm", "crosscheck", "scan", "look", "identify", "read", "note",
+  "monitor", "review",
 ]);
 const ACT_VERBS = new Set([
   "set", "select", "press", "enter", "adjust", "type", "dial", "push", "reset", "pull", "leave",
   "have", "load", "wait", "obtain", "deflect", "reinsert", "roll", "retract", "request", "be",
   "report", "match", "generate", "display", "link", "hold", "repeat", "scroll", "copy", "double",
   "arm", "advance", "perform", "steer", "preset", "revise", "compute", "draw", "descend", "keep",
-  "fly", "aim", "out", "brake", "slow", "connect", "call",
+  "fly", "aim", "out", "brake", "slow", "connect", "call", "run", "advise", "release",
 ]);
 
 /* ------------------------------------------------------------------ *
@@ -107,7 +132,6 @@ const stripMd = md =>
  * A "–" value means the label reads plainly on its own, on purpose.
  * ------------------------------------------------------------------ */
 
-const duplicateNames = [];
 const nameKey = s => String(s).trim().toUpperCase().replace(/\s+/g, " ");
 
 function buildNames() {
@@ -127,7 +151,6 @@ function buildNames() {
   return names;
 }
 
-const NAMES = buildNames();
 const nameOf = s => NAMES[nameKey(s)] ?? null;
 
 /* ------------------------------------------------------------------ *
@@ -138,8 +161,6 @@ const nameOf = s => NAMES[nameKey(s)] ?? null;
  * under #performance is the MCDU field, under #flaps-and-speed-brake it is
  * the pedestal lever.
  * ------------------------------------------------------------------ */
-
-const ALIASES = { PERF: "APPROACH" };
 
 const slugify = s =>
   s.toLowerCase().replace(/[`*_~]/g, "").replace(/[^\w\- ]/g, "").replace(/ /g, "-");
@@ -201,12 +222,12 @@ function buildControlIndex() {
     const tries = [];
     const q = norm(label);
     tries.push(q);
-    if (ALIASES[q]) tries.push(norm(ALIASES[q]));
+    if (CONFIG.aliases[q]) tries.push(norm(CONFIG.aliases[q]));
     // "MCDU MENU / ATSU / AOC MENU" -> "AOC MENU"
     if (q.includes(" / ")) {
       const last = norm(q.split(" / ").pop());
       tries.push(last);
-      if (ALIASES[last]) tries.push(norm(ALIASES[last]));
+      if (CONFIG.aliases[last]) tries.push(norm(CONFIG.aliases[last]));
     }
     for (const t of tries) {
       const hit = within(map, t) ?? (map !== global ? within(global, t) : null);
@@ -217,9 +238,6 @@ function buildControlIndex() {
 
   return { labels, lookup };
 }
-
-const { labels: CONTROL_LABELS, lookup: lookupControl } = buildControlIndex();
-const unresolved = new Set();
 
 function controlHref(text, target) {
   if (/^https?:/.test(target)) return target;
@@ -239,8 +257,6 @@ function controlHref(text, target) {
  * names.md is the only source: no derivation, no fuzzy fallback. A label the
  * map does not carry has no name, and the run prints it.
  * ------------------------------------------------------------------ */
-
-const nameless = new Set();
 
 function controlFull(cell) {
   const m = String(cell).match(/\[([^\]]+)\]\(controls\.md#[^)]+\)/);
@@ -355,7 +371,6 @@ function parseSections(md) {
 // itself rather than a running counter: inserting a row would otherwise renumber
 // every id below it and wipe a saved flight. The group title is deliberately not
 // part of the id — renaming a heading should not untick everything under it.
-const idSeen = new Map();
 const idPart = (s, max) => stripMd(s).slice(0, max).replace(/\s+/g, "_");
 
 function itemId(phase, control, action) {
@@ -364,8 +379,6 @@ function itemId(phase, control, action) {
   idSeen.set(base, n);
   return n === 1 ? base : `${base}#${n}`;
 }
-
-const unknownVerbs = new Set();
 
 function itemKind(action) {
   const verb = (stripMd(action).split(" ")[0] || "").toLowerCase().replace(/[.,;:!?]+$/, "");
@@ -411,7 +424,7 @@ function buildProcedure(slug, num) {
     id: slug,
     num: String(num),
     title: title.replace(/^\d+\s+·\s+/, num + " · "),
-    short: RAIL_TITLES[slug] ?? title.replace(/^\d+\s+·\s+/, ""),
+    short: CONFIG.railTitles[slug] ?? title.replace(/^\d+\s+·\s+/, ""),
     lede,
     groups,
   };
@@ -446,9 +459,9 @@ function buildLights() {
 
 function phaseLights(slug, sheet) {
   const matrices = sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix"));
-  return (PHASE_LIGHT_COLUMNS[slug] ?? []).map(when => {
+  return (CONFIG.phaseLightColumns[slug] ?? []).map(when => {
     const columns = matrices.map(m => ({ m, col: m.head.indexOf(when) })).filter(c => c.col > 0);
-    if (!columns.length) throw new Error(`lights.md has no "${when}" column, which PHASE_LIGHT_COLUMNS maps to ${slug}`);
+    if (!columns.length) throw new Error(`lights.md has no "${when}" column, which phaseLightColumns maps to ${slug}`);
     const set = columns.flatMap(({ m, col }) => m.rows.flatMap((r, ri) =>
       /^[-–]?$/.test(r[col]) ? [] : [{ light: r[0], state: r[col], full: m.fulls?.[ri] ?? null }]));
     return { when, set };
@@ -562,56 +575,79 @@ function buildATC() {
  * emit
  * ------------------------------------------------------------------ */
 
-if (PROCEDURES.some((p, i) => p.num !== i + 1)) {
-  const files = PROCEDURES.map(p => p.file).join(", ");
-  throw new Error(`procedure notes must be numbered 1-${PROCEDURES.length} with no gaps or repeats: ${files}`);
+function buildAircraft(slug) {
+  CONFIG = AIRCRAFT[slug];
+  if (!CONFIG) throw new Error(`${slug} is registered in src/params/aircraft.ts but has no AIRCRAFT entry`);
+  NOTES = resolve(FLY, slug);
+  duplicateNames = [];
+  unresolved = new Set();
+  nameless = new Set();
+  idSeen = new Map();
+  unknownVerbs = new Set();
+  NAMES = buildNames();
+  ({ labels: CONTROL_LABELS, lookup: lookupControl } = buildControlIndex());
+
+  // The numeric filename prefix orders the procedures and picks the digit that
+  // opens each one.
+  const procedures = readdirSync(NOTES)
+    .map(file => file.match(/^(\d+)-.+\.md$/))
+    .filter(Boolean)
+    .map(m => ({ file: m[0], slug: m[0].slice(0, -3), num: Number(m[1]) }))
+    .sort((a, b) => a.num - b.num);
+
+  if (procedures.some((p, i) => p.num !== i + 1)) {
+    const files = procedures.map(p => p.file).join(", ");
+    throw new Error(`procedure notes must be numbered 1-${procedures.length} with no gaps or repeats: ${files}`);
+  }
+  // The companion binds the digits 1-9 to phases, so a tenth would be unreachable.
+  if (procedures.length > 9) {
+    throw new Error(`${procedures.length} procedures: the companion only binds digits 1-9 to phases`);
+  }
+  const strayLights = Object.keys(CONFIG.phaseLightColumns).filter(note => !procedures.some(p => p.slug === note));
+  if (strayLights.length) throw new Error(`${slug} phaseLightColumns names notes that do not exist: ${strayLights.join(", ")}`);
+
+  const abbreviations = buildAbbreviations();
+  const atc = buildATC();
+  const phases = procedures.map(p => buildProcedure(p.slug, p.num));
+  const lights = buildLights();
+  const data = {
+    phases: phases.map(p => ({ ...p, lights: phaseLights(p.id, lights) })),
+    refs: { lights, abbreviations, atc: atc.sheet },
+    tokens: atc.tokens,
+  };
+
+  const items = data.phases.flatMap(p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items)));
+  const ids = items.map(i => i.id);
+  if (new Set(ids).size !== ids.length) {
+    const dupes = ids.filter((id, n) => ids.indexOf(id) !== n);
+    throw new Error(`duplicate item ids: ${[...new Set(dupes)].join(", ")}`);
+  }
+
+  const outPath = resolve(FLY, `${slug}.json`);
+
+  // The endpoint escapes "</" when it inlines this into a <script> block; escaping
+  // it here too would double up and render a literal backslash on the page.
+  const json = JSON.stringify(data);
+  writeFileSync(outPath, json + "\n");
+
+  const turns = atc.sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
+  const absRows = abbreviations.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix").flatMap(b => b.rows)).length;
+
+  console.log(`wrote ${outPath.replace(ROOT + "/", "")}`);
+  console.log(`  ${data.phases.length} phases · ${Object.keys(data.refs).length} reference sheets · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
+  const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
+  console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
+  const named = items.filter(i => i.full).length;
+  console.log(`  ${named}/${items.length} items carry a full control name`);
+  console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
+  if (nameless.size) console.log(`  no full name: ${[...nameless].join(", ")}`);
+  if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
+  if (unknownVerbs.size) console.log(`  action verbs in neither VERIFY_VERBS nor ACT_VERBS: ${[...unknownVerbs].join(", ")}`);
+  if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
+  // names.md is meant to cover the whole control inventory, not just what the
+  // procedures happen to link today
+  const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(nameKey(l) in NAMES));
+  if (uncovered.length) console.log(`  controls.md labels missing from names.md: ${uncovered.join(", ")}`);
 }
-// The companion binds the digits 1-9 to phases, so a tenth would be unreachable.
-if (PROCEDURES.length > 9) {
-  throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
-}
-const strayLights = Object.keys(PHASE_LIGHT_COLUMNS).filter(slug => !PROCEDURES.some(p => p.slug === slug));
-if (strayLights.length) throw new Error(`PHASE_LIGHT_COLUMNS names notes that do not exist: ${strayLights.join(", ")}`);
 
-const abbreviations = buildAbbreviations();
-const atc = buildATC();
-const phases = PROCEDURES.map(p => buildProcedure(p.slug, p.num));
-const lights = buildLights();
-const data = {
-  phases: phases.map(p => ({ ...p, lights: phaseLights(p.id, lights) })),
-  refs: { lights, abbreviations, atc: atc.sheet },
-  tokens: atc.tokens,
-};
-
-const items = data.phases.flatMap(p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items)));
-const ids = items.map(i => i.id);
-if (new Set(ids).size !== ids.length) {
-  const dupes = ids.filter((id, n) => ids.indexOf(id) !== n);
-  throw new Error(`duplicate item ids: ${[...new Set(dupes)].join(", ")}`);
-}
-
-const outPath = resolve(ROOT, "src/lib/fly/fbw-a32nx.json");
-
-// The endpoint escapes "</" when it inlines this into a <script> block; escaping
-// it here too would double up and render a literal backslash on the page.
-const json = JSON.stringify(data);
-writeFileSync(outPath, json + "\n");
-
-const turns = atc.sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "exchange").flatMap(b => b.turns));
-const absRows = abbreviations.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix").flatMap(b => b.rows)).length;
-
-console.log(`wrote ${outPath.replace(ROOT + "/", "")}`);
-console.log(`  ${data.phases.length} phases · ${Object.keys(data.refs).length} reference sheets · ${items.length} checklist items · ${turns.length} radio calls · ${data.tokens.length} worksheet fields`);
-const linked = items.filter(i => i.control.some(n => n.t === "link")).length;
-console.log(`  ${linked}/${items.length} items linked to FlyByWire docs`);
-const named = items.filter(i => i.full).length;
-console.log(`  ${named}/${items.length} items carry a full control name`);
-console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
-if (nameless.size) console.log(`  no full name: ${[...nameless].join(", ")}`);
-if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
-if (unknownVerbs.size) console.log(`  action verbs in neither VERIFY_VERBS nor ACT_VERBS: ${[...unknownVerbs].join(", ")}`);
-if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
-// names.md is meant to cover the whole control inventory, not just what the
-// procedures happen to link today
-const uncovered = [...new Set(CONTROL_LABELS)].filter(l => !(nameKey(l) in NAMES));
-if (uncovered.length) console.log(`  controls.md labels missing from names.md: ${uncovered.join(", ")}`);
+for (const slug of SLUGS) buildAircraft(slug);

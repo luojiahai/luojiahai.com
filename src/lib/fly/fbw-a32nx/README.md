@@ -1,12 +1,7 @@
 # FlyByWire A32NX — companion notes
 
-The source of truth for `src/lib/fly/fbw-a32nx.json`. Edit the markdown, run
-`pnpm fly`, and commit the regenerated payload alongside the notes. CI reruns
-`pnpm fly` and fails if the committed payload is stale.
-
-```sh
-pnpm fly            # -> src/lib/fly/fbw-a32nx.json
-```
+The source of truth for `src/lib/fly/fbw-a32nx.json`. The workflow and the
+conventions every aircraft shares are in [`../README.md`](../README.md).
 
 ## Where the content comes from
 
@@ -27,81 +22,10 @@ disagree, the guide wins.
 | `8-after-landing-and-taxi-to-gate.md` | `after-landing/` |
 | `9-powering-down.md` | `powering-down/` |
 
-The generator finds the procedure notes by their numeric prefix, which sets
-both their order and the digit that opens each one, so the prefixes must run
-from 1 with no gaps or repeats. Nine is the ceiling: the companion binds the
-digits 1-9 to phases, and the generator throws if a tenth is added.
-
-The three reference sheets:
+Its own sheets, beyond the procedures:
 
 - `lights.md` — the light state matrix, from the beginner guide's per-phase
   calls plus the `ovhd/ext-lt`, `ovhd/int-lt` and `ovhd/signs` briefing pages.
-- `abbreviations.md` — the sole source of the Abbreviations sheet, a **verbatim
-  copy** of FlyByWire's
-  [Airbus Terms and Abbreviations](https://docs.flybywiresim.com/pilots-corner/airliner/abbreviations/)
-  page. Refresh it by re-downloading, never by editing:
+- `controls.md` — deep links into the `a32nx-briefing/flight-deck/**` pages.
 
-  ```sh
-  curl -sS https://raw.githubusercontent.com/flybywiresim/docs/primary/docs/pilots-corner/airliner/abbreviations.md \
-    > src/lib/fly/fbw-a32nx/abbreviations.md
-  ```
-
-- `atc-communications.md` — VATSIM call-and-response scripts. Not FlyByWire
-  sourced, and the only note that is written from scratch.
-
-Two supporting indexes:
-
-- `controls.md` — maps every control label to its deep link into the
-  `a32nx-briefing/flight-deck/**` pages. Every `[LABEL](controls.md#section)` in
-  a procedure note resolves through here; the generator prints anything it
-  cannot resolve. Its "What it is" column is prose for a human reader, not
-  build input.
-- `names.md` — the full-name map, and the only one. It fills the line under
-  each checklist control and the tooltip on a bolded setting, in
-  `abbreviations.md`'s own style (`EXT PWR` → `EXTernal PoWeR`), with `–` for
-  labels that read plainly on their own. Nothing resolves from it into
-  `abbreviations.md` at build time: that page is an airline-wide glossary,
-  refreshed by re-download, and it reads `RET` as *return* where a speed brake
-  lever means *retracted*. The generator prints any `controls.md` label with no
-  row here, and any two rows that disagree.
-
-## Row conventions
-
-Procedure tables read **control → action → condition**:
-
-| Control | Action | Condition |
-| --- | --- | --- |
-| [EXT PWR](controls.md#electrical) pushbutton | set **ON** | if AVAIL |
-
-- The first word of the action decides the row's `kind`, which the companion
-  shows. `verify` means it should already be in that position: look, do not
-  touch. Its value renders green under a VERIFY badge. `act` means touch
-  something, and its value renders cyan. The generator lower-cases the word,
-  strips trailing punctuation, and looks it up in two closed lists:
-  `VERIFY_VERBS` (verify, check, checked, confirm, crosscheck, scan, look,
-  identify, read, note) and `ACT_VERBS` (everything else in use today). A word
-  in neither list counts as `act`, and `pnpm fly` prints it until it is added
-  to one of them. `kind` is not part of the item id, so moving a verb between
-  lists keeps every tick.
-- The bold value is the target state, and picks up a tooltip if `names.md`
-  has it.
-- `–` in the condition column means unconditional.
-- The third heading is free text and shows through to the rendered column:
-  `Condition`, `Trigger`, `Wait for`, `Source` are all in use.
-- The first heading decides whether a table is a checklist at all. It must
-  contain one of `Control`, `Page / field`, `Field`, `Page`, `Step` or
-  `Indication`.
-- `> [!NOTE]` blocks, numbered lists and plain paragraphs all render; the first
-  paragraph of a note becomes the phase lede.
-- `V~1~`, `V~FE~` and friends render as real subscripts.
-
-Each phase's lights strip comes from `lights.md`, not from the procedure
-note. The `PHASE_LIGHT_COLUMNS` map in `scripts/build-companion.mjs` names
-the matrix columns each phase shows, by their exact header text. The
-generator collects those columns from both the Exterior and the Interior and
-Signs matrices and skips `–` cells. Renaming a column header means updating
-`PHASE_LIGHT_COLUMNS`, or the build throws.
-
-Item ids are derived from the phase, control and action text, and tick state
-persists against them — so editing a row's control or action clears that row's
-tick, while inserting or reordering rows elsewhere does not.
+The Abbreviations and Radio sheets come from `../shared/`.
