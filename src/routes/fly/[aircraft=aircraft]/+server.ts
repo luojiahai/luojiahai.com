@@ -14,12 +14,14 @@
 import { error } from "@sveltejs/kit";
 import template from "$lib/fly/companion.html?raw";
 import fbwA32nx from "$lib/fly/fbw-a32nx.json";
+import fbwA380x from "$lib/fly/fbw-a380x.json";
 import { aircraft, type AircraftSlug } from "../../../params/aircraft";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
 /** One payload per aircraft. The Record makes the compiler ask for it. */
 const payloads: Record<AircraftSlug, unknown> = {
   "fbw-a32nx": fbwA32nx,
+  "fbw-a380x": fbwA380x,
 };
 
 export const prerender = true;

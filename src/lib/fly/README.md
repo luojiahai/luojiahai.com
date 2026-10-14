@@ -73,9 +73,9 @@ Procedure tables read **control → action → condition**:
   something, and its value renders cyan. The generator lower-cases the word,
   strips trailing punctuation, and looks it up in two closed lists:
   `VERIFY_VERBS` (verify, check, checked, confirm, crosscheck, scan, look,
-  identify, read, note) and `ACT_VERBS` (everything else in use today). A word
-  in neither list counts as `act`, and `pnpm fly` prints it until it is added
-  to one of them. `kind` is not part of the item id, so moving a verb between
+  identify, read, note, monitor, review) and `ACT_VERBS` (everything else in
+  use today). A word in neither list counts as `act`, and `pnpm fly` prints it
+  until it is added to one of them. `kind` is not part of the item id, so moving a verb between
   lists keeps every tick.
 - The bold value is the target state, and picks up a tooltip if `names.md`
   has it.

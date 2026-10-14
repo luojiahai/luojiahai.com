@@ -36,6 +36,19 @@ const AIRCRAFT = {
     },
     aliases: { PERF: "APPROACH" },
   },
+  "fbw-a380x": {
+    railTitles: {},
+    phaseLightColumns: {
+      "2-cockpit-preparation": ["Prep"],
+      "4-engine-start-and-taxi": ["Start and Taxi"],
+      "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
+      "6-descent": ["Descent 10,000 ft"],
+      "7-landing": ["Final (G/S green)"],
+      "8-after-landing-and-taxi-to-gate": ["After Landing"],
+      "9-powering-down": ["Shutdown"],
+    },
+    aliases: {},
+  },
 };
 
 // Per-aircraft state, reset at the start of each buildAircraft run so one
@@ -50,13 +63,14 @@ const read = p => {
 
 const VERIFY_VERBS = new Set([
   "verify", "check", "checked", "confirm", "crosscheck", "scan", "look", "identify", "read", "note",
+  "monitor", "review",
 ]);
 const ACT_VERBS = new Set([
   "set", "select", "press", "enter", "adjust", "type", "dial", "push", "reset", "pull", "leave",
   "have", "load", "wait", "obtain", "deflect", "reinsert", "roll", "retract", "request", "be",
   "report", "match", "generate", "display", "link", "hold", "repeat", "scroll", "copy", "double",
   "arm", "advance", "perform", "steer", "preset", "revise", "compute", "draw", "descend", "keep",
-  "fly", "aim", "out", "brake", "slow", "connect", "call",
+  "fly", "aim", "out", "brake", "slow", "connect", "call", "run", "advise", "release",
 ]);
 
 /* ------------------------------------------------------------------ *
