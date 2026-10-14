@@ -5,12 +5,12 @@ Cold and dark to passengers boarding.
 ## Cockpit Preparation
 
 A sweep of the pedestal, the main panel and the overhead before anything gets
-power. Everything here should already be in position — you are confirming, not
-changing.
+power. Set the parking brake; everything else should already be in position —
+you are confirming, not changing.
 
 | Control | Action |
 | --- | --- |
-| [PARK BRK](controls.md#parking-brake) handle | verify **ON** |
+| [PARK BRK](controls.md#parking-brake) handle | set **ON** |
 | [SPEED BRAKE](controls.md#flaps-and-speed-brake) lever | verify **RET** |
 | [FLAPS](controls.md#flaps-and-speed-brake) lever | verify **0** |
 | [WX RADAR MODE](controls.md#radar) selector | verify **OFF** |
@@ -73,7 +73,8 @@ air conditioning:
 4. Wait for **AVAIL**, then wait **1 min**.
 5. [APU BLEED](controls.md#auxiliary-power-unit-apu) — set **ON**, then wait
    another **1 min**.
-6. [PACK 1 & 2](controls.md#air-conditioning-and-pressurisation) — set **ON**.
+6. [PACK 1](controls.md#air-conditioning-and-pressurisation) — set **ON**. Many
+   airlines turn both packs on.
 
 ### Crew Oxygen Supply
 
@@ -144,7 +145,7 @@ air conditioning:
 | --- | --- | --- |
 | [RMP frequency](controls.md#radio-management) | set the active to **ATIS** | – |
 | [RMP frequency](controls.md#radio-management) | set the standby to **Ground** | – |
-| [BARO selector](controls.md#efis-control-panel) | set **QNH** | pull the knob; inner ring picks inHg or hPa |
+| [BARO selector](controls.md#efis-control-panel) | set **QNH** | push the knob; inner ring picks inHg or hPa |
 | [FD](controls.md#efis-control-panel) pushbutton | set **ON** | green light confirms |
 
 > [!NOTE]

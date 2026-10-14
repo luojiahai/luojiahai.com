@@ -93,7 +93,7 @@ about 1500 ft AGL, and set on the MCDU.
 | [RWY TURN OFF](controls.md#exterior-lighting) switch | set **OFF** | after the gear is up |
 | [SPEED BRAKE](controls.md#flaps-and-speed-brake) lever | set **RET**, disarmed | – |
 | [PACK 1 & 2](controls.md#air-conditioning-and-pressurisation) pushbuttons | set **ON** | if they were off for takeoff |
-| [BARO selector](controls.md#efis-control-panel) | push for **STD** | passing the transition altitude |
+| [BARO selector](controls.md#efis-control-panel) | pull for **STD** | passing the transition altitude |
 
 > [!NOTE]
 > Pulling the levers into CL activates autothrust — the FMA shows `A/THR` in

@@ -295,7 +295,6 @@ row here, and any two rows that disagree.
 | FLT NBR | FLighT NumBeR |
 | COST INDEX | cost index — the time against fuel trade-off |
 | CRZ FL | CRuiZe Flight Level |
-| ALIGN IRS | ALIGN the Inertial Reference System |
 | BLOCK | block fuel |
 | ZFW / ZFWCG | Zero Fuel Weight / Zero Fuel Weight Center of Gravity |
 

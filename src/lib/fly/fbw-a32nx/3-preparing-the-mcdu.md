@@ -38,7 +38,6 @@ SID or vectors, transponder code, departure frequency.
 | [FLT NBR](controls.md#init) | type it, press **LSK3L** | OFP |
 | [COST INDEX](controls.md#init) | type it, press **LSK5L** | OFP |
 | [CRZ FL](controls.md#init) | type the level, press **LSK6L** | OFP; sets the temperature too |
-| [ALIGN IRS](controls.md#init) | press **LSK6R** twice | once the position is shown |
 
 > [!NOTE]
 > `INIT REQUEST` is missing if you picked both a departure and an arrival on the
@@ -146,11 +145,11 @@ Reached from `INIT A` with the horizontal slew keys.
 
 | Page / field | Action | Source |
 | --- | --- | --- |
-| [TAKEOFF (FLAPS, FLEX TO TEMP, V1, VR, V2)](controls.md#performance) page | enter **V1**, then **VR**, then **V2** | flyPad PERFORMANCE page |
 | [FLAPS/THS](controls.md#performance) | enter the **flaps configuration** on **LSK3R** | flyPad PERFORMANCE page |
 | [FLAPS/THS](controls.md#performance) | enter the **THS**, as `/0.4DN` or `/1.5UP` | airline SOP; optional |
 | [TAKEOFF (FLAPS, FLEX TO TEMP, V1, VR, V2)](controls.md#performance) page | enter the **FLEX TO TEMP** on **LSK4R** | flyPad PERFORMANCE page |
-| [THR RED/ACC](controls.md#performance) | check against the **transition altitude** | SID chart |
+| [TAKEOFF (FLAPS, FLEX TO TEMP, V1, VR, V2)](controls.md#performance) page | enter the **TRANS ALT** on **LSK4L** | SID chart |
+| [TAKEOFF (FLAPS, FLEX TO TEMP, V1, VR, V2)](controls.md#performance) page | enter **V1**, then **VR**, then **V2** | flyPad PERFORMANCE page |
 
 > [!NOTE]
 > Flex temp lets the engines take off at less than TOGA but not less than CLB,
@@ -168,7 +167,7 @@ Reached from `INIT A` with the horizontal slew keys.
 
 | Page / field | Action | Condition |
 | --- | --- | --- |
-| [ATC mode](controls.md#atc-and-tcas) selector | verify **STBY** | goes to **AUTO** shortly before takeoff |
+| [ATC mode](controls.md#atc-and-tcas) selector | verify **STBY** | goes to **AUTO** or **ON** shortly before takeoff |
 | [ATC code](controls.md#atc-and-tcas) keypad | **double press CLR**, then key the code | from the clearance |
 
 ---
