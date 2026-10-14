@@ -28,7 +28,7 @@ Fill this in from SimBrief and the ATIS before you call Delivery.
 
 | Token | Meaning | This flight |
 | --- | --- | --- |
-| `{CALLSIGN}` | your callsign | |
+| `{CALLSIGN}` | your callsign, plus heavy (wide-body) or super (A380) | |
 | `{DEP}` | departure airport | |
 | `{ARR}` | destination airport | |
 | `{STAND}` | gate or stand | |
