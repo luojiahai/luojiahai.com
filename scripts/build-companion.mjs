@@ -21,11 +21,32 @@ const PROCEDURES = readdirSync(NOTES)
   .map(m => ({ file: m[0], slug: m[0].slice(0, -3), num: Number(m[1]) }))
   .sort((a, b) => a.num - b.num);
 
-// The rail is 208px wide (--rail); these titles wrap to three lines without help.
+// These titles wrap to three lines in the phase rail without a shorter label.
 const SHORT = {
   "6-descent-planning-and-descent": "Descent",
   "7-approach-and-ils-landing": "Approach and Landing",
 };
+
+const LIGHTS = {
+  "2-starting-the-aircraft": ["Prep"],
+  "4-engine-start-and-taxi": ["Start and Taxi"],
+  "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
+  "6-descent-planning-and-descent": ["Descent 10,000 ft"],
+  "7-approach-and-ils-landing": ["Final (G/S green)"],
+  "8-after-landing-and-taxi-to-gate": ["After Landing"],
+  "9-powering-down": ["Shutdown"],
+};
+
+const VERIFY_VERBS = new Set([
+  "verify", "check", "checked", "confirm", "crosscheck", "scan", "look", "identify", "read", "note",
+]);
+const ACT_VERBS = new Set([
+  "set", "select", "press", "enter", "adjust", "type", "dial", "push", "reset", "pull", "leave",
+  "have", "load", "wait", "obtain", "deflect", "reinsert", "roll", "retract", "request", "be",
+  "report", "match", "generate", "display", "link", "hold", "repeat", "scroll", "copy", "double",
+  "arm", "advance", "perform", "steer", "preset", "revise", "compute", "draw", "descend", "keep",
+  "fly", "aim", "out", "brake", "slow", "connect", "call",
+]);
 
 /* ------------------------------------------------------------------ *
  * inline markdown -> fragment nodes the template can render safely
@@ -344,6 +365,15 @@ function itemId(phase, control, action) {
   return n === 1 ? base : `${base}#${n}`;
 }
 
+const unknownVerbs = new Set();
+
+function itemKind(action) {
+  const verb = (stripMd(action).split(" ")[0] || "").toLowerCase().replace(/[.,;:!?]+$/, "");
+  if (VERIFY_VERBS.has(verb)) return "verify";
+  if (!ACT_VERBS.has(verb)) unknownVerbs.add(verb || "(empty)");
+  return "act";
+}
+
 function buildProcedure(slug, num) {
   const md = read(`${slug}.md`);
   const title = stripMd((md.match(/^#\s+(.*)$/m) || [])[1] || slug);
@@ -359,6 +389,7 @@ function buildProcedure(slug, num) {
         conditionLabel: b.head[2] || null,
         items: b.body.map(r => ({
           id: itemId(slug, r[0], r[1] || ""),
+          kind: itemKind(r[1] || ""),
           control: parseInline(r[0], controlHref),
           full: controlFull(r[0]),
           action: parseInline(r[1] || "", controlHref),
@@ -411,6 +442,17 @@ function buildLights() {
     title: "Lights by Phase", short: "Lights",
     groups: matrixGroups(read("lights.md")),
   };
+}
+
+function phaseLights(slug, sheet) {
+  const matrices = sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix"));
+  return (LIGHTS[slug] ?? []).map(when => {
+    const columns = matrices.map(m => ({ m, col: m.head.indexOf(when) })).filter(c => c.col > 0);
+    if (!columns.length) throw new Error(`lights.md has no "${when}" column, which LIGHTS maps to ${slug}`);
+    const set = columns.flatMap(({ m, col }) => m.rows.flatMap((r, ri) =>
+      /^[-–]?$/.test(r[col]) ? [] : [{ light: r[0], state: r[col], full: m.fulls?.[ri] ?? null }]));
+    return { when, set };
+  }).filter(entry => entry.set.length);
 }
 
 /* ------------------------------------------------------------------ *
@@ -528,12 +570,16 @@ if (PROCEDURES.some((p, i) => p.num !== i + 1)) {
 if (PROCEDURES.length > 9) {
   throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
 }
+const strayLights = Object.keys(LIGHTS).filter(slug => !PROCEDURES.some(p => p.slug === slug));
+if (strayLights.length) throw new Error(`LIGHTS names notes that do not exist: ${strayLights.join(", ")}`);
 
 const abbreviations = buildAbbreviations();
 const atc = buildATC();
+const phases = PROCEDURES.map(p => buildProcedure(p.slug, p.num));
+const lights = buildLights();
 const data = {
-  phases: PROCEDURES.map(p => buildProcedure(p.slug, p.num)),
-  refs: { lights: buildLights(), abbreviations, atc: atc.sheet },
+  phases: phases.map(p => ({ ...p, lights: phaseLights(p.id, lights) })),
+  refs: { lights, abbreviations, atc: atc.sheet },
   tokens: atc.tokens,
 };
 
@@ -563,6 +609,7 @@ console.log(`  ${named}/${items.length} items carry a full control name`);
 console.log(`  ${(json.length / 1024).toFixed(1)} kB payload · ${Object.values(NAMES).filter(Boolean).length} names · ${absRows} abbreviation rows`);
 if (nameless.size) console.log(`  no full name: ${[...nameless].join(", ")}`);
 if (unresolved.size) console.log(`  unresolved control links: ${[...unresolved].join(", ")}`);
+if (unknownVerbs.size) console.log(`  action verbs in neither VERIFY_VERBS nor ACT_VERBS: ${[...unknownVerbs].join(", ")}`);
 if (duplicateNames.length) console.log(`  conflicting names.md keys: ${[...new Set(duplicateNames)].join(", ")}`);
 // names.md is meant to cover the whole control inventory, not just what the
 // procedures happen to link today
