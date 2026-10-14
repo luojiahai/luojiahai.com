@@ -73,8 +73,16 @@ Procedure tables read **control → action → condition**:
 | --- | --- | --- |
 | [EXT PWR](controls.md#electrical) pushbutton | set **ON** | if AVAIL |
 
-- **verify** means it should already be in that position — look, do not touch.
-- **set** / **adjust** / **press** means act.
+- The first word of the action decides the row's `kind`, which the companion
+  shows. `verify` means it should already be in that position: look, do not
+  touch. Its value renders green under a VERIFY badge. `act` means touch
+  something, and its value renders cyan. The generator lower-cases the word,
+  strips trailing punctuation, and looks it up in two closed lists:
+  `VERIFY_VERBS` (verify, check, checked, confirm, crosscheck, scan, look,
+  identify, read, note) and `ACT_VERBS` (everything else in use today). A word
+  in neither list counts as `act`, and `pnpm fly` prints it until it is added
+  to one of them. `kind` is not part of the item id, so moving a verb between
+  lists keeps every tick.
 - The bold value is the target state, and picks up a tooltip if `names.md`
   has it.
 - `–` in the condition column means unconditional.
@@ -86,6 +94,13 @@ Procedure tables read **control → action → condition**:
 - `> [!NOTE]` blocks, numbered lists and plain paragraphs all render; the first
   paragraph of a note becomes the phase lede.
 - `V~1~`, `V~FE~` and friends render as real subscripts.
+
+Each phase's lights strip comes from `lights.md`, not from the procedure
+note. The `PHASE_LIGHT_COLUMNS` map in `scripts/build-companion.mjs` names
+the matrix columns each phase shows, by their exact header text. The
+generator collects those columns from both the Exterior and the Interior and
+Signs matrices and skips `–` cells. Renaming a column header means updating
+`PHASE_LIGHT_COLUMNS`, or the build throws.
 
 Item ids are derived from the phase, control and action text, and tick state
 persists against them — so editing a row's control or action clears that row's

@@ -1,915 +1,1096 @@
 <!doctype html>
 <!--
-  The flight companion: a tick-off checklist built to sit on a second screen
-  beside the simulator. One template, filled in per aircraft by
+  The flight companion: a tick-off checklist for a tablet or second screen
+  beside the simulator. One template for every aircraft, filled in by
   src/routes/fly/[aircraft=aircraft]/+server.ts, which substitutes %name%,
-  %slug% and the checklist payload.
+  %slug% and the checklist payload from scripts/build-companion.mjs.
 
-  It lives outside the printer shell on purpose. The shell is a reading frame,
-  and this is an instrument: dark, dense, and legible at a glance. It stays
-  inside the brand by borrowing the site's night tokens from src/app.css, the
-  same JetBrains Mono, the terracotta accent, and the thermal dot texture.
-
-  The payloads are generated from the procedure notes alongside this file — for
-  the A32NX, src/lib/fly/fbw-a32nx/ — by scripts/build-companion.mjs (pnpm fly),
-  and committed.
+  It lives outside the printer shell on purpose: the shell is a reading frame,
+  and this is an instrument. It borrows the cockpit's ECAM conventions instead
+  of the site's tokens, so cyan is a value to set, green is done or as
+  expected, and amber is something to wait for.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#141413">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#000000">
 <title>%name% Flight Companion - luojiahai</title>
 <meta name="description" content="A gate to gate tick-off checklist for the %name% in Microsoft Flight Simulator, with the light matrix, abbreviations and VATSIM radio scripts.">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612:wght@400;700&family=B612+Mono:wght@400;700&display=swap">
+<script>
+  try {
+    const scheme = JSON.parse(localStorage.getItem("fly.scheme.v1"));
+    if (scheme === "dark" || scheme === "light") document.documentElement.dataset.scheme = scheme;
+  } catch {}
+</script>
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
-
   :root {
-    /* Straight from src/app.css, dark side only. */
-    --paper: #141413;
-    --body: #1a1918;
-    --shell: #262624;
-    --button: #30302e;
-    --button-active: #3d3d3a;
-    --ink: #faf9f5;
-    --muted: #9c9a93;
-    --faint: #6e6d68;
-    --accent: #c46849;
-    --line: rgba(250, 249, 245, 0.09);
-    --line-soft: rgba(250, 249, 245, 0.05);
-    --mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
-    --rail: 208px;
+    color-scheme: light dark;
+    --paper: light-dark(#e9edf0, #000000);
+    --surface: light-dark(#f7f9fa, #0a0d10);
+    --raised: light-dark(#dde3e8, #151a1f);
+    --ink: light-dark(#0b0f13, #ffffff);
+    --muted: light-dark(#46525c, #a9b3bc);
+    --faint: light-dark(#535f69, #86909a);
+    --line: light-dark(rgba(11, 15, 19, .14), rgba(255, 255, 255, .13));
+    --action: light-dark(#00657f, #2fd6ff);
+    --ok: light-dark(#176b26, #3ee05a);
+    --wait: light-dark(#8a4f00, #ffad1f);
+    --tint: light-dark(rgba(0, 101, 127, .08), rgba(47, 214, 255, .08));
+    --shadow: light-dark(rgba(11, 15, 19, .2), rgba(0, 0, 0, .65));
+    --mono: "B612 Mono", ui-monospace, "SF Mono", monospace;
+    --ui: "B612", system-ui, sans-serif;
+    --rail: 220px;
   }
+  :root[data-scheme="dark"] { color-scheme: dark; }
+  :root[data-scheme="light"] { color-scheme: light; }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; }
   body {
     background: var(--paper);
     color: var(--ink);
-    font: 400 13px/1.5 var(--mono);
+    font: 400 15px/1.45 var(--mono);
     -webkit-font-smoothing: antialiased;
-    /* the site's thermal dot texture, carried over as panel grain */
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0.6px, transparent 0.6px);
-    background-size: 5px 5px;
   }
   button, input { font: inherit; color: inherit; }
   a { color: inherit; }
-  ::selection { background: rgba(196, 104, 73, 0.3); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ::selection { background: color-mix(in srgb, var(--action) 30%, transparent); }
+  :focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+  h1:focus { outline: none; }
+  .sr {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
   .skip {
-    position: fixed; left: 12px; top: 10px; z-index: 60;
-    background: var(--accent); color: var(--paper); padding: 8px 12px;
-    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-    transform: translateY(-180%);
+    position: fixed; left: 12px; top: 10px; z-index: 90; padding: 8px 12px;
+    background: var(--action); color: var(--paper); font: 700 12px var(--ui);
+    transform: translateY(-200%);
   }
   .skip:focus { transform: none; }
+  svg { display: block; width: 16px; height: 16px; flex: none; }
+  kbd {
+    padding: 1px 4px; border: 1px solid var(--line); border-radius: 2px;
+    color: var(--muted); font: 400 10px var(--mono);
+  }
+  b[data-tip] { cursor: help; text-decoration: underline dotted; text-underline-offset: 3px; }
+
+  .app {
+    display: grid; grid-template-columns: var(--rail) minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto; min-height: 100dvh;
+  }
 
   /* ---------- header ---------- */
   header {
-    position: sticky; top: 0; z-index: 30;
-    background: var(--body);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+    grid-column: 1 / -1; grid-row: 1; position: sticky; top: 0; z-index: 20;
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "brand prog tools util";
+    align-items: center; gap: 10px 16px; padding: 10px 16px;
+    background: var(--paper); border-bottom: 1px solid var(--line);
   }
-  .hwrap {
-    display: grid; grid-template-columns: var(--rail) 1fr auto;
-    gap: 28px; align-items: center;
-    width: min(100% - 40px, 1320px); min-height: 64px; margin: 0 auto;
-  }
-  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .brand { grid-area: brand; display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .lamp {
-    position: relative; width: 14px; height: 14px; border-radius: 50%;
-    background: rgba(0, 0, 0, .4); display: grid; place-items: center;
-    border: 1px solid rgba(255, 255, 255, .05);
+    width: 10px; height: 10px; border-radius: 50%; background: var(--ok);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--ok) 55%, transparent);
   }
-  .lamp i {
-    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 8px rgba(196, 104, 73, .5), inset 0 -1px 2px rgba(0, 0, 0, .3);
-    animation: lamp 2.4s infinite;
-  }
-  @keyframes lamp { 0%, 100% { opacity: 1 } 50% { opacity: .5 } }
-  .brand b { font-size: 12px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; }
-  .brand small { display: block; color: var(--faint); font-size: 8.5px; letter-spacing: .2em; text-transform: uppercase; margin-top: 3px; }
+  .brand b { display: block; font: 700 13px/1.2 var(--ui); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+  .brand small { display: block; color: var(--muted); font: 400 11px/1.3 var(--ui); letter-spacing: .08em; }
 
-  .progress { display: grid; gap: 7px; max-width: 420px; }
-  .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .progress-row span:first-child { color: var(--faint); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; }
-  .progress-row b { font-weight: 500; font-size: 11.5px; font-variant-numeric: tabular-nums; }
-  .cells { display: flex; gap: 2px; }
-  .cells i { width: 5px; height: 9px; background: rgba(250, 249, 245, .12); }
-  .cells i.on { background: var(--accent); }
+  .prog { grid-area: prog; display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .segs { flex: 1; display: flex; gap: 3px; height: 8px; min-width: 0; }
+  .segs i { flex: 1 1 0; min-width: 2px; border-radius: 1px; background: linear-gradient(90deg, var(--ok) var(--p), var(--raised) 0); }
+  .segs i.cur { outline: 1.5px solid var(--action); outline-offset: 2px; }
+  .total { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-  .actions { display: flex; gap: 8px; justify-content: flex-end; }
-  .btn {
-    height: 30px; padding: 0 13px; cursor: pointer;
-    background: var(--button); border: 1px solid rgba(255, 255, 255, .07);
-    color: var(--ink); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
-    box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, .05), inset 0 -2px 0 rgba(0, 0, 0, .38);
-    transition: transform .15s, color .15s, border-color .15s;
+  .tools, .util { display: flex; align-items: center; gap: 6px; }
+  .tools { grid-area: tools; }
+  .util { grid-area: util; }
+  .seg { display: inline-flex; padding: 2px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); }
+  .seg button {
+    min-height: 34px; padding: 0 12px; border: 0; border-radius: 2px; background: none; cursor: pointer;
+    color: var(--muted); font: 700 12px/1 var(--ui); letter-spacing: .08em; text-transform: uppercase;
   }
-  .btn:hover { color: var(--accent); border-color: rgba(196, 104, 73, .3); transform: translateY(-1px); }
-  .btn:active { transform: translateY(1px); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .hbtn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    min-width: 40px; height: 40px; padding: 0 11px; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 2px; background: var(--surface);
+    color: var(--muted); font: 700 12px/1 var(--ui); letter-spacing: .06em; text-transform: uppercase;
+  }
+  .hbtn:hover { color: var(--ink); }
+  .hbtn[aria-expanded="true"] { color: var(--ink); border-color: var(--action); }
 
-  /* ---------- shell ---------- */
-  .shell {
-    display: grid; grid-template-columns: var(--rail) minmax(0, 1fr);
-    gap: 28px; width: min(100% - 40px, 1320px); margin: 0 auto;
-    align-items: start;
+  .rail {
+    grid-column: 1; grid-row: 2 / 4; align-self: start;
+    position: sticky; top: var(--header-h, 61px); max-height: calc(100dvh - var(--header-h, 61px));
+    overflow-y: auto; padding: 14px 10px; border-right: 1px solid var(--line);
   }
-  /* Both tracks must be allowed to shrink below their content. Without this the
-     rail's row of phase buttons sets the grid's minimum size, the document grows
-     to the width of all nine of them, and a phone renders the whole page zoomed
-     out to fit. */
-  .shell > * { min-width: 0; }
-  .rail { position: sticky; top: calc(var(--header-h, 64px) + 24px); padding: 22px 0 40px; }
-  .rail-label { margin: 0 0 10px; color: var(--faint); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; }
-  .rail nav { display: grid; gap: 1px; }
   .rail button {
-    display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center;
-    width: 100%; padding: 8px 10px; cursor: pointer; text-align: left;
-    background: transparent; border: 0; border-left: 2px solid transparent;
-    color: var(--muted); font-size: 11.5px;
-    transition: background .15s, color .15s;
+    display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; align-items: center;
+    width: 100%; min-height: 48px; padding: 8px; cursor: pointer; text-align: left;
+    border: 0; border-radius: 2px; background: none; color: var(--muted); font: 400 14px/1.25 var(--ui);
   }
-  .rail button:hover { background: rgba(250, 249, 245, .04); color: var(--ink); }
-  .rail button[aria-current="true"] { background: var(--body); border-left-color: var(--accent); color: var(--ink); }
-  .rail .num { color: var(--faint); font-size: 10px; }
-  .rail button[aria-current="true"] .num { color: var(--accent); }
-  .rail .pct { color: var(--faint); font-size: 9.5px; font-variant-numeric: tabular-nums; }
-  .rail button[data-complete] .pct { color: var(--accent); }
+  .rail button:hover { color: var(--ink); background: color-mix(in srgb, var(--raised) 60%, transparent); }
+  .rail .n, .rail .pc { color: var(--faint); font: 400 12px var(--mono); font-variant-numeric: tabular-nums; }
+  .rail .done .pc { color: var(--ok); }
+  .rail [aria-current] { background: var(--raised); color: var(--ink); box-shadow: inset 3px 0 0 var(--action); }
+  .rail [aria-current] .n { color: var(--action); }
 
-  main { padding: 26px 0 80px; min-width: 0; }
-  h1 { margin: 0 0 6px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
-  .lede { margin: 0 0 24px; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
+  main { grid-column: 2; grid-row: 2; min-width: 0; padding: 22px 28px 40px; container: main / inline-size; }
+  main > * { max-width: 1100px; }
+  h1 { margin: 0 0 6px; font: 700 22px/1.2 var(--mono); letter-spacing: .03em; text-transform: uppercase; }
+  .lede { margin: 0 0 14px; max-width: 66ch; color: var(--muted); }
 
-  .grp { margin-bottom: 30px; }
-  .grp h2 {
-    display: flex; align-items: center; gap: 12px; margin: 0 0 12px;
-    color: var(--faint); font-size: 9.5px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase;
+  .lights {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0 8px; padding: 10px 12px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
   }
-  .grp h2::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
-  .grp h3 { margin: 0 0 8px; font-size: 12.5px; font-weight: 600; }
+  .lights .lbl { margin-right: 4px; color: var(--muted); font: 700 11px var(--ui); letter-spacing: .12em; text-transform: uppercase; }
+  .lights .when { margin: 0 2px 0 8px; color: var(--muted); font-size: 12px; }
+  .chip {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 8px; white-space: nowrap;
+    border: 1px solid var(--line); border-radius: 2px; font-size: 13px;
+  }
+  .chip b { color: var(--action); font-weight: 700; }
+  .chip[data-tip] { cursor: help; }
 
-  .para { margin: 0 0 14px; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
-  .note { margin: 0 0 14px; padding: 4px 0 4px 13px; border-left: 2px solid rgba(196, 104, 73, .4); color: var(--muted); font-size: 12px; max-width: 62ch; }
-  .steps { margin: 0 0 18px; padding-left: 20px; color: var(--ink); font-size: 12.5px; }
-  .steps li { margin-bottom: 6px; }
-  /* Remarks about the matrix above, so they read closer to .para than to a
-     sequence: muted, marked by an accent tick rather than a number. */
-  .bullets { list-style: none; margin: 0 0 18px; padding: 0; max-width: 62ch; color: var(--muted); font-size: 12.5px; }
-  .bullets li { position: relative; margin-bottom: 8px; padding-left: 15px; }
-  .bullets li::before {
-    content: ""; position: absolute; left: 0; top: .62em;
-    width: 5px; height: 1px; background: var(--accent); opacity: .75;
+  .grp { margin-top: 24px; }
+  .ghead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .ghead h2, .ghead .gt {
+    flex: 1; display: flex; align-items: center; gap: 10px; margin: 0;
+    color: var(--muted); font: 700 12px/1.3 var(--ui); letter-spacing: .14em; text-transform: uppercase;
   }
-  .bullets b { font-weight: 600; color: var(--ink); }
+  .ghead h2::after, .ghead .gt::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .ct { color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .ct.ok { color: var(--ok); }
+  .notes {
+    min-height: 30px; padding: 0 10px; cursor: pointer; white-space: nowrap;
+    border: 1px solid var(--line); border-radius: 2px; background: var(--surface);
+    color: var(--muted); font: 400 12px var(--ui);
+  }
+  [data-mode="learn"] .notes { display: none; }
+  [data-mode="fly"] .grp:not(.open) .prose { display: none; }
 
-  /* ---------- checklist ---------- */
-  .items-head, .items label {
-    display: grid; grid-template-columns: 15px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, .85fr);
-    gap: 0 16px; align-items: start;
-  }
-  .items-head {
-    padding-bottom: 6px; border-bottom: 1px solid var(--line);
-    color: var(--faint); font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
-  }
-  .items { list-style: none; margin: 0 0 22px; padding: 0; }
-  .items li { border-bottom: 1px solid var(--line-soft); }
-  .items li:last-child { border-bottom: 0; }
-  .items label { padding: 8px 0; cursor: pointer; }
-  .items li:hover { background: rgba(250, 249, 245, .025); }
-  .items li[data-cursor="true"] label { box-shadow: inset 2px 0 0 var(--accent); padding-left: 8px; margin-left: -10px; }
-  .items input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-  .box {
-    margin-top: 3px; width: 13px; height: 13px; display: grid; place-items: center;
-    border: 1px solid rgba(250, 249, 245, .35);
-  }
-  .box i { width: 7px; height: 7px; background: var(--accent); opacity: 0; }
-  .items li[data-done="true"] .box i { opacity: 1; }
-  .ctl { font-size: 12.5px; line-height: 1.35; }
-  .act { font-size: 12.5px; line-height: 1.35; }
-  .cond { color: var(--faint); font-size: 11px; line-height: 1.35; }
-  .full { display: block; margin-top: 1px; color: var(--faint); font-size: 9.5px; line-height: 1.3; }
-  .act b, .steps b { font-weight: 600; color: var(--accent); }
-  .ctl a { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-color: rgba(250, 249, 245, .3); }
-  .ctl a:hover { color: var(--accent); text-decoration-color: var(--accent); }
-  .items li[data-done="true"] .ctl,
-  .items li[data-done="true"] .act,
-  .items li[data-done="true"] .cond { color: var(--faint); }
-  .items li[data-done="true"] .act b { color: var(--faint); font-weight: 400; }
+  .prose, #ref-panel .prose { max-width: 66ch; margin: 8px 0 12px; color: var(--muted); }
+  .prose p, .prose ol, .prose ul { margin: 0 0 8px; }
+  .prose ol, .prose ul { padding-left: 22px; }
+  .prose li { margin-bottom: 4px; }
+  .prose b { color: var(--ink); }
+  .note { margin: 8px 0; padding: 6px 12px; border-left: 3px solid var(--action); background: var(--surface); }
 
-  /* ---------- tooltip ----------
-     A bolded value the names map knows carries its full name. The dotted rule
-     under it is the affordance; the bubble itself is one shared element moved
-     to the hovered term, because a term in the right-hand condition column
-     would push a per-term bubble off the window edge, and the reference drawer
-     is in the top layer, where a bubble left in the page would hide behind it. */
-  [data-tip] {
-    cursor: help;
-    text-decoration: underline dotted;
-    text-underline-offset: 3px;
-    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  .rows { border-top: 1px solid var(--line); }
+  .line { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 36px; border-bottom: 1px solid var(--line); }
+  .line.next { background: var(--tint); }
+  .line.next::before {
+    content: ""; position: absolute; left: -12px; top: 10px; bottom: 10px; width: 3px;
+    border-radius: 1px; background: var(--action);
   }
+  .row {
+    display: grid; grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, .9fr);
+    gap: 4px 14px; align-items: start; padding: 12px 4px; cursor: pointer;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .row:hover { background: color-mix(in srgb, var(--raised) 50%, transparent); }
+  .row.cursor, .row:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+  .box { width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid var(--faint); border-radius: 2px; }
+  [aria-checked="true"] > .box { background: var(--ok); border-color: var(--ok); }
+  [aria-checked="true"] > .box::after {
+    content: ""; width: 10px; height: 5px; border: solid var(--paper); border-width: 0 0 2.5px 2.5px;
+    transform: translateY(-1px) rotate(-45deg);
+  }
+  .full { display: block; margin-top: 2px; color: var(--faint); font-size: 12px; }
+  .act b { color: var(--action); font-weight: 700; }
+  .verify .act b { color: var(--ok); }
+  .badge {
+    display: inline-block; margin-right: 7px; padding: 1px 4px; vertical-align: 2px;
+    border: 1px solid currentColor; border-radius: 2px; color: var(--ok);
+    font: 700 10px/1.3 var(--ui); letter-spacing: .1em; text-transform: uppercase;
+  }
+  .cond { color: var(--muted); font-size: 13px; }
+  .cl { display: block; color: var(--wait); font: 700 10px/1.5 var(--ui); letter-spacing: .1em; text-transform: uppercase; }
+  .row[aria-checked="true"],
+  .row[aria-checked="true"] :is(.act b, .badge, .cond, .cl) { color: var(--faint); }
+  .row[aria-checked="true"] .name { text-decoration: line-through; }
+  .doc {
+    display: grid; place-items: center; width: 32px; height: 32px; margin-top: 7px;
+    border-radius: 2px; color: var(--faint); text-decoration: none;
+  }
+  .doc:hover { color: var(--action); background: var(--raised); }
+
+  .endcard {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 28px; padding: 16px; border: 1px dashed var(--line); border-radius: 2px; color: var(--muted);
+  }
+  .endcard.ok { border-style: solid; border-color: var(--ok); color: var(--ink); }
+  .bigbtn {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 2px; background: var(--surface);
+    color: var(--ink); font: 700 14px/1 var(--ui); letter-spacing: .04em;
+  }
+  .bigbtn.go { background: var(--ok); border-color: var(--ok); color: var(--paper); }
+
+  .bar {
+    grid-column: 2; grid-row: 3; position: sticky; bottom: 0; z-index: 15;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--paper); border-top: 1px solid var(--line);
+  }
+  #next-label {
+    flex: 1 1 220px; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--muted); font-size: 13px;
+  }
+  #next-label b { color: var(--ink); }
+  .keys { order: 3; display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+  @media (pointer: coarse) { .keys { display: none; } }
+
+  .ref {
+    grid-column: 3; grid-row: 2 / 4; align-self: start;
+    position: sticky; top: var(--header-h, 61px); height: calc(100dvh - var(--header-h, 61px));
+    display: flex; flex-direction: column; width: min(460px, 38vw);
+    background: var(--surface); border-left: 1px solid var(--line);
+  }
+  .ref-head { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .ref-tabs { display: flex; gap: 4px; flex: 1; min-width: 0; overflow-x: auto; }
+  [role="tab"] {
+    min-height: 36px; padding: 0 10px; cursor: pointer; white-space: nowrap;
+    border: 0; border-radius: 2px; background: none;
+    color: var(--muted); font: 700 12px/1 var(--ui); letter-spacing: .06em; text-transform: uppercase;
+  }
+  [role="tab"][aria-selected="true"] { background: var(--raised); color: var(--ink); box-shadow: inset 0 -2px 0 var(--action); }
+  #ref-panel { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 14px 16px 40px; font-size: 13px; }
+  #ref-panel h2 { margin: 0 0 12px; font: 700 15px/1.3 var(--mono); letter-spacing: .03em; text-transform: uppercase; }
+  #ref-panel h3 { margin: 18px 0 8px; color: var(--muted); font: 700 11px var(--ui); letter-spacing: .12em; text-transform: uppercase; }
+  .scroll { overflow-x: auto; margin-bottom: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { padding: 5px 8px 5px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-weight: 400; }
+  thead th { color: var(--muted); font-size: 11px; }
+  td { color: var(--muted); }
+  td.val { color: var(--action); }
+  td.nil { color: var(--faint); }
+  .hl { background: var(--tint); }
+  .filter, .fields input {
+    width: 100%; min-width: 0; padding: 7px 8px; border: 1px solid var(--line); border-radius: 2px;
+    background: var(--paper); color: var(--ink); font: 400 14px var(--mono); letter-spacing: 0; text-transform: none;
+  }
+  .filter { margin-bottom: 8px; }
+  input::placeholder { color: var(--faint); }
+  input:focus-visible { outline-offset: 0; }
+  .empty { color: var(--muted); }
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .fields label { display: grid; gap: 4px; color: var(--muted); font: 400 11px var(--ui); letter-spacing: .06em; text-transform: uppercase; }
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; color: var(--muted); font-size: 12px; }
+  .chain b { padding: 2px 7px; border: 1px solid var(--line); border-radius: 2px; color: var(--ink); font-weight: 400; }
+  .ex { margin: 0 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 2px; }
+  .ex h4 { margin: 0 0 6px; font: 700 12px var(--ui); }
+  .turn { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; padding: 3px 0; }
+  .who { color: var(--muted); font: 700 10px/1.8 var(--ui); letter-spacing: .1em; text-transform: uppercase; }
+  .who small { display: block; font-weight: 400; line-height: 1.2; letter-spacing: 0; text-transform: none; }
+  .you .who { color: var(--action); }
+  .atc .say { color: var(--muted); }
+  .fill { color: var(--action); font-weight: 700; }
+  .tok { color: var(--faint); border-bottom: 1px dashed currentColor; }
+
   #tip {
-    position: fixed; z-index: 80; pointer-events: none;
-    max-width: min(280px, 72vw); padding: 6px 9px;
-    background: var(--shell); border: 1px solid var(--line);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .55);
-    color: var(--ink); font-size: 11px; line-height: 1.45;
+    position: fixed; z-index: 80; max-width: min(300px, 80vw); padding: 7px 10px; pointer-events: none;
+    background: var(--ink); color: var(--paper); border-radius: 2px; box-shadow: 0 8px 24px var(--shadow);
+    font: 400 13px/1.4 var(--ui); white-space: pre-line;
   }
-  #tip[hidden] { display: none; }
-  @media (prefers-reduced-motion: no-preference) {
-    #tip { animation: tip-in .12s ease; }
+  #toast {
+    position: fixed; left: 50%; bottom: calc(var(--bar-h, 70px) + 14px); z-index: 70; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px; padding: 6px 6px 6px 16px;
+    background: var(--ink); color: var(--paper); border-radius: 2px; box-shadow: 0 8px 24px var(--shadow);
+    font: 700 14px var(--ui);
   }
-  @keyframes tip-in { from { opacity: 0; } }
-
-  /* ---------- matrix ---------- */
-  .scroll { overflow-x: auto; margin-bottom: 22px; }
-  table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
-  thead th { padding: 6px 16px 6px 0; text-align: left; font-weight: 400; color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; border-bottom: 1px solid var(--line); }
-  tbody td, tbody th { padding: 6px 16px 6px 0; text-align: left; font-weight: 400; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
-  tbody td { color: var(--accent); }
-  tbody td.nil { color: rgba(250, 249, 245, .18); }
-  tbody td.soft { color: var(--muted); }
-
-  /* ---------- atc ---------- */
-  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
-  .fields label { display: grid; gap: 4px; color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
-  .fields input {
-    /* an input's default intrinsic width is about 20 characters, which is wider
-       than the track it sits in, and as a grid item it will not shrink on its own */
-    width: 100%; min-width: 0;
-    background: var(--body); border: 1px solid var(--line); color: var(--ink);
-    padding: 6px 8px; font-size: 12px; letter-spacing: 0; text-transform: none;
+  #toast button {
+    min-height: 34px; padding: 0 14px; cursor: pointer; border: 0; border-radius: 2px;
+    background: var(--paper); color: var(--ink); font: 700 13px var(--ui);
   }
-  .fields input::placeholder { color: rgba(250, 249, 245, .22); }
-  .fields input:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
-  .turn { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 5px 0 5px 12px; margin-bottom: 5px; border-left: 2px solid var(--line); }
-  .turn.you { border-left-color: rgba(196, 104, 73, .5); }
-  .who { color: var(--faint); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
-  .who span { display: block; margin-top: 3px; letter-spacing: 0; text-transform: none; }
-  .say { font-size: 12.5px; line-height: 1.6; }
-  .say .tok { background: rgba(196, 104, 73, .14); color: var(--accent); padding: 0 4px; }
-  .say .fill { color: var(--accent); font-weight: 600; }
-  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--muted); font-size: 10.5px; }
-  .chain b { font-weight: 400; padding: 3px 8px; border: 1px solid var(--line); }
-  .chain i { color: var(--faint); font-style: normal; }
+  #toast button:focus-visible { outline-color: var(--paper); }
 
-  /* ---------- reference drawer ----------
-     Lights, abbreviations and the radio scripts are lookups, not phases:
-     they open over the checklist and close again without costing you your
-     place in it. Docked right so the rail and the ticked rows stay in view. */
-  .rail-ref { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
-  .rail-ref nav { display: grid; gap: 1px; }
-  .rail-ref button { grid-template-columns: 16px 1fr auto; color: var(--muted); }
-  /* the icon sits in the slot the phase numbers use in the rail above */
-  .rail-ref .ico { display: grid; place-items: center; color: var(--faint); }
-  .rail-ref .ico svg { display: block; width: 13px; height: 13px; }
-  .rail-ref button:hover .ico { color: var(--accent); }
-  .rail-ref .key {
-    min-width: 15px; padding: 1px 4px; text-align: center;
-    border: 1px solid var(--line); color: var(--faint); font-size: 9px;
-  }
-  .rail-ref button:hover .key { border-color: rgba(196, 104, 73, .35); color: var(--accent); }
-
-  #ref {
-    margin: 0 0 0 auto; padding: 0; max-width: none; max-height: none;
-    width: min(660px, 94vw); height: 100dvh;
-    background: var(--body); color: var(--ink);
-    border: 0; border-left: 1px solid var(--line);
-    box-shadow: -26px 0 64px rgba(0, 0, 0, .55);
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0.6px, transparent 0.6px);
-    background-size: 5px 5px;
-  }
-  #ref[open] { display: grid; grid-template-rows: auto 1fr; }
-  #ref::backdrop { background: rgba(10, 10, 9, .66); }
-
-  .ref-head {
-    display: flex; align-items: center; gap: 6px;
-    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--shell);
-  }
-  .ref-tabs { display: flex; gap: 6px; flex: 1; min-width: 0; overflow-x: auto; }
-  .ref-tab {
-    height: 28px; padding: 0 11px; cursor: pointer; white-space: nowrap;
-    background: transparent; border: 1px solid transparent; color: var(--muted);
-    font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
-    transition: color .15s, border-color .15s;
-  }
-  .ref-tab:hover { color: var(--ink); }
-  .ref-tab[aria-selected="true"] { color: var(--accent); border-color: rgba(196, 104, 73, .4); }
-  /* contain: flicking past the end of the sheet must not scroll the checklist
-     underneath it, which would cost you your place in the list. */
-  .ref-body { overflow-y: auto; overscroll-behavior-y: contain; padding: 22px 16px 48px; }
-  .ref-body h1 { font-size: 15px; margin-bottom: 18px; }
-  .ref-search {
-    width: 100%; margin-bottom: 16px; padding: 8px 10px;
-    background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-size: 12px;
-  }
-  .ref-search::placeholder { color: rgba(250, 249, 245, .22); }
-  .ref-search:focus { border-color: rgba(196, 104, 73, .5); outline: none; }
-  .ref-empty { color: var(--faint); font-size: 12px; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    #ref[open] { animation: sheet-in .24s cubic-bezier(.16, 1, .3, 1); }
-    #ref[open]::backdrop { animation: scrim-in .24s ease; }
-  }
-  @keyframes sheet-in { from { transform: translateX(28px); opacity: .3; } }
-  @keyframes scrim-in { from { opacity: 0; } }
-
-  /* ---------- footer ---------- */
-  .tips {
-    position: sticky; bottom: 0; z-index: 20;
-    /* Baseline, not the default stretch: a kbd is taller than bare text, so
-       stretched hints put their words lower in the row than the plain
-       "ticks stay in this browser" tail, and the line reads as two heights. */
-    display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; align-items: baseline;
-    padding: 10px 20px; background: var(--body); border-top: 1px solid var(--line);
-    color: var(--faint); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
-  }
-  .tips kbd { display: inline-block; min-width: 16px; padding: 1px 4px; margin-right: 3px; text-align: center; border: 1px solid var(--line); color: var(--muted); }
-  /* Inline, not a flex child of the span: the span's own baseline has to stay
-     its text baseline for the row above to keep lining up. The nudge sits the
-     glyph on the cap band rather than the baseline. */
-  .tips svg { display: inline; width: 11px; height: 11px; margin-right: 5px; vertical-align: -2px; }
-
-  /* ---------- narrow: one column, rail becomes a strip ----------
-     Below this width the rail cannot sit beside the checklist, so it turns into
-     a sticky strip under the header: phases scroll horizontally on the left,
-     the three reference sheets stay pinned right so a lookup is always one tap
-     away from wherever you are in the list. */
-  @media (max-width: 900px) {
-    .hwrap, .shell { width: min(100% - 32px, 1320px); }
-
-    /* All three are placed explicitly. Left to auto-flow, the full-width
-       progress row advances the cursor past row 1 and pushes the reset button
-       onto a third row, which is what made this header a fifth of the screen. */
-    .hwrap { grid-template-columns: 1fr auto; gap: 9px 12px; min-height: 0; padding: 9px 0 10px; }
-    .brand { grid-area: 1 / 1; }
-    .actions { grid-area: 1 / 2; }
-    .brand small { font-size: 9px; }
-    /* The count reads as the readout at the end of the bar, so the separate
-       "flight progress" caption above it is redundant here. */
-    .progress { grid-area: 2 / 1 / 3 / -1; max-width: none; display: flex; align-items: center; gap: 10px; }
-    .progress-row { order: 2; flex: none; }
-    .progress-row span:first-child { display: none; }
-    .cells { order: 1; flex: 1; min-width: 0; gap: 1px; }
-    .cells i { flex: 1; width: auto; min-width: 0; height: 6px; }
-    .btn { height: 40px; padding: 0 14px; }
-
-    .shell { grid-template-columns: 1fr; gap: 0; }
+  @media (max-width: 1020px) {
+    .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; }
+    header { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "brand tools util" "prog prog prog"; }
+    .tools { justify-self: end; }
     .rail {
-      position: sticky; top: var(--header-h, 64px); z-index: 25;
-      display: flex; align-items: stretch; padding: 0;
-      margin: 0 -16px; background: var(--body); border-bottom: 1px solid var(--line);
+      grid-row: 2; z-index: 12; max-height: none; display: flex; gap: 2px; padding: 4px 10px;
+      overflow-x: auto; scrollbar-width: none; border-right: 0; border-bottom: 1px solid var(--line); background: var(--paper);
     }
-    .rail-label { display: none; }
-    .rail > nav {
-      flex: 1; min-width: 0; display: flex; gap: 0; padding-left: 16px;
-      overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
-      /* the strip carries nine phases in roughly two chips of space, so the
-         trailing edge fades to say so rather than cutting a name in half */
-      mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent);
+    .rail::-webkit-scrollbar { display: none; }
+    .rail button { flex: none; display: inline-flex; width: auto; min-height: 44px; padding: 0 12px; white-space: nowrap; }
+    .rail .pc { display: none; }
+    .rail .done .pc { display: inline; }
+    .rail [aria-current] { box-shadow: inset 0 -3px 0 var(--action); }
+    main { grid-column: 1; grid-row: 3; padding: 16px 16px 32px; }
+    .bar { grid-column: 1; grid-row: 4; }
+    .hbtn .lbl { display: none; }
+    .total { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .ref {
+      position: fixed; inset: auto 0 0; z-index: 40; width: auto; height: 72dvh;
+      border-left: 0; border-top: 1px solid var(--line); border-radius: 12px 12px 0 0;
+      box-shadow: 0 -20px 60px var(--shadow);
     }
-    .rail > nav::-webkit-scrollbar { display: none; }
-    .rail button {
-      width: auto; min-height: 44px; padding: 0 12px; white-space: nowrap;
-      border-left: 0; border-bottom: 2px solid transparent; scroll-snap-align: start;
+    @media (prefers-reduced-motion: no-preference) {
+      .ref { animation: rise .22s cubic-bezier(.16, 1, .3, 1); }
     }
-    .rail button[aria-current="true"] { border-left: 0; border-bottom-color: var(--accent); background: transparent; }
-    .rail-ref {
-      flex: none; margin: 0; padding: 0 16px 0 0;
-      border-top: 0; border-left: 1px solid var(--line);
-    }
-    .rail-ref nav { display: flex; gap: 0; }
-    .rail-ref button { grid-template-columns: auto 1fr; gap: 7px; padding: 0 10px; font-size: 10.5px; }
-    .rail-ref .key { display: none; }
+  }
+  @keyframes rise { from { transform: translateY(32px); opacity: 0; } }
 
-    main { padding: 22px 0 64px; }
-    #ref { width: 100%; border-left: 0; }
-    .tips { display: none; }
+  /* An open reference panel narrows main as much as a phone does. */
+  @container main (max-width: 640px) {
+    .row { grid-template-columns: 26px minmax(0, 1fr); }
+    .row > .box { grid-row: 1 / span 3; }
+    .row > :not(.box) { grid-column: 2; }
+    .cond:empty { display: none; }
+    .cl { display: inline; margin-right: 6px; }
   }
 
-  /* ---------- phone: the four checklist columns stack ---------- */
-  @media (max-width: 620px) {
-    body { font-size: 14px; }
-    h1 { font-size: 18px; }
-    .lede, .para, .steps, .bullets, .say { font-size: 13.5px; }
-
-    .items-head { display: none; }
-    /* Four columns will not fit, so control / action / condition stack beside
-       the box. They must be placed explicitly: left to auto-flow, the action
-       drops into the 15px box column and wraps a word per line. */
-    .items label { grid-template-columns: 18px minmax(0, 1fr); gap: 3px 12px; padding: 11px 0; }
-    .items .box { grid-column: 1; grid-row: 1 / span 3; margin-top: 2px; width: 15px; height: 15px; }
-    .items .ctl { grid-column: 2; grid-row: 1; font-size: 13.5px; font-weight: 500; }
-    /* Borrowed from .note: an accent hairline marks what you actually do. */
-    .items .act {
-      grid-column: 2; grid-row: 2; font-size: 13.5px;
-      padding-left: 9px; border-left: 1px solid rgba(196, 104, 73, .35);
+  @media (max-width: 720px) {
+    header {
+      grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "brand brand util" "tools tools tools" "prog prog prog";
+      padding: 8px 12px;
     }
-    .items .cond { grid-column: 2; grid-row: 3; font-size: 12px; }
-    .items .cond:empty { display: none; }
-    .items .full { font-size: 10.5px; }
-
-    /* The reference cluster is pinned beside the phase strip and three labels
-       take most of a phone's width. The icons carry the meaning here, so the
-       words stay for screen readers only. */
-    .rail-ref button { grid-template-columns: auto; padding: 0 13px; }
-    .rail-ref .lbl {
-      position: absolute; width: 1px; height: 1px;
-      overflow: hidden; clip-path: inset(50%); white-space: nowrap;
-    }
-    .rail-ref .ico svg { width: 15px; height: 15px; }
-    .items li[data-cursor="true"] label { box-shadow: none; padding-left: 0; margin-left: 0; }
-
-    /* Under 16px iOS Safari zooms the page in on focus and never zooms back. */
-    .fields input, .ref-search { font-size: 16px; }
-    /* Two columns even on the narrowest phone: at 16px a single column turns
-       the worksheet into a screen and a half of scrolling before the calls. */
-    .fields { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 9px; }
-    .fields label { font-size: 10px; color: var(--muted); }
-    .fields input::placeholder, .ref-search::placeholder { color: rgba(250, 249, 245, .38); }
-    .turn { grid-template-columns: 1fr; gap: 3px; }
-    .who span { display: inline; margin: 0 0 0 6px; }
-    .ref-body { padding: 18px 16px 40px; }
-    .ref-tab { height: 40px; }
+    .util { justify-self: end; }
+    .tools { justify-self: start; }
+    .brand small { display: none; }
+    .turn { grid-template-columns: 1fr; gap: 2px; }
+    .who small { display: inline; margin-left: 6px; }
+    /* Under 16px iOS Safari zooms in on focus and never zooms back out. */
+    .filter, .fields input { font-size: 16px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lamp i { animation: none; }
-    .btn { transition: none; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  @media print {
+    header, .rail, .bar, .ref, .doc, .notes, #tip, #toast, .skip { display: none !important; }
+    .app { display: block; }
+    main { padding: 0; }
+    * { color: #000 !important; background: #fff !important; box-shadow: none !important; }
+    .prose { display: block !important; }
+    [aria-checked="true"] > .box::after { border-color: #000; }
   }
 </style>
 </head>
 <body>
 
-<a class="skip" href="#main">Skip to current phase</a>
+<a class="skip" href="#phase-title" data-act="skip">Skip to checklist</a>
 
-<header>
-  <div class="hwrap">
+<div class="app">
+  <header>
     <a class="brand" href="/">
-      <span class="lamp" aria-hidden="true"><i></i></span>
-      <span>
-        <b>%name%</b>
-        <small>Flight companion</small>
-      </span>
+      <span class="lamp" aria-hidden="true"></span>
+      <span><b>%name%</b><small>Flight companion</small></span>
     </a>
-    <div class="progress">
-      <div class="progress-row"><span>Flight progress</span><b id="total"></b></div>
-      <div class="cells" id="cells" aria-hidden="true"></div>
+    <div class="prog">
+      <div class="segs" id="segs" aria-hidden="true"></div>
+      <span class="total" id="total"></span>
     </div>
-    <div class="actions">
-      <button class="btn" id="reset">Reset flight</button>
+    <!-- Lucide glyphs (@lucide/svelte 1.28.0), inlined because this page ships
+         outside the Svelte bundle. Nothing syncs them with src/lib/icons.ts, so
+         a Lucide upgrade that redraws them has to be copied here by hand. -->
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Detail">
+        <button data-act="mode" data-mode="fly" aria-pressed="true" title="Steps only, notes on demand">Fly</button>
+        <button data-act="mode" data-mode="learn" aria-pressed="false" title="Every note and explanation">Learn</button>
+      </div>
+      <button class="hbtn" data-act="ref" data-ref="lights" aria-label="Lights" aria-controls="ref" aria-expanded="false" aria-keyshortcuts="L" title="Lights (L)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+        <span class="lbl">Lights</span>
+      </button>
+      <button class="hbtn" data-act="ref" data-ref="atc" aria-label="Radio" aria-controls="ref" aria-expanded="false" aria-keyshortcuts="R" title="Radio (R)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/></svg>
+        <span class="lbl">Radio</span>
+      </button>
+      <button class="hbtn" data-act="ref" data-ref="abbreviations" aria-label="Abbreviations" aria-controls="ref" aria-expanded="false" aria-keyshortcuts="A" title="Abbreviations (A)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/></svg>
+        <span class="lbl">Abbrev.</span>
+      </button>
     </div>
-  </div>
-</header>
+    <div class="util">
+      <button class="hbtn" id="scheme" data-act="scheme"></button>
+      <button class="hbtn" data-act="reset" aria-label="Reset flight" title="Reset flight">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span class="lbl">Reset</span>
+      </button>
+    </div>
+  </header>
 
-<div class="shell">
-  <aside class="rail">
-    <p class="rail-label">Phase</p>
-    <nav id="nav" aria-label="Flight phases"></nav>
-    <div class="rail-ref">
-      <p class="rail-label">Reference</p>
-      <nav id="ref-nav" aria-label="Reference"></nav>
+  <nav class="rail" id="rail" aria-label="Flight phases"></nav>
+
+  <main id="main"></main>
+
+  <aside class="ref" id="ref" aria-label="Reference" hidden>
+    <div class="ref-head">
+      <div class="ref-tabs" id="ref-tabs" role="tablist" aria-label="Reference sheets"></div>
+      <button class="hbtn" data-act="close" aria-label="Close reference" title="Close (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
+    <div id="ref-panel" role="tabpanel" tabindex="0"></div>
   </aside>
-  <main id="main" tabindex="-1"></main>
+
+  <div class="bar" id="bar">
+    <p id="next-label"></p>
+    <span class="keys" aria-hidden="true">
+      <span><kbd>J</kbd> <kbd>K</kbd> move</span>
+      <span><kbd>Space</kbd> tick</span>
+      <span><kbd>1</kbd>–<kbd>9</kbd> phase</span>
+      <span><kbd>L</kbd> <kbd>R</kbd> <kbd>A</kbd> reference</span>
+      <span><kbd>Esc</kbd> close</span>
+    </span>
+    <button class="bigbtn go" id="tick-next" data-act="tick-next">✓ Tick</button>
+    <button class="bigbtn go" id="next-phase" data-act="next-phase" hidden>Next phase →</button>
+  </div>
 </div>
 
-<dialog id="ref" aria-label="Reference">
-  <div class="ref-head">
-    <div class="ref-tabs" id="ref-tabs" role="tablist" aria-label="Reference"></div>
-    <button class="btn" id="ref-close">Close</button>
-  </div>
-  <div class="ref-body" id="ref-body" tabindex="-1"></div>
-</dialog>
-
 <div id="tip" role="tooltip" hidden></div>
-
-<footer class="tips">
-  <span><kbd>J</kbd><kbd>K</kbd> move</span>
-  <span><kbd>Space</kbd> tick</span>
-  <span><kbd>1</kbd>-<kbd>9</kbd> phase</span>
-  <span><kbd>L</kbd><kbd>A</kbd><kbd>R</kbd> reference</span>
-  <!-- lucide "info" -->
-  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Ticks stay in this browser</span>
-</footer>
+<div id="toast" role="status" hidden><span id="toast-msg"></span><button data-act="undo">Undo</button></div>
+<div class="sr" id="live" aria-live="polite"></div>
 
 <script id="data" type="application/json">/*__DATA__*/</script>
 <script>
 (() => {
   "use strict";
 
-  /* State is per aircraft: two companions open in two tabs must not share a
-     flight. The slug is substituted in when the page is built. */
   const SLUG = "%slug%";
   const LS = {
-    /* v2: rewriting the checklists against the FlyByWire beginner guide
-       replaced every item id, so v1 ticks no longer point at anything. */
     ticks: "fly." + SLUG + ".ticks.v2",
     fields: "fly." + SLUG + ".fields.v1",
     phase: "fly." + SLUG + ".phase.v1",
+    mode: "fly.mode.v1",
+    scheme: "fly.scheme.v1",
   };
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
-  /* The three reference sheets carry no ticks, so the payload ships them
-     under refs, apart from the procedures, and they open in the drawer
-     instead of the flight spine. Keyed by the shortcut that opens each one.
-
-     Icon markup is copied verbatim from @lucide/svelte 1.28.0 (24x24,
-     stroke-based), out of dist/icons/<name>.svelte. It's inlined rather than
-     imported because this page ships standalone, outside the printer shell.
-     Nothing syncs it: these three glyphs are not in src/lib/icons.ts, and
-     pnpm fly only writes the JSON payload, so a Lucide upgrade that redraws
-     them has to be re-copied here by hand. */
   const REFS = [
-    {
-      id: "lights", key: "l",
-      // lucide "lightbulb"
-      icon: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
-    },
-    {
-      id: "abbreviations", key: "a",
-      // lucide "book-open"
-      icon: '<path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/>',
-    },
-    {
-      id: "atc", key: "r",
-      // lucide "radio"
-      icon: '<path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/>',
-    },
+    { id: "lights", key: "l", label: "Lights" },
+    { id: "atc", key: "r", label: "Radio" },
+    { id: "abbreviations", key: "a", label: "Abbreviations" },
   ];
-  const iconSVG = inner =>
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+  const icon = paths =>
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + "</svg>";
+  const SCHEMES = {
+    auto: { next: "dark", label: "Auto", icon: icon('<circle cx="12" cy="12" r="10"/><path d="M12 18a6 6 0 0 0 0-12v12z"/>') },
+    dark: { next: "light", label: "Dark", paper: "#000000", icon: icon('<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>') },
+    light: { next: "auto", label: "Light", paper: "#e9edf0", icon: icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>') },
+  };
+  const MODES = ["fly", "learn"];
 
-  let DATA, procedures = [], ticks = load(LS.ticks, {}), fields = load(LS.fields, {});
-  let current, cursor = -1, openRefId = null;
-
-  const refSheet = id => DATA.refs[id];
-  const dialog = () => document.getElementById("ref");
-
-  const esc = s => String(s)
-    .replace(/[—–]/g, "-")
-    .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
-  const inline = frag => (frag || []).map(n => {
-    if (n.t === "text") return esc(n.v);
-    if (n.t === "b") return n.tip ? '<b data-tip="' + esc(n.tip) + '">' + esc(n.v) + "</b>" : "<b>" + esc(n.v) + "</b>";
-    if (n.t === "i") return "<i>" + esc(n.v) + "</i>";
-    if (n.t === "sub") return "<sub>" + esc(n.v) + "</sub>";
-    if (n.t === "link") return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + esc(n.v) + "</a>";
-    return "";
-  }).join("");
-
-  const phaseItems = p => (p.groups || []).flatMap(g => (g.blocks || []).filter(b => b.type === "items").flatMap(b => b.items));
-  const countPhase = p => { const it = phaseItems(p); return { done: it.filter(i => ticks[i.id]).length, total: it.length }; };
-
-  /* ---------- render ---------- */
-  const CELLS = 40;
-  function renderTotals() {
-    let done = 0, total = 0;
-    procedures.forEach(p => { const c = countPhase(p); done += c.done; total += c.total; });
-    document.getElementById("total").textContent = done + " / " + total;
-    const on = total ? Math.round(done / total * CELLS) : 0;
-    document.getElementById("cells").innerHTML =
-      Array.from({ length: CELLS }, (_, i) => '<i' + (i < on ? ' class="on"' : "") + "></i>").join("");
-  }
-
+  const $ = id => document.getElementById(id);
+  const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ESC[c]);
+  const plain = frag => (frag || []).map(n => n.v).join("");
+  const pick = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
+  const touchFirst = matchMedia("(pointer: coarse)");
+  const mouseFirst = matchMedia("(pointer: fine)");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
+  const prefersDark = matchMedia("(prefers-color-scheme: dark)");
   const glide = () => (still.matches ? "instant" : "smooth");
 
-  /* The header is sticky and its height changes with the viewport, so the rail
-     below it cannot dock against a hard-coded offset. Publish the measured
-     height and let the CSS position both the rail and its own scroll offset. */
-  function trackHeader() {
-    const header = document.querySelector("header");
-    const publish = () =>
-      document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
-    new ResizeObserver(publish).observe(header);
-    publish();
+  let DATA;
+  try {
+    DATA = JSON.parse($("data").textContent);
+  } catch {
+    $("main").innerHTML = '<p class="lede">Could not read the checklist data.</p>';
+    return;
   }
 
-  /* On narrow screens the phases are a horizontal strip, so the current one can
-     sit off-screen after a reload or a keyboard jump. */
-  function revealCurrent() {
-    const nav = document.getElementById("nav");
-    if (nav.scrollWidth <= nav.clientWidth) return;
-    const btn = nav.querySelector('[aria-current="true"]');
-    if (btn) btn.scrollIntoView({ inline: "center", block: "nearest", behavior: glide() });
-  }
+  const PHASES = DATA.phases.map(p => {
+    const groups = p.groups.map(g => ({ ...g, items: g.blocks.filter(b => b.type === "items").flatMap(b => b.items) }));
+    return { ...p, groups, items: groups.flatMap(g => g.items) };
+  });
 
-  function renderNav() {
-    document.getElementById("nav").innerHTML = procedures.map(p => {
-      const { done, total } = countPhase(p);
-      const pct = total ? Math.round(done / total * 100) + "%" : "";
-      return '<button data-id="' + p.id + '" aria-current="' + (p.id === current) + '"' +
-        (total && done === total ? ' data-complete="true"' : "") + ">" +
-        '<span class="num">' + esc(p.num) + "</span>" +
-        "<span>" + esc(p.short) + "</span>" +
-        '<span class="pct">' + pct + "</span></button>";
+  const S = {
+    phase: 0,
+    ticks: load(LS.ticks, {}),
+    fields: load(LS.fields, {}),
+    mode: pick(load(LS.mode, "fly"), MODES, "fly"),
+    scheme: pick(load(LS.scheme, "auto"), Object.keys(SCHEMES), "auto"),
+    ref: null,
+    cursor: null,
+    open: new Set(),
+    filter: "",
+  };
+
+  const done = items => items.filter(i => S.ticks[i.id]).length;
+  const nextItem = p => p.items.find(i => !S.ticks[i.id]);
+  const phaseFromHash = () => PHASES.findIndex(p => p.id === decodeURIComponent(location.hash.slice(1)));
+  const lines = () => [...$("main").querySelectorAll(".line")];
+
+  /* Inside a row the whole row is one checkbox, and a checkbox's content is
+     presentational: links flatten to text (the docs link sits beside the row)
+     and tips stay out of the tab order, reached through the row's own focus. */
+  function inline(frag, inRow) {
+    return (frag || []).map(n => {
+      const v = esc(n.v);
+      if (n.t === "b") return n.tip ? '<b data-tip="' + esc(n.tip) + '"' + (inRow ? "" : ' tabindex="0"') + ">" + v + "</b>" : "<b>" + v + "</b>";
+      if (n.t === "i") return "<i>" + v + "</i>";
+      if (n.t === "sub") return "<sub>" + v + "</sub>";
+      if (n.t === "link" && !inRow) return '<a href="' + esc(n.href) + '" target="_blank" rel="noopener">' + v + "</a>";
+      return v;
     }).join("");
   }
 
-  function renderRefNav() {
-    document.getElementById("ref-nav").innerHTML = REFS.map(r => {
-      const p = refSheet(r.id);
-      if (!p) return "";
-      return '<button data-ref="' + r.id + '"><span class="ico">' + iconSVG(r.icon) +
-        '</span><span class="lbl">' + esc(p.short) + '</span><span class="key">' +
-        r.key.toUpperCase() + "</span></button>";
-    }).join("");
+  function proseHTML(b) {
+    if (b.type === "para") return "<p>" + inline(b.frag) + "</p>";
+    if (b.type === "note") return '<p class="note">' + inline(b.frag) + "</p>";
+    if (b.type === "steps") return "<ol>" + b.items.map(f => "<li>" + inline(f) + "</li>").join("") + "</ol>";
+    if (b.type === "bullets") return "<ul>" + b.items.map(f => "<li>" + inline(f) + "</li>").join("") + "</ul>";
+    return "";
   }
 
-  function itemsHTML(block) {
-    return '<div class="items-head" aria-hidden="true"><span></span><span>Control</span><span>Action</span><span>' +
-      esc(block.conditionLabel || "") + "</span></div><ul class=\"items\">" + block.items.map(i =>
-      '<li data-done="' + !!ticks[i.id] + '" data-item="' + esc(i.id) + '">' +
-        '<label><input type="checkbox"' + (ticks[i.id] ? " checked" : "") + ' data-id="' + esc(i.id) + '">' +
-        '<span class="box" aria-hidden="true"><i></i></span>' +
-        '<span class="ctl">' + inline(i.control) + (i.full ? '<span class="full">' + esc(i.full) + "</span>" : "") + "</span>" +
-        '<span class="act">' + inline(i.action) + "</span>" +
-        '<span class="cond">' + (i.condition ? inline(i.condition) : "") + "</span>" +
-      "</label></li>").join("") + "</ul>";
+  function renderChrome() {
+    const root = document.documentElement;
+    if (S.scheme === "auto") delete root.dataset.scheme; else root.dataset.scheme = S.scheme;
+    const resolved = S.scheme === "auto" ? (prefersDark.matches ? "dark" : "light") : S.scheme;
+    document.querySelector('meta[name="color-scheme"]').content = S.scheme === "auto" ? "light dark" : S.scheme;
+    document.querySelector('meta[name="theme-color"]').content = SCHEMES[resolved].paper;
+    const scheme = SCHEMES[S.scheme];
+    $("scheme").innerHTML = scheme.icon + '<span class="lbl">' + scheme.label + "</span>";
+    $("scheme").setAttribute("aria-label", "Colour scheme: " + scheme.label);
+    $("scheme").title = "Colour scheme: " + scheme.label + " (Auto, Dark, Light)";
+
+    root.dataset.mode = S.mode;
+    document.querySelectorAll('[data-act="mode"]').forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === S.mode)));
+    document.querySelectorAll('[data-act="ref"]').forEach(b => b.setAttribute("aria-expanded", String(b.dataset.ref === S.ref)));
+    $("ref").hidden = !S.ref;
+  }
+
+  function renderProgress() {
+    let ticked = 0, total = 0;
+    $("segs").innerHTML = PHASES.map((p, i) => {
+      const c = done(p.items);
+      ticked += c; total += p.items.length;
+      return '<i style="flex-grow:' + p.items.length + ";--p:" + (p.items.length ? c / p.items.length * 100 : 0) + '%"' +
+        (i === S.phase ? ' class="cur"' : "") + "></i>";
+    }).join("");
+    $("total").textContent = ticked + " / " + total;
+  }
+
+  function renderRail() {
+    const nav = $("rail");
+    if (!nav.children.length) {
+      nav.innerHTML = PHASES.map((p, i) =>
+        '<button data-act="phase" data-i="' + i + '" aria-keyshortcuts="' + (i + 1) + '">' +
+        '<span class="n">' + esc(p.num) + '</span><span class="t">' + esc(p.short) + '</span><span class="pc"></span></button>').join("");
+    }
+    PHASES.forEach((p, i) => {
+      const b = nav.children[i], c = done(p.items), complete = c === p.items.length;
+      if (i === S.phase) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", complete);
+      b.lastElementChild.textContent = complete ? "✓" : c + "/" + p.items.length;
+    });
+  }
+
+  function revealPhase(behavior = glide()) {
+    const nav = $("rail"), b = nav.children[S.phase];
+    if (nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: b.offsetLeft - (nav.clientWidth - b.offsetWidth) / 2, behavior });
+    else if (nav.scrollHeight > nav.clientHeight) nav.scrollTo({ top: b.offsetTop - (nav.clientHeight - b.offsetHeight) / 2, behavior });
+  }
+
+  function lightsHTML(p) {
+    if (!p.lights.length) return "";
+    return '<div class="lights" role="group" aria-labelledby="lights-label"><span class="lbl" id="lights-label">Lights</span>' +
+      p.lights.map(entry =>
+        (p.lights.length > 1 ? '<span class="when">' + esc(entry.when) + "</span>" : "") +
+        entry.set.map(s =>
+          '<span class="chip"' + (s.full ? ' tabindex="0" data-tip="' + esc(s.full) + '"' : "") + ">" +
+          esc(s.light) + " <b>" + esc(s.state) + "</b></span>").join("")).join("") +
+      "</div>";
+  }
+
+  function rowHTML(it, label, n) {
+    const href = (it.control.find(f => f.t === "link") || {}).href;
+    const cl = label && label !== "Condition" ? '<span class="cl">' + esc(label) + "</span> " : "";
+    return '<div class="line" data-id="' + esc(it.id) + '">' +
+      '<div class="row' + (it.kind === "verify" ? " verify" : "") + '" role="checkbox" tabindex="0" data-act="tick" aria-checked="false"' +
+        ' aria-labelledby="rn' + n + " ra" + n + '"' + (it.condition ? ' aria-describedby="rc' + n + '"' : "") + ">" +
+        '<span class="box" aria-hidden="true"></span>' +
+        '<span class="ctl"><span class="name" id="rn' + n + '">' + inline(it.control, true) + "</span>" +
+          (it.full ? '<span class="full">' + esc(it.full) + "</span>" : "") + "</span>" +
+        '<span class="act">' + (it.kind === "verify" ? '<span class="badge" aria-hidden="true">Verify</span>' : "") +
+          '<span id="ra' + n + '">' + inline(it.action, true) + "</span></span>" +
+        (it.condition ? '<span class="cond" id="rc' + n + '">' + cl + inline(it.condition, true) + "</span>" : '<span class="cond"></span>') +
+      "</div>" +
+      (href ? '<a class="doc" href="' + esc(href) + '" target="_blank" rel="noopener" title="Open in the FlyByWire docs"' +
+        ' aria-label="' + esc(plain(it.control)) + ' in the FlyByWire docs">↗</a>' : "") +
+    "</div>";
+  }
+
+  const notesLabel = (count, open) =>
+    open ? "Hide notes" : '<span aria-hidden="true">ⓘ</span> ' + count + (count === 1 ? " note" : " notes");
+
+  function groupHTML(g, gi, counter) {
+    const key = S.phase + ":" + gi, open = S.open.has(key);
+    const runs = [];
+    let body = "", prose = [], blocks = 0;
+    const flush = () => {
+      if (!prose.length) return;
+      const id = "prose-" + gi + "-" + runs.length;
+      runs.push(id);
+      blocks += prose.length;
+      body += '<div class="prose" id="' + id + '">' + prose.map(proseHTML).join("") + "</div>";
+      prose = [];
+    };
+    g.blocks.forEach(b => {
+      if (b.type !== "items") return prose.push(b);
+      flush();
+      body += '<div class="rows">' + b.items.map(it => rowHTML(it, b.conditionLabel, counter.n++)).join("") + "</div>";
+    });
+    flush();
+
+    const toggle = runs.length
+      ? '<button class="notes" data-act="notes" data-key="' + key + '" data-count="' + blocks + '" aria-expanded="' + open +
+        '" aria-controls="' + runs.join(" ") + '">' + notesLabel(blocks, open) + "</button>"
+      : "";
+    const head = g.title || toggle
+      ? '<div class="ghead">' + (g.title ? "<h2>" + esc(g.title) + "</h2>" : '<span class="gt"></span>') +
+        (g.items.length ? '<span class="ct"></span>' : "") + toggle + "</div>"
+      : "";
+    return '<section class="grp' + (open ? " open" : "") + '" data-g="' + gi + '">' + head + body + "</section>";
+  }
+
+  function renderMain() {
+    const p = PHASES[S.phase], after = PHASES[S.phase + 1], counter = { n: 0 };
+    hideTip();
+    $("main").innerHTML =
+      '<h1 id="phase-title" tabindex="-1">' + esc(p.title) + "</h1>" +
+      (p.lede ? '<p class="lede">' + esc(p.lede) + "</p>" : "") +
+      lightsHTML(p) +
+      p.groups.map((g, gi) => groupHTML(g, gi, counter)).join("") +
+      '<div class="endcard" id="endcard"><span id="end-msg"></span>' +
+        (after
+          ? '<button class="bigbtn" id="end-next" data-act="next-phase">Next: ' + esc(after.num) + " · " + esc(after.short) + " →</button>"
+          : "<span>End of flight</span>") +
+      "</div>";
+  }
+
+  const syncCursor = () =>
+    lines().forEach(line => line.firstElementChild.classList.toggle("cursor", line.dataset.id === S.cursor));
+
+  function syncMain() {
+    const p = PHASES[S.phase], next = nextItem(p);
+    lines().forEach(line => {
+      line.firstElementChild.setAttribute("aria-checked", String(!!S.ticks[line.dataset.id]));
+      line.classList.toggle("next", !!next && next.id === line.dataset.id);
+    });
+    syncCursor();
+    $("main").querySelectorAll(".grp").forEach(sec => {
+      const ct = sec.querySelector(".ct");
+      if (!ct) return;
+      const items = p.groups[sec.dataset.g].items, c = done(items);
+      ct.textContent = c + "/" + items.length;
+      ct.classList.toggle("ok", c === items.length);
+    });
+    const left = p.items.length - done(p.items);
+    $("endcard").classList.toggle("ok", !left);
+    $("end-msg").textContent = left ? left + (left === 1 ? " item" : " items") + " left in " + p.short : "✓ " + p.short + " complete";
+    $("end-next")?.classList.toggle("go", !left);
+  }
+
+  function renderBar() {
+    const p = PHASES[S.phase], nx = nextItem(p), after = PHASES[S.phase + 1];
+    $("next-label").innerHTML = nx
+      ? "Next: <b>" + esc(plain(nx.control)) + "</b> — " + esc(plain(nx.action))
+      : "✓ " + esc(p.short) + " complete" + (after ? "" : " · end of flight");
+    const tick = $("tick-next"), go = $("next-phase");
+    const stranded = document.activeElement === tick && !nx;
+    tick.hidden = !nx;
+    go.hidden = !!nx || !after;
+    if (stranded) (go.hidden ? $("phase-title") : go).focus({ preventScroll: true });
+  }
+
+  function sync() {
+    syncMain();
+    renderBar();
+    renderProgress();
+    renderRail();
+  }
+
+  function matrixHTML(b, highlight, lights) {
+    const on = b.head.map(h => highlight.includes(h));
+    return '<div class="scroll"><table><thead><tr>' +
+      b.head.map((h, i) => '<th scope="col"' + (on[i] ? ' class="hl"' : "") + ">" + esc(h) + "</th>").join("") +
+      "</tr></thead><tbody>" + b.rows.map((r, ri) => "<tr>" + r.map((c, ci) => {
+        if (!ci) return '<th scope="row">' + esc(c) + (b.fulls?.[ri] ? '<span class="full">' + esc(b.fulls[ri]) + "</span>" : "") + "</th>";
+        const nil = /^[-–]?$/.test(c);
+        const cls = [on[ci] && "hl", nil ? "nil" : lights && !/required/i.test(c) && "val"].filter(Boolean).join(" ");
+        return "<td" + (cls ? ' class="' + cls + '"' : "") + ">" + esc(c) + "</td>";
+      }).join("") + "</tr>").join("") + "</tbody></table></div>";
   }
 
   function sayHTML(text) {
     return esc(text).replace(/\{([A-Z0-9 _+]+)\}/g, (m, tok) => {
-      const v = (fields[tok] || "").trim();
+      const v = (S.fields[tok] || "").trim();
       return v ? '<span class="fill">' + esc(v) + "</span>" : '<span class="tok">' + esc(tok.toLowerCase()) + "</span>";
     });
   }
 
-  function blockHTML(b) {
-    if (b.type === "items") return itemsHTML(b);
-    if (b.type === "para") return '<p class="para">' + inline(b.frag) + "</p>";
-    if (b.type === "note") return '<p class="note">' + inline(b.frag) + "</p>";
-    if (b.type === "steps") return '<ol class="steps">' + b.items.map(s => "<li>" + inline(s) + "</li>").join("") + "</ol>";
-    if (b.type === "bullets") return '<ul class="bullets">' + b.items.map(s => "<li>" + inline(s) + "</li>").join("") + "</ul>";
-    if (b.type === "matrix") {
-      return '<div class="scroll"><table><thead><tr>' + b.head.map(h => "<th>" + esc(h) + "</th>").join("") +
-        "</tr></thead><tbody>" + b.rows.map((r, ri) => "<tr>" + r.map((c, ci) => {
-          if (ci === 0) {
-            const full = (b.fulls || [])[ri];
-            return "<th>" + esc(c) + (full ? '<span class="full">' + esc(full) + "</span>" : "") + "</th>";
-          }
-          const nil = c === "–" || c === "-" || c === "";
-          return '<td class="' + (nil ? "nil" : /required/i.test(c) ? "soft" : "") + '">' + esc(nil ? "-" : c) + "</td>";
-        }).join("") + "</tr>").join("") + "</tbody></table></div>";
-    }
-    if (b.type === "exchange") {
-      return (b.title ? "<h3>" + esc(b.title) + "</h3>" : "") + b.turns.map(t =>
-        '<div class="turn ' + (t.who === "You" ? "you" : "atc") + '">' +
-          '<span class="who">' + esc(t.who) + (t.tag ? "<span>" + esc(t.tag) + "</span>" : "") + "</span>" +
-          '<span class="say">' + sayHTML(t.text) + "</span></div>").join("");
-    }
-    return "";
+  const exchangeHTML = b =>
+    '<div class="ex">' + (b.title ? "<h4>" + esc(b.title) + "</h4>" : "") + b.turns.map(t =>
+      '<div class="turn ' + (t.who === "You" ? "you" : "atc") + '">' +
+        '<span class="who">' + esc(t.who) + (t.tag ? "<small>" + esc(t.tag) + "</small>" : "") + "</span>" +
+        '<span class="say" data-text="' + esc(t.text) + '">' + sayHTML(t.text) + "</span></div>").join("") + "</div>";
+
+  function sheetGroupsHTML(sheet, matrix) {
+    return sheet.groups.map(g =>
+      "<section>" + (g.title ? "<h3>" + esc(g.title) + "</h3>" : "") + g.blocks.map(b =>
+        b.type === "matrix" ? matrix(b)
+          : b.type === "exchange" ? exchangeHTML(b)
+          : '<div class="prose">' + proseHTML(b) + "</div>").join("") + "</section>").join("");
   }
 
-  function groupsHTML(p) {
-    return (p.groups || []).map(g =>
-      '<section class="grp">' + (g.title ? "<h2>" + esc(g.title) + "</h2>" : "") +
-      (g.blocks || []).map(blockHTML).join("") + "</section>").join("");
-  }
+  const SHEETS = {
+    lights: sheet => sheetGroupsHTML(sheet, b => matrixHTML(b, PHASES[S.phase].lights.map(e => e.when), true)),
+    atc: sheet =>
+      (sheet.chain ? '<p class="chain">' + sheet.chain.map(c => "<b>" + esc(c) + "</b>").join('<span aria-hidden="true">→</span>') + "</p>" : "") +
+      '<div class="fields">' + DATA.tokens.map(t =>
+        "<label>" + esc(t.label) + '<input data-tok="' + esc(t.key) + '" value="' + esc(S.fields[t.key] || "") +
+        '" placeholder="' + esc(t.key.toLowerCase()) + '" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>').join("") +
+      "</div>" + sheetGroupsHTML(sheet, () => ""),
+    abbreviations: sheet =>
+      '<input class="filter" id="ref-filter" type="search" value="' + esc(S.filter) + '" placeholder="Filter, e.g. FMA"' +
+      ' aria-label="Filter abbreviations" autocomplete="off" autocapitalize="characters" spellcheck="false">' +
+      sheetGroupsHTML(sheet, b => matrixHTML(b, [], false)) + '<p class="empty" id="ref-empty" hidden></p>',
+  };
 
-  function renderMain() {
-    const p = procedures.find(x => x.id === current) || procedures[0];
-    let html = "<h1>" + esc(p.title) + "</h1>";
-    if (p.lede) html += '<p class="lede">' + esc(p.lede) + "</p>";
-    html += groupsHTML(p);
-    document.getElementById("main").innerHTML = html;
-    cursor = -1;
-    hideTip(); // the term under the pointer may not survive the re-render
-  }
-
-  /* ---------- reference drawer ---------- */
-  function renderRef(id) {
-    const p = refSheet(id);
-    if (!p) return;
-    openRefId = id;
-
-    document.getElementById("ref-tabs").innerHTML = REFS.map(r =>
-      '<button class="ref-tab" role="tab" data-ref="' + r.id + '" aria-selected="' +
-      (r.id === id) + '">' + esc(refSheet(r.id).short) + "</button>").join("");
-
-    let html = "<h1>" + esc(p.title) + "</h1>";
-
-    if (id === "abbreviations") {
-      html += '<input class="ref-search" id="ref-search" type="search" placeholder="Filter abbreviations" ' +
-        'spellcheck="false" aria-label="Filter abbreviations">';
-    }
-    if (id === "atc") {
-      if (p.chain) {
-        html += '<div class="chain">' + p.chain.map((c, i) =>
-          (i ? "<i>-&gt;</i>" : "") + "<b>" + esc(c) + "</b>").join("") + "</div>";
-      }
-      html += '<div class="fields">' + DATA.tokens.map(t =>
-        "<label>" + esc(t.label) + '<input data-tok="' + esc(t.key) + '" value="' + esc(fields[t.key] || "") +
-        '" placeholder="' + esc(t.key.toLowerCase()) + '" spellcheck="false"></label>').join("") + "</div>";
-    }
-
-    html += groupsHTML(p);
-    const body = document.getElementById("ref-body");
-    body.innerHTML = html;
-    body.scrollTop = 0;
+  function renderRef() {
+    if (!S.ref) return;
+    REFS.forEach(r => {
+      const tab = $("tab-" + r.id), on = r.id === S.ref;
+      tab.setAttribute("aria-selected", String(on));
+      tab.tabIndex = on ? 0 : -1;
+    });
+    const panel = $("ref-panel"), sheet = DATA.refs[S.ref];
+    const changed = panel.dataset.sheet !== S.ref;
+    panel.dataset.sheet = S.ref;
+    panel.setAttribute("aria-labelledby", "tab-" + S.ref);
     hideTip();
+    panel.innerHTML = "<h2>" + esc(sheet.title) + "</h2>" + SHEETS[S.ref](sheet);
+    if (changed) panel.scrollTop = 0;
+    if (S.ref === "abbreviations") applyFilter();
+  }
+
+  function applyFilter() {
+    const q = S.filter.trim().toLowerCase();
+    let any = false;
+    $("ref-panel").querySelectorAll("section").forEach(sec => {
+      let shown = 0;
+      sec.querySelectorAll("tbody tr").forEach(tr => {
+        tr.hidden = !!q && !tr.textContent.toLowerCase().includes(q);
+        if (!tr.hidden) shown++;
+      });
+      sec.hidden = !shown;
+      any ||= shown > 0;
+    });
+    $("ref-empty").hidden = any;
+    $("ref-empty").textContent = "Nothing matches “" + S.filter.trim() + "”";
+  }
+
+  const renderSays = () =>
+    document.querySelectorAll("#ref-panel .say").forEach(el => (el.innerHTML = sayHTML(el.dataset.text)));
+
+  function syncFields() {
+    document.querySelectorAll("[data-tok]").forEach(input => {
+      if (input !== document.activeElement) input.value = S.fields[input.dataset.tok] || "";
+    });
+    renderSays();
   }
 
   function openRef(id) {
-    const dlg = dialog();
-    renderRef(id);
-    if (!dlg.open) dlg.showModal();
-    const search = document.getElementById("ref-search");
-    if (search) search.focus(); else document.getElementById("ref-body").focus();
+    if (S.ref === id) return;
+    if (!S.ref) S.filter = "";
+    S.ref = id;
+    renderChrome();
+    renderRef();
   }
 
-  function filterAbbreviations(query) {
-    const q = query.trim().toLowerCase();
-    let shown = 0;
-    document.querySelectorAll("#ref-body tbody tr").forEach(tr => {
-      const hit = !q || tr.textContent.toLowerCase().includes(q);
-      tr.hidden = !hit;
-      if (hit) shown++;
-    });
-    let empty = document.getElementById("ref-empty");
-    if (!shown && !empty) {
-      empty = document.createElement("p");
-      empty.id = "ref-empty";
-      empty.className = "ref-empty";
-      empty.textContent = "Nothing matches " + query.trim();
-      document.getElementById("ref-body").append(empty);
-    } else if (shown && empty) {
-      empty.remove();
-    } else if (empty) {
-      empty.textContent = "Nothing matches " + query.trim();
-    }
+  function closeRef() {
+    if (!S.ref) return;
+    const id = S.ref, hadFocus = $("ref").contains(document.activeElement);
+    S.ref = null;
+    hideTip();
+    renderChrome();
+    if (hadFocus) document.querySelector('[data-act="ref"][data-ref="' + id + '"]').focus();
   }
 
-  /* ---------- tooltip ---------- */
-  const GAP = 7, EDGE = 8;
+  function toggleRef(id) {
+    if (S.ref === id) return closeRef();
+    openRef(id);
+    if (id === "abbreviations" && mouseFirst.matches) $("ref-filter").focus({ preventScroll: true });
+  }
 
-  function showTip(el) {
-    const tip = document.getElementById("tip");
-    tip.textContent = el.dataset.tip;
-    /* A dialog sits in the top layer, above everything the page can stack
-       against, so the bubble follows the term in and out of the sheet. */
-    const host = el.closest("dialog") || document.body;
-    if (tip.parentNode !== host) host.append(tip);
-    /* Park it at the origin before measuring: a fixed element left near the
-       right edge shrinks to the space beside it and wraps differently there. */
+  let tipAnchor = null, tipOwner = null;
+
+  function placeTip() {
+    const tip = $("tip");
+    if (tip.hidden) return;
+    if (!tipAnchor.isConnected) return hideTip();
     tip.style.left = tip.style.top = "0px";
-    tip.hidden = false;
+    const r = tipAnchor.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(r.left + r.width / 2 - t.width / 2, innerWidth - t.width - 8)) + "px";
+    tip.style.top = (r.top > t.height + 16 ? r.top - t.height - 7 : r.bottom + 7) + "px";
+  }
 
-    const r = el.getBoundingClientRect();
-    const t = tip.getBoundingClientRect();
-    const room = innerWidth - t.width - EDGE;
-    tip.style.left = Math.max(EDGE, Math.min(r.left + r.width / 2 - t.width / 2, room)) + "px";
-    // above the term unless it is too close to the top of the window
-    tip.style.top = (r.top > t.height + GAP ? r.top - t.height - GAP : r.bottom + GAP) + "px";
+  function showTip(anchor, text, owner = anchor) {
+    hideTip();
+    tipAnchor = anchor;
+    tipOwner = owner;
+    $("tip").textContent = text;
+    $("tip").hidden = false;
+    owner.setAttribute("aria-describedby", ((owner.getAttribute("aria-describedby") || "") + " tip").trim());
+    placeTip();
   }
 
   function hideTip() {
-    const tip = document.getElementById("tip");
-    if (tip) tip.hidden = true;
+    if ($("tip").hidden) return;
+    $("tip").hidden = true;
+    const rest = (tipOwner.getAttribute("aria-describedby") || "").split(" ").filter(id => id && id !== "tip").join(" ");
+    if (rest) tipOwner.setAttribute("aria-describedby", rest); else tipOwner.removeAttribute("aria-describedby");
+    tipAnchor = tipOwner = null;
   }
 
-  document.addEventListener("mouseover", e => {
-    const el = e.target.closest("[data-tip]");
-    if (el) showTip(el); else hideTip();
-  });
-  // mouseover cannot fire on the way out of the window
-  document.addEventListener("mouseleave", hideTip);
-  // fixed coordinates go stale the moment anything moves under them
-  document.addEventListener("scroll", hideTip, true);
-  window.addEventListener("resize", hideTip);
+  function rowTip(row) {
+    const terms = [...row.querySelectorAll("[data-tip]")];
+    if (terms.length) showTip(terms[0], terms.map(t => t.textContent + ": " + t.dataset.tip).join("\n"), row);
+  }
 
-  /* ---------- state ---------- */
-  function setPhase(id) {
-    current = id;
-    save(LS.phase, id);
-    renderNav();
+  function setPhase(i) {
+    const hadFocus = $("main").contains(document.activeElement);
+    S.phase = i;
+    S.cursor = null;
+    save(LS.phase, PHASES[i].id);
     renderMain();
+    sync();
+    if (S.ref === "lights") renderRef();
     window.scrollTo({ top: 0, behavior: "instant" });
-    revealCurrent();
+    revealPhase();
+    if (hadFocus) $("phase-title").focus({ preventScroll: true });
   }
+
+  const setPhaseHash = i => { if (PHASES[i]) location.hash = PHASES[i].id; };
 
   function setTick(id, on) {
-    if (on) ticks[id] = true; else delete ticks[id];
-    save(LS.ticks, ticks);
-    const li = document.querySelector('[data-item="' + CSS.escape(id) + '"]');
-    if (li) {
-      li.dataset.done = String(!!on);
-      const box = li.querySelector("input");
-      if (box) box.checked = !!on;
-    }
-    renderNav();
-    renderTotals();
+    if (on) S.ticks[id] = true; else delete S.ticks[id];
+    save(LS.ticks, S.ticks);
+    sync();
+    const p = PHASES[S.phase];
+    $("live").textContent = p.short + " " + done(p.items) + " of " + p.items.length;
   }
 
-  function rows() { return [...document.querySelectorAll(".items li")]; }
-  function moveCursor(delta) {
-    const list = rows();
-    if (!list.length) return;
-    list.forEach(li => (li.dataset.cursor = "false"));
-    cursor = cursor < 0 ? (delta > 0 ? 0 : list.length - 1)
-                        : Math.max(0, Math.min(list.length - 1, cursor + delta));
-    const li = list[cursor];
-    li.dataset.cursor = "true";
-    li.scrollIntoView({ block: "center", behavior: glide() });
+  function reveal(id, focus) {
+    const line = lines().find(l => l.dataset.id === id);
+    if (!line) return;
+    if (focus) line.firstElementChild.focus({ preventScroll: true });
+    line.scrollIntoView({ block: "center", behavior: glide() });
   }
+
+  function tickNext() {
+    const p = PHASES[S.phase], nx = nextItem(p);
+    if (!nx) return;
+    setTick(nx.id, true);
+    reveal(nextItem(p)?.id, false);
+  }
+
+  function moveCursorTo(id) {
+    S.cursor = id;
+    syncCursor();
+    reveal(id, true);
+  }
+
+  function moveCursor(step) {
+    const ids = lines().map(l => l.dataset.id);
+    if (!ids.length) return;
+    const at = ids.indexOf(S.cursor), nx = nextItem(PHASES[S.phase]);
+    const target = at >= 0 ? Math.max(0, Math.min(ids.length - 1, at + step))
+      : nx ? ids.indexOf(nx.id)
+      : step > 0 ? 0 : ids.length - 1;
+    moveCursorTo(ids[target]);
+  }
+
+  function tickCursor() {
+    const ids = lines().map(l => l.dataset.id), at = ids.indexOf(S.cursor);
+    if (at < 0) return tickNext();
+    setTick(S.cursor, !S.ticks[S.cursor]);
+    if (ids[at + 1]) moveCursorTo(ids[at + 1]);
+  }
+
+  function toggleNotes(button) {
+    const key = button.dataset.key, open = !S.open.has(key);
+    if (open) S.open.add(key); else S.open.delete(key);
+    button.closest(".grp").classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    button.innerHTML = notesLabel(Number(button.dataset.count), open);
+  }
+
+  let undo = null, toastTimer = 0;
+
+  function toast(message, onUndo) {
+    undo = onUndo;
+    $("toast-msg").textContent = message;
+    $("toast").hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 6000);
+  }
+
+  function hideToast() {
+    const hadFocus = $("toast").contains(document.activeElement);
+    $("toast").hidden = true;
+    undo = null;
+    if (hadFocus) document.querySelector('[data-act="reset"]').focus();
+  }
+
+  function restore(ticks, fields) {
+    S.ticks = ticks;
+    S.fields = fields;
+    save(LS.ticks, ticks);
+    save(LS.fields, fields);
+    sync();
+    syncFields();
+  }
+
+  function reset() {
+    const before = { ticks: S.ticks, fields: S.fields };
+    restore({}, {});
+    toast("Flight reset", () => restore(before.ticks, before.fields));
+  }
+
+  const CLICKS = {
+    tick: el => { const id = el.parentElement.dataset.id; S.cursor = id; setTick(id, !S.ticks[id]); },
+    phase: el => setPhaseHash(Number(el.dataset.i)),
+    "next-phase": () => setPhaseHash(S.phase + 1),
+    "tick-next": tickNext,
+    notes: toggleNotes,
+    mode: el => { S.mode = el.dataset.mode; save(LS.mode, S.mode); renderChrome(); },
+    scheme: () => { S.scheme = SCHEMES[S.scheme].next; save(LS.scheme, S.scheme); renderChrome(); },
+    ref: el => toggleRef(el.dataset.ref),
+    tab: el => openRef(el.dataset.ref),
+    close: closeRef,
+    reset,
+    undo: () => { undo?.(); hideToast(); },
+    skip: (el, e) => { e.preventDefault(); $("phase-title").focus(); },
+  };
 
   document.addEventListener("click", e => {
-    const nav = e.target.closest("#nav button");
-    if (nav) return setPhase(nav.dataset.id);
+    const term = touchFirst.matches && e.target.closest("[data-tip]");
+    if (term) return tipAnchor === term ? hideTip() : showTip(term, term.dataset.tip);
+    if (touchFirst.matches) hideTip();
+    const el = e.target.closest("[data-act]");
+    if (el) CLICKS[el.dataset.act](el, e);
+  });
 
-    const ref = e.target.closest("[data-ref]");
-    if (ref) return openRef(ref.dataset.ref);
+  const TAB_KEYS = {
+    ArrowRight: i => i + 1,
+    ArrowLeft: i => i - 1,
+    Home: () => 0,
+    End: () => REFS.length - 1,
+  };
 
-    if (e.target.id === "ref-close") return dialog().close();
+  const KEYS = {
+    j: () => moveCursor(1),
+    k: () => moveCursor(-1),
+    " ": tickCursor,
+    escape: () => { hideTip(); closeRef(); },
+    ...Object.fromEntries(REFS.map(r => [r.key, () => toggleRef(r.id)])),
+    ...Object.fromEntries(PHASES.map((p, i) => [String(i + 1), () => setPhaseHash(i)])),
+  };
 
-    if (e.target.id === "reset") {
-      ticks = {}; save(LS.ticks, ticks);
-      renderNav(); renderMain(); renderTotals();
+  document.addEventListener("keydown", e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t.matches("input:not([type=checkbox]):not([type=radio]), textarea, select")) {
+      if (e.key === "Escape") t.blur();
+      return;
     }
+    const step = t.getAttribute("role") === "tab" && TAB_KEYS[e.key];
+    if (step) {
+      e.preventDefault();
+      const next = REFS[(step(REFS.findIndex(r => r.id === S.ref)) + REFS.length) % REFS.length];
+      openRef(next.id);
+      $("tab-" + next.id).focus();
+      return;
+    }
+    if (e.key === " " && t.matches("button, a")) return;
+    const action = KEYS[e.key.toLowerCase()];
+    if (!action) return;
+    e.preventDefault();
+    const heldSpace = e.repeat && e.key === " ";
+    if (!heldSpace) action();
   });
 
-  /* Clicking the scrim beside the sheet closes it, the usual drawer contract. */
-  dialog().addEventListener("click", e => {
-    if (e.target === dialog()) dialog().close();
+  document.addEventListener("focusin", e => {
+    const row = e.target.closest(".row");
+    if (row) { S.cursor = row.parentElement.dataset.id; syncCursor(); }
+    if (!mouseFirst.matches) return;
+    if (e.target.matches("[data-tip]")) showTip(e.target, e.target.dataset.tip);
+    else if (row && row.matches(":focus-visible")) rowTip(row);
   });
-  dialog().addEventListener("close", () => { openRefId = null; hideTip(); });
+  document.addEventListener("focusout", e => { if (e.target === tipOwner) hideTip(); });
 
-  document.addEventListener("change", e => {
-    if (e.target.matches(".items input")) setTick(e.target.dataset.id, e.target.checked);
+  document.addEventListener("mouseover", e => {
+    if (!mouseFirst.matches) return;
+    const term = e.target.closest("[data-tip]");
+    if (term && term !== tipAnchor) showTip(term, term.dataset.tip);
   });
+  document.addEventListener("mouseout", e => {
+    const term = e.target.closest("[data-tip]");
+    if (term && term === tipAnchor && !term.contains(e.relatedTarget) && tipOwner !== document.activeElement) hideTip();
+  });
+  addEventListener("scroll", placeTip, { capture: true, passive: true });
+  addEventListener("resize", placeTip);
 
   document.addEventListener("input", e => {
-    if (e.target.id === "ref-search") return filterAbbreviations(e.target.value);
-    if (!e.target.matches("[data-tok]")) return;
-    fields[e.target.dataset.tok] = e.target.value;
-    save(LS.fields, fields);
+    const t = e.target;
+    if (t.id === "ref-filter") { S.filter = t.value; applyFilter(); return; }
+    if (!t.dataset.tok) return;
+    S.fields[t.dataset.tok] = t.value;
+    save(LS.fields, S.fields);
     renderSays();
   });
 
-  /* Worksheet values substitute into the calls as you type, so the drawer
-     reads as the sentence you will actually say. */
-  function renderSays() {
-    const p = refSheet("atc");
-    if (!p) return;
-    const turns = (p.groups || []).flatMap(g =>
-      (g.blocks || []).filter(b => b.type === "exchange").flatMap(b => b.turns));
-    document.querySelectorAll("#ref-body .say").forEach((el, i) => {
-      if (turns[i]) el.innerHTML = sayHTML(turns[i].text);
-    });
-  }
-
-  document.addEventListener("keydown", e => {
-    if (e.target.matches("input, textarea, select")) return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-
-    const shortcut = REFS.find(r => r.key === e.key.toLowerCase());
-    if (shortcut) {
-      e.preventDefault();
-      // The same key that opened the drawer closes it again.
-      if (openRefId === shortcut.id) dialog().close();
-      else openRef(shortcut.id);
-      return;
-    }
-
-    // Everything below drives the checklist, which the drawer is covering.
-    if (dialog().open) return;
-
-    if (e.key === "j" || e.key === "J") { e.preventDefault(); moveCursor(1); }
-    else if (e.key === "k" || e.key === "K") { e.preventDefault(); moveCursor(-1); }
-    else if (e.key === " " && cursor >= 0) {
-      e.preventDefault();
-      const li = rows()[cursor];
-      if (li) setTick(li.dataset.item, li.dataset.done !== "true");
-    } else if (/^[1-9]$/.test(e.key)) {
-      const p = procedures[Number(e.key) - 1];
-      if (p) setPhase(p.id);
-    }
+  addEventListener("hashchange", () => {
+    const i = phaseFromHash();
+    if (i >= 0 && i !== S.phase) setPhase(i);
   });
 
+  addEventListener("storage", e => {
+    if (e.key === LS.ticks) { S.ticks = load(LS.ticks, {}); sync(); }
+    if (e.key === LS.fields) { S.fields = load(LS.fields, {}); syncFields(); }
+  });
+
+  prefersDark.addEventListener("change", renderChrome);
+
+  const chromeHeights = new ResizeObserver(() => {
+    const root = document.documentElement.style;
+    root.setProperty("--header-h", document.querySelector("header").offsetHeight + "px");
+    root.setProperty("--bar-h", $("bar").offsetHeight + "px");
+  });
+  chromeHeights.observe(document.querySelector("header"));
+  chromeHeights.observe($("bar"));
+
   /* ---------- boot ---------- */
-  trackHeader();
-  try {
-    DATA = JSON.parse(document.getElementById("data").textContent);
-    procedures = DATA.phases;
-    current = load(LS.phase, procedures[0].id);
-    if (!procedures.some(p => p.id === current)) current = procedures[0].id;
-    renderNav();
-    renderRefNav();
-    renderMain();
-    renderTotals();
-    revealCurrent();
-  } catch {
-    document.getElementById("main").innerHTML =
-      '<p class="para">Could not read the checklist data.</p>';
-  }
+  $("ref-tabs").innerHTML = REFS.map(r =>
+    '<button role="tab" id="tab-' + r.id + '" data-act="tab" data-ref="' + r.id + '" aria-controls="ref-panel"' +
+    ' aria-selected="false" tabindex="-1" aria-keyshortcuts="' + r.key.toUpperCase() + '">' + esc(r.label) + "</button>").join("");
+
+  const fromHash = phaseFromHash();
+  S.phase = fromHash >= 0 ? fromHash : Math.max(0, PHASES.findIndex(p => p.id === load(LS.phase, "")));
+  save(LS.phase, PHASES[S.phase].id);
+  renderChrome();
+  renderMain();
+  sync();
+  // B612 is wider than the fallback face, so the rail scrolls again once it lands.
+  document.fonts.ready.then(() => revealPhase("instant"));
+  if (fromHash < 0) location.replace("#" + PHASES[S.phase].id);
 })();
 </script>
 </body>

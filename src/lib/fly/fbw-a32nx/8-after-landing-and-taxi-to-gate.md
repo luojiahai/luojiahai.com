@@ -24,7 +24,7 @@ still out at this point.
 | [WING ANTI ICE](controls.md#anti-ice) pushbutton | set **OFF** | if no longer required |
 | [NOSE](controls.md#exterior-lighting) switch | set **TAXI** | – |
 | [RWY TURN OFF](controls.md#exterior-lighting) switch | set **ON** | – |
-| [STROBE](controls.md#exterior-lighting) switch | set **AUTO** | leave **ON** while still on a runway |
+| [STROBE](controls.md#exterior-lighting) switch | set **AUTO** or **OFF** | leave **ON** while still on a runway |
 | [LAND L & R](controls.md#exterior-lighting) switches | **retract** or set **OFF** | – |
 | [BRK FAN](controls.md#autobrake-and-gear) pushbutton | set **ON** | on a hot brakes ECAM warning |
 

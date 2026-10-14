@@ -170,7 +170,7 @@ See [Lights by Phase](lights.md) for the full state matrix.
 | Control | What it is | Docs |
 | --- | --- | --- |
 | BARO REF | Barometric reference window (QNH / STD) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#barometer-reference-display-window) |
-| BARO selector | Barometric reference selector — pull for QNH, push for STD | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#barometer-reference-selector) |
+| BARO selector | Barometric reference selector — pull for STD, push for QNH | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#barometer-reference-selector) |
 | FD | Flight director pushbutton | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#fd-pushbutton) |
 | LS | Localizer / glideslope pushbutton | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#ls-pushbutton) |
 | CSTR | Constraint pushbutton (ND altitude constraints) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/flight-deck/glareshield/efis_control/#optional-data-display-pushbutton-cstr-vor-d-wpt-ndb-arpt) |
@@ -297,7 +297,6 @@ See [Lights by Phase](lights.md) for the full state matrix.
 | FLT NBR | Flight number (INIT A) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-a) |
 | COST INDEX | Cost index (INIT A) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-a) |
 | CRZ FL | Cruise flight level (INIT A) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-a) |
-| ALIGN IRS | Aligns the inertial reference to the FMS position (INIT A) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-a) |
 | BLOCK | Block fuel (INIT B / FUEL PRED) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-b) |
 | ZFW / ZFWCG | Zero fuel weight and CG (INIT B) | [docs](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/#init-b) |
 

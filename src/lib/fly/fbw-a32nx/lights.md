@@ -10,7 +10,7 @@ Every light state, in one matrix. The procedure pages say *when*; this says
 | Light | Prep | Start and Taxi | Takeoff | Initial Climb | Above 10,000 ft | Descent 10,000 ft | Final (G/S green) | After Landing | Shutdown |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [NAV & LOGO](controls.md#exterior-lighting) | **ON** | – | ON | – | – | – | – | – | **OFF** |
-| [STROBE](controls.md#exterior-lighting) | **AUTO** | – | **ON** | – | – | – | – | **AUTO** | – |
+| [STROBE](controls.md#exterior-lighting) | **AUTO** | – | **ON**/**AUTO** | – | – | – | – | **AUTO**/**OFF** | – |
 | [BEACON](controls.md#exterior-lighting) | **OFF** | **ON** | – | – | – | – | – | – | **OFF** |
 | [WING](controls.md#exterior-lighting) | – | – | **OFF** | – | – | – | – | – | – |
 | [RWY TURN OFF](controls.md#exterior-lighting) | – | **ON** | ON | **OFF** | – | – | **ON** | ON | **OFF** |
@@ -22,7 +22,8 @@ Every light state, in one matrix. The procedure pages say *when*; this says
 - **BEACON** on before pushback or start, off once the engines spool down. It
   tells the ground crew the engines are about to run.
 - **STROBE** AUTO on the ground, which fires them when the gear strut extends.
-  ON by the takeoff roll, and whenever you cross a runway.
+  ON or AUTO by the takeoff roll, ON whenever you cross a runway, and AUTO or
+  OFF after landing.
 - **RWY TURN OFF and NOSE** cut out by themselves when the gear retracts. Move
   the switches anyway: if the cut-out failed, the lamps are cooking in the bay.
 - **LAND L & R** OFF leaves them extended and dragging, RETRACT stows them.
