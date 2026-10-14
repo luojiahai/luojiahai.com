@@ -96,11 +96,11 @@ Procedure tables read **control → action → condition**:
 - `V~1~`, `V~FE~` and friends render as real subscripts.
 
 Each phase's lights strip comes from `lights.md`, not from the procedure
-note. The `LIGHTS` map in `scripts/build-companion.mjs` names the matrix
-columns each phase shows, by their exact header text. The generator collects
-those columns from both the Exterior and the Interior and Signs matrices and
-skips `–` cells. Renaming a column header means updating `LIGHTS`, or the
-build throws.
+note. The `PHASE_LIGHT_COLUMNS` map in `scripts/build-companion.mjs` names
+the matrix columns each phase shows, by their exact header text. The
+generator collects those columns from both the Exterior and the Interior and
+Signs matrices and skips `–` cells. Renaming a column header means updating
+`PHASE_LIGHT_COLUMNS`, or the build throws.
 
 Item ids are derived from the phase, control and action text, and tick state
 persists against them — so editing a row's control or action clears that row's

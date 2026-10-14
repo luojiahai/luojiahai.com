@@ -22,12 +22,12 @@ const PROCEDURES = readdirSync(NOTES)
   .sort((a, b) => a.num - b.num);
 
 // These titles wrap to three lines in the phase rail without a shorter label.
-const SHORT = {
+const RAIL_TITLES = {
   "6-descent-planning-and-descent": "Descent",
   "7-approach-and-ils-landing": "Approach and Landing",
 };
 
-const LIGHTS = {
+const PHASE_LIGHT_COLUMNS = {
   "2-starting-the-aircraft": ["Prep"],
   "4-engine-start-and-taxi": ["Start and Taxi"],
   "5-takeoff-climb-and-cruise": ["Takeoff", "Initial Climb", "Above 10,000 ft"],
@@ -411,7 +411,7 @@ function buildProcedure(slug, num) {
     id: slug,
     num: String(num),
     title: title.replace(/^\d+\s+·\s+/, num + " · "),
-    short: SHORT[slug] ?? title.replace(/^\d+\s+·\s+/, ""),
+    short: RAIL_TITLES[slug] ?? title.replace(/^\d+\s+·\s+/, ""),
     lede,
     groups,
   };
@@ -446,9 +446,9 @@ function buildLights() {
 
 function phaseLights(slug, sheet) {
   const matrices = sheet.groups.flatMap(g => g.blocks.filter(b => b.type === "matrix"));
-  return (LIGHTS[slug] ?? []).map(when => {
+  return (PHASE_LIGHT_COLUMNS[slug] ?? []).map(when => {
     const columns = matrices.map(m => ({ m, col: m.head.indexOf(when) })).filter(c => c.col > 0);
-    if (!columns.length) throw new Error(`lights.md has no "${when}" column, which LIGHTS maps to ${slug}`);
+    if (!columns.length) throw new Error(`lights.md has no "${when}" column, which PHASE_LIGHT_COLUMNS maps to ${slug}`);
     const set = columns.flatMap(({ m, col }) => m.rows.flatMap((r, ri) =>
       /^[-–]?$/.test(r[col]) ? [] : [{ light: r[0], state: r[col], full: m.fulls?.[ri] ?? null }]));
     return { when, set };
@@ -570,8 +570,8 @@ if (PROCEDURES.some((p, i) => p.num !== i + 1)) {
 if (PROCEDURES.length > 9) {
   throw new Error(`${PROCEDURES.length} procedures: the companion only binds digits 1-9 to phases`);
 }
-const strayLights = Object.keys(LIGHTS).filter(slug => !PROCEDURES.some(p => p.slug === slug));
-if (strayLights.length) throw new Error(`LIGHTS names notes that do not exist: ${strayLights.join(", ")}`);
+const strayLights = Object.keys(PHASE_LIGHT_COLUMNS).filter(slug => !PROCEDURES.some(p => p.slug === slug));
+if (strayLights.length) throw new Error(`PHASE_LIGHT_COLUMNS names notes that do not exist: ${strayLights.join(", ")}`);
 
 const abbreviations = buildAbbreviations();
 const atc = buildATC();
