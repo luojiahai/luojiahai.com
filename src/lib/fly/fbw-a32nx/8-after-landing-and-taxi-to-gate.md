@@ -38,7 +38,7 @@ as on departure — see the taxi section of
 [4 · Engine Start and Taxi](4-engine-start-and-taxi.md).
 
 Request taxi to the gate —
-[ATC Communications › Ground, taxi to stand](atc-communications.md#7--ground-taxi-to-stand).
+[ATC Communications › Ground, taxi to stand](../shared/atc-communications.md#7--ground-taxi-to-stand).
 
 ### Crossing a Runway
 

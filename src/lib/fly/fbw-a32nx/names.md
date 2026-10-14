@@ -5,7 +5,7 @@ companion's only name source: it fills the small grey line under each checklist
 control, and the tooltip on a bolded setting.
 
 Deliberately standalone. Nothing resolves from here into
-[abbreviations.md](abbreviations.md) at build time — that page is a verbatim
+[abbreviations.md](../shared/abbreviations.md) at build time — that page is a verbatim
 copy of FlyByWire's airline-wide glossary, refreshed by re-downloading, so a
 change upstream must never be able to silently drop or rewrite a name here.
 Duplication between the two files is the point, and duplication inside this file
@@ -550,4 +550,4 @@ Labels the procedures write that are not `controls.md` rows.
 ---
 
 [Controls Reference](controls.md) ·
-[Airbus Terms and Abbreviations](abbreviations.md)
+[Airbus Terms and Abbreviations](../shared/abbreviations.md)
