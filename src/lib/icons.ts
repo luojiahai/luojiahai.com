@@ -12,7 +12,6 @@ import Mail from "@lucide/svelte/icons/mail";
 import Monitor from "@lucide/svelte/icons/monitor";
 import Moon from "@lucide/svelte/icons/moon";
 import PenLine from "@lucide/svelte/icons/pen-line";
-import Plane from "@lucide/svelte/icons/plane";
 import Send from "@lucide/svelte/icons/send";
 import Sun from "@lucide/svelte/icons/sun";
 import Tag from "@lucide/svelte/icons/tag";
@@ -26,7 +25,6 @@ export const icons = {
   sun: Sun,
   tag: Tag,
   tools: Wrench,
-  plane: Plane,
   external: ExternalLink,
   code: Code,
   user: User,

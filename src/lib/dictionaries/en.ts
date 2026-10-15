@@ -79,7 +79,6 @@ const dictionary = {
     postsSubtitle: "Things I write.",
     projectsSubtitle: "Things I build.",
     useSubtitle: "Things I'm using.",
-    fly: "Fly",
     empty: "Nothing here yet.",
     shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
