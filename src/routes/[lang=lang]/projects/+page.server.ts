@@ -1,4 +1,4 @@
-import { flyOf, projectsOf } from "$lib/content";
+import { projectsOf } from "$lib/content";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = ({ params }) => {
@@ -6,6 +6,5 @@ export const load: PageServerLoad = ({ params }) => {
 
   return {
     projects: projectsOf(lang),
-    fly: flyOf(lang),
   };
 };

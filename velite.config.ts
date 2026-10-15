@@ -1,7 +1,6 @@
 import type { Element, Parent, Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import { defineCollection, defineConfig, s } from "velite";
-import { aircraft, match as isAircraft } from "./src/params/aircraft";
 
 /**
  * One blog, one content pipeline:
@@ -161,19 +160,6 @@ const use = defineCollection({
   }),
 });
 
-/**
- * The flight companions, listed in the Fly section of /{lang}/projects. The
- * name and URL come from the aircraft registry; only the blurb is here.
- */
-const fly = defineCollection({
-  name: "FlyEntry",
-  pattern: "fly/*.yml",
-  schema: s.object({
-    slug: s.string().refine(isAircraft, "Unknown aircraft"),
-    description: localized(100),
-  }),
-});
-
 export default defineConfig({
   root: "content",
   output: {
@@ -183,12 +169,12 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { categories, fly, pages, posts, projects, use },
+  collections: { categories, pages, posts, projects, use },
   markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
   // Without strict, a schema violation is only logged and the document still
   // ships, so every cap above would be advisory.
   strict: true,
-  prepare: ({ categories, fly, pages, posts, projects, use }) => {
+  prepare: ({ categories, pages, posts, projects, use }) => {
     const problems: string[] = [];
     const report = (what: string, found: string[]) => {
       if (found.length > 0) problems.push(`${what}: ${found.join(", ")}`);
@@ -218,19 +204,8 @@ export default defineConfig({
             group.items.map((item) => item.value),
           ] as const,
       ),
-      ["fly slugs", fly.map((entry) => entry.slug)],
     ] as const;
     for (const [what, keys] of keyed) report(`Duplicate ${what}`, duplicates(keys));
-
-    // The schema rejects a fly.yml slug missing from the registry; this is the
-    // other direction. An aircraft with no row still prerenders its page, but
-    // nothing links to it.
-    report(
-      "Aircraft missing from content/fly/fly.yml",
-      aircraft
-        .map((entry) => entry.slug)
-        .filter((slug) => !fly.some((entry) => entry.slug === slug)),
-    );
 
     // Unlike posts, a page renders at a fixed URL in every language, so a
     // missing translation is a broken route rather than one fewer list entry.

@@ -1,6 +1,5 @@
 import {
   categories as allCategories,
-  fly,
   pages,
   posts as allPosts,
   projects,
@@ -105,19 +104,6 @@ export function useGroupsOf(lang: Language) {
     })),
   }));
 }
-
-/**
- * The flight companions, in authored order, with the blurb resolved. The name
- * and URL come from the aircraft registry, keyed by `slug`.
- */
-export function flyOf(lang: Language) {
-  return fly.map((entry) => ({
-    ...entry,
-    description: entry.description[lang],
-  }));
-}
-
-export type FlyItem = ReturnType<typeof flyOf>[number];
 
 export function findPage(lang: Language, slug: string) {
   return pages.find((page) => page.lang === lang && page.slug === slug);

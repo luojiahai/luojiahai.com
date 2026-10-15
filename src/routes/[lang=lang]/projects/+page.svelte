@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
-  import FlyList from "$lib/components/FlyList.svelte";
   import PrintedDivider from "$lib/components/PrintedDivider.svelte";
   import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
   import PrintedSection from "$lib/components/PrintedSection.svelte";
@@ -40,10 +39,4 @@
 
   <PrintedDivider style="dashed" />
 
-  <!-- Sim companions - links out of the printer shell -->
-  <PrintedSection label={dictionary.labels.fly} labelIcon="plane">
-    <FlyList entries={data.fly} />
-  </PrintedSection>
-
-  <PrintedDivider style="dashed" />
 </div>

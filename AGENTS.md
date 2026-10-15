@@ -6,34 +6,11 @@
 - `src/routes/`: SvelteKit routes with `[lang=lang]/` i18n prefix. The blog
   lives under `posts/`, which covers the list, `[slug]/`, and
   `categories/[categorySlug]/`. Standalone pages: `projects/` (the project
-  list from `content/projects/`, and Fly from `content/fly/`), `use/` (the
+  list from `content/projects/`), `use/` (the
   gear list, from `content/use/`), and `about/` (prose from
   `content/pages/about/`).
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
-  `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`,
-  `fly/[aircraft=aircraft]/` (prerendered flight companions).
-- `src/lib/fly/`: the flight companions. `companion.html` is one standalone
-  page template shared by every aircraft, served outside the printer shell.
-  `<slug>/*.md` is the source of truth for that aircraft — for the A32NX, nine
-  numbered procedure notes following FlyByWire's beginner guide, plus
-  `controls.md` (docs deep links), `names.md` (the one full-name map, for the
-  name under each control and the tooltip on a bolded setting) and
-  `lights.md`. `shared/` holds the sheets every aircraft uses, read when the
-  aircraft's own directory lacks the file: `abbreviations.md` (a verbatim
-  copy of FlyByWire's Airbus Terms and Abbreviations page, refreshed by
-  re-downloading, not by editing, and the only source of the Abbreviations
-  sheet) and `atc-communications.md`. The shared conventions are in
-  `src/lib/fly/README.md`, the per-aircraft sources in `<slug>/README.md`.
-  `pnpm fly` (`scripts/build-companion.mjs`) regenerates `<slug>.json` for
-  every aircraft in `src/params/aircraft.ts`; commit the regenerated
-  payloads. The procedure list comes from the notes' `1-`…`9-` filename
-  prefixes, which must run from 1 with no gaps or repeats; at most nine,
-  since the companion binds the digits 1-9. Adding an aircraft means a
-  `src/params/aircraft.ts` entry, a notes directory, an entry in the
-  script's `AIRCRAFT` map (per-aircraft settings; a registered aircraft
-  without one fails the run), a `payloads` row in
-  `src/routes/fly/[aircraft=aircraft]/+server.ts`, and a row in
-  `content/fly/fly.yml`.
+  `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
   elements, post list/content).
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
@@ -55,7 +32,7 @@
   `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
   script only mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
-  categories, projects, use, fly). The types are Velite's own, generated from
+  categories, projects, use). The types are Velite's own, generated from
   the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
   change reaches every consumer with no interface to copy by hand. That only
   holds while the `#velite` alias names the `.velite` directory; pointed at
@@ -74,8 +51,8 @@
   every language is required, since the route prerenders at a fixed URL in
   each; the route owns the URL, so `slug` is only a lookup key. Pages render
   through the same markdown pipeline as posts. Structured (non-prose) content
-  is YAML instead: `content/projects/projects.yml`, `content/use/use.yml`,
-  `content/fly/fly.yml`. Array order is display order, and only the fields
+  is YAML instead: `content/projects/projects.yml` and
+  `content/use/use.yml`. Array order is display order, and only the fields
   that actually vary carry an inline `{ en, zh }`. By convention each of
   these directories holds one array file named after the collection, but the
   patterns are globs (`projects/*.yml`), so splitting a list across files
@@ -100,17 +77,12 @@
 - `pnpm install`: Install dependencies (pnpm only; no npm/yarn lockfiles).
 - `pnpm dev`: Start local dev server (runs Velite in watch mode).
 - `pnpm check`: svelte-check type checking. Run before PRs.
-- `pnpm fly`: Regenerate every registered aircraft's flight companion
-  payload from `src/lib/fly/<slug>/` and `src/lib/fly/shared/`; commit the
-  regenerated JSON.
 - `pnpm build`: Production build; prerenders every page and OG image.
 - `pnpm preview`: Build + preview in the Workers runtime (wrangler dev).
 - `pnpm deploy`: Build + deploy to Cloudflare Workers.
 - `pnpm upload`: Build + upload a Workers preview version (no production
   release).
-CI runs check and build on push via `.github/workflows/ci.yml`, after
-rerunning `pnpm fly` and failing if that changes anything under
-`src/lib/fly/`, so a note committed without its payload fails. Deployment is
+CI runs check and build on push via `.github/workflows/ci.yml`. Deployment is
 handled by Cloudflare Workers Builds (Git integration): its dashboard deploy
 commands run `wrangler deploy` on main (production) and
 `wrangler versions upload` on other branches (preview only).
@@ -163,17 +135,11 @@ as an in-repo backstop.
   (`{ en, zh }`, ≤20), and `items` of `label` (`{ en, zh }`, ≤30) plus
   `value` (≤60). `value` is a product name, so it is plain, not localized;
   listing something with a language-specific name means widening the schema.
-- Fly entries (`content/fly/fly.yml`): `slug` and `description`
-  (`{ en, zh }`, ≤100). The name and URL come from `src/params/aircraft.ts`.
-  The schema rejects a slug that isn't in that registry (the row would render
-  nameless and link to a route the param matcher refuses), and `prepare`
-  rejects a registered aircraft with no row (its page would prerender with
-  nothing linking to it).
 - Every `categories` entry must exist in `content/categories/posts.yml`, or
   the Velite `prepare` step aborts the build. Category `name` is capped at
   20 chars, `description` at 100.
 - `prepare` rejects duplicate keys in every collection — posts and pages by
-  `lang/slug`, categories, projects, use groups and fly by `slug`, and use
+  `lang/slug`, categories, projects and use groups by `slug`, and use
   items by `value`, since they have no slug. These are the keys the list
   pages pass to `{#each}`, and Svelte throws on a repeated key, so a
   duplicate is a broken page rather than a cosmetic slip. Adding a collection

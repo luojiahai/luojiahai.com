@@ -44,7 +44,6 @@ const dictionary: Dictionary = {
     postsSubtitle: "我写的东西。",
     projectsSubtitle: "我做的东西。",
     useSubtitle: "我使用的东西。",
-    fly: "飞行",
     empty: "这里还没有内容。",
     shareTo: "分享到：",
     brandName: "LUOJIAHAI",

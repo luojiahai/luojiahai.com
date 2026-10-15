@@ -5,7 +5,6 @@ import { defaultLanguage, isLanguage, languages } from "$lib/dictionaries";
 const NON_LOCALIZED_PREFIXES = [
   "/api",
   "/feed",
-  "/fly",
   "/og",
   "/blog",
   "/static",

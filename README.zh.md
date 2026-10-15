@@ -16,9 +16,6 @@
 `/api/social`（社交悬浮卡片的实时账号数据）。三者都使用 Cloudflare Cache API
 做边缘缓存。
 
-`/fly/<aircraft>` 提供飞行助手页面——由 `src/lib/fly/<aircraft>/` 下的笔记构建
-而成的独立、自包含检查单。
-
 ## 内容
 
 文章走 Velite 管道：

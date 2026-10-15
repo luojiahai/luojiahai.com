@@ -32,3 +32,11 @@
     zh: 收纳冗长的终端命令，通过模糊搜索找到并取回。
   image: /static/potato.svg
   link: https://github.com/luojiahai/potato
+
+- slug: fly
+  name: Fly
+  description:
+    en: Gate to gate tick-off checklists for FlyByWire aircraft in MSFS.
+    zh: 为 MSFS 中 FlyByWire 机型打造的登机口到登机口逐项检查单。
+  image: /static/fly.svg
+  link: https://fly.liyu.dev
