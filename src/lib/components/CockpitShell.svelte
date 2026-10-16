@@ -266,7 +266,7 @@
     </div>
 
     <div class="fcu-right">
-      <div class={["masters", warnLit && "has-lit"]}>
+      <div class="masters">
         <button
           type="button"
           class={["master warn", warnLit && "lit"]}
