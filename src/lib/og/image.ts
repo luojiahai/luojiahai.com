@@ -483,6 +483,7 @@ export async function generateOgImage(
     options.description,
     options.subtitle,
     options.category,
+    options.date,
     options.brandName,
     options.brandTagline,
   ]

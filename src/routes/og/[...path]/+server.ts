@@ -7,7 +7,7 @@ import {
   posts,
 } from "$lib/content";
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
-import { displayDate } from "$lib/date";
+import { ecamDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
@@ -105,7 +105,7 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       title: post.title,
       description: post.description,
       category: findCategory(post.categories[0])?.name[lang],
-      date: displayDate(post.date, "en-US"),
+      date: ecamDate(post.date, lang),
       type: "post",
       ...branding,
     };
