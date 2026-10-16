@@ -70,42 +70,51 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    // The nav tab, the page title, and the home page's section header all
-    // read "Posts"; the same holds for "Projects".
+    // The nav key's accessible name and the page title both read "Posts";
+    // the same holds for "Projects".
     posts: "Posts",
     projects: "Projects",
     use: "Use",
     about: "About",
+    recentPosts: "Recent posts",
+    viewAll: "VIEW ALL",
     postsSubtitle: "Things I write.",
     projectsSubtitle: "Things I build.",
     useSubtitle: "Things I'm using.",
     empty: "Nothing here yet.",
-    shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
-    backToPosts: "← BACK TO POSTS",
-    allPosts: "← ALL POSTS",
-    notFoundStatus: "Paper Tray Empty",
-    notFoundTitle: "Out of Paper",
-    notFoundSubtitle: "Please insert paper correctly to print content.",
-    notFoundButton: "← Print Home",
-    notFoundError: "ERR 404 · PAPER_NOT_FOUND",
-    printedOn: "Printed on",
+    backToPosts: "‹ BACK TO POSTS",
+    allPosts: "‹ ALL POSTS",
+    // An ECAM warning: the system underlined, then the failure and the
+    // actions to take. ECAM text stays English except the requested label.
+    notFound: {
+      system: "NAV",
+      title: "PAGE NOT FOUND",
+      requested: "REQUESTED",
+      url: "URL",
+      check: "CHECK",
+      home: "HOME",
+      select: "SELECT",
+    },
     wechatScanHint: "Scan to read on WeChat",
-    shareToX: "Share to X",
+    shareToX: "SHARE TO X",
     aboutSignOff: "That's about it~",
     skipToContent: "Skip to main content",
     primaryNavigation: "Primary navigation",
     // Offered to a reader of the other language, so it is written in theirs.
     switchLanguage: "切换到中文",
-    colorModes: { system: "System", light: "Light", dark: "Dark" },
-    colorMode(mode: string) {
-      return `Color mode: ${mode}`;
+    annLt: "Annunciator lights",
+    annLtPositions: {
+      test: "Test every light",
+      brt: "Bright: light mode",
+      dim: "Dim: dark mode",
     },
-    lightSwitchOn: "Pull the cord to turn the light on",
-    lightSwitchOff: "Pull the cord to turn the light off",
+    annLtFlip: "Flip the annunciator light switch",
+    masterWarning: "Master warning: press to acknowledge",
+    lastUpdate: "LAST UPDATE",
     entries(count: number) {
-      return `${count} ${count === 1 ? "entry" : "entries"}`;
+      return `${count} ${count === 1 ? "ENTRY" : "ENTRIES"}`;
     },
   },
   contacts,
@@ -116,10 +125,7 @@ const dictionary = {
     repos: "Repos",
     contributions: "Contribs/yr",
     recentActivity: "Recent activity",
-    since(year: string) {
-      return `since ${year}`;
-    },
-    emailTo: "To",
+    since: "Since",
     emailHint: "Mail lands straight in my inbox.",
     telegramHint: "DMs open, say hi anytime.",
   },

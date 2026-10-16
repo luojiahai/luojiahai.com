@@ -1,19 +1,16 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import type { Snippet } from "svelte";
-  import { fly } from "svelte/transition";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import { socialCardIcons, type SocialCardKind } from "$lib/social";
+  import type { SocialCardKind } from "$lib/social";
   import { ensureSocialStats, social } from "$lib/social-state.svelte";
-  import Icon from "./Icon.svelte";
 
   let {
     kind,
     href,
     lang,
     dictionary,
-    align = "center",
-    side = "top",
+    side = "bottom",
     class: className = "",
     children,
   }: {
@@ -21,9 +18,8 @@
     href: string;
     lang: Language;
     dictionary: Dictionary;
-    align?: "center" | "left" | "right";
-    /** Where the card opens relative to the link. The printed paper is
-     * clipped at its top edge, so links near the top should use "bottom". */
+    /** Which side of the link the card prefers; it flips when that side
+     * has no room. */
     side?: "top" | "bottom";
     class?: string;
     children: Snippet;
@@ -31,20 +27,81 @@
 
   const OPEN_DELAY_MS = 120;
   const CLOSE_DELAY_MS = 160;
+  const VIEWPORT_MARGIN = 12;
+  const GAP = 8;
 
-  let open = $state(false);
-  let openTimer: ReturnType<typeof setTimeout> | undefined;
-  let closeTimer: ReturnType<typeof setTimeout> | undefined;
+  /**
+   * What opened the card decides what closes it: a hover closes when the
+   * mouse leaves, keyboard focus when focus leaves, and a tap only on a tap
+   * elsewhere, Escape, or a scroll.
+   */
+  type Opener = "hover" | "focus" | "tap";
 
-  function show() {
+  let openedBy = $state<Opener | null>(null);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let pointerType = "";
+  let wrapper: HTMLSpanElement;
+  let trigger: HTMLAnchorElement;
+  let card = $state<HTMLDivElement>();
+
+  function openSoon(by: Opener) {
     ensureSocialStats();
-    clearTimeout(closeTimer);
-    openTimer = setTimeout(() => (open = true), OPEN_DELAY_MS);
+    clearTimeout(timer);
+    if (openedBy) return;
+    timer = setTimeout(() => openNow(by), OPEN_DELAY_MS);
   }
 
-  function hide() {
-    clearTimeout(openTimer);
-    closeTimer = setTimeout(() => (open = false), CLOSE_DELAY_MS);
+  async function openNow(by: Opener) {
+    ensureSocialStats();
+    clearTimeout(timer);
+    openedBy = by;
+    await tick();
+    place();
+  }
+
+  function closeSoon(by: Opener) {
+    clearTimeout(timer);
+    if (openedBy !== by) return;
+    timer = setTimeout(close, CLOSE_DELAY_MS);
+  }
+
+  function close() {
+    clearTimeout(timer);
+    openedBy = null;
+  }
+
+  /** Centre the card on the link, kept inside the viewport. */
+  function place() {
+    if (!card) return;
+    const link = trigger.getBoundingClientRect();
+    const { offsetWidth: width, offsetHeight: height } = card;
+    const left = Math.min(
+      Math.max(VIEWPORT_MARGIN, link.left + link.width / 2 - width / 2),
+      window.innerWidth - width - VIEWPORT_MARGIN,
+    );
+    const above = link.top - height - GAP;
+    const below = link.bottom + GAP;
+    const fitsAbove = above >= GAP;
+    const fitsBelow = below + height <= window.innerHeight - GAP;
+    const top =
+      side === "top"
+        ? fitsAbove || !fitsBelow
+          ? above
+          : below
+        : fitsBelow || !fitsAbove
+          ? below
+          : above;
+    card.style.left = `${left}px`;
+    card.style.top = `${top}px`;
+  }
+
+  function onTriggerClick(event: MouseEvent) {
+    // A touch has no hover, so the first tap shows the card and the card's
+    // own link (or a second tap) follows it.
+    if (pointerType === "touch" && !openedBy) {
+      event.preventDefault();
+      openNow("tap");
+    }
   }
 
   // Warm up the live stats while idle so an open card never waits on the
@@ -53,12 +110,9 @@
     const idle = setTimeout(ensureSocialStats, 2500);
     return () => {
       clearTimeout(idle);
-      clearTimeout(openTimer);
-      clearTimeout(closeTimer);
+      clearTimeout(timer);
     };
   });
-
-  let stats = $derived(social.stats);
 
   function formatCount(value: number): string {
     return new Intl.NumberFormat(lang === "zh" ? "zh-CN" : "en-US", {
@@ -67,14 +121,71 @@
     }).format(value);
   }
 
+  const kindLabels: Record<SocialCardKind, string> = {
+    github: "GITHUB",
+    x: "X",
+    telegram: "TELEGRAM",
+    instagram: "INSTAGRAM",
+    email: "EMAIL",
+  };
+
+  /** What each kind of card shows: a handle, up to three stats, a bio. */
+  let view = $derived.by(() => {
+    const stats = social.stats;
+    const labels = dictionary.social;
+    switch (kind) {
+      case "github":
+        return {
+          handle: `@${stats.github.handle}`,
+          stats: [
+            [labels.followers, formatCount(stats.github.followers)],
+            [labels.repos, formatCount(stats.github.publicRepos)],
+            [labels.contributions, formatCount(stats.github.totalContributions)],
+          ],
+          bio: "",
+        };
+      case "x":
+        return {
+          handle: `@${stats.x.handle}`,
+          stats: [
+            [labels.followers, formatCount(stats.x.followers)],
+            [labels.following, formatCount(stats.x.following)],
+            [labels.since, stats.x.joined],
+          ],
+          bio: stats.x.bio,
+        };
+      case "instagram":
+        return {
+          handle: `@${stats.instagram.handle}`,
+          stats: [
+            [labels.followers, formatCount(stats.instagram.followers)],
+            [labels.following, formatCount(stats.instagram.following)],
+            [labels.posts, formatCount(stats.instagram.posts)],
+          ],
+          bio: stats.instagram.bio,
+        };
+      case "telegram":
+        return {
+          handle: `@${stats.telegram.handle}`,
+          stats: [],
+          bio: stats.telegram.bio || labels.telegramHint,
+        };
+      case "email":
+        return {
+          handle: href.replace("mailto:", ""),
+          stats: [],
+          bio: labels.emailHint,
+        };
+    }
+  });
+
   // Contribution heatmap: column-major grid of GitHub-style weeks
   // (top = Sunday), newest week in the last column. -1 marks padding cells
   // beyond the data range.
   const HEATMAP_WEEKS = 18;
-  const LEVEL_OPACITY = [0.07, 0.25, 0.45, 0.68, 0.92];
 
   let heatmapCells = $derived.by(() => {
-    const { levels, endDate } = stats.github;
+    const { levels, endDate } = social.stats.github;
     const days = [...levels].map(Number);
     const endWeekday = new Date(`${endDate}T00:00:00Z`).getUTCDay();
     const padded = days.concat(Array(6 - endWeekday).fill(-1));
@@ -84,251 +195,83 @@
       ? Array(size - cells.length).fill(-1).concat(cells)
       : cells;
   });
-
-  const postmark = new Date().toISOString().split("T")[0];
-
-  const kindLabels: Record<SocialCardKind, string> = {
-    github: "GITHUB",
-    x: "X",
-    telegram: "TELEGRAM",
-    instagram: "INSTAGRAM",
-    email: "MAIL",
-  };
-
-  const alignClasses = {
-    center: "left-1/2 -translate-x-1/2",
-    left: "left-0",
-    right: "right-0",
-  };
 </script>
 
-{#snippet statCell(label: string, value: number)}
-  <div>
-    <div
-      class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
-    >
-      {formatCount(value)}
-    </div>
-    <div
-      class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
-    >
-      {label}
-    </div>
-  </div>
-{/snippet}
+<svelte:window onscroll={() => openedBy && close()} />
+<svelte:document
+  onclick={(event) => {
+    if (openedBy && !wrapper.contains(event.target as Node)) close();
+  }}
+/>
 
-<!-- Mouse handlers only track hover intent; keyboard access goes through
-  the anchor's focus/blur, so the wrapper stays presentational. -->
+<!-- Pointer handlers only track hover intent; keyboard access goes through
+  the anchor's focus, so the wrapper stays presentational. -->
 <span
   role="presentation"
   class="relative inline-flex"
-  onmouseenter={show}
-  onmouseleave={hide}
-  onkeydown={(event) => {
-    if (event.key === "Escape") {
-      clearTimeout(openTimer);
-      open = false;
-    }
+  bind:this={wrapper}
+  onpointerenter={(event) => event.pointerType === "mouse" && openSoon("hover")}
+  onpointerleave={(event) => event.pointerType === "mouse" && closeSoon("hover")}
+  onfocusout={(event) => {
+    if (!wrapper.contains(event.relatedTarget as Node | null)) closeSoon("focus");
   }}
+  onkeydown={(event) => event.key === "Escape" && close()}
 >
   <a
+    bind:this={trigger}
     {href}
     target={kind === "email" ? undefined : "_blank"}
     rel={kind === "email" ? undefined : "noopener"}
     class={className}
-    onfocus={show}
-    onblur={hide}
+    data-open={openedBy ? "" : undefined}
+    onpointerdown={(event) => (pointerType = event.pointerType)}
+    onfocus={() => trigger.matches(":focus-visible") && openSoon("focus")}
+    onclick={onTriggerClick}
   >
     {@render children()}
   </a>
 
-  {#if open}
-    <div
-      transition:fly={{ y: side === "top" ? 6 : -6, duration: 160 }}
-      class={[
-        "absolute z-50 w-64",
-        side === "top" ? "bottom-full mb-2.5" : "top-full mt-2.5",
-        alignClasses[align],
-      ]}
-      aria-hidden="true"
-    >
-      <div
-        class="printed-card px-4 py-3 text-left normal-case tracking-normal"
-      >
-        <!-- Receipt header -->
-        <div
-          class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
-        >
-          <span
-            class="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
-          >
-            <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
-            {kindLabels[kind]}
-          </span>
-          <span
-            class="font-mono text-[10px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
-          >
-            {kind === "email" ? postmark : `@${stats[kind].handle}`}
-          </span>
+  {#if openedBy}
+    <!-- The link itself carries the name and destination; the card repeats
+      it for sighted readers, so it stays out of the accessibility tree. -->
+    <div bind:this={card} class="hc" aria-hidden="true">
+      <div class="screen">
+        <div class="hc-head">
+          <b>{kindLabels[kind]}</b>
+          <span>{view.handle}</span>
         </div>
 
-        {#if kind === "github"}
-          <div class="flex items-baseline gap-1.5 mb-2">
-            <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
-            >
-              {stats.github.name}
-            </span>
-            <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
-            >
-              @{stats.github.handle}
-            </span>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 mb-2.5">
-            {@render statCell(dictionary.social.followers, stats.github.followers)}
-            {@render statCell(dictionary.social.repos, stats.github.publicRepos)}
-            {@render statCell(
-              dictionary.social.contributions,
-              stats.github.totalContributions,
-            )}
-          </div>
-
-          <!-- Dot-matrix contribution heatmap -->
-          <div
-            class="grid grid-flow-col grid-rows-7 gap-[2px] w-full"
-            style:grid-auto-columns="minmax(0, 1fr)"
-          >
-            {#each heatmapCells as level, i (i)}
-              <span
-                class="w-full aspect-square rounded-[1px] bg-printer-ink dark:bg-printer-ink-dark"
-                style:opacity={level < 0 ? 0 : LEVEL_OPACITY[level]}
-              ></span>
+        {#if view.stats.length > 0}
+          <div class="hc-stats">
+            {#each view.stats as [label, value] (label)}
+              <div>{label}<b>{value}</b></div>
             {/each}
           </div>
-          <div
-            class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 mt-1.5"
-          >
-            {dictionary.social.recentActivity}
-          </div>
-        {:else if kind === "x" || kind === "instagram"}
-          {@const profile = stats[kind]}
-          <div class="flex items-baseline gap-1.5">
-            <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
-            >
-              {profile.name}
-            </span>
-            <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
-            >
-              {kind === "x"
-                ? dictionary.social.since(stats.x.joined)
-                : `@${profile.handle}`}
-            </span>
-          </div>
-          {#if profile.bio}
-            <p
-              class="font-serif text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
-            >
-              {profile.bio}
-            </p>
-          {/if}
+        {/if}
 
-          <div
-            class="grid grid-cols-3 gap-2 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
-          >
-            {@render statCell(dictionary.social.followers, profile.followers)}
-            {@render statCell(dictionary.social.following, profile.following)}
-            {@render statCell(dictionary.social.posts, profile.posts)}
-          </div>
-        {:else if kind === "telegram"}
-          <div class="flex items-baseline gap-1.5">
-            <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
-            >
-              {stats.telegram.name}
-            </span>
-            <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
-            >
-              @{stats.telegram.handle}
-            </span>
-          </div>
-          {#if stats.telegram.bio}
-            <p
-              class="font-serif text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
-            >
-              {stats.telegram.bio}
-            </p>
-          {/if}
-          <div
-            class="flex items-center gap-1.5 font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
-          >
-            <Icon
-              name="send"
-              class="w-2.5 h-2.5 text-printer-accent dark:text-printer-accent-dark"
-            />
-            {dictionary.social.telegramHint}
-          </div>
-        {:else}
-          <!-- Printed envelope slip -->
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0 pt-1">
-              <div
-                class="font-mono text-[8px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
-              >
-                {dictionary.social.emailTo}
-              </div>
-              <div
-                class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark mt-0.5 truncate"
-              >
-                {dictionary.meta.name}
-              </div>
-              <div
-                class="font-mono text-[10px] text-printer-ink/70 dark:text-printer-ink-dark/60 truncate"
-              >
-                {href.replace("mailto:", "")}
-              </div>
-            </div>
-            <!-- Stamp -->
-            <div
-              class="shrink-0 w-10 h-12 rounded-[2px] border border-dashed border-printer-accent/50 dark:border-printer-accent-dark/50 flex flex-col items-center justify-center gap-1 rotate-2"
-            >
-              <Icon
-                name="send"
-                class="w-3.5 h-3.5 text-printer-accent dark:text-printer-accent-dark"
-              />
-              <span
-                class="font-mono text-[7px] tracking-widest uppercase text-printer-accent dark:text-printer-accent-dark"
-              >
-                HELLO
-              </span>
-            </div>
-          </div>
-          <div
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
-          >
-            {dictionary.social.emailHint}
+        {#if view.bio}
+          <p class="hc-bio">{view.bio}</p>
+        {/if}
+
+        {#if kind === "github"}
+          <div class="hc-heat-label">{dictionary.social.recentActivity}</div>
+          <div class="hc-heat">
+            {#each heatmapCells as level, i (i)}
+              <i data-level={level}></i>
+            {/each}
           </div>
         {/if}
-      </div>
 
-      <!-- Pointer notch -->
-      <div
-        class={[
-          "absolute w-2 h-2 rotate-45 border-printer-ink/15 dark:border-printer-ink-dark/15 bg-printer-paper dark:bg-printer-paper-dark",
-          side === "top"
-            ? "top-full -mt-[1px] -translate-y-1/2 border-b border-r"
-            : "bottom-full -mb-[1px] translate-y-1/2 border-t border-l",
-          align === "center"
-            ? "left-1/2 -translate-x-1/2"
-            : align === "left"
-              ? "left-5"
-              : "right-5",
-        ]}
-      ></div>
+        <div class="hc-foot">
+          <a
+            class="act"
+            {href}
+            target={kind === "email" ? undefined : "_blank"}
+            rel={kind === "email" ? undefined : "noopener"}
+            tabindex="-1">OPEN ›</a
+          >
+        </div>
+      </div>
     </div>
   {/if}
 </span>

@@ -1,9 +1,7 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
   import PostContent from "$lib/components/PostContent.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
+  import ScreenTitle from "$lib/components/ScreenTitle.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -20,28 +18,10 @@
   path={dictionary.urls.about}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="user">{about.title}</PrintedPageTitle>
-    {#if about.description}
-      <p class="page-subtitle">
-        {about.description}
-      </p>
-    {/if}
-  </PrintedSection>
+<ScreenTitle subtitle={about.description}>{about.title}</ScreenTitle>
 
-  <PrintedDivider style="solid" />
+<PostContent html={about.content} />
 
-  <!-- About content -->
-  <PostContent html={about.content} />
-
-  <PrintedDivider style="dashed" />
-
-  <!-- Footer -->
-  <div
-    class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase text-center py-4"
-  >
-    {dictionary.labels.aboutSignOff}
-  </div>
-</div>
+<p class="mt-1.5 font-mono text-sm text-ecam-green">
+  {dictionary.labels.aboutSignOff}
+</p>

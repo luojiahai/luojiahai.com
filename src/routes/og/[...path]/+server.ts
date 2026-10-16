@@ -7,7 +7,7 @@ import {
   posts,
 } from "$lib/content";
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
-import { displayDate } from "$lib/date";
+import { ecamDate } from "$lib/date";
 import { generateOgImage, type OgImageOptions } from "$lib/og/image";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
@@ -58,7 +58,6 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       title: dictionary.meta.name,
       description: dictionary.meta.motto,
       type: "page",
-      showTitleAvatar: true,
       ...branding,
     };
   }
@@ -94,7 +93,13 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   if (rest.length === 2 && rest[0] === "categories") {
     const category = findCategory(rest[1]);
     if (!category) return undefined;
-    return { title: category.name[lang], type: "post", ...branding };
+    return {
+      title: category.name[lang],
+      subtitle: category.description?.[lang],
+      emoji: PAGE_EMOJIS.posts,
+      type: "page",
+      ...branding,
+    };
   }
 
   // Post pages
@@ -105,7 +110,7 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       title: post.title,
       description: post.description,
       category: findCategory(post.categories[0])?.name[lang],
-      date: displayDate(post.date, "en-US"),
+      date: ecamDate(post.date, lang),
       type: "post",
       ...branding,
     };

@@ -1,53 +1,34 @@
 <script lang="ts">
   import type { ProjectItem } from "$lib/content";
-  import PrintedEmpty from "./PrintedEmpty.svelte";
+  import ScreenEmpty from "./ScreenEmpty.svelte";
 
   let { projects }: { projects: ProjectItem[] } = $props();
 </script>
 
 <div class="flex flex-col">
   {#each projects as project (project.slug)}
-    <a
-      href={project.link}
-      target="_blank"
-      rel="noopener"
-      class="printed-row group -mx-3 flex items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
-    >
+    <a href={project.link} target="_blank" rel="noopener" class="row proj">
       {#if project.image}
         <img
-          class="h-10 w-10 shrink-0 border border-printer-ink/10 dark:border-printer-ink-dark/10"
+          class="icon"
           src={project.image}
           alt=""
-          width="40"
-          height="40"
+          width="44"
+          height="44"
           loading="lazy"
         />
       {:else}
-        <div
-          class="flex h-10 w-10 shrink-0 items-center justify-center bg-printer-accent/10 font-mono text-base font-semibold text-printer-accent dark:bg-printer-accent-dark/10 dark:text-printer-accent-dark"
+        <span
+          class="icon grid place-items-center font-mono text-base font-bold text-ecam-white"
         >
           {project.name[0]}
-        </div>
+        </span>
       {/if}
-      <div class="min-w-0 flex-1">
-        <div
-          class="font-serif text-lg font-medium leading-[1.15] tracking-[-0.015em] text-printer-ink transition-colors group-hover:text-printer-accent group-focus-visible:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark sm:text-xl"
-        >
-          {project.name}
-        </div>
-        <div
-          class="mt-1 line-clamp-1 max-w-[62ch] font-serif text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60"
-        >
-          {project.description}
-        </div>
-      </div>
-      <span
-        class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
-      >
-        →
-      </span>
+      <span class="t">{project.name}</span>
+      <span class="arrow" aria-hidden="true">›</span>
+      <span class="d line-clamp-1">{project.description}</span>
     </a>
   {:else}
-    <PrintedEmpty />
+    <ScreenEmpty />
   {/each}
 </div>
