@@ -269,10 +269,7 @@
 
   .placard {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 14px 9px 9px;
+    padding: 9px 14px;
     border-radius: 4px;
     background: linear-gradient(160deg, #e3e7ea, #a9b2b8 55%, #c9d0d4);
     box-shadow:
@@ -281,15 +278,6 @@
       0 2px 0 var(--seam);
     filter: brightness(var(--plate));
     transition: filter 0.4s;
-  }
-  .placard img {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow:
-      0 0 0 2px #59636a,
-      0 0 0 3px rgba(255, 255, 255, 0.5);
   }
   .placard .reg {
     font: 700 17px/1 var(--font-ui);
@@ -320,6 +308,14 @@
   .placard .rivet.b {
     bottom: 4px;
     right: 4px;
+  }
+  .placard .rivet.c {
+    top: 4px;
+    left: 4px;
+  }
+  .placard .rivet.d {
+    bottom: 4px;
+    left: 4px;
   }
 
   .ann {
@@ -695,6 +691,18 @@
       grid-column: 1 / -1;
       grid-row: 2;
     }
+    .fcu-left {
+      flex-direction: row;
+      align-items: center;
+    }
+    .ecp-row {
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    .ecp-row .ecp {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   @media (max-width: 639px) {
@@ -707,7 +715,6 @@
     }
     .fcu .lcds,
     .masters:not(.has-lit),
-    .placard .type,
     .ann.norm {
       display: none;
     }
@@ -715,13 +722,9 @@
       gap: 8px;
     }
     .ecp-row {
-      flex-wrap: nowrap;
       gap: 7px;
-      width: 100%;
     }
     .ecp-row .ecp {
-      flex: 1;
-      min-width: 0;
       height: 42px;
       padding: 0 2px;
     }
@@ -730,16 +733,15 @@
       letter-spacing: 0.04em;
     }
     .placard {
-      gap: 8px;
-      padding: 6px 10px 6px 6px;
-    }
-    .placard img {
-      width: 30px;
-      height: 30px;
+      padding: 6px 10px;
     }
     .placard .reg {
       font-size: 13px;
       letter-spacing: 0.1em;
+    }
+    .placard .type {
+      font-size: 8px;
+      letter-spacing: -0.01em;
     }
     .knob-btn {
       margin: -4px -6px;

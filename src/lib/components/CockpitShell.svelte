@@ -218,13 +218,14 @@
   <header class="fcu panel">
     <div class="fcu-left">
       <div class="placard">
-        <img src="/static/avatar.webp" alt="" width="42" height="42" />
         <div>
           <div class="reg">{dictionary.labels.brandName}</div>
           <div class="type">{dictionary.labels.brandTagline}</div>
         </div>
         <i class="rivet a"></i>
         <i class="rivet b"></i>
+        <i class="rivet c"></i>
+        <i class="rivet d"></i>
       </div>
       <span class="ann norm" aria-hidden="true">NORM</span>
     </div>
@@ -358,7 +359,7 @@
   </div>
 
   <footer class="pedestal panel">
-    <span class="legend"><span class="font-read">©</span> {currentYear} LUO, JIAHAI</span>
+    <span class="legend"><span class="font-read">©</span> {currentYear} {dictionary.labels.brandName}</span>
     <div class="ped-keys">
       {#each pedestalKeys as { kind, legend } (kind)}
         {@const contact = dictionary.contacts.find((contact) => contact.kind === kind)}
