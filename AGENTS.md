@@ -31,7 +31,7 @@
   `content/`.
 - `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
   (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
-  deck mascots (`none`, `plane`, `snail`) and
+  deck mascots (`none`, `plane`) and
   the `mascot` flag picking which one rides the glareshield's top edge — an
   in-code setting, not a visitor preference. A mascot exists in three places
   that must agree: this list, its styles in `app.css`, and the

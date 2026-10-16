@@ -13,7 +13,6 @@
   import { mascot, type Mascot } from "$lib/site-config";
   import type { SocialCardKind } from "$lib/social";
   import DeckPlane from "./DeckPlane.svelte";
-  import DeckSnail from "./DeckSnail.svelte";
   import FcuWindow from "./FcuWindow.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
 
@@ -27,7 +26,6 @@
   const deckOccupants: Record<Mascot, Component | null> = {
     none: null,
     plane: DeckPlane,
-    snail: DeckSnail,
   };
 
   const DeckOccupant = deckOccupants[mascot];
