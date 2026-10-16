@@ -62,12 +62,15 @@ const dictionary: Dictionary = {
     skipToContent: "跳到主要内容",
     primaryNavigation: "主导航",
     switchLanguage: "Switch to English",
-    colorModes: { system: "跟随系统", light: "浅色", dark: "深色" },
-    colorMode(mode: string) {
-      return `颜色模式：${mode}`;
+    annLt: "信号灯",
+    annLtPositions: {
+      test: "测试所有指示灯",
+      brt: "明亮：浅色模式",
+      dim: "调暗：深色模式",
     },
-    lightSwitchOn: "拉绳开灯",
-    lightSwitchOff: "拉绳关灯",
+    annLtFlip: "拨动信号灯开关",
+    masterWarning: "主警告：按下以确认",
+    lastUpdate: "最后更新",
     entries(count: number) {
       return `${count} 条`;
     },

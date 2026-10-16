@@ -98,12 +98,15 @@ const dictionary = {
     primaryNavigation: "Primary navigation",
     // Offered to a reader of the other language, so it is written in theirs.
     switchLanguage: "切换到中文",
-    colorModes: { system: "System", light: "Light", dark: "Dark" },
-    colorMode(mode: string) {
-      return `Color mode: ${mode}`;
+    annLt: "Annunciator lights",
+    annLtPositions: {
+      test: "Test every light",
+      brt: "Bright: light mode",
+      dim: "Dim: dark mode",
     },
-    lightSwitchOn: "Pull the cord to turn the light on",
-    lightSwitchOff: "Pull the cord to turn the light off",
+    annLtFlip: "Flip the annunciator light switch",
+    masterWarning: "Master warning: press to acknowledge",
+    lastUpdate: "LAST UPDATE",
     entries(count: number) {
       return `${count} ${count === 1 ? "entry" : "entries"}`;
     },

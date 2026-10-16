@@ -2,9 +2,9 @@
   import "../app.css";
   import { page } from "$app/state";
   import { getDictionary, languageOf } from "$lib/dictionaries";
-  import PrinterShell from "$lib/components/PrinterShell.svelte";
+  import CockpitShell from "$lib/components/CockpitShell.svelte";
 
-  let { children } = $props();
+  let { data, children } = $props();
 
   let lang = $derived(languageOf(page.url));
   let dictionary = $derived(getDictionary(lang));
@@ -16,6 +16,6 @@
   });
 </script>
 
-<PrinterShell {lang} {dictionary}>
+<CockpitShell {lang} {dictionary} stats={data.stats} builtAt={data.builtAt}>
   {@render children()}
-</PrinterShell>
+</CockpitShell>
