@@ -26,4 +26,7 @@ function velite(): PluginOption {
 
 export default defineConfig({
   plugins: [velite(), tailwindcss(), sveltekit()],
+  // Inlined rather than read at load time: a 404 renders in the worker, where
+  // "now" is the request time, not the build.
+  define: { __BUILD_TIME__: JSON.stringify(new Date().toISOString()) },
 });

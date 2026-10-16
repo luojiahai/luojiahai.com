@@ -1,5 +1,8 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 declare global {
+  /** When this build ran (ISO 8601), set by `define` in vite.config.ts. */
+  const __BUILD_TIME__: string;
+
   namespace App {
     interface Platform {
       env?: {

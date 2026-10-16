@@ -9,10 +9,9 @@ import { defineCollection, defineConfig, s } from "velite";
  */
 
 /**
- * Wrap every table in a horizontally scrollable div. The printed paper column is
- * ~294px wide on a phone and .printer-paper-area clips its overflow, so a wide
- * table loses its right-hand columns with no way to reach them. Styled as
- * .table-scroll in src/app.css.
+ * Wrap every table in a horizontally scrollable div. The display is only a few
+ * hundred pixels wide on a phone, so a wide table would otherwise push the
+ * whole page sideways. Styled as .table-scroll in src/app.css.
  */
 function rehypeTableScroll() {
   return (tree: Root) => {

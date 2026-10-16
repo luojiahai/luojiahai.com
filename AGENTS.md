@@ -11,26 +11,24 @@
   `content/pages/about/`).
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
   `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`.
-- `src/lib/components/`: Svelte components (printer shell UI, printed
-  elements, post list/content).
+- `src/lib/components/`: Svelte components: `CockpitShell.svelte` (the
+  page chrome), the `Screen*` primitives that pages build from, the post and
+  project lists, `PostContent.svelte`, and `SocialHoverCard.svelte`.
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
   `zh.ts` must match). Keep keys in sync. **Page content belongs in
   `content/`; the dictionaries hold UI strings and typed config only.** Two
   deliberate exceptions stay put: `contacts`, because `kind` binds to
-  `SocialCardKind`, which picks both the hover card and its icon
-  (`socialCardIcons` in `src/lib/social.ts`), so moving it to YAML would
-  sever that type-checked link to translate one field; and `social`, which
+  `SocialCardKind`, which picks what the hover card shows, so moving it to
+  YAML would sever that type-checked link to translate one field; and
+  `social`, which
   is hover-card chrome, meaningless outside `SocialHoverCard.svelte`.
   Anything with a reader as its audience — prose, a list, a blurb — goes in
-  `content/`.
+  `content/`. Hardware legends (the nav keys, ANN LT, LANG, MASTER WARN)
+  stay English uppercase in every language and live in the markup; only
+  their accessible names come from the dictionary. Screen content
+  translates.
 - `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
-  (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
-  deck mascots (`none`, `plane`, `snail`) and
-  the `mascot` flag picking which one rides the printer's top edge — an
-  in-code setting, not a visitor preference. A mascot exists in three places
-  that must agree: this list, its styles in `app.css`, and the
-  `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
-  script only mirrors the `color-mode` values now.
+  (canonical, OG, feed, sitemap, JSON-LD, share links) is built from.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
   categories, projects, use). The types are Velite's own, generated from
   the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
@@ -102,12 +100,32 @@ as an in-repo backstop.
 - OG images are rendered at build time with satori + resvg
   (`src/lib/og/image.ts`); CJK glyph subsets and Twemoji are fetched during
   the build, so builds need network access.
-- Icons go through `src/lib/icons.ts`. Generic UI icons are Lucide
-  components, imported one per icon (`@lucide/svelte/icons/<name>`) so the
-  bundle stays tree-shaken; `customIconPaths` holds inline 24x24 filled paths
-  for what Lucide won't cover — brand marks, which Lucide excludes on
-  purpose. `Icon.svelte` picks the branch by name, so a new icon means an
-  entry in one map or the other, never both.
+- The shell is an A320 cockpit (`CockpitShell.svelte`): a glareshield
+  panel (placard, LCD windows, the five ECP nav keys, master lights, the
+  ANN LT switch, the LANG knob), one ECAM display holding the page with a
+  status strip along its foot, and a pedestal footer. The panel styles live
+  in `src/app.css`.
+- Light and dark: ANN LT BRT stores `light` and DIM stores `dark` in the
+  `color-mode` localStorage key, which the `src/app.html` pre-paint script
+  turns into `html.dark` before paint. The lever position is derived, never
+  stored, and CSS draws it from `html.dark`. TEST only sets `data-ann-test`
+  on the shell root for about a second, and CSS lights every annunciator
+  from that one attribute.
+- Panel colours are CSS variables on `:root` that `:root.dark` redefines in
+  `src/app.css`. Components read them (`var(--panel)`) and never pair a
+  `dark:` utility with them, so the DIM decision stays in that one block.
+  Screens never change with the mode: the ECAM colours are fixed
+  `--color-ecam-*` theme tokens. White is titles, green data values, cyan
+  anything clickable, amber drafts, magenta featured posts, and red only the
+  404.
+- The root `src/routes/+layout.server.ts` loads the post counts per
+  language, the project count and the build time (`__BUILD_TIME__`, a Vite
+  `define`, so a 404 rendered in the worker still shows the build date)
+  for the LCD windows and the status strip. Client components take content
+  from load data and never import `$lib/content`, which would ship the
+  content JSON to the browser.
+- The 404 is an ECAM warning: the shell lights MASTER WARN from
+  `page.status` until it is pressed.
 - A new non-localized top-level path must be added to
   `NON_LOCALIZED_PREFIXES` in `src/hooks.server.ts`, or the locale redirect
   swallows it. A new static page also needs an entry in `PAGE_EMOJIS`
@@ -152,9 +170,12 @@ as an in-repo backstop.
 ## Coding Style & Naming Conventions
 - Language: TypeScript (strict). Framework: SvelteKit 2 + Svelte 5 (runes).
 - Indentation: 2 spaces; LF line endings (`.editorconfig`).
-- File naming: PascalCase for components (`PrinterShell.svelte`), kebab-case
+- File naming: PascalCase for components (`CockpitShell.svelte`), kebab-case
   or camelCase for modules, camelCase for variables.
 - Styling: Tailwind CSS 4 (CSS-first config in `src/app.css`).
+- Fonts: B612 and B612 Mono for chrome, labels and data (`font-ui`,
+  `font-mono`), IBM Plex Sans for prose (`font-read`), and Noto Sans SC as
+  the CJK fallback in every stack.
 
 ## Commit & Pull Request Guidelines
 - Commits: clear, imperative messages (e.g., "Update work entries").

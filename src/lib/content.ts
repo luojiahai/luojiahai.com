@@ -47,6 +47,8 @@ export type PostListItem = Pick<
   | "description"
   | "categories"
   | "permalink"
+  | "draft"
+  | "featured"
 >;
 
 export function toListItem(post: Post): PostListItem {
@@ -58,6 +60,8 @@ export function toListItem(post: Post): PostListItem {
     description: post.description,
     categories: post.categories,
     permalink: post.permalink,
+    draft: post.draft,
+    featured: post.featured,
   };
 }
 
@@ -112,3 +116,21 @@ export function findPage(lang: Language, slug: string) {
 export function findCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);
 }
+
+/**
+ * The counts the glareshield and the display's status strip show. Drafts are
+ * left out even in dev, so the numbers match what production publishes.
+ */
+export function siteStats() {
+  return {
+    posts: Object.fromEntries(
+      languages.map((lang) => [
+        lang,
+        postsOf(lang).filter((post) => !post.draft).length,
+      ]),
+    ) as Record<Language, number>,
+    projects: projects.length,
+  };
+}
+
+export type SiteStats = ReturnType<typeof siteStats>;
