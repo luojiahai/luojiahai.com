@@ -600,7 +600,7 @@
   /* Display unit: a bezel around one black screen with a glass glare. */
   .du {
     position: relative;
-    margin-top: 18px;
+    margin-top: 14px;
     padding: 16px;
     border-radius: 10px;
     background: linear-gradient(#2d3439, #22282c);
@@ -758,7 +758,6 @@
       zoom: 0.85;
     }
     .du {
-      margin-top: 12px;
       padding: 9px;
       border-radius: 8px;
     }
