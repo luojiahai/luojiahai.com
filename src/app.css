@@ -708,7 +708,7 @@
     }
   }
 
-  @media (max-width: 809px) {
+  @media (max-width: 759px) {
     .fcu {
       grid-template-columns: minmax(0, 1fr) auto;
     }
