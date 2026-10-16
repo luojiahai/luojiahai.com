@@ -6,11 +6,12 @@ lang: en
 categories:
   - journal
 date: "2014-01-01"
+updated: "2026-10-16"
 ---
 
 Hello, World! This is the first post on [luojiahai.com](https://luojiahai.com).
 
-The site is styled like a printer: every page gets printed out of the little machine at the top.
+The site is styled like an Airbus cockpit: every page comes up on the display below the glareshield.
 
 So what goes here? Everything lands in [Posts](/en/posts) — technical writing and everything else, side by side. Updated irregularly. Anything could appear here.
 
