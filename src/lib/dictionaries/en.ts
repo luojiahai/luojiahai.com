@@ -86,11 +86,17 @@ const dictionary = {
     brandTagline: "The sky is not the limit.",
     backToPosts: "‹ BACK TO POSTS",
     allPosts: "‹ ALL POSTS",
-    notFoundStatus: "Paper Tray Empty",
-    notFoundTitle: "Out of Paper",
-    notFoundSubtitle: "Please insert paper correctly to print content.",
-    notFoundButton: "← Print Home",
-    notFoundError: "ERR 404 · PAPER_NOT_FOUND",
+    // An ECAM warning: the system underlined, then the failure and the
+    // actions to take. ECAM text stays English except the requested label.
+    notFound: {
+      system: "NAV",
+      title: "PAGE NOT FOUND",
+      requested: "REQUESTED",
+      url: "URL",
+      check: "CHECK",
+      home: "HOME",
+      select: "SELECT",
+    },
     wechatScanHint: "Scan to read on WeChat",
     shareToX: "SHARE TO X",
     aboutSignOff: "That's about it~",
