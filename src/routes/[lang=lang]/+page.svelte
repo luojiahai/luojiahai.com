@@ -45,8 +45,6 @@
       href={contact.link}
       {lang}
       {dictionary}
-      align="left"
-      side="bottom"
       class="chip"
     >
       {contact.label}

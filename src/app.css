@@ -837,7 +837,7 @@
     color: var(--color-ecam-cyan);
   }
   .chip:hover,
-  .chip[aria-expanded="true"] {
+  .chip[data-open] {
     background: rgba(51, 214, 239, 0.12);
   }
 
@@ -919,29 +919,126 @@
     }
   }
 
-  .printed-card {
-    background-image: radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0.04) 0.6px,
-      transparent 0.6px
-    );
-    background-size: 5px 5px;
+  /* Social hover card: a small bezelled display. */
+  .hc {
+    position: fixed;
+    z-index: 50;
+    width: 300px;
+    max-width: calc(100vw - 24px);
+    padding: 10px;
+    border-radius: 8px;
+    background: linear-gradient(#2d3439, #22282c);
+    box-shadow:
+      0 0 0 2px #0d1013,
+      0 18px 40px -10px rgba(0, 0, 0, 0.8);
+    font-family: var(--font-ui);
+    text-align: left;
+    text-transform: none;
+    letter-spacing: normal;
+    animation: hc-in 0.16s ease-out;
   }
-  :is(.dark) .printed-card {
-    background-image: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.03) 0.6px,
-      transparent 0.6px
-    );
+  .hc .screen {
+    padding: 14px 16px 12px;
+  }
+  .hc-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .hc-head b {
+    border-bottom: 2px solid var(--color-ecam-white);
+    font: 700 13px/1.2 var(--font-ui);
+    letter-spacing: 0.1em;
+    color: var(--color-ecam-white);
+  }
+  .hc-head span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: 12px var(--font-mono);
+    color: var(--color-ecam-cyan);
+  }
+  .hc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 12px 0 4px;
+  }
+  .hc-stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font: 9.5px/1.2 var(--font-ui);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ecam-white);
+  }
+  .hc-stats b {
+    font: 700 17px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    color: var(--color-ecam-green);
+  }
+  .hc-bio {
+    margin: 10px 0 2px;
+    font: 14px/1.5 var(--font-read);
+    color: var(--color-ecam-text);
+  }
+  .hc-heat-label {
+    margin-top: 10px;
+    font: 9.5px/1 var(--font-ui);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ecam-white);
+  }
+  .hc-heat {
+    display: grid;
+    grid-template-rows: repeat(7, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 3px;
+    margin-top: 7px;
+  }
+  .hc-heat i {
+    aspect-ratio: 1;
+    border-radius: 1px;
+    background: #0f2410;
+  }
+  .hc-heat i[data-level="-1"] {
+    background: none;
+  }
+  .hc-heat i[data-level="1"] {
+    background: #1b6a1e;
+  }
+  .hc-heat i[data-level="2"] {
+    background: #26a12b;
+  }
+  .hc-heat i[data-level="3"] {
+    background: #34d13a;
+  }
+  .hc-heat i[data-level="4"] {
+    background: #5dff66;
+    box-shadow: 0 0 4px rgba(93, 255, 102, 0.6);
+  }
+  .hc-foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
   }
 
-  /* A slip of thermal paper lifted off the shell: the body of the social
-     hover card. Padding stays with the caller. */
-  .printed-card {
-    @apply rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15;
-    @apply bg-printer-paper dark:bg-printer-paper-dark;
-    @apply shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)];
-    @apply dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)];
+  @media (prefers-reduced-motion: reduce) {
+    .hc {
+      animation: none;
+    }
+  }
+}
+
+@keyframes hc-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
 }
 

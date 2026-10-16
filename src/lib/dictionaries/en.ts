@@ -119,10 +119,7 @@ const dictionary = {
     repos: "Repos",
     contributions: "Contribs/yr",
     recentActivity: "Recent activity",
-    since(year: string) {
-      return `since ${year}`;
-    },
-    emailTo: "To",
+    since: "Since",
     emailHint: "Mail lands straight in my inbox.",
     telegramHint: "DMs open, say hi anytime.",
   },

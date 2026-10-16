@@ -109,10 +109,7 @@ const dictionary: Dictionary = {
     repos: "仓库",
     contributions: "年贡献",
     recentActivity: "近期活动",
-    since(year: string) {
-      return `${year} 年至今`;
-    },
-    emailTo: "收件人",
+    since: "加入",
     emailHint: "邮件会直达我的收件箱。",
     telegramHint: "私信随时开放，欢迎来聊。",
   },

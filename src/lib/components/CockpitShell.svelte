@@ -369,7 +369,6 @@
             {lang}
             {dictionary}
             side="top"
-            align="right"
             class="ecp plain"
           >
             <span class="ecp-leg">{legend}</span>
