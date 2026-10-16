@@ -205,8 +205,9 @@
       0 0 0 2px #15191c,
       0 1px 0 2px #0e1113;
   }
+  /* 36px, the same as the glareshield nav keys. */
   .ecp.plain {
-    height: 34px;
+    height: 36px;
     gap: 0;
   }
   .ecp-bar {
