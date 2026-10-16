@@ -721,6 +721,24 @@
     .fcu-right {
       gap: 8px;
     }
+    .fcu:has(.masters.has-lit) {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      column-gap: 8px;
+    }
+    .fcu:has(.masters.has-lit) .fcu-right {
+      display: contents;
+    }
+    .masters.has-lit {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      flex-direction: row;
+    }
+    .masters.has-lit .master {
+      flex: 1;
+    }
+    .fcu:has(.masters.has-lit) .fcu-mid {
+      grid-row: 3;
+    }
     .ecp-row {
       gap: 7px;
     }
