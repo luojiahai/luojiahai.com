@@ -783,6 +783,17 @@
     }
   }
 
+  /* Below 360px the one-line tagline pushes the name tag over the master
+     lights, so let it wrap instead. */
+  @media (max-width: 359px) {
+    .fcu-left {
+      min-width: 0;
+    }
+    .placard .type {
+      white-space: normal;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .master.warn.lit {
       animation: none;
