@@ -355,14 +355,14 @@
     gap: 4px;
   }
   .lcd-win {
-    min-width: 74px;
+    min-width: 60px;
     padding: 5px 8px 4px;
     border-radius: 2px;
     background: #0f0e0b;
     box-shadow:
       inset 0 2px 4px rgba(0, 0, 0, 0.9),
       0 0 0 2px #15191c;
-    font: 700 19px/1 var(--font-mono);
+    font: 700 15px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.04em;
     text-align: center;
@@ -705,10 +705,6 @@
     }
     .ecp-row .ecp {
       flex: none;
-    }
-    .lcd-win {
-      min-width: 60px;
-      font-size: 15px;
     }
   }
 
