@@ -239,14 +239,16 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 20px 26px;
     align-items: center;
-    padding: 20px 26px 22px;
+    padding: 20px 26px;
     border-radius: 8px;
   }
+  /* 36px tag + 22px + 24px NORM = 82px, the height of the two stacked
+     36px master lights, so both columns line up at every width. */
   .fcu-left {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 22px;
   }
   .fcu .lcds {
     grid-column: 2;
@@ -272,9 +274,14 @@
     justify-content: space-between;
   }
 
+  /* One size at every width: 36px tall, level with the phone master
+     lights. */
   .placard {
     position: relative;
-    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 10px;
     border-radius: 4px;
     background: linear-gradient(160deg, #e3e7ea, #a9b2b8 55%, #c9d0d4);
     box-shadow:
@@ -285,15 +292,15 @@
     transition: filter 0.4s;
   }
   .placard .reg {
-    font: 700 17px/1 var(--font-ui);
-    letter-spacing: 0.14em;
+    font: 700 13px/1 var(--font-ui);
+    letter-spacing: 0.1em;
     color: #1b2125;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
   }
   .placard .type {
-    margin-top: 5px;
-    font: 400 9.5px/1 var(--font-ui);
-    letter-spacing: 0.05em;
+    margin-top: 3px;
+    font: 400 8px/1 var(--font-ui);
+    letter-spacing: -0.01em;
     text-transform: uppercase;
     white-space: nowrap;
     color: #3a444b;
@@ -354,6 +361,11 @@
     align-items: center;
     gap: 4px;
   }
+  /* 10 + 4 + 24 = 38px, so on desktop the LCDs, the 8px row gap and the
+     36px nav keys come to the 82px of the columns either side. */
+  .lcd .legend {
+    line-height: 10px;
+  }
   .lcd-win {
     min-width: 60px;
     padding: 5px 8px 4px;
@@ -388,8 +400,8 @@
   .master {
     display: grid;
     place-content: center;
-    flex: 1;
-    width: 38px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border-radius: 3px;
     background: #121413;
@@ -721,20 +733,13 @@
       gap: 14px 8px;
       padding: 14px 10px;
     }
-    /* The two 36px master lights set the top row's height; the name tag
-       column spreads to match it, as ANN LT and LANG already do. */
     .fcu-left {
       min-width: 0;
-      align-self: stretch;
-      justify-content: space-between;
     }
     .fcu-right {
       gap: 12px;
     }
     .master {
-      flex: none;
-      width: 36px;
-      height: 36px;
       font-size: 8.5px;
       letter-spacing: 0.03em;
     }
@@ -747,18 +752,6 @@
     .ecp-row .ecp-leg {
       font-size: 8.5px;
       letter-spacing: 0.04em;
-    }
-    .placard {
-      padding: 6px 10px;
-    }
-    .placard .reg {
-      font-size: 13px;
-      letter-spacing: 0.1em;
-    }
-    .placard .type {
-      font-size: 8px;
-      letter-spacing: -0.01em;
-      white-space: normal;
     }
     .knob-btn {
       margin: -4px -6px;
@@ -793,18 +786,13 @@
     }
   }
 
-  /* Below 360px the name tag needs the room even with its tagline wrapped,
-     so the side padding gives it up and the right-hand gaps stay 12px. */
+  /* Below 360px the side padding gives the name tag some room, and the
+     right-hand gaps stay 12px. Under about 345px the one-line tag runs
+     into MASTER WARN; that is accepted. */
   @media (max-width: 359px) {
     .cockpit,
     .fcu {
       padding-inline: 8px;
-    }
-    .placard {
-      padding: 6px 8px;
-    }
-    .placard .reg {
-      letter-spacing: 0.06em;
     }
   }
 
