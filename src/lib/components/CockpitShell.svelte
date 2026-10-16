@@ -255,7 +255,7 @@
     >
       <a
         href={dictionary.urls.home}
-        class="mr-auto flex min-w-0 items-center gap-3 rounded-sm"
+        class="mr-auto flex min-w-0 items-center gap-3 rounded-sm max-lg:grow max-lg:basis-0"
       >
         <img
           class="h-9 w-9 shrink-0 rounded-full shadow-[0_0_0_3px_#15181b,0_0_0_4px_rgba(255,255,255,0.12)] sm:h-10 sm:w-10"
@@ -271,14 +271,14 @@
             {dictionary.labels.brandName}
           </span>
           <span
-            class="mt-0.5 block text-[9px] uppercase tracking-[0.16em] text-hw-soft max-sm:hidden"
+            class="mt-0.5 block text-[8px] uppercase tracking-[0.14em] text-hw-soft sm:text-[9px] sm:tracking-[0.16em]"
           >
             {dictionary.labels.brandTagline}
           </span>
         </span>
       </a>
 
-      <div class="recess flex items-end gap-3 px-3 py-2 sm:gap-4 sm:px-4 sm:py-2.5">
+      <div class="recess flex shrink-0 items-end gap-3 px-3 py-2 sm:gap-4 sm:px-4 sm:py-2.5">
         <FcuWindow
           label="LANG"
           value={displayLang === "zh" ? "中" : "EN"}
