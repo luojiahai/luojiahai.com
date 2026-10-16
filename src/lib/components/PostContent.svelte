@@ -4,9 +4,9 @@
 
 <div
   class={[
-    "post-content prose dark:prose-invert mx-auto max-w-[72ch] font-serif",
+    "post-content prose dark:prose-invert mx-auto max-w-[72ch] font-sans",
     "prose-base sm:prose-lg",
-    "prose-headings:font-serif prose-headings:text-printer-ink dark:prose-headings:text-printer-ink-dark",
+    "prose-headings:font-sans prose-headings:text-printer-ink dark:prose-headings:text-printer-ink-dark",
     "prose-headings:tracking-tight prose-headings:scroll-mt-24",
     "prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mb-4",
     "prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4",

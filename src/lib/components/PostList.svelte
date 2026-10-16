@@ -33,14 +33,14 @@
             </div>
             <div>
               <h3
-                class="font-serif text-lg font-medium leading-[1.15] tracking-[-0.015em] text-printer-ink transition-colors group-hover:text-printer-accent group-focus-visible:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark sm:text-xl"
+                class="font-sans text-lg font-medium leading-[1.15] tracking-[-0.015em] text-printer-ink transition-colors group-hover:text-printer-accent group-focus-visible:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark sm:text-xl"
               >
                 {post.title}
               </h3>
               {#if post.description}
                 <p
                   class={[
-                    "mt-1 max-w-[62ch] font-serif text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60",
+                    "mt-1 max-w-[62ch] font-sans text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60",
                     compact ? "line-clamp-1" : "line-clamp-2",
                   ]}
                 >

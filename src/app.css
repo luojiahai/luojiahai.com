@@ -1,11 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  /* B612 has no CJK glyphs; name the fallback so zh renders the same everywhere. */
+  --font-sans: "B612", "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-mono: "B612 Mono", "PingFang SC", "Noto Sans SC", monospace;
 
   /* Claude Code palette, mapped to the printer's material hierarchy. */
   --color-printer-body: #f5f4ed;
@@ -52,6 +54,9 @@
 
   body {
     text-rendering: optimizeLegibility;
+    /* B612 ships 400 and 700 only; font matching maps 300/500 to 400 and 600
+       to 700, so never fake the weights in between. */
+    font-synthesis: none;
   }
 
   ::selection {
@@ -464,7 +469,7 @@
   }
 
   .page-subtitle {
-    @apply max-w-[52ch] font-serif text-sm leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/65 sm:text-base;
+    @apply max-w-[52ch] font-sans text-sm leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/65 sm:text-base;
   }
 
   .printer-shell-bottom-shadow {

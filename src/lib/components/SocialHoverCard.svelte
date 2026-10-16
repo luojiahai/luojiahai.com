@@ -230,7 +230,7 @@
           </div>
           {#if profile.bio}
             <p
-              class="font-serif text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
+              class="font-sans text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
             >
               {profile.bio}
             </p>
@@ -258,7 +258,7 @@
           </div>
           {#if stats.telegram.bio}
             <p
-              class="font-serif text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
+              class="font-sans text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
             >
               {stats.telegram.bio}
             </p>
