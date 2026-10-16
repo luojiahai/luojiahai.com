@@ -36,7 +36,7 @@
 - slug: fly
   name: Fly
   description:
-    en: Gate to gate tick-off checklists for FlyByWire aircraft in MSFS.
-    zh: 为 MSFS 中 FlyByWire 机型打造的登机口到登机口逐项检查单。
+    en: Flight sim checklists you tick off as you fly, gate to gate.
+    zh: 飞行模拟检查单，边飞边逐项勾选，从登机口到登机口。
   image: /static/fly.svg
   link: https://fly.liyu.dev
