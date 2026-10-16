@@ -713,12 +713,18 @@
       display: none;
     }
     .fcu-right {
+      align-self: stretch;
       gap: 5px;
     }
+    .fcu-right > * {
+      align-self: stretch;
+      justify-content: space-between;
+    }
     .master {
-      width: 45px;
-      height: 38px;
-      font-size: 8.5px;
+      flex: 1;
+      width: 40px;
+      height: auto;
+      font-size: 8px;
     }
     .ecp-row {
       gap: 7px;
@@ -747,7 +753,7 @@
       transform: scale(0.85);
     }
     .toggle {
-      transform: scale(0.85);
+      zoom: 0.85;
     }
     .du {
       margin-top: 12px;
