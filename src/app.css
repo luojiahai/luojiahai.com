@@ -261,6 +261,7 @@
   .ecp-row .ecp {
     flex: 1;
     min-width: 0;
+    height: 36px;
   }
   .fcu-right {
     display: flex;
@@ -704,7 +705,6 @@
     }
     .ecp-row .ecp {
       flex: none;
-      height: 36px;
     }
     .lcd-win {
       min-width: 60px;
@@ -741,7 +741,6 @@
       gap: 7px;
     }
     .ecp-row .ecp {
-      height: 42px;
       padding: 0 2px;
     }
     .ecp-row .ecp-leg {
