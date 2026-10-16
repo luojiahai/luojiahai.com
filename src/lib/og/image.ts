@@ -17,19 +17,24 @@ export interface OgImageOptions {
   type?: "post" | "page";
   emoji?: string;
   subtitle?: string;
-  brandName?: string;
-  brandTagline?: string;
-  showTitleAvatar?: boolean;
+  brandName: string;
+  brandTagline: string;
 }
 
-const COLORS = {
-  body: "#F5F4ED",
-  paper: "#FAF9F5",
-  ink: "#141413",
-  inkLight: "#5E5D59",
-  accent: "#D97757",
-  border: "rgba(20, 20, 19, 0.1)",
-  shadow: "rgba(0, 0, 0, 0.06)",
+/** The BRT panel lighting from app.css; a shared image has no DIM. */
+const PANEL = {
+  face: "#4c5b68",
+  hi: "#677783",
+  lo: "#34404a",
+  seam: "#1c2328",
+};
+
+const ECAM = {
+  screen: "#000000",
+  white: "#f4f6f6",
+  text: "#d5dbdb",
+  green: "#3fe23f",
+  cyan: "#33d6ef",
 };
 
 // ---------------------------------------------------------------------------
@@ -51,40 +56,49 @@ function h(
   const flat = children.flat().filter(Boolean);
   return {
     type,
-    props: { ...props, children: flat.length === 1 ? flat[0] : flat },
+    props: { ...props, children: flat.length > 1 ? flat : flat[0] },
   };
 }
 
 // ---------------------------------------------------------------------------
-// Fonts — JetBrains Mono is bundled; CJK glyphs are fetched as tiny subsets
-// from Google Fonts at build time (cached per charset).
+// Fonts — B612 is bundled; CJK glyphs are fetched as tiny subsets from
+// Google Fonts at build time (cached per charset).
 // ---------------------------------------------------------------------------
 
-const fontRegular = readFileSync("src/lib/og/fonts/jetbrains-mono-400.ttf");
-const fontBold = readFileSync("src/lib/og/fonts/jetbrains-mono-700.ttf");
+const fontRegular = readFileSync("src/lib/og/fonts/b612-400.ttf");
+const fontBold = readFileSync("src/lib/og/fonts/b612-700.ttf");
+const fontMono = readFileSync("src/lib/og/fonts/b612-mono-400.ttf");
 
-const cjkFontCache = new Map<string, ArrayBuffer | null>();
+type CjkWeight = 400 | 700;
+type CjkSubset = Partial<Record<CjkWeight, ArrayBuffer>>;
 
-async function loadCjkSubset(text: string): Promise<ArrayBuffer | null> {
+const cjkFontCache = new Map<string, CjkSubset>();
+
+async function loadCjkSubset(text: string): Promise<CjkSubset> {
   const chars = Array.from(new Set(Array.from(text)))
     .filter((char) => char.charCodeAt(0) > 127)
     .sort()
     .join("");
-  if (!chars) return null;
+  if (!chars) return {};
 
   const cached = cjkFontCache.get(chars);
   if (cached !== undefined) return cached;
 
-  let result: ArrayBuffer | null = null;
+  const result: CjkSubset = {};
   try {
     const css = await fetch(
-      `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&text=${encodeURIComponent(chars)}`,
+      `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&text=${encodeURIComponent(chars)}`,
       { headers: { "User-Agent": "curl/8" } },
     ).then((response) => response.text());
 
-    const url = css.match(/src:\s*url\(([^)]+)\)/)?.[1];
-    if (url) {
-      result = await fetch(url).then((response) => response.arrayBuffer());
+    for (const face of css.split("@font-face").slice(1)) {
+      const weight = Number(face.match(/font-weight:\s*(\d+)/)?.[1]);
+      const url = face.match(/src:\s*url\(([^)]+)\)/)?.[1];
+      if ((weight === 400 || weight === 700) && url) {
+        result[weight] = await fetch(url).then((response) =>
+          response.arrayBuffer(),
+        );
+      }
     }
   } catch (error) {
     console.warn("[og] failed to load CJK font subset:", error);
@@ -133,356 +147,330 @@ async function loadEmoji(grapheme: string): Promise<string | null> {
   return result;
 }
 
-// ---------------------------------------------------------------------------
-// Building blocks
-// ---------------------------------------------------------------------------
-
 const AVATAR_DATA_URI = `data:image/jpeg;base64,${readFileSync("src/lib/og/avatar.jpg").toString("base64")}`;
 
-function avatar(size: number, circle?: boolean): Node {
-  return h("img", {
-    src: AVATAR_DATA_URI,
-    width: size,
-    height: size,
-    style: {
-      borderRadius: circle ? "50%" : "12px",
-      border: `1px solid ${COLORS.border}`,
-      boxShadow: `0 4px 12px ${COLORS.shadow}`,
-    },
-  });
-}
+const SCREWS = [
+  { top: 14, left: 14, rotate: 35 },
+  { top: 14, right: 14, rotate: -20 },
+  { bottom: 14, left: 14, rotate: 80 },
+  { bottom: 14, right: 14, rotate: 10 },
+];
 
-function brandingFooter(options: OgImageOptions, large?: boolean): Node {
-  const avatarSize = large ? 56 : 48;
-  const nameSize = large ? 20 : 18;
-  const taglineSize = large ? 16 : 14;
-
+function screw({ rotate, ...position }: (typeof SCREWS)[number]): Node {
   return h(
     "div",
     {
       style: {
+        position: "absolute",
+        ...position,
+        width: 16,
+        height: 16,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        borderTop: `1px dashed ${COLORS.border}`,
-        paddingTop: "24px",
-        width: "100%",
-        marginTop: "auto",
+        justifyContent: "center",
+        borderRadius: "50%",
+        backgroundImage:
+          "radial-gradient(circle at 35% 30%, #d2d8dc, #7b858c 55%, #3d454b)",
+        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
       },
     },
-    h(
-      "div",
-      { style: { display: "flex", alignItems: "center", gap: "16px" } },
-      avatar(avatarSize),
-      h(
-        "div",
-        { style: { display: "flex", flexDirection: "column" } },
-        h(
-          "div",
-          {
-            style: {
-              fontSize: `${nameSize}px`,
-              fontWeight: 700,
-              color: COLORS.ink,
-              letterSpacing: "0.05em",
-              display: "flex",
-            },
-          },
-          options.brandName || "LUOJIAHAI",
-        ),
-        h(
-          "div",
-          {
-            style: {
-              fontSize: `${taglineSize}px`,
-              color: COLORS.inkLight,
-              display: "flex",
-            },
-          },
-          "luojiahai.com",
-        ),
-      ),
-    ),
-    h(
-      "div",
-      {
-        style: {
-          fontSize: `${taglineSize}px`,
-          color: COLORS.inkLight,
-          letterSpacing: "0.05em",
-          display: "flex",
-          opacity: 0.8,
-        },
+    h("div", {
+      style: {
+        width: 13,
+        height: 3,
+        borderRadius: 2,
+        backgroundColor: "#2b3237",
+        transform: `rotate(${rotate}deg)`,
       },
-      options.brandTagline || "The sky is not the limit.",
-    ),
+    }),
   );
 }
 
-function dotPattern(): Node {
+function rivet(position: Record<string, number>): Node {
   return h("div", {
     style: {
       position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      opacity: 0.04,
-      display: "flex",
-      backgroundImage: `radial-gradient(circle at center, ${COLORS.ink} 1px, transparent 1px)`,
-      backgroundSize: "30px 30px",
+      ...position,
+      width: 6,
+      height: 6,
+      borderRadius: "50%",
+      backgroundColor: "#79838a",
+      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.6)",
     },
   });
 }
 
-function articleLayout(options: OgImageOptions): Node {
-  const { title, description, category, date, type } = options;
-  const typeLabel = type === "post" ? "POSTS" : "";
-
+function placard({ brandName, brandTagline }: OgImageOptions): Node {
   return h(
     "div",
     {
       style: {
+        position: "relative",
         display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        padding: "50px 60px",
+        alignItems: "center",
+        gap: 16,
+        padding: "10px 30px 10px 10px",
+        borderRadius: 6,
+        backgroundImage:
+          "linear-gradient(160deg, #e3e7ea, #a9b2b8 55%, #c9d0d4)",
+        boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 2px 0 ${PANEL.seam}`,
       },
     },
-    // Meta tags row
+    h("img", {
+      src: AVATAR_DATA_URI,
+      width: 52,
+      height: 52,
+      style: {
+        borderRadius: "50%",
+        border: "2px solid #59636a",
+      },
+    }),
     h(
       "div",
-      {
-        style: {
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-          marginBottom: "32px",
-        },
-      },
-      typeLabel
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 14px",
-                backgroundColor: COLORS.accent,
-                color: COLORS.paper,
-                fontSize: "16px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                borderRadius: "4px",
-                boxShadow: "0 4px 10px rgba(217, 119, 87, 0.2)",
-              },
-            },
-            typeLabel,
-          )
-        : undefined,
-      category
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 14px",
-                border: `1px solid ${COLORS.border}`,
-                color: COLORS.inkLight,
-                fontSize: "16px",
-                fontWeight: 400,
-                letterSpacing: "0.05em",
-                borderRadius: "4px",
-                backgroundColor: "rgba(0,0,0,0.02)",
-              },
-            },
-            category,
-          )
-        : undefined,
-      date
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                color: COLORS.inkLight,
-                fontSize: "16px",
-                fontWeight: 400,
-                marginLeft: "8px",
-              },
-            },
-            date,
-          )
-        : undefined,
-    ),
-    // Main content
-    h(
-      "div",
-      {
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          maxWidth: "900px",
-        },
-      },
+      { style: { display: "flex", flexDirection: "column", gap: 7 } },
       h(
         "div",
         {
           style: {
-            fontSize: title.length > 30 ? "42px" : "48px",
+            fontSize: 22,
             fontWeight: 700,
-            color: COLORS.ink,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            display: "flex",
+            lineHeight: 1,
+            letterSpacing: "0.14em",
+            color: "#1b2125",
+            textShadow: "0 1px 0 rgba(255, 255, 255, 0.6)",
           },
         },
-        title,
+        brandName,
       ),
-      description
-        ? h(
-            "div",
-            {
-              style: {
-                fontSize: "36px",
-                color: COLORS.inkLight,
-                lineHeight: 1.4,
-                display: "flex",
-                marginTop: "8px",
-              },
-            },
-            description.length > 140
-              ? description.slice(0, 140) + "..."
-              : description,
-          )
-        : undefined,
+      h(
+        "div",
+        {
+          style: {
+            fontSize: 13,
+            lineHeight: 1,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: "#3a444b",
+          },
+        },
+        brandTagline,
+      ),
     ),
-    brandingFooter(options),
+    rivet({ top: 6, right: 7 }),
+    rivet({ bottom: 6, right: 7 }),
   );
 }
 
-function pageLayout(options: OgImageOptions): Node {
-  const { title, description, emoji, subtitle, showTitleAvatar } = options;
+/** Width in Latin-letter units: a CJK glyph is about two letters wide. */
+function visualLength(text: string): number {
+  return Array.from(text).reduce(
+    (length, char) => length + (char.charCodeAt(0) > 0x2e7f ? 2 : 1),
+    0,
+  );
+}
 
+function annunciator(legend: string): Node {
   return h(
     "div",
     {
       style: {
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        width: 84,
+        height: 34,
+        borderRadius: 3,
+        backgroundColor: "#0d0f0e",
+        boxShadow: "inset 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 0 2px #15191c",
+      },
+    },
+    // satori paints a textShadow onto the element's box as well, so the glow
+    // sits on its own element inside the lamp.
+    h(
+      "div",
+      {
+        style: {
+          fontSize: 15,
+          fontWeight: 700,
+          letterSpacing: "0.1em",
+          color: "#5dff66",
+          textShadow: "0 0 8px rgba(70, 255, 80, 0.85)",
+        },
+      },
+      legend,
+    ),
+  );
+}
+
+function screenTitle(title: string, fontSize: number, page: boolean): Node {
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignSelf: "flex-start",
+        paddingBottom: 4,
+        borderBottom: `3px solid ${ECAM.white}`,
+        fontSize,
+        fontWeight: 700,
+        lineHeight: 1.25,
+        letterSpacing: page ? "0.05em" : "0.02em",
+        textTransform: page ? "uppercase" : "none",
+        // satori shrinks a balanced box with no break opportunity to its
+        // narrowest guess, so the underline stops short of a one-word title.
+        textWrap: title.includes(" ") ? "balance" : "wrap",
+        color: ECAM.white,
+      },
+    },
+    title,
+  );
+}
+
+function screenText(text: string, lines: number): Node {
+  return h(
+    "div",
+    {
+      style: {
+        display: "block",
+        lineClamp: lines,
+        fontSize: 28,
+        lineHeight: 1.4,
+        color: ECAM.text,
+      },
+    },
+    text,
+  );
+}
+
+function postScreen({ title, description, category, date }: OgImageOptions) {
+  const length = visualLength(title);
+  return h(
+    "div",
+    { style: { display: "flex", flexDirection: "column", gap: 28 } },
+    category || date
+      ? h(
+          "div",
+          {
+            style: { display: "flex", alignItems: "center" },
+          },
+          category
+            ? h(
+                "div",
+                {
+                  style: {
+                    display: "flex",
+                    padding: "8px 14px",
+                    border: `2px solid ${ECAM.cyan}`,
+                    fontSize: 20,
+                    fontWeight: 700,
+                    lineHeight: 1,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: ECAM.cyan,
+                  },
+                },
+                category,
+              )
+            : undefined,
+          date
+            ? h(
+                "div",
+                {
+                  style: {
+                    marginLeft: "auto",
+                    fontFamily: '"B612 Mono", "Noto Sans SC"',
+                    fontSize: 24,
+                    color: ECAM.green,
+                  },
+                },
+                date,
+              )
+            : undefined,
+        )
+      : undefined,
+    screenTitle(
+      title,
+      length > 72 ? 40 : length > 48 ? 46 : length > 24 ? 54 : 62,
+      false,
+    ),
+    description ? screenText(description, length > 48 ? 2 : 3) : undefined,
+  );
+}
+
+function pageScreen({ title, subtitle, description, emoji }: OgImageOptions) {
+  const text = subtitle || description;
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
         flex: 1,
-        padding: "50px 60px",
+        gap: 28,
+      },
+    },
+    emoji
+      ? h("div", { style: { display: "flex", fontSize: 96, lineHeight: 1 } }, emoji)
+      : undefined,
+    screenTitle(title, visualLength(title) > 20 ? 54 : 64, true),
+    text ? screenText(text, 2) : undefined,
+  );
+}
+
+function displayUnit(options: OgImageOptions): Node {
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        flex: 1,
+        padding: 18,
+        borderRadius: 14,
+        backgroundImage: "linear-gradient(#2d3439, #22282c)",
+        boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 2px ${PANEL.seam}, 0 14px 30px -14px rgba(0, 0, 0, 0.8)`,
       },
     },
     h(
       "div",
       {
         style: {
+          position: "relative",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: "32px",
           flex: 1,
-          justifyContent: "center",
+          padding: "40px 52px",
+          borderRadius: 6,
+          backgroundColor: ECAM.screen,
+          boxShadow: "inset 0 0 0 1px #050505",
+          overflow: "hidden",
         },
       },
-      showTitleAvatar
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.1))",
-              },
-            },
-            avatar(120, true),
-          )
-        : undefined,
-      emoji
-        ? h(
-            "div",
-            {
-              style: {
-                fontSize: "100px",
-                display: "flex",
-                lineHeight: 1,
-                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.1))",
-              },
-            },
-            emoji,
-          )
-        : undefined,
-      h(
-        "div",
-        {
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "16px",
-          },
+      options.type === "page" ? pageScreen(options) : postScreen(options),
+      h("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage:
+            "linear-gradient(125deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 32%)",
         },
-        h(
-          "div",
-          {
-            style: {
-              fontSize: showTitleAvatar
-                ? title.length > 20
-                  ? "44px"
-                  : "48px"
-                : title.length > 20
-                  ? "46px"
-                  : "50px",
-              fontWeight: 700,
-              color: COLORS.ink,
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              display: "flex",
-              textAlign: "center",
-            },
-          },
-          title,
-        ),
-        subtitle || description
-          ? h(
-              "div",
-              {
-                style: {
-                  fontSize: "38px",
-                  color: COLORS.inkLight,
-                  lineHeight: 1.4,
-                  display: "flex",
-                  textAlign: "center",
-                  maxWidth: "800px",
-                },
-              },
-              subtitle || description,
-            )
-          : undefined,
-      ),
+      }),
     ),
-    brandingFooter(options, true),
   );
 }
-
-// ---------------------------------------------------------------------------
-// Rendering
-// ---------------------------------------------------------------------------
 
 export async function generateOgImage(
   options: OgImageOptions,
 ): Promise<Buffer> {
-  const { type = "post" } = options;
-
   const allText = [
     options.title,
     options.description,
     options.subtitle,
     options.category,
+    options.date,
     options.brandName,
     options.brandTagline,
   ]
@@ -494,67 +482,46 @@ export async function generateOgImage(
     "div",
     {
       style: {
+        position: "relative",
         width: "100%",
         height: "100%",
         display: "flex",
-        backgroundColor: COLORS.body,
-        padding: "40px",
-        position: "relative",
-        fontFamily: '"JetBrains Mono", "Noto Sans SC", monospace',
+        flexDirection: "column",
+        gap: 22,
+        padding: "36px 40px 30px",
+        backgroundColor: PANEL.face,
+        boxShadow: `inset 0 2px 0 ${PANEL.hi}, inset 0 -2px 0 ${PANEL.lo}`,
+        fontFamily: '"B612", "Noto Sans SC", sans-serif',
       },
     },
-    // The paper card
+    ...SCREWS.map(screw),
+    displayUnit(options),
     h(
       "div",
       {
         style: {
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          backgroundColor: COLORS.paper,
-          borderRadius: "32px",
-          boxShadow: `0 20px 50px ${COLORS.shadow}, 0 4px 12px rgba(0,0,0,0.04)`,
-          border: `1px solid ${COLORS.border}`,
-          position: "relative",
-          overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "space-between",
         },
       },
-      dotPattern(),
-      // Top accent bar
-      h("div", {
-        style: {
-          width: "100%",
-          height: "8px",
-          backgroundColor: COLORS.accent,
-          display: "flex",
-        },
-      }),
-      type === "page" ? pageLayout(options) : articleLayout(options),
+      placard(options),
+      annunciator("NORM"),
     ),
   );
 
   const svg = await satori(tree as never, {
     ...OG_IMAGE_SIZE,
     fonts: [
-      { name: "JetBrains Mono", data: fontRegular, weight: 400, style: "normal" },
-      { name: "JetBrains Mono", data: fontBold, weight: 700, style: "normal" },
-      ...(cjkFont
-        ? [
-            {
-              name: "Noto Sans SC",
-              data: cjkFont,
-              weight: 400 as const,
-              style: "normal" as const,
-            },
-            {
-              name: "Noto Sans SC",
-              data: cjkFont,
-              weight: 700 as const,
-              style: "normal" as const,
-            },
-          ]
-        : []),
+      { name: "B612", data: fontRegular, weight: 400, style: "normal" },
+      { name: "B612", data: fontBold, weight: 700, style: "normal" },
+      { name: "B612 Mono", data: fontMono, weight: 400, style: "normal" },
+      ...Object.entries(cjkFont).map(([weight, data]) => ({
+        name: "Noto Sans SC",
+        data,
+        weight: Number(weight) as CjkWeight,
+        style: "normal" as const,
+      })),
     ],
     loadAdditionalAsset: async (code, segment) => {
       if (code === "emoji") {
