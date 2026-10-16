@@ -1,6 +1,9 @@
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
+import { render } from "svelte/server";
 import { readFileSync } from "node:fs";
+import { icons } from "$lib/icons";
+import { SITE_URL } from "$lib/site-config";
 
 /**
  * Build-time OG image rendering (satori + resvg). This module is only used
@@ -9,28 +12,35 @@ import { readFileSync } from "node:fs";
 
 const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
-export interface OgImageOptions {
+export type OgIcon = keyof typeof icons;
+
+export type OgMarker =
+  | { kind: "post"; category?: string; date: string }
+  | { kind: "icon"; icon: OgIcon };
+
+export interface OgCard {
   title: string;
   description?: string;
-  category?: string;
-  date?: string;
-  type?: "post" | "page";
-  emoji?: string;
-  subtitle?: string;
-  brandName?: string;
-  brandTagline?: string;
-  showTitleAvatar?: boolean;
+  /** The row above the title; the home card has none. */
+  marker?: OgMarker;
+  brandName: string;
+  brandTagline: string;
 }
 
 const COLORS = {
-  body: "#F5F4ED",
+  bench: "#D1CFC5",
   paper: "#FAF9F5",
   ink: "#141413",
   inkLight: "#5E5D59",
   accent: "#D97757",
-  border: "rgba(20, 20, 19, 0.1)",
-  shadow: "rgba(0, 0, 0, 0.06)",
 };
+
+const SANS = '"B612", "Noto Sans SC"';
+const MONO = '"B612 Mono", "Noto Sans SC"';
+
+const SLIP_WIDTH = 1060;
+
+const DOMAIN = new URL(SITE_URL).host;
 
 // ---------------------------------------------------------------------------
 // Minimal element helper — satori consumes React-element-shaped objects.
@@ -55,13 +65,28 @@ function h(
   };
 }
 
+function svgDataUri(svg: string): string {
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+}
+
 // ---------------------------------------------------------------------------
-// Fonts — B612 Mono is bundled; CJK glyphs are fetched as tiny subsets
-// from Google Fonts at build time (cached per charset).
+// Fonts — B612 and B612 Mono are bundled; CJK glyphs are fetched as tiny
+// subsets from Google Fonts at build time (cached per charset).
 // ---------------------------------------------------------------------------
 
-const fontRegular = readFileSync("src/lib/og/fonts/b612-mono-400.ttf");
-const fontBold = readFileSync("src/lib/og/fonts/b612-mono-700.ttf");
+const fonts = (
+  [
+    { name: "B612", file: "b612-400.ttf", weight: 400 },
+    { name: "B612", file: "b612-700.ttf", weight: 700 },
+    { name: "B612 Mono", file: "b612-mono-400.ttf", weight: 400 },
+    { name: "B612 Mono", file: "b612-mono-700.ttf", weight: 700 },
+  ] as const
+).map(({ name, file, weight }) => ({
+  name,
+  data: readFileSync(`src/lib/og/fonts/${file}`),
+  weight,
+  style: "normal" as const,
+}));
 
 const cjkFontCache = new Map<string, ArrayBuffer | null>();
 
@@ -95,111 +120,179 @@ async function loadCjkSubset(text: string): Promise<ArrayBuffer | null> {
 }
 
 // ---------------------------------------------------------------------------
-// Emoji — resolved to Twemoji data URIs at build time (cached per grapheme).
-// ---------------------------------------------------------------------------
-
-const emojiCache = new Map<string, string | null>();
-
-async function loadEmoji(grapheme: string): Promise<string | null> {
-  const cached = emojiCache.get(grapheme);
-  if (cached !== undefined) return cached;
-
-  const codePoints = Array.from(grapheme).map((char) =>
-    char.codePointAt(0)!.toString(16),
-  );
-  const candidates = [
-    codePoints.join("-"),
-    codePoints.filter((cp) => cp !== "fe0f").join("-"),
-  ];
-
-  let result: string | null = null;
-  for (const name of new Set(candidates)) {
-    try {
-      const response = await fetch(
-        `https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/${name}.svg`,
-      );
-      if (response.ok) {
-        const svg = await response.text();
-        result = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
-        break;
-      }
-    } catch {
-      // try the next candidate / give up gracefully
-    }
-  }
-
-  if (!result) console.warn(`[og] failed to load emoji ${grapheme}`);
-  emojiCache.set(grapheme, result);
-  return result;
-}
-
-// ---------------------------------------------------------------------------
 // Building blocks
 // ---------------------------------------------------------------------------
 
 const AVATAR_DATA_URI = `data:image/jpeg;base64,${readFileSync("src/lib/og/avatar.jpg").toString("base64")}`;
 
-function avatar(size: number, circle?: boolean): Node {
+const ICON_SIZE = 32;
+
+function icon(name: OgIcon): Node {
+  const { body } = render(icons[name], {
+    props: { size: ICON_SIZE, color: COLORS.accent, strokeWidth: 2 },
+  });
   return h("img", {
-    src: AVATAR_DATA_URI,
-    width: size,
-    height: size,
-    style: {
-      borderRadius: circle ? "50%" : "12px",
-      border: `1px solid ${COLORS.border}`,
-      boxShadow: `0 4px 12px ${COLORS.shadow}`,
-    },
+    src: svgDataUri(body),
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   });
 }
 
-function brandingFooter(options: OgImageOptions, large?: boolean): Node {
-  const avatarSize = large ? 56 : 48;
-  const nameSize = large ? 20 : 18;
-  const taglineSize = large ? 16 : 14;
-
+function chip(text: string): Node {
   return h(
     "div",
     {
       style: {
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderTop: `1px dashed ${COLORS.border}`,
-        paddingTop: "24px",
-        width: "100%",
-        marginTop: "auto",
+        fontSize: "15px",
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        padding: "5px 10px 4px",
+        border: "1.5px solid rgba(217, 119, 87, 0.4)",
+        borderRadius: "2px",
+        color: COLORS.accent,
+        backgroundColor: "rgba(217, 119, 87, 0.06)",
       },
     },
-    h(
-      "div",
-      { style: { display: "flex", alignItems: "center", gap: "16px" } },
-      avatar(avatarSize),
-      h(
+    text,
+  );
+}
+
+function markerRow(marker: OgMarker): Node {
+  switch (marker.kind) {
+    case "post":
+      return h(
         "div",
-        { style: { display: "flex", flexDirection: "column" } },
+        { style: { display: "flex", alignItems: "center", gap: "18px" } },
+        marker.category && chip(marker.category),
         h(
           "div",
           {
             style: {
-              fontSize: `${nameSize}px`,
-              fontWeight: 700,
-              color: COLORS.ink,
-              letterSpacing: "0.05em",
               display: "flex",
-            },
-          },
-          options.brandName || "LUOJIAHAI",
-        ),
-        h(
-          "div",
-          {
-            style: {
-              fontSize: `${taglineSize}px`,
+              fontSize: "15px",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
               color: COLORS.inkLight,
-              display: "flex",
             },
           },
-          "luojiahai.com",
+          marker.date,
+        ),
+      );
+    case "icon":
+      return icon(marker.icon);
+  }
+}
+
+/** Steps down so a title at the 99-char cap still fits in three lines. */
+function titleSize(title: string): number {
+  if (title.length <= 34) return 60;
+  if (title.length <= 64) return 52;
+  return 44;
+}
+
+function content(card: OgCard): Node {
+  return h(
+    "div",
+    { style: { display: "flex", flexDirection: "column", gap: "20px" } },
+    card.marker && markerRow(card.marker),
+    h(
+      "div",
+      {
+        style: {
+          display: "block",
+          lineClamp: 3,
+          fontFamily: SANS,
+          fontWeight: 700,
+          fontSize: `${titleSize(card.title)}px`,
+          lineHeight: 1.12,
+          color: COLORS.ink,
+        },
+      },
+      card.title,
+    ),
+    card.description &&
+      h(
+        "div",
+        {
+          style: {
+            display: "block",
+            lineClamp: 2,
+            fontFamily: SANS,
+            fontSize: "26px",
+            lineHeight: 1.45,
+            color: COLORS.inkLight,
+          },
+        },
+        card.description,
+      ),
+  );
+}
+
+function footer(card: OgCard): Node {
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "auto",
+        paddingTop: "26px",
+        borderTop: "1.5px dashed rgba(20, 20, 19, 0.14)",
+      },
+    },
+    h(
+      "div",
+      { style: { display: "flex", alignItems: "center", gap: "20px" } },
+      h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            padding: "6px",
+            borderRadius: "999px",
+            backgroundColor: "rgba(0, 0, 0, 0.05)",
+          },
+        },
+        h("img", {
+          src: AVATAR_DATA_URI,
+          width: 40,
+          height: 40,
+          style: {
+            borderRadius: "999px",
+            border: "1px solid rgba(0, 0, 0, 0.1)",
+          },
+        }),
+      ),
+      h(
+        "div",
+        { style: { display: "flex", flexDirection: "column", gap: "6px" } },
+        h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              fontSize: "18px",
+              fontWeight: 700,
+              letterSpacing: "0.28em",
+              color: COLORS.ink,
+            },
+          },
+          card.brandName,
+        ),
+        h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              fontSize: "11px",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: COLORS.inkLight,
+            },
+          },
+          card.brandTagline,
         ),
       ),
     ),
@@ -207,165 +300,19 @@ function brandingFooter(options: OgImageOptions, large?: boolean): Node {
       "div",
       {
         style: {
-          fontSize: `${taglineSize}px`,
+          display: "flex",
+          fontSize: "14px",
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
           color: COLORS.inkLight,
-          letterSpacing: "0.05em",
-          display: "flex",
-          opacity: 0.8,
         },
       },
-      options.brandTagline || "The sky is not the limit.",
+      DOMAIN,
     ),
   );
 }
 
-function dotPattern(): Node {
-  return h("div", {
-    style: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      opacity: 0.04,
-      display: "flex",
-      backgroundImage: `radial-gradient(circle at center, ${COLORS.ink} 1px, transparent 1px)`,
-      backgroundSize: "30px 30px",
-    },
-  });
-}
-
-function articleLayout(options: OgImageOptions): Node {
-  const { title, description, category, date, type } = options;
-  const typeLabel = type === "post" ? "POSTS" : "";
-
-  return h(
-    "div",
-    {
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        padding: "50px 60px",
-      },
-    },
-    // Meta tags row
-    h(
-      "div",
-      {
-        style: {
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-          marginBottom: "32px",
-        },
-      },
-      typeLabel
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 14px",
-                backgroundColor: COLORS.accent,
-                color: COLORS.paper,
-                fontSize: "16px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                borderRadius: "4px",
-                boxShadow: "0 4px 10px rgba(217, 119, 87, 0.2)",
-              },
-            },
-            typeLabel,
-          )
-        : undefined,
-      category
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 14px",
-                border: `1px solid ${COLORS.border}`,
-                color: COLORS.inkLight,
-                fontSize: "16px",
-                fontWeight: 400,
-                letterSpacing: "0.05em",
-                borderRadius: "4px",
-                backgroundColor: "rgba(0,0,0,0.02)",
-              },
-            },
-            category,
-          )
-        : undefined,
-      date
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                color: COLORS.inkLight,
-                fontSize: "16px",
-                fontWeight: 400,
-                marginLeft: "8px",
-              },
-            },
-            date,
-          )
-        : undefined,
-    ),
-    // Main content
-    h(
-      "div",
-      {
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          maxWidth: "900px",
-        },
-      },
-      h(
-        "div",
-        {
-          style: {
-            fontSize: title.length > 30 ? "42px" : "48px",
-            fontWeight: 700,
-            color: COLORS.ink,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            display: "flex",
-          },
-        },
-        title,
-      ),
-      description
-        ? h(
-            "div",
-            {
-              style: {
-                fontSize: "36px",
-                color: COLORS.inkLight,
-                lineHeight: 1.4,
-                display: "flex",
-                marginTop: "8px",
-              },
-            },
-            description.length > 140
-              ? description.slice(0, 140) + "..."
-              : description,
-          )
-        : undefined,
-    ),
-    brandingFooter(options),
-  );
-}
-
-function pageLayout(options: OgImageOptions): Node {
-  const { title, description, emoji, subtitle, showTitleAvatar } = options;
-
+function perforations(side: "left" | "right"): Node {
   return h(
     "div",
     {
@@ -373,99 +320,82 @@ function pageLayout(options: OgImageOptions): Node {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-        padding: "50px 60px",
+        gap: "32px",
+        position: "absolute",
+        [side]: 0,
+        top: "22px",
+        width: "22px",
+        opacity: 0.3,
       },
     },
+    ...Array.from({ length: 14 }, () =>
+      h("div", {
+        style: {
+          display: "flex",
+          width: "8px",
+          height: "8px",
+          borderRadius: "8px",
+          border: `1.5px solid ${COLORS.ink}`,
+        },
+      }),
+    ),
+  );
+}
+
+const TEAR_DEPTH = 8;
+
+const TEAR_DATA_URI = (() => {
+  const tooth = 16;
+  let path = `M0 0 L${SLIP_WIDTH} 0 `;
+  for (let x = SLIP_WIDTH; x > 0; x -= tooth) {
+    path += `L${x - tooth / 2} ${TEAR_DEPTH} L${x - tooth} 0 `;
+  }
+  return svgDataUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${SLIP_WIDTH}" height="${TEAR_DEPTH}"><path d="${path}Z" fill="${COLORS.paper}"/></svg>`,
+  );
+})();
+
+function slip(card: OgCard): Node {
+  return h(
+    "div",
+    { style: { display: "flex", flexDirection: "column" } },
     h(
       "div",
       {
         style: {
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: "32px",
-          flex: 1,
-          justifyContent: "center",
+          position: "relative",
+          width: `${SLIP_WIDTH}px`,
+          height: "560px",
+          padding: "54px 76px 40px",
+          backgroundColor: COLORS.paper,
+          backgroundImage:
+            "radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px)",
+          backgroundSize: "7px 7px",
+          boxShadow:
+            "0 18px 36px rgba(75, 57, 43, 0.14), 0 3px 8px rgba(75, 57, 43, 0.12)",
         },
       },
-      showTitleAvatar
-        ? h(
-            "div",
-            {
-              style: {
-                display: "flex",
-                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.1))",
-              },
-            },
-            avatar(120, true),
-          )
-        : undefined,
-      emoji
-        ? h(
-            "div",
-            {
-              style: {
-                fontSize: "100px",
-                display: "flex",
-                lineHeight: 1,
-                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.1))",
-              },
-            },
-            emoji,
-          )
-        : undefined,
-      h(
-        "div",
-        {
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "16px",
-          },
+      // The shadow of the printer slot the slip just fed out of.
+      h("div", {
+        style: {
+          display: "flex",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "52px",
+          backgroundImage:
+            "linear-gradient(to bottom, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0))",
         },
-        h(
-          "div",
-          {
-            style: {
-              fontSize: showTitleAvatar
-                ? title.length > 20
-                  ? "44px"
-                  : "48px"
-                : title.length > 20
-                  ? "46px"
-                  : "50px",
-              fontWeight: 700,
-              color: COLORS.ink,
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              display: "flex",
-              textAlign: "center",
-            },
-          },
-          title,
-        ),
-        subtitle || description
-          ? h(
-              "div",
-              {
-                style: {
-                  fontSize: "38px",
-                  color: COLORS.inkLight,
-                  lineHeight: 1.4,
-                  display: "flex",
-                  textAlign: "center",
-                  maxWidth: "800px",
-                },
-              },
-              subtitle || description,
-            )
-          : undefined,
-      ),
+      }),
+      perforations("left"),
+      perforations("right"),
+      content(card),
+      footer(card),
     ),
-    brandingFooter(options, true),
+    h("img", { src: TEAR_DATA_URI, width: SLIP_WIDTH, height: TEAR_DEPTH }),
   );
 }
 
@@ -473,22 +403,22 @@ function pageLayout(options: OgImageOptions): Node {
 // Rendering
 // ---------------------------------------------------------------------------
 
-export async function generateOgImage(
-  options: OgImageOptions,
-): Promise<Buffer> {
-  const { type = "post" } = options;
-
-  const allText = [
-    options.title,
-    options.description,
-    options.subtitle,
-    options.category,
-    options.brandName,
-    options.brandTagline,
+function cardText(card: OgCard): string {
+  const { marker } = card;
+  return [
+    card.title,
+    card.description,
+    marker?.kind === "post" && marker.category,
+    marker?.kind === "post" && marker.date,
+    card.brandName,
+    card.brandTagline,
   ]
     .filter(Boolean)
     .join("");
-  const cjkFont = await loadCjkSubset(allText);
+}
+
+export async function generateOgImage(card: OgCard): Promise<Buffer> {
+  const cjkFont = await loadCjkSubset(cardText(card));
 
   const tree = h(
     "div",
@@ -497,48 +427,23 @@ export async function generateOgImage(
         width: "100%",
         height: "100%",
         display: "flex",
-        backgroundColor: COLORS.body,
-        padding: "40px",
-        position: "relative",
-        fontFamily: '"B612 Mono", "Noto Sans SC", monospace',
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: COLORS.bench,
+        backgroundImage:
+          "linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+        backgroundPosition: "13px 13px",
+        fontFamily: MONO,
       },
     },
-    // The paper card
-    h(
-      "div",
-      {
-        style: {
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: COLORS.paper,
-          borderRadius: "32px",
-          boxShadow: `0 20px 50px ${COLORS.shadow}, 0 4px 12px rgba(0,0,0,0.04)`,
-          border: `1px solid ${COLORS.border}`,
-          position: "relative",
-          overflow: "hidden",
-        },
-      },
-      dotPattern(),
-      // Top accent bar
-      h("div", {
-        style: {
-          width: "100%",
-          height: "8px",
-          backgroundColor: COLORS.accent,
-          display: "flex",
-        },
-      }),
-      type === "page" ? pageLayout(options) : articleLayout(options),
-    ),
+    slip(card),
   );
 
   const svg = await satori(tree as never, {
     ...OG_IMAGE_SIZE,
     fonts: [
-      { name: "B612 Mono", data: fontRegular, weight: 400, style: "normal" },
-      { name: "B612 Mono", data: fontBold, weight: 700, style: "normal" },
+      ...fonts,
       ...(cjkFont
         ? [
             {
@@ -556,13 +461,6 @@ export async function generateOgImage(
           ]
         : []),
     ],
-    loadAdditionalAsset: async (code, segment) => {
-      if (code === "emoji") {
-        const uri = await loadEmoji(segment);
-        if (uri) return uri;
-      }
-      return segment;
-    },
   });
 
   return new Resvg(svg, {
