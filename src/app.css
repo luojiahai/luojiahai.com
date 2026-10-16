@@ -691,10 +691,6 @@
       grid-column: 1 / -1;
       grid-row: 2;
     }
-    .fcu-left {
-      flex-direction: row;
-      align-items: center;
-    }
     .ecp-row {
       flex-wrap: nowrap;
       width: 100%;
