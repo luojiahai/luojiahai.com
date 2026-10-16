@@ -40,12 +40,12 @@
   <!-- Profile masthead -->
   <PrintedSection>
     <h1
-      class="max-w-[11ch] font-serif text-[2rem] font-bold leading-[0.96] tracking-[-0.04em] text-printer-ink dark:text-printer-ink-dark"
+      class="max-w-[11ch] font-sans text-[2rem] font-bold leading-[0.96] tracking-[-0.04em] text-printer-ink dark:text-printer-ink-dark"
     >
       {dictionary.meta.name}
     </h1>
     <p
-      class="mt-3 max-w-[42ch] font-serif text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
+      class="mt-3 max-w-[42ch] font-sans text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
     >
       {dictionary.meta.motto}
     </p>

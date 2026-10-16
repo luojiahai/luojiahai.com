@@ -177,7 +177,7 @@
 
   <!-- Main heading -->
   <h1
-    class="font-serif text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
+    class="font-sans text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
   >
     {dictionary.labels.notFoundTitle}
   </h1>
