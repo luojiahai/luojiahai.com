@@ -1,9 +1,7 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
   import ProjectList from "$lib/components/ProjectList.svelte";
+  import ScreenTitle from "$lib/components/ScreenTitle.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -19,24 +17,10 @@
   path={dictionary.urls.projects}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="code">
-      {dictionary.labels.projects}
-    </PrintedPageTitle>
-    <p class="page-subtitle">
-      {dictionary.labels.projectsSubtitle}
-    </p>
-  </PrintedSection>
+<ScreenTitle subtitle={dictionary.labels.projectsSubtitle}>
+  {dictionary.labels.projects}
+</ScreenTitle>
 
-  <PrintedDivider style="solid" />
-
-  <!-- Projects. The page title already names them, so no section label. -->
-  <PrintedSection>
-    <ProjectList projects={data.projects} />
-  </PrintedSection>
-
-  <PrintedDivider style="dashed" />
-
+<div class="mt-3.5">
+  <ProjectList projects={data.projects} />
 </div>

@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { displayDate } from "$lib/date";
+  import { ecamDate } from "$lib/date";
   import { getDictionary, languageLabels } from "$lib/dictionaries";
   import {
     generateBlogPostingJsonLd,
     generateBreadcrumbJsonLd,
   } from "$lib/json-ld";
   import { SITE_URL } from "$lib/site-config";
-  import Icon from "$lib/components/Icon.svelte";
   import PostContent from "$lib/components/PostContent.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedLabel from "$lib/components/PrintedLabel.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
+  import ScreenChip from "$lib/components/ScreenChip.svelte";
+  import ScreenTitle from "$lib/components/ScreenTitle.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -63,105 +61,54 @@
   ]}
 />
 
-<div>
-  <!-- Post header -->
-  <PrintedSection>
-    <div class="flex flex-wrap gap-1.5 mb-3">
-      {#each data.categories as category (category.slug)}
-        <a href={category.permalink[lang]}>
-          <PrintedLabel variant="accent">{category.name[lang]}</PrintedLabel>
-        </a>
-      {/each}
+{#if data.categories.length > 0}
+  <div class="mb-4 flex flex-wrap gap-2">
+    {#each data.categories as category (category.slug)}
+      <ScreenChip href={category.permalink[lang]}>{category.name[lang]}</ScreenChip>
+    {/each}
+  </div>
+{/if}
+
+<ScreenTitle kind="post" subtitle={post.description}>{post.title}</ScreenTitle>
+
+<div
+  class="mt-3.5 flex flex-wrap items-center gap-x-3.5 gap-y-2 font-mono text-[13px]"
+>
+  <span class="text-ecam-green tabular-nums">{ecamDate(post.date, lang)}</span>
+  {#each data.translations as translation (translation.lang)}
+    <a class="act" href={translation.permalink}>
+      {languageLabels[translation.lang]} ›
+    </a>
+  {/each}
+</div>
+
+<PostContent html={post.content} />
+
+{#if data.wechatQrSvg}
+  <div class="mt-6 flex items-center gap-4">
+    <div class="h-20 w-20 shrink-0 bg-white p-1.5">
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -- build-time QR SVG -->
+      {@html data.wechatQrSvg}
     </div>
-    <h1
-      class="max-w-[28ch] font-serif text-[2rem] font-bold leading-[1.08] tracking-[-0.025em] text-printer-ink dark:text-printer-ink-dark"
-    >
-      {post.title}
-    </h1>
-    <div class="flex items-center gap-3 mt-2 flex-wrap">
-      <span
-        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 tabular-nums"
-      >
-        {displayDate(post.date, lang)}
-      </span>
-      {#if data.translations.length > 0}
-        <div class="flex items-center gap-2">
-          <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
-          >
-            |
-          </span>
-          {#each data.translations as translation (translation.lang)}
-            <a
-              class="font-mono text-[10px] text-printer-accent dark:text-printer-accent-dark hover:underline"
-              href={translation.permalink}
-            >
-              {languageLabels[translation.lang]}
-            </a>
-          {/each}
-        </div>
-      {/if}
-    </div>
-    {#if post.description}
-      <p class="page-subtitle mt-4">
-        {post.description}
+    <div>
+      <p class="text-[13px] font-bold tracking-[0.06em] text-ecam-white">WECHAT</p>
+      <p class="mt-1 font-read text-sm text-ecam-dim">
+        {dictionary.labels.wechatScanHint}
       </p>
-    {/if}
-  </PrintedSection>
-
-  <PrintedDivider style="solid" />
-
-  <!-- Post content -->
-  <PostContent html={post.content} />
-
-  <!-- WeChat QR Code -->
-  {#if data.wechatQrSvg}
-    <PrintedDivider style="dashed" />
-    <div class="flex items-center gap-4 py-1">
-      <div class="shrink-0 w-20 h-20 bg-white p-1.5">
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -- build-time QR SVG -->
-        {@html data.wechatQrSvg}
-      </div>
-      <div>
-        <p class="font-mono text-[11px] text-printer-ink dark:text-printer-ink-dark">
-          WeChat
-        </p>
-        <p
-          class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5"
-        >
-          {dictionary.labels.wechatScanHint}
-        </p>
-      </div>
     </div>
-  {/if}
-
-  <PrintedDivider style="dashed" />
-
-  <!-- Footer actions -->
-  <div class="flex items-center gap-4">
-    <span
-      class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 uppercase tracking-wider"
-    >
-      {dictionary.labels.shareTo}
-    </span>
-    <a
-      href={dictionary.urls.shareToX(post.title, post.permalink)}
-      target="_blank"
-      rel="noopener"
-      class="text-printer-ink-light dark:text-printer-ink-dark/40 hover:text-printer-ink dark:hover:text-printer-ink-dark transition-colors"
-      aria-label={dictionary.labels.shareToX}
-    >
-      <Icon name="x" class="w-4 h-4" />
-    </a>
   </div>
+{/if}
 
-  <div class="mt-6">
-    <a
-      href={dictionary.urls.posts}
-      class="section-action"
-    >
-      {dictionary.labels.backToPosts}
-    </a>
-  </div>
-
+<div
+  class="mt-[18px] flex flex-wrap justify-between gap-3 border-t border-white/15 pt-3.5"
+>
+  <a class="act" href={dictionary.urls.posts}>{dictionary.labels.backToPosts}</a>
+  <a
+    class="act"
+    href={dictionary.urls.shareToX(post.title, post.permalink)}
+    target="_blank"
+    rel="noopener"
+  >
+    {dictionary.labels.shareToX} ›
+  </a>
 </div>

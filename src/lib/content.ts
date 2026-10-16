@@ -47,6 +47,8 @@ export type PostListItem = Pick<
   | "description"
   | "categories"
   | "permalink"
+  | "draft"
+  | "featured"
 >;
 
 export function toListItem(post: Post): PostListItem {
@@ -58,6 +60,8 @@ export function toListItem(post: Post): PostListItem {
     description: post.description,
     categories: post.categories,
     permalink: post.permalink,
+    draft: post.draft,
+    featured: post.featured,
   };
 }
 

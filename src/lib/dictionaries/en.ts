@@ -70,29 +70,29 @@ const dictionary = {
   },
   labels: {
     home: "Home",
-    // The nav tab, the page title, and the home page's section header all
-    // read "Posts"; the same holds for "Projects".
+    // The nav key's accessible name and the page title both read "Posts";
+    // the same holds for "Projects".
     posts: "Posts",
     projects: "Projects",
     use: "Use",
     about: "About",
+    recentPosts: "Recent posts",
+    viewAll: "VIEW ALL",
     postsSubtitle: "Things I write.",
     projectsSubtitle: "Things I build.",
     useSubtitle: "Things I'm using.",
     empty: "Nothing here yet.",
-    shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
-    backToPosts: "← BACK TO POSTS",
-    allPosts: "← ALL POSTS",
+    backToPosts: "‹ BACK TO POSTS",
+    allPosts: "‹ ALL POSTS",
     notFoundStatus: "Paper Tray Empty",
     notFoundTitle: "Out of Paper",
     notFoundSubtitle: "Please insert paper correctly to print content.",
     notFoundButton: "← Print Home",
     notFoundError: "ERR 404 · PAPER_NOT_FOUND",
-    printedOn: "Printed on",
     wechatScanHint: "Scan to read on WeChat",
-    shareToX: "Share to X",
+    shareToX: "SHARE TO X",
     aboutSignOff: "That's about it~",
     skipToContent: "Skip to main content",
     primaryNavigation: "Primary navigation",
@@ -108,7 +108,7 @@ const dictionary = {
     masterWarning: "Master warning: press to acknowledge",
     lastUpdate: "LAST UPDATE",
     entries(count: number) {
-      return `${count} ${count === 1 ? "entry" : "entries"}`;
+      return `${count} ${count === 1 ? "ENTRY" : "ENTRIES"}`;
     },
   },
   contacts,

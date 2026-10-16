@@ -1,11 +1,9 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
   import PostList from "$lib/components/PostList.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedLabel from "$lib/components/PrintedLabel.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedEmpty from "$lib/components/PrintedEmpty.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
+  import ScreenChip from "$lib/components/ScreenChip.svelte";
+  import ScreenEmpty from "$lib/components/ScreenEmpty.svelte";
+  import ScreenTitle from "$lib/components/ScreenTitle.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -21,39 +19,20 @@
   path={dictionary.urls.posts}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="draft">
-      {dictionary.labels.posts}
-    </PrintedPageTitle>
-    <p class="page-subtitle">
-      {dictionary.labels.postsSubtitle}
-    </p>
-  </PrintedSection>
+<ScreenTitle subtitle={dictionary.labels.postsSubtitle}>
+  {dictionary.labels.posts}
+</ScreenTitle>
 
-  <PrintedDivider style="solid" />
+<div class="mt-[18px] flex flex-wrap gap-2">
+  {#each data.categories as category (category.slug)}
+    <ScreenChip href={category.permalink[lang]} count={category.count[lang]}>
+      {category.name[lang]}
+    </ScreenChip>
+  {:else}
+    <ScreenEmpty />
+  {/each}
+</div>
 
-  <!-- Posts, with the categories above them. The page title already names
-       them, so no section label. -->
-  <PrintedSection>
-    <div class="flex flex-wrap gap-1.5">
-      {#each data.categories as category (category.slug)}
-        <a href={category.permalink[lang]}>
-          <PrintedLabel variant="default">
-            {category.name[lang]}
-            <span class="opacity-50">({category.count[lang]})</span>
-          </PrintedLabel>
-        </a>
-      {:else}
-        <PrintedEmpty />
-      {/each}
-    </div>
-
-    <PrintedDivider style="dashed" />
-
-    <PostList posts={data.posts} {lang} />
-  </PrintedSection>
-
-  <PrintedDivider style="dashed" />
+<div class="mt-[18px]">
+  <PostList posts={data.posts} {lang} />
 </div>
