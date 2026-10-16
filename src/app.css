@@ -183,7 +183,7 @@
     justify-content: center;
     gap: 6px;
     min-width: 64px;
-    height: 48px;
+    height: 36px;
     padding: 0 8px;
     border-radius: 3px;
     background: linear-gradient(var(--key-a), var(--key-b));
@@ -205,9 +205,7 @@
       0 0 0 2px #15191c,
       0 1px 0 2px #0e1113;
   }
-  /* 36px, the same as the glareshield nav keys. */
   .ecp.plain {
-    height: 36px;
     gap: 0;
   }
   .ecp-bar {
@@ -264,9 +262,11 @@
   .ecp-row .ecp {
     flex: 1;
     min-width: 0;
-    height: 36px;
   }
+  /* Positioned so that where a narrow screen pushes the name tag under the
+     master lights, the lights paint and take clicks on top of it. */
   .fcu-right {
+    position: relative;
     display: flex;
     align-self: stretch;
     gap: 18px;
@@ -275,8 +275,6 @@
     justify-content: space-between;
   }
 
-  /* One size at every width: 36px tall, level with the phone master
-     lights. */
   .placard {
     position: relative;
     display: flex;
@@ -410,8 +408,8 @@
       inset 0 1px 3px rgba(0, 0, 0, 0.9),
       0 0 0 2px #15191c,
       0 3px 0 2px #0e1113;
-    font: 700 7.5px/1.15 var(--font-ui);
-    letter-spacing: 0.07em;
+    font: 700 8.5px/1.15 var(--font-ui);
+    letter-spacing: 0.03em;
     text-align: center;
     color: #3a2a24;
   }
@@ -740,10 +738,6 @@
     .fcu-right {
       gap: 12px;
     }
-    .master {
-      font-size: 8.5px;
-      letter-spacing: 0.03em;
-    }
     .ecp-row {
       gap: 7px;
     }
@@ -789,7 +783,7 @@
 
   /* Below 360px the side padding gives the name tag some room, and the
      right-hand gaps stay 12px. Under about 345px the one-line tag runs
-     into MASTER WARN; that is accepted. */
+     under MASTER WARN; that is accepted. */
   @media (max-width: 359px) {
     .cockpit,
     .fcu {
