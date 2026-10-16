@@ -388,7 +388,7 @@
     display: grid;
     place-content: center;
     flex: 1;
-    width: 50px;
+    width: 38px;
     padding: 0;
     border-radius: 3px;
     background: #121413;
@@ -396,7 +396,7 @@
       inset 0 1px 3px rgba(0, 0, 0, 0.9),
       0 0 0 2px #15191c,
       0 3px 0 2px #0e1113;
-    font: 700 9.5px/1.15 var(--font-ui);
+    font: 700 7.5px/1.15 var(--font-ui);
     letter-spacing: 0.07em;
     text-align: center;
     color: #3a2a24;
@@ -707,8 +707,9 @@
       gap: 5px;
     }
     .master {
-      width: 40px;
-      font-size: 8px;
+      width: 32px;
+      font-size: 6.5px;
+      letter-spacing: 0.03em;
     }
     .ecp-row {
       gap: 7px;
