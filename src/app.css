@@ -721,12 +721,21 @@
       gap: 14px 8px;
       padding: 14px 10px;
     }
+    /* The two 36px master lights set the top row's height; the name tag
+       column spreads to match it, as ANN LT and LANG already do. */
+    .fcu-left {
+      min-width: 0;
+      align-self: stretch;
+      justify-content: space-between;
+    }
     .fcu-right {
-      gap: 5px;
+      gap: 12px;
     }
     .master {
-      width: 32px;
-      font-size: 6.5px;
+      flex: none;
+      width: 36px;
+      height: 36px;
+      font-size: 8.5px;
       letter-spacing: 0.03em;
     }
     .ecp-row {
@@ -749,6 +758,7 @@
     .placard .type {
       font-size: 8px;
       letter-spacing: -0.01em;
+      white-space: normal;
     }
     .knob-btn {
       margin: -4px -6px;
@@ -783,14 +793,18 @@
     }
   }
 
-  /* Below 360px the one-line tagline pushes the name tag over the master
-     lights, so let it wrap instead. */
+  /* Below 360px the name tag needs the room even with its tagline wrapped,
+     so the side padding gives it up and the right-hand gaps stay 12px. */
   @media (max-width: 359px) {
-    .fcu-left {
-      min-width: 0;
+    .cockpit,
+    .fcu {
+      padding-inline: 8px;
     }
-    .placard .type {
-      white-space: normal;
+    .placard {
+      padding: 6px 8px;
+    }
+    .placard .reg {
+      letter-spacing: 0.06em;
     }
   }
 
