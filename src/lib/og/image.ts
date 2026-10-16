@@ -147,8 +147,6 @@ async function loadEmoji(grapheme: string): Promise<string | null> {
   return result;
 }
 
-const AVATAR_DATA_URI = `data:image/jpeg;base64,${readFileSync("src/lib/og/avatar.jpg").toString("base64")}`;
-
 const SCREWS = [
   { top: 14, left: 14, rotate: 35 },
   { top: 14, right: 14, rotate: -20 },
@@ -208,23 +206,13 @@ function placard({ brandName, brandTagline }: OgImageOptions): Node {
         position: "relative",
         display: "flex",
         alignItems: "center",
-        gap: 16,
-        padding: "10px 30px 10px 10px",
+        padding: "10px 30px",
         borderRadius: 6,
         backgroundImage:
           "linear-gradient(160deg, #e3e7ea, #a9b2b8 55%, #c9d0d4)",
         boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 2px 0 ${PANEL.seam}`,
       },
     },
-    h("img", {
-      src: AVATAR_DATA_URI,
-      width: 52,
-      height: 52,
-      style: {
-        borderRadius: "50%",
-        border: "2px solid #59636a",
-      },
-    }),
     h(
       "div",
       { style: { display: "flex", flexDirection: "column", gap: 7 } },
@@ -258,6 +246,8 @@ function placard({ brandName, brandTagline }: OgImageOptions): Node {
     ),
     rivet({ top: 6, right: 7 }),
     rivet({ bottom: 6, right: 7 }),
+    rivet({ top: 6, left: 7 }),
+    rivet({ bottom: 6, left: 7 }),
   );
 }
 

@@ -218,54 +218,53 @@
   <header class="fcu panel">
     <div class="fcu-left">
       <div class="placard">
-        <img src="/static/avatar.webp" alt="" width="42" height="42" />
         <div>
           <div class="reg">{dictionary.labels.brandName}</div>
           <div class="type">{dictionary.labels.brandTagline}</div>
         </div>
         <i class="rivet a"></i>
         <i class="rivet b"></i>
+        <i class="rivet c"></i>
+        <i class="rivet d"></i>
       </div>
       <span class="ann norm" aria-hidden="true">NORM</span>
     </div>
 
-    <div class="fcu-mid">
-      <div class="lcds" aria-hidden="true">
-        <div class="lcd">
-          <span class="legend">POSTS</span>
-          <span class="lcd-win">{pad(postCount, 3)}</span>
-        </div>
-        <div class="lcd">
-          <span class="legend">PROJ</span>
-          <span class="lcd-win">{pad(stats.projects, 3)}<span class="dot"></span></span>
-        </div>
-        <div class="lcd">
-          <span class="legend">LAST UPD</span>
-          <span class="lcd-win">{lcdDate(builtAt)}</span>
-        </div>
+    <div class="lcds" aria-hidden="true">
+      <div class="lcd">
+        <span class="legend">POSTS</span>
+        <span class="lcd-win">{pad(postCount, 3)}</span>
       </div>
-
-      <nav class="ecp-row" aria-label={dictionary.labels.primaryNavigation}>
-        {#each navItems as item (item.key)}
-          <a
-            href={item.href}
-            class="ecp"
-            aria-label={item.label}
-            aria-current={isActive(item.href) ? "page" : undefined}
-            data-lit={(pendingNavHref
-              ? pendingNavHref === item.href
-              : isActive(item.href)) || undefined}
-            onclick={(event) => onNavPress(event, item.href)}
-          >
-            <span class="ecp-bar"></span>
-            <span class="ecp-leg">{item.key.toUpperCase()}</span>
-          </a>
-        {/each}
-      </nav>
+      <div class="lcd">
+        <span class="legend">PROJ</span>
+        <span class="lcd-win">{pad(stats.projects, 3)}<span class="dot"></span></span>
+      </div>
+      <div class="lcd">
+        <span class="legend">LAST UPD</span>
+        <span class="lcd-win">{lcdDate(builtAt)}</span>
+      </div>
     </div>
 
+    <nav class="ecp-row" aria-label={dictionary.labels.primaryNavigation}>
+      {#each navItems as item (item.key)}
+        <a
+          href={item.href}
+          class="ecp"
+          aria-label={item.label}
+          aria-current={isActive(item.href) ? "page" : undefined}
+          data-lit={(pendingNavHref
+            ? pendingNavHref === item.href
+            : isActive(item.href)) || undefined}
+          onclick={(event) => onNavPress(event, item.href)}
+        >
+          <span class="ecp-bar"></span>
+          <span class="ecp-leg">{item.key.toUpperCase()}</span>
+        </a>
+      {/each}
+    </nav>
+
     <div class="fcu-right">
-      <div class={["masters", warnLit && "has-lit"]}>
+      <div class="masters">
         <button
           type="button"
           class={["master warn", warnLit && "lit"]}
@@ -358,7 +357,7 @@
   </div>
 
   <footer class="pedestal panel">
-    <span class="legend"><span class="font-read">©</span> {currentYear} LUO, JIAHAI</span>
+    <span class="legend"><span class="font-read">©</span> {currentYear} {dictionary.labels.brandName}</span>
     <div class="ped-keys">
       {#each pedestalKeys as { kind, legend } (kind)}
         {@const contact = dictionary.contacts.find((contact) => contact.kind === kind)}
