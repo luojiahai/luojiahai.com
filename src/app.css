@@ -1,11 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400&family=B612+Mono:wght@400;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+SC:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  --font-ui: "B612", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "B612 Mono", "Noto Sans SC", ui-monospace, Menlo, monospace;
+  --font-read: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
+
+  /* The ECAM colour code. Screens never change with the panel lighting, so
+     these have no dark variants. */
+  --color-ecam-screen: #000000;
+  --color-ecam-white: #f4f6f6;
+  --color-ecam-text: #d5dbdb;
+  --color-ecam-dim: #97a3a6;
+  --color-ecam-green: #3fe23f;
+  --color-ecam-cyan: #33d6ef;
+  --color-ecam-amber: #ffa21a;
+  --color-ecam-magenta: #f25cf2;
+  --color-ecam-red: #ff3b30;
 
   /* Claude Code palette, mapped to the printer's material hierarchy. */
   --color-printer-body: #f5f4ed;
@@ -22,6 +36,35 @@
   --color-printer-ink-dark: #faf9f5;
   --color-printer-ink-light: #5e5d59;
   --color-printer-tape: #f0eee6;
+}
+
+/* Panel lighting. BRT is the day cockpit; DIM (html.dark) darkens the panels
+   and makes the legends glow. Components read these variables and never pair
+   a dark: utility with them, so the DIM decision lives here alone. */
+:root {
+  --panel: #4c5b68;
+  --panel-hi: #677783;
+  --panel-lo: #34404a;
+  --seam: #1c2328;
+  --legend: #f4f6f3;
+  --legend-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  --interior: #1d2226;
+  --plate: 1;
+  --key-a: #3b4248;
+  --key-b: #2a3035;
+}
+:root.dark {
+  --panel: #262e35;
+  --panel-hi: #313b43;
+  --panel-lo: #1b2126;
+  --seam: #0d1013;
+  --legend: #ffefc9;
+  --legend-shadow: 0 0 5px rgba(255, 214, 140, 0.55),
+    0 0 1px rgba(255, 236, 190, 0.9);
+  --interior: #0b0d0f;
+  --plate: 0.55;
+  --key-a: #2a3035;
+  --key-b: #1d2226;
 }
 
 @layer base {
