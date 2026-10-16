@@ -806,14 +806,6 @@
     }
   }
 
-  /* Below 320px the name can't narrow any further, so shrink the whole
-     glareshield to keep the 320px layout. 0.86 holds down to 278px. */
-  @media (max-width: 319px) {
-    .fcu {
-      zoom: 0.86;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .master.warn.lit {
       animation: none;
