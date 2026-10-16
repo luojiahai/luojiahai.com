@@ -58,7 +58,6 @@ function resolveOptions(path: string): OgImageOptions | undefined {
       title: dictionary.meta.name,
       description: dictionary.meta.motto,
       type: "page",
-      showTitleAvatar: true,
       ...branding,
     };
   }
