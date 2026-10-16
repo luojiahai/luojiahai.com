@@ -11,8 +11,14 @@
   `content/pages/about/`).
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
   `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`.
-- `src/lib/components/`: Svelte components (printer shell UI, printed
-  elements, post list/content).
+- `src/lib/components/`: Svelte components. The site is an Airbus cockpit:
+  `CockpitShell.svelte` is the glareshield (FCU windows for LANG, DISPLAY
+  and, on posts, reading PROG; autopilot-style nav buttons; MASTER WARN,
+  which lights on error pages) over an instrument panel holding the display
+  every page renders into. Display pieces: `Card`, `PageHeader`,
+  `EmptyState`, `CategoryFilter` (the EFIS-style post filter),
+  `ProjectMap` (the projects page's navigation-display map), post
+  list/content.
 - `src/lib/dictionaries/`: i18n strings (`en.ts` is the canonical shape,
   `zh.ts` must match). Keep keys in sync. **Page content belongs in
   `content/`; the dictionaries hold UI strings and typed config only.** Two
@@ -26,10 +32,10 @@
 - `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
   (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
   deck mascots (`none`, `plane`, `snail`) and
-  the `mascot` flag picking which one rides the printer's top edge — an
+  the `mascot` flag picking which one rides the glareshield's top edge — an
   in-code setting, not a visitor preference. A mascot exists in three places
   that must agree: this list, its styles in `app.css`, and the
-  `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
+  `deckOccupants` map in `CockpitShell.svelte`. The `src/app.html` pre-paint
   script only mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
   categories, projects, use). The types are Velite's own, generated from
@@ -119,6 +125,9 @@ as an in-repo backstop.
   `description` (≤999), `keywords`, `draft`, `archived`, `featured`,
   `wechatLink`.
   Translations are linked by matching `slug`.
+- Every h2 and h3 in posts and pages gets an id from its text
+  (`rehypeHeadingIds` in `velite.config.ts`); a post with two or more h2s
+  shows them as a table of contents beside the article.
 - Page frontmatter (`velite.config.ts`): required `slug`, `lang`, `title`
   (≤99 chars); optional `description` (≤999). A page missing a translation
   aborts the build in the Velite `prepare` step.
@@ -152,9 +161,16 @@ as an in-repo backstop.
 ## Coding Style & Naming Conventions
 - Language: TypeScript (strict). Framework: SvelteKit 2 + Svelte 5 (runes).
 - Indentation: 2 spaces; LF line endings (`.editorconfig`).
-- File naming: PascalCase for components (`PrinterShell.svelte`), kebab-case
+- File naming: PascalCase for components (`CockpitShell.svelte`), kebab-case
   or camelCase for modules, camelCase for variables.
-- Styling: Tailwind CSS 4 (CSS-first config in `src/app.css`).
+- Styling: Tailwind CSS 4 (CSS-first config in `src/app.css`). Type is
+  B612 / B612 Mono (Airbus's open-source cockpit face). Colours come in two
+  layers: cockpit hardware (glareshield, FCU, panel) is fixed `@theme`
+  colours, identical in both modes; the display's contents use `@theme
+  inline` tokens (`bg-card`, `text-ink`, `text-accent`, …) backed by CSS
+  variables that `:root` (DAY) and `:root.dark` (NGT) redefine, so they need
+  no `dark:` twins. Prose rules sit in `@layer utilities` so they beat the
+  typography plugin's.
 
 ## Commit & Pull Request Guidelines
 - Commits: clear, imperative messages (e.g., "Update work entries").

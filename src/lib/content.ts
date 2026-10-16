@@ -112,3 +112,42 @@ export function findPage(lang: Language, slug: string) {
 export function findCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);
 }
+
+const ENTITIES: Record<string, string> = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&#39;": "'",
+  "&#x27;": "'",
+};
+
+function plainText(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(?:amp|lt|gt|quot|#39|#x27);/g, (entity) => ENTITIES[entity]);
+}
+
+/**
+ * The post's h2 headings, for the table of contents. The ids come from the
+ * rehypeHeadingIds step in velite.config.ts.
+ */
+export function tableOfContents(html: string): { id: string; text: string }[] {
+  return [...html.matchAll(/<h2 id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)].map(
+    ([, id, inner]) => ({ id, text: plainText(inner).replace(/\s+/g, " ").trim() }),
+  );
+}
+
+/**
+ * Minutes to read rendered HTML: about 220 words a minute for spaced
+ * scripts, 450 characters a minute for CJK, never less than one.
+ */
+export function readingMinutes(html: string): number {
+  const text = plainText(html);
+  const cjk = text.match(/[㐀-鿿豈-﫿]/g)?.length ?? 0;
+  const words = text
+    .replace(/[㐀-鿿豈-﫿]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220 + cjk / 450));
+}

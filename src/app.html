@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-icon.png" sizes="180x180" />
     <link rel="mask-icon" href="%sveltekit.assets%/mask-icon.svg" color="#141413" />
     <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
-    <meta name="theme-color" content="#d1cfc5" />
+    <meta name="theme-color" content="#0f1214" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
@@ -23,10 +23,6 @@
             (mode === "system" &&
               window.matchMedia("(prefers-color-scheme: dark)").matches);
           document.documentElement.classList.toggle("dark", dark);
-          var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) {
-            themeColor.setAttribute("content", dark ? "#141413" : "#d1cfc5");
-          }
         } catch (e) {}
       })();
     </script>

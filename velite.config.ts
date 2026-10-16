@@ -9,10 +9,9 @@ import { defineCollection, defineConfig, s } from "velite";
  */
 
 /**
- * Wrap every table in a horizontally scrollable div. The printed paper column is
- * ~294px wide on a phone and .printer-paper-area clips its overflow, so a wide
- * table loses its right-hand columns with no way to reach them. Styled as
- * .table-scroll in src/app.css.
+ * Wrap every table in a horizontally scrollable div. The display column is
+ * narrow on a phone, so a wide table would lose its right-hand columns with
+ * no way to reach them. Styled as .table-scroll in src/app.css.
  */
 function rehypeTableScroll() {
   return (tree: Root) => {
@@ -30,6 +29,42 @@ function rehypeTableScroll() {
       });
     };
     wrap(tree);
+  };
+}
+
+type HastNode = Root | Root["children"][number];
+
+function textOf(node: HastNode): string {
+  if (node.type === "text") return node.value;
+  return "children" in node ? node.children.map(textOf).join("") : "";
+}
+
+/**
+ * Give every h2 and h3 an id made from its text, so the post page can list
+ * the h2s as a table of contents and link to each one. A repeated heading
+ * gets -2, -3 and so on; an id written in the source is left alone.
+ */
+function rehypeHeadingIds() {
+  return (tree: Root) => {
+    const used = new Map<string, number>();
+    const visit = (node: HastNode) => {
+      if (node.type === "element" && (node.tagName === "h2" || node.tagName === "h3")) {
+        if (!node.properties.id) {
+          const base =
+            textOf(node)
+              .toLowerCase()
+              .trim()
+              .replace(/[^\p{L}\p{N}]+/gu, "-")
+              .replace(/^-+|-+$/g, "") || "section";
+          const seen = used.get(base) ?? 0;
+          used.set(base, seen + 1);
+          node.properties.id = seen === 0 ? base : `${base}-${seen + 1}`;
+        }
+        return;
+      }
+      if ("children" in node) node.children.forEach(visit);
+    };
+    visit(tree);
   };
 }
 
@@ -170,7 +205,9 @@ export default defineConfig({
     clean: true,
   },
   collections: { categories, pages, posts, projects, use },
-  markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
+  markdown: {
+    rehypePlugins: [rehypePrettyCode, rehypeTableScroll, rehypeHeadingIds],
+  },
   // Without strict, a schema violation is only logged and the document still
   // ships, so every cap above would be advisory.
   strict: true,

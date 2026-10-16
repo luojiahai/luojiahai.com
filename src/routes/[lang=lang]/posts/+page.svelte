@@ -1,11 +1,9 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
+  import Card from "$lib/components/Card.svelte";
+  import CategoryFilter from "$lib/components/CategoryFilter.svelte";
+  import PageHeader from "$lib/components/PageHeader.svelte";
   import PostList from "$lib/components/PostList.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedLabel from "$lib/components/PrintedLabel.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedEmpty from "$lib/components/PrintedEmpty.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -21,39 +19,20 @@
   path={dictionary.urls.posts}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="draft">
-      {dictionary.labels.posts}
-    </PrintedPageTitle>
-    <p class="page-subtitle">
-      {dictionary.labels.postsSubtitle}
-    </p>
-  </PrintedSection>
+<PageHeader
+  title={dictionary.labels.posts}
+  subtitle={dictionary.labels.postsSubtitle}
+/>
 
-  <PrintedDivider style="solid" />
-
-  <!-- Posts, with the categories above them. The page title already names
-       them, so no section label. -->
-  <PrintedSection>
-    <div class="flex flex-wrap gap-1.5">
-      {#each data.categories as category (category.slug)}
-        <a href={category.permalink[lang]}>
-          <PrintedLabel variant="default">
-            {category.name[lang]}
-            <span class="opacity-50">({category.count[lang]})</span>
-          </PrintedLabel>
-        </a>
-      {:else}
-        <PrintedEmpty />
-      {/each}
-    </div>
-
-    <PrintedDivider style="dashed" />
-
-    <PostList posts={data.posts} {lang} />
-  </PrintedSection>
-
-  <PrintedDivider style="dashed" />
+<div class="flex flex-col gap-4">
+  <CategoryFilter categories={data.categories} active={null} {lang} {dictionary} />
+  <p class="font-mono text-xs uppercase tracking-[0.1em] text-ink-soft">
+    {dictionary.labels.filterSummary(
+      dictionary.labels.allCategories,
+      data.posts.length,
+    )}
+  </p>
+  <Card>
+    <PostList posts={data.posts} {lang} categories={data.categories} />
+  </Card>
 </div>

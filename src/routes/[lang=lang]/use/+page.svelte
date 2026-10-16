@@ -1,8 +1,7 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
+  import Card from "$lib/components/Card.svelte";
+  import PageHeader from "$lib/components/PageHeader.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -18,47 +17,24 @@
   path={dictionary.urls.use}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="tools">{dictionary.labels.use}</PrintedPageTitle>
-    <p class="page-subtitle">
-      {dictionary.labels.useSubtitle}
-    </p>
-  </PrintedSection>
+<PageHeader title={dictionary.labels.use} subtitle={dictionary.labels.useSubtitle} />
 
-  <PrintedDivider style="solid" />
-
-  <!-- One section per group; the group names carry the labels here. -->
+<!-- One panel per group; the group names carry the labels here. -->
+<div class="grid gap-4 lg:grid-cols-2">
   {#each data.groups as group (group.slug)}
-    <PrintedSection label={group.label} labelIcon="tag">
-      <div class="flex flex-col">
-        {#each group.items as item, index (item.value)}
-          <div>
-            <div
-              class="flex flex-col gap-y-1 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-4"
-            >
-              <div
-                class="font-mono text-[10px] uppercase tracking-[0.2em] text-printer-ink-light dark:text-printer-ink-dark/45"
-              >
-                {item.label}
-              </div>
-              <div
-                class="font-mono text-xs text-printer-ink dark:text-printer-ink-dark sm:text-right"
-              >
-                {item.value}
-              </div>
-            </div>
-            {#if index < group.items.length - 1}
-              <div
-                class="border-b border-dotted border-printer-ink/5 dark:border-printer-ink-dark/5"
-              ></div>
-            {/if}
+    <Card title={group.label}>
+      <dl class="m-0">
+        {#each group.items as item (item.value)}
+          <div
+            class="flex flex-col gap-y-1 border-b border-line px-4 py-2.5 last:border-b-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-4"
+          >
+            <dt class="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-soft">
+              {item.label}
+            </dt>
+            <dd class="m-0 text-sm sm:text-right">{item.value}</dd>
           </div>
         {/each}
-      </div>
-    </PrintedSection>
-
-    <PrintedDivider style="dashed" />
+      </dl>
+    </Card>
   {/each}
 </div>

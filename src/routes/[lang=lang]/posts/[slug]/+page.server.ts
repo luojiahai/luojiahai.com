@@ -5,6 +5,8 @@ import {
   findPost,
   posts,
   postTranslations,
+  readingMinutes,
+  tableOfContents,
 } from "$lib/content";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
@@ -34,5 +36,12 @@ export const load: PageServerLoad = async ({ params }) => {
       })
     : undefined;
 
-  return { post, translations, categories, wechatQrSvg };
+  return {
+    post,
+    translations,
+    categories,
+    wechatQrSvg,
+    toc: tableOfContents(post.content),
+    readingMinutes: readingMinutes(post.content),
+  };
 };

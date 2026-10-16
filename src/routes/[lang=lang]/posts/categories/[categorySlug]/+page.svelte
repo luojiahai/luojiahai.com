@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getDictionary } from "$lib/dictionaries";
+  import Card from "$lib/components/Card.svelte";
+  import CategoryFilter from "$lib/components/CategoryFilter.svelte";
+  import PageHeader from "$lib/components/PageHeader.svelte";
   import PostList from "$lib/components/PostList.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedPageTitle from "$lib/components/PrintedPageTitle.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -20,34 +20,22 @@
   path={category.permalink[lang]}
 />
 
-<div>
-  <!-- Header -->
-  <PrintedSection>
-    <PrintedPageTitle icon="tag">{category.name[lang]}</PrintedPageTitle>
-    {#if category.description?.[lang]}
-      <p class="page-subtitle">
-        {category.description[lang]}
-      </p>
-    {/if}
-    <p
-      class="font-serif text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-1"
-    >
-      {dictionary.labels.entries(data.posts.length)}
-    </p>
-  </PrintedSection>
+<PageHeader
+  title={category.name[lang]}
+  subtitle={category.description?.[lang]}
+/>
 
-  <!-- Back link -->
-  <div class="mb-4">
-    <a
-      href={dictionary.urls.posts}
-      class="inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent dark:text-printer-accent-dark hover:underline"
-    >
-      {dictionary.labels.allPosts}
-    </a>
-  </div>
-
-  <PrintedDivider style="dashed" />
-
-  <!-- Post list -->
-  <PostList posts={data.posts} {lang} />
+<div class="flex flex-col gap-4">
+  <CategoryFilter
+    categories={data.categories}
+    active={category.slug}
+    {lang}
+    {dictionary}
+  />
+  <p class="font-mono text-xs uppercase tracking-[0.1em] text-ink-soft">
+    {dictionary.labels.filterSummary(category.name[lang], data.posts.length)}
+  </p>
+  <Card>
+    <PostList posts={data.posts} {lang} />
+  </Card>
 </div>

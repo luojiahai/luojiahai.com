@@ -21,6 +21,7 @@ export const load: PageServerLoad = ({ params }) => {
 
   return {
     category,
+    categories,
     posts: postsOf(lang, category.slug).map(toListItem),
   };
 };

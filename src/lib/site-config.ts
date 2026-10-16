@@ -4,7 +4,7 @@
 export const SITE_URL = "https://luojiahai.com";
 
 /**
- * The critters available to ride the printer shell's top edge — the deck.
+ * The critters available to ride the glareshield's top edge — the deck.
  */
 export const mascots = ["none", "plane", "snail"] as const;
 export type Mascot = (typeof mascots)[number];

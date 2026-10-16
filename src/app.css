@@ -1,27 +1,107 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=B612+Mono:wght@400;700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Airbus cockpit palette. Two layers:
+ *
+ * - The hardware (glareshield, FCU, pushbuttons, instrument panel) is the
+ *   same in day and night, as it is in the aircraft. Those are plain theme
+ *   colours.
+ * - The display's contents switch with the colour mode: DAY is a light
+ *   screen, NGT the dark A350 one. Those colours are CSS variables set on
+ *   :root and :root.dark below, exposed through `@theme inline` so one
+ *   utility (`bg-card`, `text-ink`) serves both modes with no `dark:` twin.
+ *
+ * Type is B612, the open-source face Airbus commissioned for cockpit
+ * displays.
+ */
 @theme {
-  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  --font-sans:
+    "B612", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --font-mono:
+    "B612 Mono", "SF Mono", ui-monospace, "PingFang SC", "Microsoft YaHei",
+    monospace;
 
-  /* Claude Code palette, mapped to the printer's material hierarchy. */
-  --color-printer-body: #f5f4ed;
-  --color-printer-body-dark: #1a1918;
-  --color-printer-shell: #e8e6dc;
-  --color-printer-shell-dark: #262624;
-  --color-printer-accent: #d97757;
-  --color-printer-accent-dark: #c46849;
-  --color-printer-button-dark: #30302e;
-  --color-printer-button-active-dark: #3d3d3a;
-  --color-printer-paper: #faf9f5;
-  --color-printer-paper-dark: #141413;
-  --color-printer-ink: #141413;
-  --color-printer-ink-dark: #faf9f5;
-  --color-printer-ink-light: #5e5d59;
-  --color-printer-tape: #f0eee6;
+  --color-cockpit: #0f1214;
+  --color-glare: #2a2f34;
+  --color-recess: #1f2327;
+  --color-lcd: #140d06;
+  --color-lcd-ink: #ff9a2e;
+  --color-hw-ink: #eceee8;
+  --color-hw-soft: #b8c0c6;
+  --color-panel: #3b4852;
+  --color-bezel: #121416;
+  --color-engaged: #39e46b;
+  --color-ecam: #030405;
+  --color-ecam-cyan: #3fd6f5;
+  --color-ecam-green: #39e46b;
+  --color-warn: #ff3b30;
+  --color-caut: #ffa21f;
+}
+
+@theme inline {
+  --color-screen: var(--screen);
+  --color-screen-bar: var(--screen-bar);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-card: var(--card);
+  --color-card-head: var(--card-head);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-memo: var(--memo);
+  --color-btn: var(--btn);
+  --color-btn-hover: var(--btn-hover);
+  --color-row-hover: var(--row-hover);
+}
+
+/* DAY display */
+:root {
+  --screen: #e7eaec;
+  --screen-bar: #c4cacf;
+  --ink: #11161a;
+  --ink-soft: #3f4a52;
+  --card: #ffffff;
+  --card-head: #dde2e6;
+  --line: #c3cad0;
+  --accent: #075ea8;
+  --memo: #9a5300;
+  --btn: #f1f3f5;
+  --btn-hover: #ffffff;
+  --btn-edge: #9aa4ac;
+  --row-hover: #eef2f5;
+  --tab: #eef0f2;
+  --tab-on: #ffffff;
+  --tab-ink: #3f4a52;
+  --tab-ink-on: #0b1218;
+  --code-inline: #e3e7ea;
+  --focus: #075ea8;
+}
+
+/* NGT display */
+:root.dark {
+  --screen: #1a1d20;
+  --screen-bar: #0e1012;
+  --ink: #eceee8;
+  --ink-soft: #b8c0c6;
+  --card: #24292d;
+  --card-head: #3c4348;
+  --line: #3c4348;
+  --accent: #3fd6f5;
+  --memo: #ffa21f;
+  --btn: #4c535a;
+  --btn-hover: #5d656c;
+  --btn-edge: #0e1012;
+  --row-hover: #2f353a;
+  --tab: #2c3136;
+  --tab-on: #4c535a;
+  --tab-ink: #c9d0d4;
+  --tab-ink-on: #ffffff;
+  --code-inline: #30363b;
+  --focus: #3fd6f5;
 }
 
 @layer base {
@@ -33,21 +113,7 @@
 
   html,
   body {
-    @apply min-h-screen;
-    background-color: #d1cfc5;
-    color: var(--color-printer-ink);
-  }
-
-  :is(.dark) html,
-  :is(.dark) body {
-    background-color: #141413;
-    color: var(--color-printer-ink-dark);
-  }
-
-  *,
-  ::before,
-  ::after {
-    @apply dark:border-neutral-800;
+    @apply min-h-screen bg-cockpit font-sans text-hw-ink;
   }
 
   body {
@@ -55,20 +121,12 @@
   }
 
   ::selection {
-    background: color-mix(
-      in oklab,
-      var(--color-printer-accent) 24%,
-      transparent
-    );
+    background: color-mix(in oklab, var(--accent) 28%, transparent);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-printer-accent);
-    outline-offset: 3px;
-  }
-
-  :is(.dark) :focus-visible {
-    outline-color: var(--color-printer-accent-dark);
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
   }
 
   h1,
@@ -92,196 +150,320 @@
   }
 }
 
+/* ============================================================
+   Cockpit hardware — glareshield, FCU, pushbuttons, master lights.
+   Fixed colours: the hardware does not change with the display.
+   ============================================================ */
 @layer components {
-  /* Page grid background - Industrial workbench style */
-  .page-grid {
-    position: relative;
-    isolation: isolate;
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    background-position: 13px 13px;
-  }
-  :is(.dark) .page-grid {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-
   .skip-link {
-    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-[11px] font-medium tracking-wider text-printer-paper transition-transform duration-200;
+    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-hw-ink px-4 py-2 font-mono text-[11px] font-bold tracking-wider text-cockpit transition-transform duration-200;
   }
   .skip-link:focus {
     @apply translate-y-0;
   }
-  :is(.dark) .skip-link {
-    @apply bg-printer-ink-dark text-printer-paper-dark;
+
+  .glareshield {
+    border-radius: 12px 12px 4px 4px;
+    background: linear-gradient(180deg, #353b40 0%, #2a2f34 60%, #24282c 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 14px 24px rgba(0, 0, 0, 0.6);
+  }
+  /* Controls on the glareshield always sit on dark plastic, so the focus
+     ring stays cyan in either display mode. */
+  .glareshield :focus-visible {
+    outline-color: #3fd6f5;
   }
 
-  .paper-edge-bottom {
+  /* The recessed well the FCU's windows and buttons sit in. */
+  .recess {
+    border-radius: 6px;
+    background: var(--color-recess);
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.55),
+      0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* An FCU window: engraved label, orange LCD readout, and on wide screens
+     the knob that turns it. The whole thing is one button. */
+  .fcu-window {
+    @apply flex cursor-pointer flex-col items-center gap-1 select-none;
+  }
+  .fcu-label {
+    @apply font-sans text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-hw-ink;
+  }
+  .lcd {
+    @apply inline-flex min-w-[3.5rem] items-center justify-center rounded-[3px] bg-lcd px-2 py-1 font-mono text-lg font-bold leading-tight tracking-[0.06em] text-lcd-ink sm:text-xl;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 0 6px rgba(255, 154, 46, 0.6);
+  }
+  .knob {
     position: relative;
+    width: 34px;
+    height: 34px;
+    margin-top: 3px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 30%, #3e444a 0%, #16191b 70%);
+    box-shadow:
+      0 3px 5px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0 0 3px #2b3035;
   }
-  .paper-edge-bottom::after {
-    content: "";
+  .knob-index {
     position: absolute;
-    bottom: -3px;
-    left: 0;
-    right: 0;
+    left: 50%;
+    top: 4px;
+    width: 3px;
+    height: 10px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--color-hw-ink);
+    transform-origin: 50% 13px;
+    transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .fcu-window:hover .knob {
+    filter: brightness(1.2);
+  }
+  .fcu-window:active .knob {
+    transform: translateY(1px);
+  }
+
+  /* Autopilot-style pushbutton: three green bars light when engaged. */
+  .pb {
+    @apply inline-flex h-11 min-w-16 cursor-pointer flex-col items-center justify-center gap-[7px] rounded-[3px] px-2.5 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-hw-ink select-none;
+    border: 1.5px solid #0b0d0e;
+    background: linear-gradient(180deg, #3b4146 0%, #2b3035 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 2px 0 #121518;
+    transition:
+      transform 60ms,
+      filter 100ms;
+  }
+  .pb:hover {
+    filter: brightness(1.2);
+  }
+  .pb:active {
+    transform: translateY(1px);
+  }
+  .pb-bars {
+    @apply flex gap-1;
+  }
+  .pb-bars > span {
+    width: 12px;
     height: 3px;
-    background:
-      linear-gradient(
-        315deg,
-        transparent 33.33%,
-        currentColor 33.33%,
-        currentColor 66.67%,
-        transparent 66.67%
-      ),
-      linear-gradient(
-        45deg,
-        transparent 33.33%,
-        currentColor 33.33%,
-        currentColor 66.67%,
-        transparent 66.67%
-      );
-    background-size: 12px 6px;
-    background-position: 0 0;
-    color: var(--color-printer-paper);
+    border-radius: 1px;
+    background: #20262a;
+    transition:
+      background-color 120ms,
+      box-shadow 120ms;
   }
-  :is(.dark) .paper-edge-bottom::after {
-    color: var(--color-printer-paper-dark);
+  .pb.active .pb-bars > span {
+    background: var(--color-engaged);
+    box-shadow: 0 0 5px rgba(57, 228, 107, 0.85);
   }
 
-  /* Top inner shadow to simulate printer head blocking some light */
-  .paper-top-occlusion {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 52px;
-    pointer-events: none;
-    z-index: 15;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.12) 0%,
-      rgba(0, 0, 0, 0.08) 24%,
-      rgba(0, 0, 0, 0.05) 50%,
-      rgba(0, 0, 0, 0.02) 78%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    mix-blend-mode: multiply;
+  .master {
+    @apply flex h-12 w-[3.75rem] flex-col items-center justify-center gap-0.5 rounded-[3px] font-sans text-[10px] font-bold leading-tight tracking-[0.06em];
+    border: 1.5px solid #070505;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
-  :is(.dark) .paper-top-occlusion {
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.48) 0%,
-      rgba(0, 0, 0, 0.34) 26%,
-      rgba(0, 0, 0, 0.2) 54%,
-      rgba(0, 0, 0, 0.08) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    mix-blend-mode: normal;
+  .master-warn {
+    background: #120c0c;
+    color: #3a1d1b;
+  }
+  .master-caut {
+    background: #120f0a;
+    color: #3a2c17;
+  }
+  .master-warn.lit {
+    color: var(--color-warn);
+    text-shadow: 0 0 10px rgba(255, 59, 48, 0.9);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .master-warn.lit.flashing > span {
+      animation: master-flash 1s steps(1) infinite;
+    }
   }
 
-  /* Flatten all corner radii inside the printed content area */
-  .printer-content-area,
-  .printer-content-area * {
-    border-radius: 0 !important;
-  }
-  .printer-content-area:focus {
-    outline: none;
-  }
-
-  /* Keep borders on visual assets, but make them very subtle */
-  .printer-content-area img,
-  .printer-content-area svg {
-    border-color: rgba(0, 0, 0, 0.06) !important;
-  }
-  .printer-content-area img {
-    /* Slightly desaturate and warm up to mimic thermal/printed output */
-    filter: saturate(0.78) contrast(1.06) brightness(0.98) sepia(0.16)
-      hue-rotate(-4deg);
-  }
-  :is(.dark) .printer-content-area img,
-  :is(.dark) .printer-content-area svg {
-    border-color: rgba(255, 255, 255, 0.08) !important;
-  }
-  :is(.dark) .printer-content-area img {
-    filter: saturate(0.64) contrast(1.08) brightness(0.9) sepia(0.12)
-      hue-rotate(-6deg);
-  }
-
-  /* 404 tray mode — when paper area contains [data-not-found], swap paper for tray */
-  .printer-paper-area:has([data-not-found]) {
-    background-color: var(--color-printer-body) !important;
-    background-image: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.015) 0px,
-      rgba(0, 0, 0, 0.015) 1px,
-      transparent 1px,
-      transparent 3px
-    ) !important;
-    background-size: 100% 3px !important;
+  /* Main instrument panel and the display set into it. */
+  .instrument-panel {
+    @apply mx-2 rounded-b-[10px] bg-panel px-2.5 pb-3 pt-4 sm:mx-[18px] sm:px-[22px] sm:pb-6 sm:pt-[26px];
     box-shadow:
-      inset 0 6px 18px rgba(0, 0, 0, 0.1),
-      inset 0 2px 4px rgba(0, 0, 0, 0.06),
-      inset 0 -2px 6px rgba(255, 255, 255, 0.3),
-      0 1px 3px rgba(0, 0, 0, 0.06) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    border-radius: 4px 4px 6px 6px !important;
+      inset 0 10px 18px rgba(0, 0, 0, 0.45),
+      0 16px 36px rgba(0, 0, 0, 0.5);
   }
-  :is(.dark) .printer-paper-area:has([data-not-found]) {
-    background-color: var(--color-printer-body-dark) !important;
-    background-image: repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.01) 0px,
-      rgba(255, 255, 255, 0.01) 1px,
-      transparent 1px,
-      transparent 3px
-    ) !important;
-    background-size: 100% 3px !important;
+  .bezel {
+    @apply rounded-lg bg-bezel p-1.5 sm:p-2.5;
     box-shadow:
-      inset 0 6px 20px rgba(0, 0, 0, 0.35),
-      inset 0 2px 5px rgba(0, 0, 0, 0.25),
-      inset 0 -2px 6px rgba(255, 255, 255, 0.02),
-      0 1px 3px rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.04) !important;
-    border-radius: 4px 4px 6px 6px !important;
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+  .screen {
+    @apply rounded-[3px] bg-screen text-ink;
+    transition:
+      background-color 300ms,
+      color 300ms;
   }
 
-  /* Hide paper-specific elements in tray mode */
-  .printer-paper-area:has([data-not-found]) > .paper-edge-top {
-    display: none;
+  /* The recessed strip of EFIS-style filter buttons on the posts pages. */
+  .efis {
+    @apply flex flex-wrap items-center gap-2 rounded-md bg-recess px-3 py-2.5;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55);
   }
-  /* !important: the perforation columns' own flex utility sits in a later
-     cascade layer. */
-  .printer-paper-area:has([data-not-found]) > :is(.paper-perforation, footer) {
-    display: none !important;
+  .efis .pb {
+    @apply h-[42px] min-w-14 gap-1.5 px-2 text-[10px] tracking-[0.06em];
   }
-  .printer-paper-wrap:has(.printer-paper-area [data-not-found])
-    > .paper-top-occlusion {
-    display: none;
+  .efis .pb-bars > span {
+    width: 9px;
   }
-  .printer-paper-area:has([data-not-found]) + .paper-edge-bottom {
-    display: none;
+}
+
+/* ============================================================
+   Display contents — these follow the DAY/NGT tokens.
+   ============================================================ */
+@layer components {
+  .screen-tab {
+    @apply flex min-h-10 flex-[1_1_7rem] items-center justify-center rounded-[2px] px-3 py-2 text-center text-[13px] font-bold uppercase tracking-[0.08em];
+    background: var(--tab);
+    color: var(--tab-ink);
+    transition: filter 100ms;
+  }
+  .screen-tab:hover {
+    filter: brightness(1.08);
+  }
+  .screen-tab.active {
+    background: var(--tab-on);
+    color: var(--tab-ink-on);
+    box-shadow: inset 0 -3px 0 var(--accent);
   }
 
-  /* Inline-code only: mono font + subtle background */
+  .card {
+    @apply rounded border border-line bg-card;
+  }
+  .card-head {
+    @apply rounded-t-[3px] bg-card-head px-3.5 py-2 text-xs font-bold uppercase tracking-[0.14em] text-ink;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-[2px] bg-btn px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-btn-hover;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 1px 0 var(--btn-edge);
+  }
+  :root:not(.dark) .btn {
+    box-shadow:
+      inset 0 0 0 1px var(--btn-edge),
+      0 1px 0 var(--btn-edge);
+  }
+  .btn-accent {
+    @apply text-accent;
+  }
+
+  .row-link {
+    @apply block transition-colors hover:bg-row-hover focus-visible:bg-row-hover;
+  }
+  .row-link .row-title {
+    @apply transition-colors;
+  }
+  .row-link:hover .row-title,
+  .row-link:focus-visible .row-title {
+    @apply text-accent;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-[2px] border border-ink-soft/50 px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none tracking-[0.1em] text-ink-soft;
+  }
+
+  .page-subtitle {
+    @apply mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink-soft sm:text-base;
+  }
+
+  /* The social hover card: a small display page lifted off the screen. */
+  .display-card {
+    @apply rounded border border-line bg-card text-ink;
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.35),
+      0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+}
+
+/* Long-form prose lives in the utilities layer, beside the typography
+   plugin's own rules — in an earlier layer the plugin would win outright. */
+@layer utilities {
+  .post-content.prose {
+    --tw-prose-body: var(--ink);
+    --tw-prose-headings: var(--ink);
+    --tw-prose-lead: var(--ink-soft);
+    --tw-prose-links: var(--accent);
+    --tw-prose-bold: var(--ink);
+    --tw-prose-counters: var(--ink-soft);
+    --tw-prose-bullets: var(--ink-soft);
+    --tw-prose-hr: var(--line);
+    --tw-prose-quotes: var(--ink);
+    --tw-prose-quote-borders: var(--memo);
+    --tw-prose-captions: var(--ink-soft);
+    --tw-prose-code: var(--ink);
+    --tw-prose-pre-code: #eceee8;
+    --tw-prose-pre-bg: #050607;
+    --tw-prose-th-borders: var(--line);
+    --tw-prose-td-borders: var(--line);
+    @apply font-sans leading-[1.78];
+  }
+  .post-content :is(h2, h3) {
+    @apply scroll-mt-40 font-bold tracking-normal;
+  }
+  .post-content h2 {
+    @apply border-b border-line pb-2;
+  }
+  .post-content a {
+    @apply font-normal underline-offset-[3px];
+  }
   .post-content :not(pre) > code {
-    @apply font-mono font-normal text-inherit bg-printer-ink/8 dark:bg-printer-ink-dark/12 px-1 py-0.5 rounded;
+    @apply rounded-[2px] px-1.5 py-0.5 font-mono text-[0.86em] font-normal;
+    background: var(--code-inline);
+  }
+  .post-content code::before,
+  .post-content code::after {
+    content: none;
+  }
+  /* Code is a black cockpit display in either mode. !important beats the
+     highlighter's inline background. */
+  .post-content pre {
+    @apply rounded border border-line font-mono text-[13.5px] leading-[1.65];
+    background-color: #050607 !important;
+  }
+  /* Quotes become a cockpit MEMO. */
+  .post-content blockquote {
+    @apply rounded-[3px] border-[1.5px] border-memo not-italic;
+    padding: 0.9rem 1.1rem;
+    background: color-mix(in oklab, var(--memo) 7%, transparent);
+  }
+  .post-content blockquote::before {
+    content: "MEMO";
+    @apply mb-1 block font-mono text-[11px] font-bold tracking-[0.2em] text-memo;
+  }
+  .post-content blockquote p:first-of-type::before,
+  .post-content blockquote p:last-of-type::after {
+    content: none;
+  }
+  .post-content img {
+    @apply rounded border border-line;
   }
 
-  /* Wide tables scroll inside the paper column rather than being clipped by
-     .printer-paper-area's overflow-hidden. The typography plugin gives `pre`
-     an overflow-x but leaves tables alone. Wrapper comes from velite.config.ts. */
+  /* Wide tables scroll inside the display rather than overflowing it. The
+     typography plugin gives `pre` an overflow-x but leaves tables alone.
+     Wrapper comes from velite.config.ts. */
   .post-content .table-scroll {
     overflow-x: auto;
     overscroll-behavior-x: contain;
     max-width: 100%;
     margin-block: 1.5rem; /* takes over the prose table margin */
   }
-  /* prose sets `table { width: 100% }`, which inside a scroll container resolves
-     to the container width — the table would squeeze to fit and never scroll. */
+  /* prose sets `table { width: 100% }`, which inside a scroll container
+     resolves to the container width — the table would squeeze to fit and
+     never scroll. */
   .post-content .table-scroll > table {
     width: auto;
     min-width: 100%;
@@ -293,245 +475,36 @@
     vertical-align: top;
   }
 
-  /* The site logo, printed inside prose (assets/logo.svg, inlined so its stroke
-     rides currentColor and follows the colour-mode toggle rather than the OS). */
+  /* The site logo inside prose (assets/logo.svg, inlined so its stroke rides
+     currentColor and follows the display mode). */
   .post-content .content-logo {
     display: flex;
     justify-content: center;
     margin-block: 2.5rem;
-    color: var(--color-printer-ink);
+    color: var(--ink);
     opacity: 0.7;
-  }
-  :is(.dark) .post-content .content-logo {
-    color: var(--color-printer-ink-dark);
   }
   .post-content .content-logo svg {
     width: 4rem;
     height: 4rem;
   }
-
-  /* Dot matrix / thermal print texture */
-  .thermal-texture,
-  .printed-card {
-    background-image: radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0.04) 0.6px,
-      transparent 0.6px
-    );
-    background-size: 5px 5px;
-  }
-  :is(.dark) .thermal-texture,
-  :is(.dark) .printed-card {
-    background-image: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.03) 0.6px,
-      transparent 0.6px
-    );
-  }
-
-  /* A slip of thermal paper lifted off the shell: the body of the social
-     hover card. Padding stays with the caller. */
-  .printed-card {
-    @apply rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15;
-    @apply bg-printer-paper dark:bg-printer-paper-dark;
-    @apply shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)];
-    @apply dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)];
-  }
-
-  /* Printer button style */
-  .printer-btn {
-    @apply relative px-4 h-9 rounded-md font-mono text-[10px] sm:text-[11px] tracking-widest uppercase;
-    @apply bg-printer-shell dark:bg-printer-shell-dark;
-    @apply border border-printer-ink/10 dark:border-white/[0.08];
-    @apply text-printer-ink dark:text-printer-ink-dark;
-    @apply transition-[transform,box-shadow,background-color,border-color,color] duration-200 select-none cursor-pointer;
-    @apply flex items-center justify-center;
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.5),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.08),
-      inset 0 -4px 6px rgba(0, 0, 0, 0.04),
-      0 1px 1px rgba(0, 0, 0, 0.08);
-  }
-  :is(.dark) .printer-btn {
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.05),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.38),
-      inset 0 -4px 8px rgba(0, 0, 0, 0.24),
-      0 1px 1px rgba(0, 0, 0, 0.4);
-  }
-  .printer-btn:hover {
-    @apply -translate-y-px border-printer-accent/25 text-printer-accent;
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.62),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.07),
-      0 5px 10px rgba(75, 57, 43, 0.11);
-  }
-  :is(.dark) .printer-btn:hover {
-    @apply border-printer-accent-dark/30 text-printer-accent-dark;
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.06),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.38),
-      0 6px 14px rgba(0, 0, 0, 0.38);
-  }
-  .printer-btn:active,
-  .printer-btn.active {
-    @apply translate-y-[1.5px];
-    color: var(--color-printer-accent);
-    box-shadow:
-      inset 0 1px 2px rgba(0, 0, 0, 0.2),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.05),
-      0 0 0 rgba(0, 0, 0, 0);
-  }
-  :is(.dark) .printer-btn:active,
-  :is(.dark) .printer-btn.active {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--color-printer-accent-dark);
-    box-shadow:
-      inset 0 1px 3px rgba(0, 0, 0, 0.55),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.25),
-      0 0 0 rgba(0, 0, 0, 0);
-  }
-
-  /* Rotary dial knob — the inner clickable circle */
-  .rotary-dial-knob {
-    @apply bg-printer-shell dark:bg-printer-shell-dark;
-    @apply border border-printer-ink/10 dark:border-white/[0.08];
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.5),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.06),
-      inset 0 -3px 4px rgba(0, 0, 0, 0.03),
-      0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  :is(.dark) .rotary-dial-knob {
-    box-shadow:
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.04),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.3),
-      inset 0 -3px 5px rgba(0, 0, 0, 0.2),
-      0 1px 2px rgba(0, 0, 0, 0.4);
-  }
-  @media (max-width: 639px) {
-    .printer-btn {
-      @apply h-[30px] px-2.5;
-    }
-  }
-
-  .printer-header-border {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      0 18px 40px rgba(75, 57, 43, 0.12),
-      0 4px 10px rgba(75, 57, 43, 0.12);
-  }
-  :is(.dark) .printer-header-border {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
-      0 4px 20px rgba(0, 0, 0, 0.5),
-      0 8px 40px rgba(196, 104, 73, 0.035),
-      0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-
-  .printed-row {
-    @apply relative transition-[background-color,color,transform] duration-200;
-  }
-  .printed-row::before {
-    content: "";
-    position: absolute;
-    inset-block: 0.5rem;
-    left: 0;
-    width: 2px;
-    background: var(--color-printer-accent);
-    opacity: 0;
-    transform: scaleY(0.35);
-    transform-origin: center;
-    transition:
-      opacity 180ms ease,
-      transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  :is(.dark) .printed-row::before {
-    background: var(--color-printer-accent-dark);
-  }
-  .printed-row:hover::before,
-  .printed-row:focus-within::before {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-
-  .section-action {
-    @apply inline-flex items-center gap-2 font-mono text-[10px] font-medium tracking-[0.16em] text-printer-accent transition-[gap,color] duration-200 dark:text-printer-accent-dark;
-  }
-  .section-action:hover,
-  .section-action:focus-visible {
-    @apply gap-3;
-  }
-
-  .page-subtitle {
-    @apply max-w-[52ch] font-serif text-sm leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/65 sm:text-base;
-  }
-
-  .printer-shell-bottom-shadow {
-    position: absolute;
-    left: 12px;
-    right: 12px;
-    top: -1px;
-    height: 22px;
-    pointer-events: none;
-    background: radial-gradient(
-      130% 90% at 50% 0%,
-      rgba(0, 0, 0, 0.22) 0%,
-      rgba(0, 0, 0, 0.12) 42%,
-      rgba(0, 0, 0, 0.05) 70%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    filter: blur(6px);
-    opacity: 0.78;
-  }
-  :is(.dark) .printer-shell-bottom-shadow {
-    background: radial-gradient(
-      130% 90% at 50% 0%,
-      rgba(0, 0, 0, 0.62) 0%,
-      rgba(0, 0, 0, 0.36) 44%,
-      rgba(0, 0, 0, 0.17) 72%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    opacity: 0.86;
-  }
-  @media (min-width: 640px) {
-    .printer-shell-bottom-shadow {
-      left: 40px;
-      right: 40px;
-      height: 24px;
-      filter: blur(8px);
-    }
-  }
 }
 
-@layer utilities {
-  /* Keep hover behavior on the current link only, and override prose defaults */
-  .post-content a:hover,
-  .post-content a:focus-visible {
-    text-decoration-color: color-mix(
-      in oklab,
-      var(--color-printer-ink) 85%,
-      transparent
-    ) !important;
-    text-decoration-thickness: 2px !important;
-    text-underline-offset: 4px !important;
+@keyframes master-flash {
+  0%,
+  49% {
+    opacity: 1;
   }
-
-  :is(.dark) .post-content a:hover,
-  :is(.dark) .post-content a:focus-visible {
-    text-decoration-color: color-mix(
-      in oklab,
-      var(--color-printer-ink-dark) 85%,
-      transparent
-    ) !important;
+  50%,
+  100% {
+    opacity: 0.2;
   }
 }
 
 /* ============================================================
-   Jet airliner landing on and taking off from the printer's top
-   edge (PrinterPlane.svelte). The artwork is an optimized flat
-   vector whose fills all ride the tokens below: paper-white body,
-   plastic greys, and the ON light's orange on the tail.
+   Jet airliner landing on and taking off from the glareshield's
+   top edge (DeckPlane.svelte). The artwork is an optimized flat
+   vector whose fills all ride the tokens below.
    ============================================================ */
 @layer components {
   .plane-lane {
@@ -543,25 +516,16 @@
     z-index: 40;
     pointer-events: none;
 
-    /* Jet palette (light) — thermal paper + printer plastic. Body white and
-       tail orange ride the app theme; the grey tiers borrow the robo-snail's
-       livery (see the snail block below) so both critters match. */
-    --plane-paper: var(--color-printer-paper);
-    --plane-mid: var(--color-printer-shell);
-    --plane-shade: #c2c0b6;
-    --plane-dark: #73726c;
-    --plane-deep: var(--color-printer-ink);
-    --plane-accent: var(--color-printer-accent);
-  }
-  :is(.dark) .plane-lane {
-    /* Dark body is deliberately lighter than printer-paper-dark so the
-       plane doesn't vanish against the dark shell */
-    --plane-paper: var(--color-printer-button-dark);
-    --plane-mid: var(--color-printer-button-active-dark);
-    --plane-shade: #5e5d59;
-    --plane-dark: #4d4c48;
-    --plane-deep: #141413;
-    --plane-accent: var(--color-printer-accent-dark);
+    /* Jet palette — glareshield greys with the FCU's LCD orange on the
+       tail. The deck is the dark glareshield in both colour modes, so there
+       is one palette; the body stays lighter than the page so the jet never
+       vanishes into it. */
+    --plane-paper: #5b636a;
+    --plane-mid: #4c535a;
+    --plane-shade: #6b747b;
+    --plane-dark: #3b4146;
+    --plane-deep: #0f1214;
+    --plane-accent: #ff9a2e;
   }
   @media (min-width: 640px) {
     .plane-lane {
@@ -634,10 +598,10 @@
 }
 
 /* ============================================================
-   Crawling robo-snail on the printer's top edge — plastic body,
-   antenna LEDs, and a roll of thermal paper for a shell. Shown
+   Crawling robo-snail on the glareshield's top edge — plastic
+   body, antenna LEDs, and a roll of paper for a shell. Shown
    when site-config's mascot flag selects "snail".
-   Travel + the head-sweep turn are driven from JS (PrinterSnail.svelte);
+   Travel + the head-sweep turn are driven from JS (DeckSnail.svelte);
    only the small idle motions (antenna sway, LED pulse) live here.
    ============================================================ */
 @layer components {
@@ -650,29 +614,18 @@
     z-index: 40;
     pointer-events: none;
 
-    /* Robo-snail palette (light) — printer plastic + thermal paper */
-    --snail-body: var(--color-printer-shell);
-    --snail-body-shade: #c2c0b6;
-    --snail-line: rgba(20, 20, 19, 0.42);
-    --snail-roll: var(--color-printer-paper);
-    --snail-roll-edge: rgba(20, 20, 19, 0.28);
-    --snail-roll-print: rgba(20, 20, 19, 0.42);
-    --snail-core: #d1cfc5;
-    --snail-core-hole: #73726c;
-    --snail-led: var(--color-printer-accent);
-    --snail-led-glow: rgba(217, 119, 87, 0.48);
-  }
-  :is(.dark) .snail-lane {
-    --snail-body: var(--color-printer-button-dark);
-    --snail-body-shade: #5e5d59;
+    /* Robo-snail palette — glareshield greys, LCD-orange LEDs. One palette,
+       for the same reason as the jet's. */
+    --snail-body: #3b4146;
+    --snail-body-shade: #5b636a;
     --snail-line: rgba(0, 0, 0, 0.55);
-    --snail-roll: #30302e;
-    --snail-roll-edge: rgba(250, 249, 245, 0.18);
-    --snail-roll-print: rgba(250, 249, 245, 0.46);
-    --snail-core: #4d4c48;
-    --snail-core-hole: #141413;
-    --snail-led: var(--color-printer-accent-dark);
-    --snail-led-glow: rgba(196, 104, 73, 0.6);
+    --snail-roll: #4c535a;
+    --snail-roll-edge: rgba(236, 238, 232, 0.18);
+    --snail-roll-print: rgba(236, 238, 232, 0.46);
+    --snail-core: #2b3035;
+    --snail-core-hole: #0f1214;
+    --snail-led: #ff9a2e;
+    --snail-led-glow: rgba(255, 154, 46, 0.6);
   }
   @media (min-width: 640px) {
     .snail-lane {
@@ -690,12 +643,9 @@
     left: 0;
     width: 46px;
     height: 28px;
-    /* tight contact shadow so it reads as sitting on the printer, no gap */
-    filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
-    will-change: transform;
-  }
-  :is(.dark) .snail-walker {
+    /* tight contact shadow so it reads as sitting on the glareshield */
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+    will-change: transform;
   }
   @media (min-width: 640px) {
     .snail-walker {
@@ -712,7 +662,7 @@
   }
 
   /* No outline on the body/head so the head blends into the foot and the
-     snail sits seamlessly against the printer (no border seam). */
+     snail sits seamlessly on the glareshield (no border seam). */
   .snail-foot,
   .snail-neck {
     fill: var(--snail-body);
@@ -758,9 +708,6 @@
   }
   .snail-roll-shine {
     fill: #faf9f5;
-    opacity: 0.22;
-  }
-  :is(.dark) .snail-roll-shine {
     opacity: 0.05;
   }
 
@@ -777,7 +724,7 @@
   .snail-led-front {
     animation-delay: -0.9s;
   }
-  :is(.dark) .snail-led {
+  .snail-led {
     filter: drop-shadow(0 0 3px var(--snail-led-glow));
   }
   .snail-led-glint {

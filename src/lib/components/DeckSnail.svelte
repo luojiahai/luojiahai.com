@@ -3,9 +3,9 @@
 
   /**
    * A small decorative robo-snail that slowly crawls back and forth along the
-   * very top edge of the printer shell. It's built from the printer's own
-   * parts: a plastic body, antenna LEDs for eyes, and a roll of thermal paper
-   * for a shell.
+   * very top edge of the cockpit's glareshield. It's built from spare parts:
+   * a plastic body, antenna LEDs for eyes, and a roll of thermal paper for a
+   * shell.
    *
    * The turn-around is the tricky part: rotating a flat SVG about the Y axis
    * goes razor-thin at 90°, which reads as a flipping sheet of paper. Instead,

@@ -2,7 +2,7 @@
   import "../app.css";
   import { page } from "$app/state";
   import { getDictionary, languageOf } from "$lib/dictionaries";
-  import PrinterShell from "$lib/components/PrinterShell.svelte";
+  import CockpitShell from "$lib/components/CockpitShell.svelte";
 
   let { children } = $props();
 
@@ -16,6 +16,6 @@
   });
 </script>
 
-<PrinterShell {lang} {dictionary}>
+<CockpitShell {lang} {dictionary}>
   {@render children()}
-</PrinterShell>
+</CockpitShell>

@@ -45,17 +45,39 @@ const dictionary: Dictionary = {
     projectsSubtitle: "我做的东西。",
     useSubtitle: "我使用的东西。",
     empty: "这里还没有内容。",
-    shareTo: "分享到：",
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
     backToPosts: "← 返回文章",
-    allPosts: "← 全部文章",
-    notFoundStatus: "纸空了",
-    notFoundTitle: "托盘已空",
-    notFoundSubtitle: "请正确放入纸张以打印内容。",
-    notFoundButton: "← 打印主页",
-    notFoundError: "ERR 404 · PAPER_NOT_FOUND",
-    printedOn: "打印于",
+    notFoundSystem: "导航",
+    notFoundTitle: "页面未找到",
+    notFoundSteps: {
+      home: ["主页", "按下"],
+      posts: ["文章", "检查"],
+      url: ["网址", "核对"],
+    },
+    notFoundAck: "按下 MASTER WARN 以确认",
+    notFoundAcked: "告警已确认 · 请按程序处置",
+    notFoundButton: "◂ 返回主页",
+    masterWarn: "主警告：按下以确认",
+    profile: "简介",
+    viewAllProjects: "全部项目 ▸",
+    viewAllPosts: "全部文章 ▸",
+    displaySections: "显示页",
+    postFilter: "按分类筛选文章",
+    allCategories: "全部",
+    filterSummary(name: string, count: number) {
+      return `筛选 ${name} · ${count} 条`;
+    },
+    contents: "目录",
+    keywords: "关键词",
+    updated: "更新于",
+    readingTime(minutes: number) {
+      return `约 ${minutes} 分钟`;
+    },
+    readingProgress: "阅读进度",
+    projectsHint: "指向一个项目，即可直飞该航点。",
+    projectMap: "项目航图",
+    openProject: "打开",
     wechatScanHint: "微信扫码阅读原文",
     shareToX: "分享到 X",
     aboutSignOff: "就酱～",
@@ -65,11 +87,6 @@ const dictionary: Dictionary = {
     colorModes: { system: "跟随系统", light: "浅色", dark: "深色" },
     colorMode(mode: string) {
       return `颜色模式：${mode}`;
-    },
-    lightSwitchOn: "拉绳开灯",
-    lightSwitchOff: "拉绳关灯",
-    entries(count: number) {
-      return `${count} 条`;
     },
   },
   contacts: [

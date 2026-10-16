@@ -3,10 +3,10 @@
 
   /**
    * A decorative jet airliner that endlessly lands on and takes off from the
-   * top edge of the printer shell. The artwork is an optimized flat-design
-   * vector (99 paths, ~22 KB) recolored into the printer's own livery: paper
-   * white body, plastic-grey details, and the ON light's orange on the tail.
-   * Every fill rides a CSS token, so dark mode restyles it automatically.
+   * top edge of the cockpit's glareshield. The artwork is an optimized
+   * flat-design vector (99 paths, ~22 KB) recolored into the glareshield's
+   * livery: grey body and details, and the FCU's LCD orange on the tail.
+   * Every fill rides a CSS token (`.plane-lane` in app.css).
    *
    * One full cycle, always travelling left to right: descending approach
    * from off-screen left (with a touch of light chop), flare + touchdown

@@ -80,17 +80,41 @@ const dictionary = {
     projectsSubtitle: "Things I build.",
     useSubtitle: "Things I'm using.",
     empty: "Nothing here yet.",
-    shareTo: "Share to: ",
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
     backToPosts: "← BACK TO POSTS",
-    allPosts: "← ALL POSTS",
-    notFoundStatus: "Paper Tray Empty",
-    notFoundTitle: "Out of Paper",
-    notFoundSubtitle: "Please insert paper correctly to print content.",
-    notFoundButton: "← Print Home",
-    notFoundError: "ERR 404 · PAPER_NOT_FOUND",
-    printedOn: "Printed on",
+    // The 404 page reads as an ECAM warning: a red system + title, then the
+    // procedure lines in cyan.
+    notFoundSystem: "NAV",
+    notFoundTitle: "Page not found",
+    notFoundSteps: {
+      home: ["HOME", "PRESS"],
+      posts: ["POSTS", "CHECK"],
+      url: ["URL", "VERIFY"],
+    },
+    notFoundAck: "Press MASTER WARN to acknowledge",
+    notFoundAcked: "Warning acknowledged · follow procedure",
+    notFoundButton: "◂ Return home",
+    masterWarn: "Master warning: press to acknowledge",
+    profile: "Profile",
+    viewAllProjects: "All projects ▸",
+    viewAllPosts: "All posts ▸",
+    displaySections: "Display sections",
+    postFilter: "Filter posts by category",
+    allCategories: "All",
+    filterSummary(name: string, count: number) {
+      return `Filter ${name} · ${count} ${count === 1 ? "entry" : "entries"}`;
+    },
+    contents: "Contents",
+    keywords: "Keywords",
+    updated: "Updated",
+    readingTime(minutes: number) {
+      return `~${minutes} min read`;
+    },
+    readingProgress: "Reading progress",
+    projectsHint: "Point at a project to fly direct to it.",
+    projectMap: "Project map",
+    openProject: "Open",
     wechatScanHint: "Scan to read on WeChat",
     shareToX: "Share to X",
     aboutSignOff: "That's about it~",
@@ -101,11 +125,6 @@ const dictionary = {
     colorModes: { system: "System", light: "Light", dark: "Dark" },
     colorMode(mode: string) {
       return `Color mode: ${mode}`;
-    },
-    lightSwitchOn: "Pull the cord to turn the light on",
-    lightSwitchOff: "Pull the cord to turn the light off",
-    entries(count: number) {
-      return `${count} ${count === 1 ? "entry" : "entries"}`;
     },
   },
   contacts,

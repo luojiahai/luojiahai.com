@@ -8,9 +8,6 @@
   import { SITE_URL } from "$lib/site-config";
   import Icon from "$lib/components/Icon.svelte";
   import PostContent from "$lib/components/PostContent.svelte";
-  import PrintedDivider from "$lib/components/PrintedDivider.svelte";
-  import PrintedLabel from "$lib/components/PrintedLabel.svelte";
-  import PrintedSection from "$lib/components/PrintedSection.svelte";
   import Seo from "$lib/components/Seo.svelte";
 
   let { data } = $props();
@@ -63,105 +60,111 @@
   ]}
 />
 
-<div>
-  <!-- Post header -->
-  <PrintedSection>
-    <div class="flex flex-wrap gap-1.5 mb-3">
-      {#each data.categories as category (category.slug)}
-        <a href={category.permalink[lang]}>
-          <PrintedLabel variant="accent">{category.name[lang]}</PrintedLabel>
+<!-- Breadcrumb strip across the top of the display -->
+<div
+  class="-mx-3.5 -mt-6 mb-7 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line px-3.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] text-ink-soft sm:-mx-6 sm:-mt-7 sm:px-6"
+>
+  <nav aria-label={dictionary.labels.posts} class="flex flex-wrap items-center gap-x-2">
+    <a href={dictionary.urls.posts} class="text-accent hover:underline">
+      {dictionary.labels.posts}
+    </a>
+    {#each data.categories as category (category.slug)}
+      <span aria-hidden="true">›</span>
+      <a href={category.permalink[lang]} class="hover:text-accent hover:underline">
+        {category.name[lang]}
+      </a>
+    {/each}
+  </nav>
+  <span>{dictionary.labels.readingTime(data.readingMinutes)}</span>
+</div>
+
+<div class="flex flex-wrap items-start gap-x-10 gap-y-8">
+  <article class="min-w-0 flex-[999_1_34rem]">
+    <div
+      class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums text-ink-soft"
+    >
+      <span class="text-accent">{displayDate(post.date, lang)}</span>
+      {#if post.updated}
+        <span>{dictionary.labels.updated} {displayDate(post.updated, lang)}</span>
+      {/if}
+      {#each data.translations as translation (translation.lang)}
+        <a class="text-accent hover:underline" href={translation.permalink}>
+          {languageLabels[translation.lang]}
         </a>
       {/each}
     </div>
-    <h1
-      class="max-w-[28ch] font-serif text-[2rem] font-bold leading-[1.08] tracking-[-0.025em] text-printer-ink dark:text-printer-ink-dark"
-    >
+    <h1 class="mt-3 max-w-[30ch] text-[1.875rem] font-bold leading-[1.12] sm:text-[2.375rem]">
       {post.title}
     </h1>
-    <div class="flex items-center gap-3 mt-2 flex-wrap">
-      <span
-        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 tabular-nums"
-      >
-        {displayDate(post.date, lang)}
-      </span>
-      {#if data.translations.length > 0}
-        <div class="flex items-center gap-2">
-          <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
-          >
-            |
-          </span>
-          {#each data.translations as translation (translation.lang)}
-            <a
-              class="font-mono text-[10px] text-printer-accent dark:text-printer-accent-dark hover:underline"
-              href={translation.permalink}
-            >
-              {languageLabels[translation.lang]}
-            </a>
-          {/each}
-        </div>
-      {/if}
-    </div>
     {#if post.description}
-      <p class="page-subtitle mt-4">
+      <p class="mt-3.5 max-w-[60ch] text-base leading-relaxed text-ink-soft sm:text-[17px]">
         {post.description}
       </p>
     {/if}
-  </PrintedSection>
+    <div class="my-7 h-0.5 bg-line" aria-hidden="true"></div>
 
-  <PrintedDivider style="solid" />
+    <PostContent html={post.content} />
 
-  <!-- Post content -->
-  <PostContent html={post.content} />
-
-  <!-- WeChat QR Code -->
-  {#if data.wechatQrSvg}
-    <PrintedDivider style="dashed" />
-    <div class="flex items-center gap-4 py-1">
-      <div class="shrink-0 w-20 h-20 bg-white p-1.5">
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -- build-time QR SVG -->
-        {@html data.wechatQrSvg}
+    {#if data.wechatQrSvg}
+      <div class="card mt-8 flex max-w-[68ch] items-center gap-4 p-3">
+        <div class="h-20 w-20 shrink-0 bg-white p-1.5">
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -- build-time QR SVG -->
+          {@html data.wechatQrSvg}
+        </div>
+        <div>
+          <p class="text-sm font-bold">WeChat</p>
+          <p class="mt-0.5 text-xs text-ink-soft">
+            {dictionary.labels.wechatScanHint}
+          </p>
+        </div>
       </div>
-      <div>
-        <p class="font-mono text-[11px] text-printer-ink dark:text-printer-ink-dark">
-          WeChat
-        </p>
-        <p
-          class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5"
-        >
-          {dictionary.labels.wechatScanHint}
-        </p>
-      </div>
+    {/if}
+
+    <div
+      class="mt-8 flex max-w-[68ch] flex-wrap justify-between gap-3 border-t-2 border-line pt-5"
+    >
+      <a href={dictionary.urls.posts} class="btn">
+        {dictionary.labels.backToPosts}
+      </a>
+      <a
+        href={dictionary.urls.shareToX(post.title, post.permalink)}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-accent"
+      >
+        {dictionary.labels.shareToX}
+        <Icon name="x" class="h-3.5 w-3.5" />
+      </a>
     </div>
+  </article>
+
+  {#if data.toc.length > 1 || post.keywords?.length}
+    <aside class="flex-[1_1_13rem] lg:sticky lg:top-40">
+      {#if data.toc.length > 1}
+        <nav aria-label={dictionary.labels.contents} class="mb-7 hidden lg:block">
+          <h2 class="mb-2 text-[11px] font-bold uppercase tracking-[0.18em]">
+            {dictionary.labels.contents}
+          </h2>
+          {#each data.toc as heading (heading.id)}
+            <a
+              href="#{heading.id}"
+              class="block border-l-2 border-line px-2.5 py-1.5 text-sm leading-snug text-ink-soft transition-colors hover:border-accent hover:text-accent"
+            >
+              {heading.text}
+            </a>
+          {/each}
+        </nav>
+      {/if}
+      {#if post.keywords?.length}
+        <h2 class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.18em]">
+          {dictionary.labels.keywords}
+        </h2>
+        <div class="flex flex-wrap gap-1.5">
+          {#each post.keywords as keyword (keyword)}
+            <span class="chip normal-case tracking-normal">{keyword}</span>
+          {/each}
+        </div>
+      {/if}
+    </aside>
   {/if}
-
-  <PrintedDivider style="dashed" />
-
-  <!-- Footer actions -->
-  <div class="flex items-center gap-4">
-    <span
-      class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 uppercase tracking-wider"
-    >
-      {dictionary.labels.shareTo}
-    </span>
-    <a
-      href={dictionary.urls.shareToX(post.title, post.permalink)}
-      target="_blank"
-      rel="noopener"
-      class="text-printer-ink-light dark:text-printer-ink-dark/40 hover:text-printer-ink dark:hover:text-printer-ink-dark transition-colors"
-      aria-label={dictionary.labels.shareToX}
-    >
-      <Icon name="x" class="w-4 h-4" />
-    </a>
-  </div>
-
-  <div class="mt-6">
-    <a
-      href={dictionary.urls.posts}
-      class="section-action"
-    >
-      {dictionary.labels.backToPosts}
-    </a>
-  </div>
-
 </div>
