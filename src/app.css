@@ -242,11 +242,13 @@
     padding: 20px 26px 22px;
     border-radius: 8px;
   }
+  /* 36px tag + 22px + 24px NORM = 82px, the height of the two stacked
+     36px master lights on phones, so both columns line up there. */
   .fcu-left {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 22px;
   }
   .fcu .lcds {
     grid-column: 2;
@@ -726,12 +728,8 @@
       gap: 14px 8px;
       padding: 14px 10px;
     }
-    /* The two 36px master lights set the top row's height; the name tag
-       column spreads to match it, as ANN LT and LANG already do. */
     .fcu-left {
       min-width: 0;
-      align-self: stretch;
-      justify-content: space-between;
     }
     .fcu-right {
       gap: 12px;
