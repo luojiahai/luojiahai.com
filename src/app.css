@@ -729,6 +729,9 @@
     .fcu-left {
       min-width: 0;
     }
+    /* The right-hand controls keep full size and 12px gaps, so under
+       about 367px the one-line name tag runs under MASTER WARN; that is
+       accepted. */
     .fcu-right {
       gap: 12px;
     }
@@ -765,16 +768,6 @@
     }
     .pedestal {
       padding: 12px;
-    }
-  }
-
-  /* Below 360px the side padding gives the name tag some room. The
-     right-hand controls keep full size and 12px gaps, so under about
-     367px the one-line tag runs under MASTER WARN; that is accepted. */
-  @media (max-width: 359px) {
-    .cockpit,
-    .fcu {
-      padding-inline: 8px;
     }
   }
 
