@@ -753,9 +753,6 @@
       font-size: 8.5px;
       letter-spacing: 0.04em;
     }
-    .placard .type {
-      white-space: normal;
-    }
     .knob-btn {
       margin: -4px -6px;
       transform: scale(0.85);
@@ -789,18 +786,13 @@
     }
   }
 
-  /* Below 360px the name tag needs the room even with its tagline wrapped,
-     so the side padding gives it up and the right-hand gaps stay 12px. */
+  /* Below 360px the side padding gives the name tag some room, and the
+     right-hand gaps stay 12px. Under about 345px the one-line tag runs
+     into MASTER WARN; that is accepted. */
   @media (max-width: 359px) {
     .cockpit,
     .fcu {
       padding-inline: 8px;
-    }
-    .placard {
-      padding: 0 8px;
-    }
-    .placard .reg {
-      letter-spacing: 0.06em;
     }
   }
 
