@@ -56,12 +56,12 @@ function h(
 }
 
 // ---------------------------------------------------------------------------
-// Fonts — JetBrains Mono is bundled; CJK glyphs are fetched as tiny subsets
-// from Google Fonts at build time (cached per charset).
+// Fonts — B612 is bundled; CJK glyphs are fetched as tiny subsets from
+// Google Fonts at build time (cached per charset).
 // ---------------------------------------------------------------------------
 
-const fontRegular = readFileSync("src/lib/og/fonts/jetbrains-mono-400.ttf");
-const fontBold = readFileSync("src/lib/og/fonts/jetbrains-mono-700.ttf");
+const fontRegular = readFileSync("src/lib/og/fonts/b612-400.ttf");
+const fontBold = readFileSync("src/lib/og/fonts/b612-700.ttf");
 
 const cjkFontCache = new Map<string, ArrayBuffer | null>();
 
@@ -500,7 +500,7 @@ export async function generateOgImage(
         backgroundColor: COLORS.body,
         padding: "40px",
         position: "relative",
-        fontFamily: '"JetBrains Mono", "Noto Sans SC", monospace',
+        fontFamily: '"B612", "Noto Sans SC", sans-serif',
       },
     },
     // The paper card
@@ -537,8 +537,8 @@ export async function generateOgImage(
   const svg = await satori(tree as never, {
     ...OG_IMAGE_SIZE,
     fonts: [
-      { name: "JetBrains Mono", data: fontRegular, weight: 400, style: "normal" },
-      { name: "JetBrains Mono", data: fontBold, weight: 700, style: "normal" },
+      { name: "B612", data: fontRegular, weight: 400, style: "normal" },
+      { name: "B612", data: fontBold, weight: 700, style: "normal" },
       ...(cjkFont
         ? [
             {
