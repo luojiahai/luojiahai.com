@@ -17,6 +17,14 @@
   image: /static/aileron.svg
   link: https://github.com/luojiahai/aileron
 
+- slug: fly
+  name: Fly
+  description:
+    en: Flight sim checklists you tick off as you fly, gate to gate.
+    zh: 飞行模拟检查单，边飞边逐项勾选，从登机口到登机口。
+  image: /static/fly.svg
+  link: https://fly.liyu.dev
+
 - slug: code-by-wire
   name: Code-by-wire
   description:
@@ -32,11 +40,3 @@
     zh: 收纳冗长的终端命令，通过模糊搜索找到并取回。
   image: /static/potato.svg
   link: https://github.com/luojiahai/potato
-
-- slug: fly
-  name: Fly
-  description:
-    en: Flight sim checklists you tick off as you fly, gate to gate.
-    zh: 飞行模拟检查单，边飞边逐项勾选，从登机口到登机口。
-  image: /static/fly.svg
-  link: https://fly.liyu.dev
