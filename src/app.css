@@ -416,7 +416,7 @@
   }
   @media (max-width: 639px) {
     .printer-btn {
-      @apply h-[30px] px-2.5;
+      @apply h-[30px] px-2.5 tracking-wider;
     }
   }
 
