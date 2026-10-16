@@ -93,7 +93,13 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   if (rest.length === 2 && rest[0] === "categories") {
     const category = findCategory(rest[1]);
     if (!category) return undefined;
-    return { title: category.name[lang], type: "post", ...branding };
+    return {
+      title: category.name[lang],
+      subtitle: category.description?.[lang],
+      emoji: PAGE_EMOJIS.posts,
+      type: "page",
+      ...branding,
+    };
   }
 
   // Post pages
