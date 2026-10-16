@@ -793,10 +793,12 @@
     }
   }
 
-  /* Below 360px the name tag needs the room even with its tagline wrapped. */
+  /* Below 360px the name tag needs the room even with its tagline wrapped,
+     so the side padding gives it up and the right-hand gaps stay 12px. */
   @media (max-width: 359px) {
-    .fcu-right {
-      gap: 8px;
+    .cockpit,
+    .fcu {
+      padding-inline: 8px;
     }
     .placard {
       padding: 6px 8px;
