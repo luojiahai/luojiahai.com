@@ -8,27 +8,27 @@ import {
 } from "$lib/content";
 import { getDictionary, isLanguage, languages } from "$lib/dictionaries";
 import { displayDate } from "$lib/date";
-import { generateOgImage, type OgImageOptions } from "$lib/og/image";
+import { generateOgImage, type OgCard, type OgIcon } from "$lib/og/image";
 import type { EntryGenerator, RequestHandler } from "./$types";
 
 export const prerender = true;
 
-/** Static pages under each language, with their page-layout OG options. */
-const PAGE_EMOJIS = {
-  posts: "📝",
-  projects: "🛠",
-  use: "🧰",
-  about: "👋",
-};
+/** Static pages under each language, marked with the icon each page prints. */
+const PAGE_ICONS = {
+  posts: "draft",
+  projects: "code",
+  use: "tools",
+  about: "user",
+} satisfies Record<string, OgIcon>;
 
-type StaticPage = keyof typeof PAGE_EMOJIS;
+type StaticPage = keyof typeof PAGE_ICONS;
 
-const isStaticPage = (page: string): page is StaticPage => page in PAGE_EMOJIS;
+const isStaticPage = (page: string): page is StaticPage => page in PAGE_ICONS;
 
 export const entries: EntryGenerator = () => [
   ...languages.map((lang) => ({ path: `${lang}.png` })),
   ...languages.flatMap((lang) =>
-    Object.keys(PAGE_EMOJIS).map((page) => ({ path: `${lang}/${page}.png` })),
+    Object.keys(PAGE_ICONS).map((page) => ({ path: `${lang}/${page}.png` })),
   ),
   ...posts.map((post) => ({ path: `${post.lang}/posts/${post.slug}.png` })),
   ...categories.flatMap((category) =>
@@ -38,7 +38,7 @@ export const entries: EntryGenerator = () => [
   ),
 ];
 
-function resolveOptions(path: string): OgImageOptions | undefined {
+function resolveCard(path: string): OgCard | undefined {
   if (!path.endsWith(".png")) return undefined;
 
   const segments = path.slice(0, -".png".length).split("/");
@@ -57,8 +57,6 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     return {
       title: dictionary.meta.name,
       description: dictionary.meta.motto,
-      type: "page",
-      showTitleAvatar: true,
       ...branding,
     };
   }
@@ -80,9 +78,8 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     if (title === undefined) return undefined;
     return {
       title,
-      subtitle,
-      emoji: PAGE_EMOJIS[page],
-      type: "page",
+      description: subtitle,
+      marker: { kind: "icon", icon: PAGE_ICONS[page] },
       ...branding,
     };
   }
@@ -94,7 +91,12 @@ function resolveOptions(path: string): OgImageOptions | undefined {
   if (rest.length === 2 && rest[0] === "categories") {
     const category = findCategory(rest[1]);
     if (!category) return undefined;
-    return { title: category.name[lang], type: "post", ...branding };
+    return {
+      title: category.name[lang],
+      description: category.description?.[lang],
+      marker: { kind: "icon", icon: "tag" },
+      ...branding,
+    };
   }
 
   // Post pages
@@ -104,9 +106,11 @@ function resolveOptions(path: string): OgImageOptions | undefined {
     return {
       title: post.title,
       description: post.description,
-      category: findCategory(post.categories[0])?.name[lang],
-      date: displayDate(post.date, "en-US"),
-      type: "post",
+      marker: {
+        kind: "post",
+        category: findCategory(post.categories[0])?.name[lang],
+        date: displayDate(post.date, lang),
+      },
       ...branding,
     };
   }
@@ -115,10 +119,10 @@ function resolveOptions(path: string): OgImageOptions | undefined {
 }
 
 export const GET: RequestHandler = async ({ params }) => {
-  const options = resolveOptions(params.path);
-  if (!options) error(404, "No OG image for this path");
+  const card = resolveCard(params.path);
+  if (!card) error(404, "No OG image for this path");
 
-  const png = await generateOgImage(options);
+  const png = await generateOgImage(card);
 
   return new Response(new Uint8Array(png), {
     headers: {

@@ -100,8 +100,8 @@ as an in-repo backstop.
   `wrangler.jsonc`; the code tolerates a missing binding in local dev) →
   committed fallback `src/lib/social-fallback.json`.
 - OG images are rendered at build time with satori + resvg
-  (`src/lib/og/image.ts`); CJK glyph subsets and Twemoji are fetched during
-  the build, so builds need network access.
+  (`src/lib/og/image.ts`); CJK glyph subsets are fetched during the build,
+  so builds need network access.
 - Icons go through `src/lib/icons.ts`. Generic UI icons are Lucide
   components, imported one per icon (`@lucide/svelte/icons/<name>`) so the
   bundle stays tree-shaken; `customIconPaths` holds inline 24x24 filled paths
@@ -110,8 +110,9 @@ as an in-repo backstop.
   entry in one map or the other, never both.
 - A new non-localized top-level path must be added to
   `NON_LOCALIZED_PREFIXES` in `src/hooks.server.ts`, or the locale redirect
-  swallows it. A new static page also needs an entry in `PAGE_EMOJIS`
-  (`src/routes/og/[...path]/+server.ts`) to get an OG image.
+  swallows it. A new static page also needs an entry in `PAGE_ICONS`
+  (`src/routes/og/[...path]/+server.ts`), naming one of the Lucide `icons`,
+  to get an OG image.
 
 ## Content Notes
 - Post frontmatter (`velite.config.ts`): required `title` (≤99 chars),
