@@ -162,12 +162,17 @@
     @apply translate-y-0;
   }
 
+  /* The padded coaming over the instrument panel: same width as the panel,
+     with a lip along its bottom edge that casts a shadow onto it. */
   .glareshield {
-    border-radius: 12px 12px 4px 4px;
-    background: linear-gradient(180deg, #353b40 0%, #2a2f34 60%, #24282c 100%);
+    border-radius: 14px 14px 0 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0, transparent 22px),
+      linear-gradient(180deg, #353b40 0%, #2a2f34 55%, #23272b 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 14px 24px rgba(0, 0, 0, 0.6);
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -3px 0 #1a1d20,
+      0 12px 14px -6px rgba(0, 0, 0, 0.75);
   }
   /* Controls on the glareshield always sit on dark plastic, so the focus
      ring stays cyan in either display mode. */
@@ -192,33 +197,44 @@
   .fcu-label {
     @apply font-sans text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-hw-ink;
   }
+  /* LCD behind glass, framed in a black bezel. */
   .lcd {
-    @apply inline-flex min-w-[3.5rem] items-center justify-center rounded-[3px] bg-lcd px-2 py-1 font-mono text-lg font-bold leading-tight tracking-[0.06em] text-lcd-ink sm:text-xl;
-    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.9);
+    @apply inline-flex min-w-[3.5rem] items-center justify-center rounded-[2px] px-2 py-1 font-mono text-lg font-bold leading-tight tracking-[0.06em] text-lcd-ink sm:text-xl;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, transparent 50%),
+      var(--color-lcd);
+    box-shadow:
+      inset 0 2px 5px rgba(0, 0, 0, 0.95),
+      0 0 0 2px #0a0b0c,
+      0 0 0 3px rgba(255, 255, 255, 0.07);
     text-shadow: 0 0 6px rgba(255, 154, 46, 0.6);
   }
+  /* FCU knob: knurled grip skirt around a smooth cap with a white index. */
   .knob {
     position: relative;
-    width: 34px;
-    height: 34px;
-    margin-top: 3px;
+    width: 38px;
+    height: 38px;
+    margin-top: 5px;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 30%, #3e444a 0%, #16191b 70%);
+    background:
+      radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.16), transparent 42%),
+      radial-gradient(circle closest-side, #30353a 0 70%, #1b1e21 71%, transparent 73%),
+      repeating-conic-gradient(#121416 0deg 6deg, #3a4045 6deg 12deg);
     box-shadow:
-      0 3px 5px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 0 0 3px #2b3035;
+      0 0 0 2px #181b1e,
+      0 0 0 3px rgba(255, 255, 255, 0.06),
+      0 4px 6px rgba(0, 0, 0, 0.65);
   }
   .knob-index {
     position: absolute;
     left: 50%;
-    top: 4px;
+    top: 7px;
     width: 3px;
-    height: 10px;
+    height: 9px;
     margin-left: -1.5px;
     border-radius: 2px;
     background: var(--color-hw-ink);
-    transform-origin: 50% 13px;
+    transform-origin: 50% 12px;
     transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .fcu-window:hover .knob {
@@ -228,55 +244,85 @@
     transform: translateY(1px);
   }
 
-  /* Autopilot-style pushbutton: three green bars light when engaged. */
+  /* Autopilot-style pushbutton: a bevelled cap in a dark collar, engraved
+     legend, and a three-segment lens that lights green when engaged. */
   .pb {
-    @apply inline-flex h-11 min-w-16 cursor-pointer flex-col items-center justify-center gap-[7px] rounded-[3px] px-2.5 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-hw-ink select-none;
-    border: 1.5px solid #0b0d0e;
-    background: linear-gradient(180deg, #3b4146 0%, #2b3035 100%);
+    @apply relative inline-flex h-11 min-w-16 cursor-pointer flex-col items-center justify-center gap-[7px] rounded-[3px] px-2.5 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.08em] text-hw-ink select-none;
+    border: 1px solid #08090a;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, transparent 40%),
+      linear-gradient(180deg, #3d4348 0%, #2d3237 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 2px 0 #121518;
+      0 0 0 2px #171a1d,
+      0 0 0 3px rgba(255, 255, 255, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.35),
+      0 4px 4px rgba(0, 0, 0, 0.55);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
     transition:
       transform 60ms,
+      box-shadow 60ms,
       filter 100ms;
   }
   .pb:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.15);
   }
   .pb:active {
-    transform: translateY(1px);
+    transform: translateY(1.5px);
+    box-shadow:
+      0 0 0 2px #171a1d,
+      0 0 0 3px rgba(255, 255, 255, 0.07),
+      inset 0 1px 3px rgba(0, 0, 0, 0.5),
+      0 1px 1px rgba(0, 0, 0, 0.5);
   }
   .pb-bars {
-    @apply flex gap-1;
+    @apply flex gap-[3px];
   }
   .pb-bars > span {
     width: 12px;
-    height: 3px;
+    height: 4px;
     border-radius: 1px;
-    background: #20262a;
+    background: #15191b;
+    box-shadow:
+      inset 0 1px 1px rgba(0, 0, 0, 0.8),
+      0 1px 0 rgba(255, 255, 255, 0.06);
     transition:
-      background-color 120ms,
+      background 120ms,
       box-shadow 120ms;
   }
   .pb.active .pb-bars > span {
-    background: var(--color-engaged);
-    box-shadow: 0 0 5px rgba(57, 228, 107, 0.85);
+    background: linear-gradient(180deg, #8dffb0 0%, #39e46b 45%, #1fae4c 100%);
+    box-shadow:
+      0 0 6px rgba(57, 228, 107, 0.8),
+      0 0 1px #39e46b;
   }
 
+  /* Master lights: square lenses in the same collar as the pushbuttons. */
   .master {
     @apply flex h-12 w-[3.75rem] flex-col items-center justify-center gap-0.5 rounded-[3px] font-sans text-[10px] font-bold leading-tight tracking-[0.06em];
-    border: 1.5px solid #070505;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    border: 1px solid #050505;
+    box-shadow:
+      0 0 0 2px #171a1d,
+      0 0 0 3px rgba(255, 255, 255, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 4px 4px rgba(0, 0, 0, 0.55);
   }
   .master-warn {
-    background: #120c0c;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 50% 40%, #1d1010, #0d0707);
     color: #3a1d1b;
   }
   .master-caut {
-    background: #120f0a;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 50% 40%, #1d170c, #0d0a05);
     color: #3a2c17;
   }
   .master-warn.lit {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 45%),
+      radial-gradient(circle at 50% 40%, #4a1210, #1c0706);
     color: var(--color-warn);
     text-shadow: 0 0 10px rgba(255, 59, 48, 0.9);
   }
@@ -286,21 +332,54 @@
     }
   }
 
-  /* Main instrument panel and the display set into it. */
+  /* Main instrument panel, running on from under the glareshield: the
+     top is shaded where the lip overhangs it. */
   .instrument-panel {
-    @apply mx-2 rounded-b-[10px] bg-panel px-2.5 pb-3 pt-4 sm:mx-[18px] sm:px-[22px] sm:pb-6 sm:pt-[26px];
+    @apply relative rounded-b-[14px] px-3 pb-4 pt-5 sm:px-[26px] sm:pb-7 sm:pt-7;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0, transparent 28px),
+      linear-gradient(180deg, #3e4b55 0%, #37434c 100%);
     box-shadow:
-      inset 0 10px 18px rgba(0, 0, 0, 0.45),
-      0 16px 36px rgba(0, 0, 0, 0.5);
+      inset 1px 0 0 rgba(255, 255, 255, 0.05),
+      inset -1px 0 0 rgba(0, 0, 0, 0.25),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+      0 18px 36px rgba(0, 0, 0, 0.5);
   }
-  .bezel {
-    @apply rounded-lg bg-bezel p-1.5 sm:p-2.5;
+  /* Dzus fastener: a slotted quarter-turn screw at the panel's corners. */
+  .screw {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #a2acb3 0%, #66727b 45%, #2f383f 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 2px 6px rgba(0, 0, 0, 0.5);
+      inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+      0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  .screw::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 4px;
+    height: 2px;
+    border-radius: 1px;
+    background: #20272c;
+    transform: rotate(38deg);
+  }
+  /* The display unit's bezel, held in a mounting frame. */
+  .bezel {
+    @apply rounded-[10px] p-1.5 sm:p-3;
+    background: linear-gradient(180deg, #1e2225 0%, #121416 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.6),
+      0 0 0 3px #2c363e,
+      0 3px 10px 3px rgba(0, 0, 0, 0.45);
   }
   .screen {
     @apply rounded-[3px] bg-screen text-ink;
+    box-shadow: 0 0 0 2px #050607;
     transition:
       background-color 300ms,
       color 300ms;
@@ -308,7 +387,7 @@
 
   /* The recessed strip of EFIS-style filter buttons on the posts pages. */
   .efis {
-    @apply flex flex-wrap items-center gap-2 rounded-md bg-recess px-3 py-2.5;
+    @apply flex flex-wrap items-center gap-3 rounded-md bg-recess px-3.5 py-3;
     box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55);
   }
   .efis .pb {
@@ -323,10 +402,15 @@
    Display contents — these follow the DAY/NGT tokens.
    ============================================================ */
 @layer components {
+  /* MFD menu keys: flat-topped and bevelled, the selected one underlined. */
   .screen-tab {
-    @apply flex min-h-10 flex-[1_1_7rem] items-center justify-center rounded-[2px] px-3 py-2 text-center text-[13px] font-bold uppercase tracking-[0.08em];
-    background: var(--tab);
+    @apply flex min-h-10 flex-[1_1_7rem] items-center justify-center rounded-[3px] px-3 py-2 text-center text-[13px] font-bold uppercase tracking-[0.08em];
+    background: linear-gradient(180deg, var(--tab-on) -60%, var(--tab) 100%);
     color: var(--tab-ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.22),
+      0 0 0 1px var(--btn-edge);
     transition: filter 100ms;
   }
   .screen-tab:hover {
@@ -335,7 +419,10 @@
   .screen-tab.active {
     background: var(--tab-on);
     color: var(--tab-ink-on);
-    box-shadow: inset 0 -3px 0 var(--accent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -3px 0 var(--accent),
+      0 0 0 1px var(--btn-edge);
   }
 
   .card {
@@ -343,18 +430,32 @@
   }
   .card-head {
     @apply rounded-t-[3px] bg-card-head px-3.5 py-2 text-xs font-bold uppercase tracking-[0.14em] text-ink;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 var(--line);
   }
 
+  /* A display softkey: bevelled, and it travels when pressed. */
   .btn {
-    @apply inline-flex items-center gap-2 rounded-[2px] bg-btn px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-btn-hover;
+    @apply inline-flex items-center gap-2 rounded-[3px] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-ink;
+    background: linear-gradient(180deg, var(--btn-hover) 0%, var(--btn) 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 1px 0 var(--btn-edge);
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.18),
+      0 0 0 1px var(--btn-edge),
+      0 2px 2px rgba(0, 0, 0, 0.22);
+    transition:
+      filter 100ms,
+      transform 60ms;
   }
-  :root:not(.dark) .btn {
+  .btn:hover {
+    filter: brightness(1.06);
+  }
+  .btn:active {
+    transform: translateY(1px);
     box-shadow:
-      inset 0 0 0 1px var(--btn-edge),
-      0 1px 0 var(--btn-edge);
+      inset 0 1px 3px rgba(0, 0, 0, 0.3),
+      0 0 0 1px var(--btn-edge);
   }
   .btn-accent {
     @apply text-accent;

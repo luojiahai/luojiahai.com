@@ -287,7 +287,7 @@
           onclick={turnLanguageKnob}
         />
         <nav
-          class="hidden gap-2 self-center lg:flex"
+          class="hidden gap-3 self-center lg:flex"
           aria-label={dictionary.labels.primaryNavigation}
         >
           {@render autopilotButtons(false)}
@@ -318,7 +318,7 @@
         />
       </div>
 
-      <div class="hidden gap-2 lg:flex">
+      <div class="hidden gap-3 lg:flex">
         {#if isError}
           <button
             type="button"
@@ -343,7 +343,7 @@
       </div>
 
       <nav
-        class="recess grid w-full grid-cols-5 gap-1.5 p-2 lg:hidden"
+        class="recess grid w-full grid-cols-5 gap-2.5 p-2.5 lg:hidden"
         aria-label={dictionary.labels.primaryNavigation}
       >
         {@render autopilotButtons(true)}
@@ -352,6 +352,10 @@
 
     <!-- Instrument panel and the display set into it -->
     <div class="instrument-panel">
+      <span class="screw left-2.5 top-2.5 max-sm:hidden" aria-hidden="true"></span>
+      <span class="screw right-2.5 top-2.5 max-sm:hidden" aria-hidden="true"></span>
+      <span class="screw bottom-2.5 left-2.5 max-sm:hidden" aria-hidden="true"></span>
+      <span class="screw bottom-2.5 right-2.5 max-sm:hidden" aria-hidden="true"></span>
       <div class="bezel">
         <div class="screen" bind:this={screenElement}>
           <nav
