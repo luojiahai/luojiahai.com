@@ -700,11 +700,7 @@
     }
     .ecp-row {
       grid-column: 2;
-      justify-self: center;
       align-self: end;
-    }
-    .ecp-row .ecp {
-      flex: none;
     }
   }
 
