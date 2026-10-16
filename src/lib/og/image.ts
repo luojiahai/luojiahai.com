@@ -1,5 +1,5 @@
 import { Resvg } from "@resvg/resvg-js";
-import satori from "satori";
+import satori, { type Font } from "satori";
 import { render } from "svelte/server";
 import { readFileSync } from "node:fs";
 import { icons } from "$lib/icons";
@@ -88,29 +88,36 @@ const fonts = (
   style: "normal" as const,
 }));
 
-const cjkFontCache = new Map<string, ArrayBuffer | null>();
+const cjkFontCache = new Map<string, Font[]>();
 
-async function loadCjkSubset(text: string): Promise<ArrayBuffer | null> {
+async function loadCjkSubset(text: string): Promise<Font[]> {
   const chars = Array.from(new Set(Array.from(text)))
     .filter((char) => char.charCodeAt(0) > 127)
     .sort()
     .join("");
-  if (!chars) return null;
+  if (!chars) return [];
 
   const cached = cjkFontCache.get(chars);
   if (cached !== undefined) return cached;
 
-  let result: ArrayBuffer | null = null;
+  let result: Font[] = [];
   try {
     const css = await fetch(
-      `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&text=${encodeURIComponent(chars)}`,
+      `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&text=${encodeURIComponent(chars)}`,
       { headers: { "User-Agent": "curl/8" } },
     ).then((response) => response.text());
 
-    const url = css.match(/src:\s*url\(([^)]+)\)/)?.[1];
-    if (url) {
-      result = await fetch(url).then((response) => response.arrayBuffer());
-    }
+    const faces = css.matchAll(
+      /font-weight:\s*(400|700);\s*src:\s*url\(([^)]+)\)/g,
+    );
+    result = await Promise.all(
+      Array.from(faces, async ([, weight, url]) => ({
+        name: "Noto Sans SC",
+        data: await fetch(url).then((response) => response.arrayBuffer()),
+        weight: Number(weight) as 400 | 700,
+        style: "normal" as const,
+      })),
+    );
   } catch (error) {
     console.warn("[og] failed to load CJK font subset:", error);
   }
@@ -418,7 +425,7 @@ function cardText(card: OgCard): string {
 }
 
 export async function generateOgImage(card: OgCard): Promise<Buffer> {
-  const cjkFont = await loadCjkSubset(cardText(card));
+  const cjkFonts = await loadCjkSubset(cardText(card));
 
   const tree = h(
     "div",
@@ -442,25 +449,7 @@ export async function generateOgImage(card: OgCard): Promise<Buffer> {
 
   const svg = await satori(tree as never, {
     ...OG_IMAGE_SIZE,
-    fonts: [
-      ...fonts,
-      ...(cjkFont
-        ? [
-            {
-              name: "Noto Sans SC",
-              data: cjkFont,
-              weight: 400 as const,
-              style: "normal" as const,
-            },
-            {
-              name: "Noto Sans SC",
-              data: cjkFont,
-              weight: 700 as const,
-              style: "normal" as const,
-            },
-          ]
-        : []),
-    ],
+    fonts: [...fonts, ...cjkFonts],
   });
 
   return new Resvg(svg, {
