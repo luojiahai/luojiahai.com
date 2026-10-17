@@ -16,7 +16,7 @@ export const defaultLanguage: Language = "en";
 export const languages = Object.keys(dictionaries) as Language[];
 
 export function isLanguage(value: string): value is Language {
-  return value in dictionaries;
+  return Object.hasOwn(dictionaries, value);
 }
 
 /** The language a URL is in, falling back to the default outside /{lang}/. */
