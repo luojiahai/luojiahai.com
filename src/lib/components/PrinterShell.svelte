@@ -216,7 +216,7 @@
 
       <!-- Top part - Brand & Nav -->
       <div
-        class="relative bg-printer-body px-6 pb-5 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
+        class="relative bg-printer-body px-6 pb-4.75 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
       >
         {#snippet powerLamp()}
           <div
