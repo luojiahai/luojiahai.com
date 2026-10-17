@@ -16,6 +16,8 @@
   --color-printer-shell-dark: #262624;
   --color-printer-accent: #c34c1d;
   --color-printer-accent-dark: #e47348;
+  --color-printer-lamp: #2e9d48;
+  --color-printer-lamp-dark: #4cd06a;
   --color-printer-button-dark: #30302e;
   --color-printer-button-active-dark: #3d3d3a;
   --color-printer-paper: #faf9f5;
@@ -536,7 +538,7 @@
    Jet airliner landing on and taking off from the printer's top
    edge (PrinterPlane.svelte). The artwork is an optimized flat
    vector whose fills all ride the tokens below: paper-white body,
-   plastic greys, and the ON light's orange on the tail.
+   plastic greys, and the accent orange on the tail.
    ============================================================ */
 @layer components {
   .plane-lane {
