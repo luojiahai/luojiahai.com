@@ -271,7 +271,7 @@
                 class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
               >
                 <div
-                  class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-accent shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-accent)_50%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-accent-dark"
+                  class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-lamp shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp)_50%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-lamp-dark dark:shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp-dark)_60%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
                   style:animation-delay={indicatorDelay}
                 ></div>
                 <div
