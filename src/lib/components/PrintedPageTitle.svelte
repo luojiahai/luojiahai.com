@@ -18,7 +18,7 @@
     class="pointer-events-none h-4 w-4 shrink-0 text-printer-accent dark:text-printer-accent-dark"
   />
   <h1
-    class="font-sans text-xl font-bold uppercase leading-none tracking-tight text-printer-ink dark:text-printer-ink-dark"
+    class="font-sans text-title font-bold uppercase leading-none text-printer-ink dark:text-printer-ink-dark"
   >
     {@render children()}
   </h1>

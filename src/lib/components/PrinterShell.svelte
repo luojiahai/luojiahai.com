@@ -234,12 +234,12 @@
             </div>
             <div>
               <div
-                class="font-mono text-sm font-semibold uppercase tracking-[0.28em] text-printer-ink dark:text-printer-ink-dark sm:text-[15px]"
+                class="font-mono text-brand font-bold uppercase text-printer-ink dark:text-printer-ink-dark"
               >
                 {dictionary.labels.brandName}
               </div>
               <div
-                class="mt-1 font-mono text-[8px] uppercase tracking-[0.2em] text-printer-ink-light dark:text-printer-ink-dark/40 sm:text-[10px]"
+                class="mt-1 font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
               >
                 {dictionary.labels.brandTagline}
               </div>
@@ -261,7 +261,7 @@
                 ></div>
               </div>
               <span
-                class="font-mono text-[8px] text-printer-ink-light dark:text-printer-ink-dark/40 uppercase tracking-widest leading-none"
+                class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
               >
                 ON
               </span>
@@ -399,12 +399,12 @@
               class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-dark/40"
             >
               <div
-                class="font-mono text-[10px] tracking-widest uppercase order-2 sm:order-1"
+                class="font-mono text-label tracking-label uppercase order-2 sm:order-1"
               >
                 © {currentYear} LUOJIAHAI
               </div>
               <div
-                class="font-mono text-[10px] tracking-widest uppercase flex items-center gap-4 order-1 sm:order-2"
+                class="font-mono text-label tracking-label uppercase flex items-center gap-4 order-1 sm:order-2"
               >
                 {#each footerLinks as { kind, label, align } (kind)}
                   {@const contact = dictionary.contacts.find(

@@ -6,6 +6,6 @@
   let dictionary = $derived(getDictionary(lang));
 </script>
 
-<p class="font-mono text-xs text-printer-ink-light dark:text-printer-ink-dark/40 py-2.5">
+<p class="font-mono text-data text-printer-ink-light dark:text-printer-ink-dark/40 py-2.5">
   {dictionary.labels.empty}
 </p>

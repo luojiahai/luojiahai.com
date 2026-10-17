@@ -74,26 +74,26 @@
       {/each}
     </div>
     <h1
-      class="max-w-[28ch] font-sans text-[2rem] font-bold leading-[1.08] tracking-[-0.025em] text-printer-ink dark:text-printer-ink-dark"
+      class="max-w-[28ch] font-sans text-display font-bold text-printer-ink dark:text-printer-ink-dark"
     >
       {post.title}
     </h1>
     <div class="flex items-center gap-3 mt-2 flex-wrap">
       <span
-        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 tabular-nums"
+        class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 tabular-nums"
       >
         {displayDate(post.date, lang)}
       </span>
       {#if data.translations.length > 0}
         <div class="flex items-center gap-2">
           <span
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
           >
             |
           </span>
           {#each data.translations as translation (translation.lang)}
             <a
-              class="font-mono text-[10px] text-printer-accent dark:text-printer-accent-dark hover:underline"
+              class="font-mono text-label text-printer-accent dark:text-printer-accent-dark hover:underline"
               href={translation.permalink}
             >
               {languageLabels[translation.lang]}
@@ -123,11 +123,11 @@
         {@html data.wechatQrSvg}
       </div>
       <div>
-        <p class="font-mono text-[11px] text-printer-ink dark:text-printer-ink-dark">
+        <p class="font-mono text-data text-printer-ink dark:text-printer-ink-dark">
           WeChat
         </p>
         <p
-          class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5"
+          class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5"
         >
           {dictionary.labels.wechatScanHint}
         </p>
@@ -140,7 +140,7 @@
   <!-- Footer actions -->
   <div class="flex items-center gap-4">
     <span
-      class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 uppercase tracking-wider"
+      class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
     >
       {dictionary.labels.shareTo}
     </span>
