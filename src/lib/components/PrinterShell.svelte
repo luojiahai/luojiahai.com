@@ -216,7 +216,7 @@
 
       <!-- Top part - Brand & Nav -->
       <div
-        class="relative bg-printer-body px-6 pb-5 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
+        class="relative bg-printer-body px-6 pb-4.75 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
       >
         {#snippet powerLamp()}
           <div
@@ -238,7 +238,7 @@
         {/snippet}
 
         <!-- Brand plate -->
-        <div class="relative mb-5.5 flex items-start justify-between sm:mb-8">
+        <div class="relative mb-4.5 flex items-start justify-between sm:mb-8">
           <div class="flex items-center gap-4 sm:gap-5">
             <div class="relative">
               <div
@@ -300,7 +300,7 @@
             class="border-t border-dashed border-black/10 sm:hidden dark:border-white/10"
           ></div>
           <div
-            class="flex shrink-0 items-center justify-between py-1 max-sm:pt-3 sm:justify-end"
+            class="flex shrink-0 items-center justify-between py-1 max-sm:pt-3 max-sm:pb-0 sm:justify-end"
           >
             <div class="flex items-center gap-2 sm:hidden">
               {@render powerLamp()}
