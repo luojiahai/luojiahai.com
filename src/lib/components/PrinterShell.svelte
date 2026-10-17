@@ -2,30 +2,15 @@
   import { afterNavigate, goto } from "$app/navigation";
   import { page } from "$app/state";
   import { onMount } from "svelte";
-  import type { Component, Snippet } from "svelte";
+  import type { Snippet } from "svelte";
   import { getDictionary, type Dictionary, type Language } from "$lib/dictionaries";
-  import { mascot, type Mascot } from "$lib/site-config";
   import type { SocialCardKind } from "$lib/social";
-  import PrinterPlane from "./PrinterPlane.svelte";
-  import PrinterSnail from "./PrinterSnail.svelte";
+  import PrinterRobot from "./PrinterRobot.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
   import LightSwitch from "./LightSwitch.svelte";
 
   type ColorMode = "system" | "light" | "dark";
-
-  /**
-   * Who rides the deck, keyed by the mascot values site-config lists. An
-   * empty deck runs nothing, so adding a mascot means adding a row here —
-   * the Record makes the compiler ask for it.
-   */
-  const deckOccupants: Record<Mascot, Component | null> = {
-    none: null,
-    plane: PrinterPlane,
-    snail: PrinterSnail,
-  };
-
-  const DeckOccupant = deckOccupants[mascot];
 
   let {
     lang,
@@ -207,15 +192,12 @@
 />
 
 <div
-  class="min-h-screen page-grid flex flex-col items-center px-3 pb-14 pt-6 sm:px-5 sm:pb-18 sm:pt-9"
+  class="min-h-screen page-grid flex flex-col items-center px-3 pb-14 pt-8 sm:px-5 sm:pb-18 sm:pt-9"
 >
   <!-- Printer Body -->
   <div class="relative w-full max-w-[56rem]">
-    <!-- Decorative critter/vehicle on the printer's top edge, picked by
-      the mascot flag in src/lib/site-config.ts. -->
-    {#if DeckOccupant}
-      <DeckOccupant />
-    {/if}
+    <!-- Decorative wind-up robot walking the printer's top edge -->
+    <PrinterRobot />
 
     <!-- Unified header housing — wraps both brand and slit areas to share a single shadow -->
     <div

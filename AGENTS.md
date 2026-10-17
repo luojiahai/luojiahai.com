@@ -24,13 +24,11 @@
   Anything with a reader as its audience — prose, a list, a blurb — goes in
   `content/`.
 - `src/lib/site-config.ts`: `SITE_URL`, the one origin every absolute URL
-  (canonical, OG, feed, sitemap, JSON-LD, share links) is built from; and the
-  deck mascots (`none`, `plane`, `snail`) and
-  the `mascot` flag picking which one rides the printer's top edge — an
-  in-code setting, not a visitor preference. A mascot exists in three places
-  that must agree: this list, its styles in `app.css`, and the
-  `deckOccupants` map in `PrinterShell.svelte`. The `src/app.html` pre-paint
-  script only mirrors the `color-mode` values now.
+  (canonical, OG, feed, sitemap, JSON-LD, share links) is built from. Nothing
+  else lives there. The mascot on the printer's top edge is a single
+  always-on component, `PrinterRobot.svelte`, with its styles in the
+  `.robot-*` block in `app.css`. The `src/app.html` pre-paint script only
+  mirrors the `color-mode` values now.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
   categories, projects, use). The types are Velite's own, generated from
   the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
