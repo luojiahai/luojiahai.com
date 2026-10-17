@@ -15,4 +15,4 @@ Outside of programming, I like eating, cooking, and grocery shopping. McDonald's
 
 I'm an aviation enthusiast. I play Microsoft Flight Simulator. I fly the Airbus A320 (A32NX) built by [FlyByWire](https://flybywiresim.com/), practicing realistic piloting: procedures, radio communications, and the aviation knowledge behind them.
 
-You can find me on [X](https://x.com/luojiahai) or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
+You can find me on [X](https://x.com/luojiahai), [Instagram](https://instagram.com/luojiahai), or [GitHub](https://github.com/luojiahai), or email me at [hi@luojiahai.com](mailto:hi@luojiahai.com).
