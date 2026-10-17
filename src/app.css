@@ -535,13 +535,14 @@
 }
 
 /* ============================================================
-   Jet airliner landing on and taking off from the printer's top
-   edge (PrinterPlane.svelte). The artwork is an optimized flat
-   vector whose fills all ride the tokens below: paper-white body,
-   plastic greys, and the accent orange on the tail.
+   Tin-toy wind-up robot on the printer's top edge — plastic
+   shell, dark visor with LED eyes, a slip of thermal paper in
+   its chest slot. Walk, run-down, turn and blink are all driven
+   from JS (PrinterRobot.svelte); this block holds the geometry
+   and the palette.
    ============================================================ */
 @layer components {
-  .plane-lane {
+  .robot-lane {
     position: absolute;
     left: 48px;
     right: 48px;
@@ -550,28 +551,32 @@
     z-index: 40;
     pointer-events: none;
 
-    /* Jet palette (light) — thermal paper + printer plastic. Body white and
-       tail orange ride the app theme; the grey tiers borrow the robo-snail's
-       livery (see the snail block below) so both critters match. */
-    --plane-paper: var(--color-printer-paper);
-    --plane-mid: var(--color-printer-shell);
-    --plane-shade: #c2c0b6;
-    --plane-dark: #73726c;
-    --plane-deep: var(--color-printer-ink);
-    --plane-accent: var(--color-printer-accent);
+    /* Robot palette (light) — printer plastic + thermal paper */
+    --robot-shell: var(--color-printer-shell);
+    --robot-shade: #c2c0b6;
+    --robot-dark: #73726c;
+    --robot-screen: #141413;
+    --robot-paper: var(--color-printer-paper);
+    --robot-line: rgba(20, 20, 19, 0.32);
+    --robot-ink: rgba(20, 20, 19, 0.45);
+    --robot-accent: var(--color-printer-accent);
+    --robot-lamp: var(--color-printer-lamp);
   }
-  :is(.dark) .plane-lane {
-    /* Dark body is deliberately lighter than printer-paper-dark so the
-       plane doesn't vanish against the dark shell */
-    --plane-paper: var(--color-printer-button-dark);
-    --plane-mid: var(--color-printer-button-active-dark);
-    --plane-shade: #5e5d59;
-    --plane-dark: #4d4c48;
-    --plane-deep: #141413;
-    --plane-accent: var(--color-printer-accent-dark);
+  :is(.dark) .robot-lane {
+    --robot-shell: var(--color-printer-button-dark);
+    --robot-shade: #5e5d59;
+    --robot-dark: #6b6a65;
+    --robot-screen: #141413;
+    --robot-paper: #45443f;
+    --robot-line: rgba(250, 249, 245, 0.2);
+    --robot-ink: rgba(250, 249, 245, 0.5);
+    --robot-accent: var(--color-printer-accent-dark);
+    --robot-lamp: var(--color-printer-lamp-dark);
+    --robot-accent-glow: color-mix(in srgb, var(--color-printer-accent-dark) 60%, transparent);
+    --robot-lamp-glow: color-mix(in srgb, var(--color-printer-lamp-dark) 60%, transparent);
   }
   @media (min-width: 640px) {
-    .plane-lane {
+    .robot-lane {
       left: 64px;
       right: 64px;
       top: -27px;
@@ -579,256 +584,78 @@
     }
   }
 
-  /* The flyer — transform + opacity are set each frame from JS */
-  .plane-flyer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 76px;
-    height: 25px;
-    will-change: transform, opacity;
-  }
-  @media (min-width: 640px) {
-    .plane-flyer {
-      width: 88px;
-      height: 29px;
-    }
-  }
-
-  .plane-svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  /* Touchdown dust puff — position + fade are driven from JS */
-  .plane-puff {
-    position: absolute;
-    bottom: 1px;
-    width: 22px;
-    height: 12px;
-    opacity: 0;
-  }
-  .plane-puff circle {
-    fill: var(--plane-shade);
-  }
-
-  /* Artwork fills — five luminance tiers plus the accent */
-  .plane-t1 {
-    fill: var(--plane-paper);
-  }
-  .plane-t2 {
-    fill: var(--plane-mid);
-  }
-  .plane-t3 {
-    fill: var(--plane-shade);
-  }
-  .plane-t4 {
-    fill: var(--plane-dark);
-  }
-  .plane-t5 {
-    fill: var(--plane-deep);
-  }
-  .plane-accent {
-    fill: var(--plane-accent);
-  }
-  .plane-exhaust {
-    stroke: var(--plane-shade);
-    stroke-width: 8;
-    stroke-linecap: round;
-  }
-}
-
-/* ============================================================
-   Crawling robo-snail on the printer's top edge — plastic body,
-   antenna LEDs, and a roll of thermal paper for a shell. Shown
-   when site-config's mascot flag selects "snail".
-   Travel + the head-sweep turn are driven from JS (PrinterSnail.svelte);
-   only the small idle motions (antenna sway, LED pulse) live here.
-   ============================================================ */
-@layer components {
-  .snail-lane {
-    position: absolute;
-    left: 48px;
-    right: 48px;
-    top: -25px;
-    height: 28px;
-    z-index: 40;
-    pointer-events: none;
-
-    /* Robo-snail palette (light) — printer plastic + thermal paper */
-    --snail-body: var(--color-printer-shell);
-    --snail-body-shade: #c2c0b6;
-    --snail-line: rgba(20, 20, 19, 0.42);
-    --snail-roll: var(--color-printer-paper);
-    --snail-roll-edge: rgba(20, 20, 19, 0.28);
-    --snail-roll-print: rgba(20, 20, 19, 0.42);
-    --snail-core: #d1cfc5;
-    --snail-core-hole: #73726c;
-    --snail-led: var(--color-printer-accent);
-    --snail-led-glow: color-mix(in srgb, var(--color-printer-accent) 48%, transparent);
-  }
-  :is(.dark) .snail-lane {
-    --snail-body: var(--color-printer-button-dark);
-    --snail-body-shade: #5e5d59;
-    --snail-line: rgba(0, 0, 0, 0.55);
-    --snail-roll: #30302e;
-    --snail-roll-edge: rgba(250, 249, 245, 0.18);
-    --snail-roll-print: rgba(250, 249, 245, 0.46);
-    --snail-core: #4d4c48;
-    --snail-core-hole: #141413;
-    --snail-led: var(--color-printer-accent-dark);
-    --snail-led-glow: color-mix(in srgb, var(--color-printer-accent-dark) 60%, transparent);
-  }
-  @media (min-width: 640px) {
-    .snail-lane {
-      left: 64px;
-      right: 64px;
-      top: -27px;
-      height: 30px;
-    }
-  }
-
-  /* The traveller — transform is set each frame from JS */
-  .snail-walker {
+  /* The walker — transform is set each frame from JS */
+  .robot-walker {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 46px;
     height: 28px;
-    /* tight contact shadow so it reads as sitting on the printer, no gap */
+    /* tight contact shadow so it reads as standing on the printer, no gap */
     filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
     will-change: transform;
   }
-  :is(.dark) .snail-walker {
+  :is(.dark) .robot-walker {
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
   }
   @media (min-width: 640px) {
-    .snail-walker {
+    .robot-walker {
       width: 50px;
       height: 30px;
     }
   }
 
-  .snail-svg {
+  .robot-svg {
     display: block;
     width: 100%;
     height: 100%;
     overflow: visible;
   }
 
-  /* No outline on the body/head so the head blends into the foot and the
-     snail sits seamlessly against the printer (no border seam). */
-  .snail-foot,
-  .snail-neck {
-    fill: var(--snail-body);
+  .robot-shell {
+    fill: var(--robot-shell);
   }
-  /* Dashed rubber tread along the underside of the foot */
-  .snail-tread {
-    stroke: var(--snail-body-shade);
-    stroke-width: 1.3;
-    stroke-linecap: round;
-    stroke-dasharray: 2.6 2.4;
-    opacity: 0.75;
+  .robot-ear {
+    fill: var(--robot-shade);
   }
-  /* Faint panel seam on the face plate */
-  .snail-seam {
-    stroke: var(--snail-body-shade);
-    stroke-width: 0.9;
-    stroke-linecap: round;
-    opacity: 0.65;
+  .robot-leg,
+  .robot-key-wing {
+    fill: var(--robot-dark);
   }
-
-  /* Shell: thermal paper roll — intentionally static, no animation */
-  .snail-roll {
-    fill: var(--snail-roll);
-    stroke: var(--snail-roll-edge);
+  .robot-key-shaft {
+    fill: none;
+    stroke: var(--robot-dark);
+    stroke-width: 1.6;
+  }
+  .robot-antenna {
+    fill: none;
+    stroke: var(--robot-dark);
     stroke-width: 1;
   }
-  .snail-roll-spiral {
-    stroke: var(--snail-roll-print);
-    stroke-width: 1.4;
-    stroke-linecap: round;
+  .robot-antenna-tip {
+    fill: var(--robot-accent);
   }
-  .snail-roll-core {
-    fill: var(--snail-core);
-    stroke: var(--snail-line);
-    stroke-width: 0.5;
+  .robot-screen,
+  .robot-slot {
+    fill: var(--robot-screen);
   }
-  .snail-roll-hole {
-    fill: var(--snail-core-hole);
+  .robot-paper {
+    fill: var(--robot-paper);
+    stroke: var(--robot-line);
+    stroke-width: 0.4;
   }
-  .snail-roll-tape {
-    fill: var(--snail-led);
-    opacity: 0.85;
+  .robot-print {
+    fill: none;
+    stroke: var(--robot-ink);
+    stroke-width: 0.6;
   }
-  .snail-roll-shine {
-    fill: #faf9f5;
-    opacity: 0.22;
+  .robot-led {
+    fill: var(--robot-lamp);
   }
-  :is(.dark) .snail-roll-shine {
-    opacity: 0.05;
+  :is(.dark) .robot-led {
+    filter: drop-shadow(0 0 1.2px var(--robot-lamp-glow));
   }
-
-  .snail-stalk-line {
-    stroke: var(--snail-body-shade);
-    stroke-width: 1.9;
-    stroke-linecap: round;
-  }
-  /* Antenna LEDs — slow pulse instead of a blink, echoing the ON light */
-  .snail-led {
-    fill: var(--snail-led);
-    animation: snail-led-pulse 3.6s ease-in-out infinite;
-  }
-  .snail-led-front {
-    animation-delay: -0.9s;
-  }
-  :is(.dark) .snail-led {
-    filter: drop-shadow(0 0 3px var(--snail-led-glow));
-  }
-  .snail-led-glint {
-    fill: #faf9f5;
-    opacity: 0.85;
-  }
-
-  /* Gentle antenna sway, composed on top of the JS head transform */
-  .snail-stalk {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-  }
-  .snail-stalk-front {
-    animation: snail-sway 3s ease-in-out infinite;
-  }
-  .snail-stalk-back {
-    animation: snail-sway 3s ease-in-out -1.4s infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .snail-stalk-front,
-    .snail-stalk-back,
-    .snail-led {
-      animation: none !important;
-    }
-  }
-}
-
-@keyframes snail-sway {
-  0%,
-  100% {
-    transform: rotate(-2.5deg);
-  }
-  50% {
-    transform: rotate(2.5deg);
-  }
-}
-
-@keyframes snail-led-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
+  :is(.dark) .robot-antenna-tip {
+    filter: drop-shadow(0 0 1.2px var(--robot-accent-glow));
   }
 }
