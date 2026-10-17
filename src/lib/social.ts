@@ -33,12 +33,6 @@ export interface XStats {
   joined: string;
 }
 
-export interface TelegramStats {
-  handle: string;
-  name: string;
-  bio: string;
-}
-
 export interface InstagramStats {
   handle: string;
   name: string;
@@ -52,7 +46,6 @@ export interface SocialStats {
   fetchedAt: string;
   github: GitHubStats;
   x: XStats;
-  telegram: TelegramStats;
   instagram: InstagramStats;
 }
 
@@ -63,7 +56,6 @@ export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
 export const socialCardIcons: Record<SocialCardKind, IconName> = {
   github: "github",
   x: "x",
-  telegram: "send",
   instagram: "instagram",
   email: "mail",
 };
@@ -75,7 +67,7 @@ export const socialFallback: SocialStats = fallback;
  * and the server keys its edge cache by it, so after a shape change neither
  * the browser nor the edge serves a payload written for the old one.
  */
-export const SOCIAL_STATS_VERSION = 4;
+export const SOCIAL_STATS_VERSION = 5;
 
 /**
  * Whether a payload read back from a cache or the network has the current
@@ -86,7 +78,6 @@ export function isSocialStats(value: unknown): value is SocialStats {
   return (
     typeof stats?.github?.levels === "string" &&
     stats.x != null &&
-    stats.telegram != null &&
     typeof stats.instagram?.posts === "number"
   );
 }

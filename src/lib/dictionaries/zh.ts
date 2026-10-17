@@ -74,9 +74,14 @@ const dictionary: Dictionary = {
   },
   contacts: [
     {
-      label: "X (Twitter)",
+      label: "X",
       link: "https://x.com/luojiahai",
       kind: "x",
+    },
+    {
+      label: "Instagram",
+      link: "https://instagram.com/luojiahai",
+      kind: "instagram",
     },
     {
       label: "GitHub",
@@ -87,16 +92,6 @@ const dictionary: Dictionary = {
       label: "邮箱",
       link: "mailto:hi@luojiahai.com",
       kind: "email",
-    },
-    {
-      label: "Telegram",
-      link: "https://t.me/luojiahai",
-      kind: "telegram",
-    },
-    {
-      label: "Instagram",
-      link: "https://instagram.com/luojiahai",
-      kind: "instagram",
     },
   ],
   social: {
@@ -111,7 +106,6 @@ const dictionary: Dictionary = {
     },
     emailTo: "收件人",
     emailHint: "邮件会直达我的收件箱。",
-    telegramHint: "私信随时开放，欢迎来聊。",
   },
 };
 

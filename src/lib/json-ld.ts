@@ -23,8 +23,8 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
       url: SITE_URL,
       sameAs: [
         "https://x.com/luojiahai",
-        "https://github.com/luojiahai",
         "https://instagram.com/luojiahai",
+        "https://github.com/luojiahai",
       ],
     },
   };

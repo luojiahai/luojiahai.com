@@ -9,9 +9,14 @@ interface Contact {
 
 const contacts: Contact[] = [
   {
-    label: "X (Twitter)",
+    label: "X",
     link: "https://x.com/luojiahai",
     kind: "x",
+  },
+  {
+    label: "Instagram",
+    link: "https://instagram.com/luojiahai",
+    kind: "instagram",
   },
   {
     label: "GitHub",
@@ -22,16 +27,6 @@ const contacts: Contact[] = [
     label: "Email",
     link: "mailto:hi@luojiahai.com",
     kind: "email",
-  },
-  {
-    label: "Telegram",
-    link: "https://t.me/luojiahai",
-    kind: "telegram",
-  },
-  {
-    label: "Instagram",
-    link: "https://instagram.com/luojiahai",
-    kind: "instagram",
   },
 ];
 
@@ -121,7 +116,6 @@ const dictionary = {
     },
     emailTo: "To",
     emailHint: "Mail lands straight in my inbox.",
-    telegramHint: "DMs open, say hi anytime.",
   },
 };
 

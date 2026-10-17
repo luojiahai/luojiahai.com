@@ -6,7 +6,6 @@ import {
   type GitHubStats,
   type InstagramStats,
   type SocialStats,
-  type TelegramStats,
   type XStats,
 } from "$lib/social";
 import { SITE_URL } from "$lib/site-config";
@@ -20,7 +19,6 @@ export const prerender = false;
 
 const GITHUB_HANDLE = "luojiahai";
 const X_HANDLE = "luojiahai";
-const TELEGRAM_HANDLE = "luojiahai";
 const INSTAGRAM_HANDLE = "luojiahai";
 const KV_KEY = "social-stats:v1";
 /** Days of contribution history to expose (18 weeks). */
@@ -157,35 +155,6 @@ async function fetchXProfile(): Promise<XStats> {
   };
 }
 
-function decodeEntities(value: string): string {
-  return value
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&amp;", "&");
-}
-
-/** Telegram has no public profile API; the t.me page exposes the profile
- * name and bio via OpenGraph tags. */
-async function fetchTelegramProfile(): Promise<TelegramStats> {
-  const res = await fetch(`https://t.me/${TELEGRAM_HANDLE}`, {
-    headers: { "User-Agent": USER_AGENT, Accept: "text/html" },
-  });
-  if (!res.ok) throw new Error(`telegram profile ${res.status}`);
-  const html = await res.text();
-  const name = /<meta property="og:title" content="([^"]*)"/.exec(html)?.[1];
-  const bio = /<meta property="og:description" content="([^"]*)"/.exec(
-    html,
-  )?.[1];
-  if (!name) throw new Error("telegram profile shape");
-  return {
-    handle: TELEGRAM_HANDLE,
-    name: decodeEntities(name),
-    bio: bio ? decodeEntities(bio) : "",
-  };
-}
-
 /** Instagram's anonymous web-profile API. It rejects non-browser user
  * agents and blocks some datacenter IPs, so failures are expected and
  * fall back to the last-good snapshot. */
@@ -234,7 +203,7 @@ async function fetchInstagramProfile(): Promise<InstagramStats> {
 
 export const GET: RequestHandler = async ({ url, platform }) => {
   // Keyed by path and shape version only. Were the raw URL the key, every
-  // new query string would miss and fan out to all five upstreams and KV.
+  // new query string would miss and fan out to every upstream and KV.
   const cacheKey = `${url.origin}${url.pathname}?v=${SOCIAL_STATS_VERSION}`;
   const cache = platform?.caches?.default;
   const cached = await cache?.match(cacheKey);
@@ -244,15 +213,13 @@ export const GET: RequestHandler = async ({ url, platform }) => {
   const lastGood = await kv?.get(KV_KEY, "json").catch(() => null);
   const base = isSocialStats(lastGood) ? lastGood : socialFallback;
 
-  const [profile, contributions, x, telegram, instagram] =
-    await Promise.allSettled([
-      fetchGitHubProfile(),
-      fetchGitHubContributions(),
-      fetchXProfile(),
-      fetchTelegramProfile(),
-      fetchInstagramProfile(),
-    ]);
-  const anyFresh = [profile, contributions, x, telegram, instagram].some(
+  const [profile, contributions, x, instagram] = await Promise.allSettled([
+    fetchGitHubProfile(),
+    fetchGitHubContributions(),
+    fetchXProfile(),
+    fetchInstagramProfile(),
+  ]);
+  const anyFresh = [profile, contributions, x, instagram].some(
     (result) => result.status === "fulfilled",
   );
 
@@ -264,7 +231,6 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       ...(contributions.status === "fulfilled" ? contributions.value : {}),
     },
     x: x.status === "fulfilled" ? x.value : base.x,
-    telegram: telegram.status === "fulfilled" ? telegram.value : base.telegram,
     instagram:
       instagram.status === "fulfilled" ? instagram.value : base.instagram,
   };
