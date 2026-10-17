@@ -13,6 +13,6 @@ description: 关于我的东西。
 
 编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我最喜欢的餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
 
-我是航空爱好者。我玩微软飞行模拟器，飞 [FlyByWire](https://flybywiresim.com/) 制作的空客 A320（A32NX），练习真实的驾驶：飞行程序、无线电通话，以及背后的航空知识。
+我是航空爱好者。我玩微软飞行模拟器，飞 [FlyByWire](https://flybywiresim.com/) 制作的空客 A320（A32NX），练习真实的驾驶：飞行程序、手动飞行，以及背后的航空知识。
 
 你可以在 [X](https://x.com/luojiahai)、[Instagram](https://instagram.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。
