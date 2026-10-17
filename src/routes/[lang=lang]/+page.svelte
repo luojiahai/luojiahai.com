@@ -63,7 +63,7 @@
           class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-label tracking-label uppercase text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
         >
           <Icon name={socialCardIcons[contact.kind]} class="h-3 w-3" />
-          {contact.label}
+          <span class="trim-label">{contact.label}</span>
         </SocialHoverCard>
       {/each}
     </div>

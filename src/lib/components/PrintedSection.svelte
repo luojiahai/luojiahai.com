@@ -23,7 +23,7 @@
         {#if labelIcon}
           <Icon name={labelIcon} class="h-2.5 w-2.5 shrink-0" />
         {/if}
-        <span class="inline-flex translate-y-[0.5px] items-center leading-none">
+        <span class="inline-flex translate-y-[0.5px] items-center leading-none trim-engraved">
           {label}
         </span>
       </div>

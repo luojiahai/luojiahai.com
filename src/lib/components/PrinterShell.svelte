@@ -289,7 +289,7 @@
                     : isActive(item.href)) && "active",
                 ]}
               >
-                <span class="leading-none">{item.label}</span>
+                <span class="leading-none trim-label">{item.label}</span>
               </a>
             {/each}
           </nav>

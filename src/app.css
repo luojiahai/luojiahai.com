@@ -36,14 +36,12 @@
   --text-display--letter-spacing: -0.03em;
   --text-title: 20px;
   --text-title--line-height: 1;
-  --text-title--letter-spacing: var(--tracking-tight);
   /* Literal, not --tracking-engraved, so zh keeps the wordmark spaced. */
   --text-brand: 15px;
   --text-brand--line-height: 1.2;
   --text-brand--letter-spacing: 0.24em;
   --text-item: 18px;
   --text-item--line-height: 1.15;
-  --text-item--letter-spacing: var(--tracking-tight);
   --text-subtitle: 15px;
   --text-subtitle--line-height: 1.6;
   --text-meta: 14px;
@@ -65,7 +63,6 @@
   --text-prose-h2--letter-spacing: var(--tracking-tight);
   --text-prose-h3: 18px;
   --text-prose-h3--line-height: 1.3;
-  --text-prose-h3--letter-spacing: var(--tracking-tight);
 }
 
 /* Unlayered, so it beats the @layer theme declarations; @theme cannot hold
@@ -83,13 +80,25 @@
   }
 }
 
-/* CJK glyphs need the extra pixel at label sizes, and letter-spacing breaks
-   them apart instead of reading as engraving. */
+/* CJK glyphs need the extra pixel at label sizes. Wide tracking breaks them
+   apart, but zh pages still set Latin caps (GITHUB, VIEW ALL), so keep a
+   little. Negative tracking makes the full-width glyphs collide. */
 html:lang(zh) {
   --text-label: 12px;
   --text-micro: 10px;
-  --tracking-label: 0;
-  --tracking-engraved: 0;
+  --tracking-label: 0.05em;
+  --tracking-engraved: 0.05em;
+  --tracking-tight: 0;
+  --text-display--letter-spacing: 0;
+}
+
+/* Letter-spacing also trails the last glyph, which pushes centered or padded
+   caps off-center. A negative end margin of the same amount cancels it. */
+@utility trim-label {
+  margin-inline-end: calc(-1 * var(--tracking-label));
+}
+@utility trim-engraved {
+  margin-inline-end: calc(-1 * var(--tracking-engraved));
 }
 
 @layer base {

@@ -159,9 +159,12 @@ as an in-repo backstop.
   `label`, `micro`, `prose`, `prose-h1..3`); each carries its own leading,
   and the `sm` step lives in one media block beside it. No arbitrary
   `text-[Npx]`, `tracking-[…]` or `leading-[…]`. Uppercase labels take
-  `tracking-label` or `tracking-engraved`. Weight is 400 or 700 only: B612
+  `tracking-label` or `tracking-engraved`, plus the matching `trim-*` when
+  the text is centered or sits in a padded chip or button, since tracking
+  trails the last glyph. Negative tracking is for 24px and up only. Weight is 400 or 700 only: B612
   has nothing between, and PingFang does, so a `font-medium` would split en
-  and zh. `html:lang(zh)` bumps label/micro by 1px and zeroes the tracking.
+  and zh. `html:lang(zh)` bumps label/micro by 1px, cuts caps tracking to 0.05em
+  and removes negative tracking, which collides full-width CJK glyphs.
 
 ## Commit & Pull Request Guidelines
 - Commits: clear, imperative messages (e.g., "Update work entries").
