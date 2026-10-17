@@ -102,6 +102,13 @@ html:lang(zh) {
 }
 
 @layer base {
+  /* A layout forced before this sheet loads leaves UA styles behind, and every
+     transition would animate from them once it lands. app.html sets the class
+     and clears it after load. */
+  .preload * {
+    transition: none !important;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;

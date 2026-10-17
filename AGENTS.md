@@ -27,8 +27,11 @@
   (canonical, OG, feed, sitemap, JSON-LD, share links) is built from. Nothing
   else lives there. The mascot on the printer's top edge is a single
   always-on component, `PrinterRobot.svelte`, with its styles in the
-  `.robot-*` block in `app.css`. The `src/app.html` pre-paint script only
-  mirrors the `color-mode` values now.
+  `.robot-*` block in `app.css`. The `src/app.html` pre-paint script mirrors
+  the `color-mode` values and holds a `preload` class on `<html>` until
+  `load`; `app.css` disables transitions under it. Without the class, a
+  layout forced before the stylesheet lands (Web Inspector, a password
+  manager) makes WebKit animate every transition from UA defaults.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
   categories, projects, use). The types are Velite's own, generated from
   the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema

@@ -11,6 +11,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
+        document.documentElement.classList.add("preload");
+        window.addEventListener("load", function () {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              document.documentElement.classList.remove("preload");
+            });
+          });
+        });
         try {
           var stored = localStorage.getItem("color-mode");
           var mode =
