@@ -175,6 +175,7 @@
     align?: "right";
   }[] = [
     { kind: "x", label: "X" },
+    { kind: "instagram", label: "Instagram" },
     { kind: "github", label: "GitHub" },
     { kind: "email", label: "Email", align: "right" },
   ];

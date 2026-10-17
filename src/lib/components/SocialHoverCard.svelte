@@ -90,7 +90,6 @@
   const kindLabels: Record<SocialCardKind, string> = {
     github: "GITHUB",
     x: "X",
-    telegram: "TELEGRAM",
     instagram: "INSTAGRAM",
     email: "MAIL",
   };
@@ -242,35 +241,6 @@
             {@render statCell(dictionary.social.followers, profile.followers)}
             {@render statCell(dictionary.social.following, profile.following)}
             {@render statCell(dictionary.social.posts, profile.posts)}
-          </div>
-        {:else if kind === "telegram"}
-          <div class="flex items-baseline gap-1.5">
-            <span
-              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
-            >
-              {stats.telegram.name}
-            </span>
-            <span
-              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
-            >
-              @{stats.telegram.handle}
-            </span>
-          </div>
-          {#if stats.telegram.bio}
-            <p
-              class="font-sans text-data text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
-            >
-              {stats.telegram.bio}
-            </p>
-          {/if}
-          <div
-            class="flex items-center gap-1.5 font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
-          >
-            <Icon
-              name="send"
-              class="w-2.5 h-2.5 text-printer-accent dark:text-printer-accent-dark"
-            />
-            {dictionary.social.telegramHint}
           </div>
         {:else}
           <!-- Printed envelope slip -->
