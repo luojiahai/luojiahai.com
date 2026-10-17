@@ -32,6 +32,8 @@
   `load`; `app.css` disables transitions under it. Without the class, a
   layout forced before the stylesheet lands (Web Inspector, a password
   manager) makes WebKit animate every transition from UA defaults.
+  It also links the Google Fonts stylesheet, so the font CSS downloads
+  alongside the app stylesheet rather than waiting on a CSS `@import`.
 - `src/lib/content.ts`: typed access to Velite output (posts, pages,
   categories, projects, use). The types are Velite's own, generated from
   the schemas in `velite.config.ts` into `.velite/index.d.ts`, so a schema
