@@ -3,7 +3,12 @@
   import { page } from "$app/state";
   import { onMount } from "svelte";
   import type { Snippet } from "svelte";
-  import { getDictionary, type Dictionary, type Language } from "$lib/dictionaries";
+  import {
+    getDictionary,
+    languageCookie,
+    type Dictionary,
+    type Language,
+  } from "$lib/dictionaries";
   import type { SocialCardKind } from "$lib/social";
   import PrinterRobot from "./PrinterRobot.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
@@ -110,6 +115,8 @@
     if (newLang === displayLang) return;
     const rest = page.url.pathname.split("/").slice(2);
     const newPath = `/${newLang}${rest.length ? `/${rest.join("/")}` : ""}`;
+    const secure = location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${languageCookie}=${newLang}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
     displayLang = newLang;
     pendingNavHref = null;
     clearTimeout(langSwitchTimer);
