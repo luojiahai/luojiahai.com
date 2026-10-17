@@ -32,7 +32,7 @@ const COLORS = {
   paper: "#FAF9F5",
   ink: "#141413",
   inkLight: "#5E5D59",
-  accent: "#D97757",
+  accent: "#C34C1D",
 };
 
 const SANS = '"B612", "Noto Sans SC"';
@@ -155,10 +155,10 @@ function chip(text: string): Node {
         letterSpacing: "0.18em",
         textTransform: "uppercase",
         padding: "5px 10px 4px",
-        border: "1.5px solid rgba(217, 119, 87, 0.4)",
+        border: `1.5px solid ${COLORS.accent}66`,
         borderRadius: "2px",
         color: COLORS.accent,
-        backgroundColor: "rgba(217, 119, 87, 0.06)",
+        backgroundColor: `${COLORS.accent}0F`,
       },
     },
     text,
