@@ -52,7 +52,7 @@
       class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark motion-safe:animate-pulse"
     ></div>
     <span
-      class="font-mono text-[10px] tracking-[0.3em] uppercase text-printer-accent dark:text-printer-accent-dark"
+      class="font-mono text-label tracking-engraved trim-engraved uppercase text-printer-accent dark:text-printer-accent-dark"
     >
       {dictionary.labels.notFoundStatus}
     </span>
@@ -177,14 +177,14 @@
 
   <!-- Main heading -->
   <h1
-    class="font-sans text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
+    class="font-sans text-title tracking-engraved trim-engraved font-bold uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
   >
     {dictionary.labels.notFoundTitle}
   </h1>
 
   <!-- Sub text -->
   <p
-    class="font-mono text-[11px] sm:text-xs tracking-wide text-printer-ink-light dark:text-printer-ink-dark/40 text-center max-w-xs mb-8 leading-relaxed"
+    class="font-mono text-data text-printer-ink-light dark:text-printer-ink-dark/40 text-center max-w-xs mb-8"
   >
     {dictionary.labels.notFoundSubtitle}
   </p>
@@ -195,13 +195,13 @@
   ></div>
 
   <!-- Print home button -->
-  <a href="/{lang}" class="printer-btn px-6 h-9 text-[11px] tracking-[0.2em]">
-    {dictionary.labels.notFoundButton}
+  <a href="/{lang}" class="printer-btn px-6 h-9">
+    <span class="trim-label">{dictionary.labels.notFoundButton}</span>
   </a>
 
   <!-- Error code -->
   <div
-    class="mt-10 font-mono text-[8px] tracking-[0.4em] uppercase text-printer-ink/20 dark:text-printer-ink-dark/15"
+    class="mt-10 font-mono text-micro uppercase text-printer-ink/20 dark:text-printer-ink-dark/15"
   >
     {dictionary.labels.notFoundError}
   </div>

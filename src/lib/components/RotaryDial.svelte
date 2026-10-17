@@ -76,7 +76,7 @@
     <div
       class={[
         "absolute pointer-events-none select-none transition-opacity duration-200",
-        "font-mono text-[8px] uppercase tracking-widest leading-none",
+        "font-mono text-micro uppercase leading-none",
         i === currentIndex
           ? "text-printer-accent dark:text-printer-accent-dark opacity-100"
           : "text-printer-ink-light dark:text-printer-ink-dark/40 opacity-60",

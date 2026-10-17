@@ -105,12 +105,12 @@
 {#snippet statCell(label: string, value: number)}
   <div>
     <div
-      class="font-mono text-sm font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
+      class="font-mono text-meta font-bold text-printer-ink dark:text-printer-ink-dark leading-tight"
     >
       {formatCount(value)}
     </div>
     <div
-      class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
+      class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
     >
       {label}
     </div>
@@ -160,13 +160,13 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
-            class="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
+            class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
             {kindLabels[kind]}
           </span>
           <span
-            class="font-mono text-[10px] tracking-widest text-printer-ink-light dark:text-printer-ink-dark/40"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
           >
             {kind === "email" ? postmark : `@${stats[kind].handle}`}
           </span>
@@ -175,12 +175,12 @@
         {#if kind === "github"}
           <div class="flex items-baseline gap-1.5 mb-2">
             <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
+              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
             >
               {stats.github.name}
             </span>
             <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
             >
               @{stats.github.handle}
             </span>
@@ -208,7 +208,7 @@
             {/each}
           </div>
           <div
-            class="font-mono text-[8px] tracking-wider uppercase text-printer-ink-light dark:text-printer-ink-dark/40 mt-1.5"
+            class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40 mt-1.5"
           >
             {dictionary.social.recentActivity}
           </div>
@@ -216,12 +216,12 @@
           {@const profile = stats[kind]}
           <div class="flex items-baseline gap-1.5">
             <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
+              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
             >
               {profile.name}
             </span>
             <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
             >
               {kind === "x"
                 ? dictionary.social.since(stats.x.joined)
@@ -230,7 +230,7 @@
           </div>
           {#if profile.bio}
             <p
-              class="font-sans text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
+              class="font-sans text-data text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
             >
               {profile.bio}
             </p>
@@ -246,25 +246,25 @@
         {:else if kind === "telegram"}
           <div class="flex items-baseline gap-1.5">
             <span
-              class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark"
+              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
             >
               {stats.telegram.name}
             </span>
             <span
-              class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
             >
               @{stats.telegram.handle}
             </span>
           </div>
           {#if stats.telegram.bio}
             <p
-              class="font-sans text-[11px] text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
+              class="font-sans text-data text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2 break-all"
             >
               {stats.telegram.bio}
             </p>
           {/if}
           <div
-            class="flex items-center gap-1.5 font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class="flex items-center gap-1.5 font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
             <Icon
               name="send"
@@ -277,17 +277,17 @@
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0 pt-1">
               <div
-                class="font-mono text-[8px] tracking-[0.25em] uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
+                class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
               >
                 {dictionary.social.emailTo}
               </div>
               <div
-                class="font-mono text-xs font-bold text-printer-ink dark:text-printer-ink-dark mt-0.5 truncate"
+                class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark mt-0.5 truncate"
               >
                 {dictionary.meta.name}
               </div>
               <div
-                class="font-mono text-[10px] text-printer-ink/70 dark:text-printer-ink-dark/60 truncate"
+                class="font-mono text-label text-printer-ink/70 dark:text-printer-ink-dark/60 truncate"
               >
                 {href.replace("mailto:", "")}
               </div>
@@ -301,14 +301,14 @@
                 class="w-3.5 h-3.5 text-printer-accent dark:text-printer-accent-dark"
               />
               <span
-                class="font-mono text-[7px] tracking-widest uppercase text-printer-accent dark:text-printer-accent-dark"
+                class="font-mono text-micro uppercase text-printer-accent dark:text-printer-accent-dark"
               >
                 HELLO
               </span>
             </div>
           </div>
           <div
-            class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
             {dictionary.social.emailHint}
           </div>

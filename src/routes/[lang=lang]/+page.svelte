@@ -40,12 +40,12 @@
   <!-- Profile masthead -->
   <PrintedSection>
     <h1
-      class="max-w-[11ch] font-sans text-[2rem] font-bold leading-[0.96] tracking-[-0.04em] text-printer-ink dark:text-printer-ink-dark"
+      class="max-w-[11ch] font-sans text-display font-bold text-printer-ink dark:text-printer-ink-dark"
     >
       {dictionary.meta.name}
     </h1>
     <p
-      class="mt-3 max-w-[42ch] font-sans text-base italic leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60 sm:text-lg"
+      class="mt-3 max-w-[42ch] font-sans text-subtitle italic text-printer-ink-light dark:text-printer-ink-dark/60"
     >
       {dictionary.meta.motto}
     </p>
@@ -60,10 +60,10 @@
           {dictionary}
           align="left"
           side="bottom"
-          class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
+          class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-label tracking-label uppercase text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-dark/50 dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
         >
           <Icon name={socialCardIcons[contact.kind]} class="h-3 w-3" />
-          {contact.label}
+          <span class="trim-label">{contact.label}</span>
         </SocialHoverCard>
       {/each}
     </div>
@@ -76,7 +76,7 @@
     <ProjectList projects={data.projects} />
     <a
       href={dictionary.urls.projects}
-      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-data text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
       VIEW ALL →
     </a>
@@ -89,7 +89,7 @@
     <PostList posts={data.latestPosts} {lang} compact />
     <a
       href={dictionary.urls.posts}
-      class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] tracking-wider text-printer-accent hover:underline dark:text-printer-accent-dark"
+      class="mt-3 inline-flex items-center gap-1 font-mono text-data text-printer-accent hover:underline dark:text-printer-accent-dark"
     >
       VIEW ALL →
     </a>
@@ -101,7 +101,7 @@
   >
     <div class="flex items-center justify-between">
       <div
-        class="font-mono text-[10px] text-printer-ink-light dark:text-printer-ink-dark/30 tracking-wider uppercase"
+        class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-dark/30"
       >
         {dictionary.labels.printedOn}
         {printedOn}

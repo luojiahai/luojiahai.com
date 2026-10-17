@@ -18,12 +18,12 @@
   {#if label}
     <div class="mb-3 flex items-center gap-2">
       <div
-        class="inline-flex items-center gap-1.5 bg-printer-ink/5 px-2 py-[3px] align-middle font-mono text-[10px] uppercase leading-none tracking-[0.3em] text-printer-ink-light dark:bg-printer-ink-dark/5 dark:text-printer-ink-dark/50"
+        class="inline-flex items-center gap-1.5 bg-printer-ink/5 px-2 py-[3px] align-middle font-mono text-label tracking-engraved uppercase leading-none text-printer-ink-light dark:bg-printer-ink-dark/5 dark:text-printer-ink-dark/50"
       >
         {#if labelIcon}
           <Icon name={labelIcon} class="h-2.5 w-2.5 shrink-0" />
         {/if}
-        <span class="inline-flex translate-y-[0.5px] items-center leading-none">
+        <span class="inline-flex translate-y-[0.5px] items-center leading-none trim-engraved">
           {label}
         </span>
       </div>

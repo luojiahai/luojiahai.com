@@ -25,14 +25,14 @@
 
 <span
   class={[
-    "inline-flex items-center gap-1 leading-none font-mono text-[10px] tracking-widest uppercase px-2 py-[3px] rounded-sm border",
+    "inline-flex items-center gap-1 leading-none font-mono text-label tracking-label uppercase px-2 py-[3px] rounded-sm border",
     variantClasses[variant],
   ]}
 >
   {#if icon}
     <Icon name={icon} class="w-2.5 h-2.5 shrink-0" />
   {/if}
-  <span class="inline-flex items-center leading-none translate-y-[0.5px]">
+  <span class="inline-flex items-center leading-none translate-y-[0.5px] trim-label">
     {@render children()}
   </span>
 </span>

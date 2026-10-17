@@ -27,20 +27,20 @@
         >
           <div class="grid gap-1 sm:grid-cols-[7.5rem_1fr] sm:gap-5">
             <div
-              class="font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-printer-ink-light tabular-nums dark:text-printer-ink-dark/55 sm:pt-1"
+              class="font-mono text-label tracking-label uppercase text-printer-ink-light tabular-nums dark:text-printer-ink-dark/55 sm:pt-1"
             >
               {displayDate(post.date, lang)}
             </div>
             <div>
               <h3
-                class="font-sans text-lg font-medium leading-[1.15] tracking-[-0.015em] text-printer-ink transition-colors group-hover:text-printer-accent group-focus-visible:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark sm:text-xl"
+                class="font-sans text-item text-printer-ink transition-colors group-hover:text-printer-accent group-focus-visible:text-printer-accent dark:text-printer-ink-dark dark:group-hover:text-printer-accent-dark dark:group-focus-visible:text-printer-accent-dark"
               >
                 {post.title}
               </h3>
               {#if post.description}
                 <p
                   class={[
-                    "mt-1 max-w-[62ch] font-sans text-[13px] leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/60",
+                    "mt-1 max-w-[62ch] font-sans text-meta text-printer-ink-light dark:text-printer-ink-dark/60",
                     compact ? "line-clamp-1" : "line-clamp-2",
                   ]}
                 >

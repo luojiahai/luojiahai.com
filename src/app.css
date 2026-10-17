@@ -26,6 +26,79 @@
   --color-printer-ink-dark: #faf9f5;
   --color-printer-ink-light: #5e5d59;
   --color-printer-tape: #f0eee6;
+
+  --tracking-label: 0.14em;
+  --tracking-engraved: 0.24em;
+  --tracking-tight: -0.02em;
+
+  --text-display: 32px;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+  --text-title: 20px;
+  --text-title--line-height: 1;
+  /* Literal, not --tracking-engraved, so zh keeps the wordmark spaced. */
+  --text-brand: 15px;
+  --text-brand--line-height: 1.2;
+  --text-brand--letter-spacing: 0.24em;
+  --text-item: 18px;
+  --text-item--line-height: 1.15;
+  --text-subtitle: 15px;
+  --text-subtitle--line-height: 1.6;
+  --text-meta: 14px;
+  --text-meta--line-height: 1.6;
+  --text-data: 12px;
+  --text-data--line-height: 1.5;
+  --text-label: 11px;
+  --text-label--line-height: 1.2;
+  --text-micro: 9px;
+  --text-micro--line-height: 1;
+  --text-micro--letter-spacing: var(--tracking-engraved);
+  --text-prose: 17px;
+  --text-prose--line-height: 1.75;
+  --text-prose-h1: 24px;
+  --text-prose-h1--line-height: 1.25;
+  --text-prose-h1--letter-spacing: var(--tracking-tight);
+  --text-prose-h2: 20px;
+  --text-prose-h2--line-height: 1.25;
+  --text-prose-h2--letter-spacing: var(--tracking-tight);
+  --text-prose-h3: 18px;
+  --text-prose-h3--line-height: 1.3;
+}
+
+/* Unlayered, so it beats the @layer theme declarations; @theme cannot hold
+   media queries or selectors. */
+@media (width >= 40rem) {
+  :root {
+    --text-display: 36px;
+    --text-title: 22px;
+    --text-item: 20px;
+    --text-subtitle: 16px;
+    --text-prose: 18px;
+    --text-prose-h1: 30px;
+    --text-prose-h2: 24px;
+    --text-prose-h3: 20px;
+  }
+}
+
+/* CJK glyphs need the extra pixel at label sizes. Wide tracking breaks them
+   apart, but zh pages still set Latin caps (GITHUB, VIEW ALL), so keep a
+   little. Negative tracking makes the full-width glyphs collide. */
+html:lang(zh) {
+  --text-label: 12px;
+  --text-micro: 10px;
+  --tracking-label: 0.05em;
+  --tracking-engraved: 0.05em;
+  --tracking-tight: 0;
+  --text-display--letter-spacing: 0;
+}
+
+/* Letter-spacing also trails the last glyph, which pushes centered or padded
+   caps off-center. A negative end margin of the same amount cancels it. */
+@utility trim-label {
+  margin-inline-end: calc(-1 * var(--tracking-label));
+}
+@utility trim-engraved {
+  margin-inline-end: calc(-1 * var(--tracking-engraved));
 }
 
 @layer base {
@@ -117,7 +190,7 @@
   }
 
   .skip-link {
-    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-[11px] font-medium tracking-wider text-printer-paper transition-transform duration-200;
+    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-label tracking-label text-printer-paper transition-transform duration-200;
   }
   .skip-link:focus {
     @apply translate-y-0;
@@ -347,7 +420,7 @@
 
   /* Printer button style */
   .printer-btn {
-    @apply relative px-4 h-9 rounded-md font-mono text-[10px] sm:text-[11px] tracking-widest uppercase;
+    @apply relative px-4 h-9 rounded-md font-mono text-label tracking-label uppercase;
     @apply bg-printer-shell dark:bg-printer-shell-dark;
     @apply border border-printer-ink/10 dark:border-white/[0.08];
     @apply text-printer-ink dark:text-printer-ink-dark;
@@ -418,7 +491,7 @@
   }
   @media (max-width: 639px) {
     .printer-btn {
-      @apply h-[30px] px-2.5 tracking-wider;
+      @apply h-[30px] px-2.5;
     }
   }
 
@@ -463,7 +536,7 @@
   }
 
   .section-action {
-    @apply inline-flex items-center gap-2 font-mono text-[10px] font-medium tracking-[0.16em] text-printer-accent transition-[gap,color] duration-200 dark:text-printer-accent-dark;
+    @apply inline-flex items-center gap-2 font-mono text-label tracking-label text-printer-accent transition-[gap,color] duration-200 dark:text-printer-accent-dark;
   }
   .section-action:hover,
   .section-action:focus-visible {
@@ -471,7 +544,7 @@
   }
 
   .page-subtitle {
-    @apply max-w-[52ch] font-sans text-sm leading-relaxed text-printer-ink-light dark:text-printer-ink-dark/65 sm:text-base;
+    @apply max-w-[52ch] font-sans text-subtitle text-printer-ink-light dark:text-printer-ink-dark/65;
   }
 
   .printer-shell-bottom-shadow {
