@@ -192,7 +192,7 @@
 />
 
 <div
-  class="min-h-screen page-grid flex flex-col items-center px-3 pb-14 pt-8 sm:px-5 sm:pb-18 sm:pt-9"
+  class="min-h-screen page-grid flex flex-col items-center px-3 pb-14 pt-9 sm:px-5 sm:pb-18"
 >
   <!-- Printer Body -->
   <div class="relative w-full max-w-[56rem]">
