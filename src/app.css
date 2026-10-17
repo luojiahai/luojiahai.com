@@ -546,8 +546,8 @@
     position: absolute;
     left: 48px;
     right: 48px;
-    top: -25px;
-    height: 28px;
+    top: -27px;
+    height: 30px;
     z-index: 40;
     pointer-events: none;
 
@@ -579,8 +579,6 @@
     .robot-lane {
       left: 64px;
       right: 64px;
-      top: -27px;
-      height: 30px;
     }
   }
 
@@ -589,20 +587,14 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 46px;
-    height: 28px;
+    width: 50px;
+    height: 30px;
     /* tight contact shadow so it reads as standing on the printer, no gap */
     filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.16));
     will-change: transform;
   }
   :is(.dark) .robot-walker {
     filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
-  }
-  @media (min-width: 640px) {
-    .robot-walker {
-      width: 50px;
-      height: 30px;
-    }
   }
 
   .robot-svg {
