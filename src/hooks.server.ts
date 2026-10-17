@@ -1,5 +1,11 @@
-import { redirect, type Handle } from "@sveltejs/kit";
-import { defaultLanguage, isLanguage, languages } from "$lib/dictionaries";
+import type { Handle } from "@sveltejs/kit";
+import {
+  defaultLanguage,
+  isLanguage,
+  languageCookie,
+  languages,
+  type Language,
+} from "$lib/dictionaries";
 
 /** Paths that live outside the /{lang}/ namespace. */
 const NON_LOCALIZED_PREFIXES = [
@@ -11,7 +17,11 @@ const NON_LOCALIZED_PREFIXES = [
   "/_app",
 ];
 
-function preferredLanguage(acceptLanguage: string | null): string {
+function preferredLanguage(
+  cookie: string | undefined,
+  acceptLanguage: string | null,
+): Language {
+  if (cookie !== undefined && isLanguage(cookie)) return cookie;
   if (!acceptLanguage) return defaultLanguage;
 
   const ranked = acceptLanguage
@@ -47,8 +57,18 @@ export const handle: Handle = async ({ event, resolve }) => {
     ) || /\.[a-zA-Z0-9]+$/.test(pathname);
 
   if (!isLocalized && !isExcluded) {
-    const lang = preferredLanguage(event.request.headers.get("accept-language"));
-    redirect(302, `/${lang}${pathname === "/" ? "" : pathname}`);
+    const lang = preferredLanguage(
+      event.cookies.get(languageCookie),
+      event.request.headers.get("accept-language"),
+    );
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: `/${lang}${pathname === "/" ? "" : pathname}`,
+        "Cache-Control": "private, no-store",
+        Vary: "Accept-Language, Cookie",
+      },
+    });
   }
 
   return resolve(event, {

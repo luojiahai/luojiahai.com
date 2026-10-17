@@ -94,9 +94,12 @@ as an in-repo backstop.
 
 ## Architecture Notes
 - The whole site is prerendered (`prerender = true` in the root layout). The
-  worker only handles the `Accept-Language` locale redirect
-  (`src/hooks.server.ts`), the extensionless `/feed*` routes, and
-  `/api/social`, all cached at the edge with the Cloudflare Cache API.
+  worker only handles the locale redirect (`src/hooks.server.ts`), the
+  extensionless `/feed*` routes, and `/api/social`. The redirect picks the
+  `lang` cookie, written only by the language dial, then `Accept-Language`,
+  then `en`, and is uncacheable (`private, no-store`, `Vary:
+  Accept-Language, Cookie`). The other two are cached at the edge with the
+  Cloudflare Cache API.
 - `/api/social` serves live GitHub/X profile stats for the social hover
   cards (`src/lib/components/SocialHoverCard.svelte`). It layers caches:
   edge Cache API → `SOCIAL_CACHE` KV last-good snapshot (binding in

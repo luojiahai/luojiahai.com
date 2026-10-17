@@ -15,6 +15,8 @@ export type Language = keyof typeof dictionaries;
 export const defaultLanguage: Language = "en";
 export const languages = Object.keys(dictionaries) as Language[];
 
+export const languageCookie = "lang";
+
 export function isLanguage(value: string): value is Language {
   return Object.hasOwn(dictionaries, value);
 }
