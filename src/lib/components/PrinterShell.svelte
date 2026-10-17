@@ -218,8 +218,27 @@
       <div
         class="relative bg-printer-body px-6 pb-5 pt-6 dark:bg-printer-body-dark sm:px-10 sm:pb-6 sm:pt-8"
       >
+        {#snippet powerLamp()}
+          <div
+            class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
+          >
+            <div
+              class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-lamp shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp)_50%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-lamp-dark dark:shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp-dark)_60%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
+              style:animation-delay={indicatorDelay}
+            ></div>
+            <div
+              class="absolute inset-0 rounded-full border border-black/10 dark:border-white/5 shadow-inner pointer-events-none"
+            ></div>
+          </div>
+          <span
+            class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
+          >
+            ON
+          </span>
+        {/snippet}
+
         <!-- Brand plate -->
-        <div class="relative mb-7 flex items-start justify-between sm:mb-8">
+        <div class="relative mb-5.5 flex items-start justify-between sm:mb-8">
           <div class="flex items-center gap-4 sm:gap-5">
             <div class="relative">
               <div
@@ -247,26 +266,8 @@
             </div>
           </div>
 
-          <!-- Instrument cluster: the power lamp -->
-          <div class="flex items-center gap-5 sm:gap-6">
-            <div class="flex flex-col items-center gap-1.5">
-              <div
-                class="relative w-3.5 h-3.5 rounded-full bg-black/10 dark:bg-black/40 flex items-center justify-center"
-              >
-                <div
-                  class="h-2.5 w-2.5 motion-safe:animate-[pulse_2.4s_infinite] rounded-full bg-printer-lamp shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp)_50%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)] dark:bg-printer-lamp-dark dark:shadow-[0_0_8px_color-mix(in_srgb,var(--color-printer-lamp-dark)_60%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.28)]"
-                  style:animation-delay={indicatorDelay}
-                ></div>
-                <div
-                  class="absolute inset-0 rounded-full border border-black/10 dark:border-white/5 shadow-inner pointer-events-none"
-                ></div>
-              </div>
-              <span
-                class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
-              >
-                ON
-              </span>
-            </div>
+          <div class="hidden flex-col items-center gap-1.5 sm:flex">
+            {@render powerLamp()}
           </div>
         </div>
 
@@ -275,16 +276,17 @@
           class="relative mt-2 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center"
         >
           <nav
-            class="relative flex w-full flex-1 flex-wrap items-center gap-2 py-1.5 sm:gap-2.5"
+            class="relative grid w-full flex-1 grid-cols-6 gap-1.5 py-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5"
             aria-label={dictionary.labels.primaryNavigation}
           >
-            {#each navItems as item (item.href)}
+            {#each navItems as item, i (item.href)}
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
                 onclick={(event) => onNavPress(event, item.href)}
                 class={[
-                  "printer-btn whitespace-nowrap",
+                  "printer-btn whitespace-nowrap max-sm:px-1",
+                  i < 3 ? "col-span-2" : "col-span-3",
                   (pendingNavHref
                     ? pendingNavHref === item.href
                     : isActive(item.href)) && "active",
@@ -294,32 +296,53 @@
               </a>
             {/each}
           </nav>
-          <div class="sm:hidden h-[1px] bg-black/10 dark:bg-white/10"></div>
-          <div class="flex shrink-0 items-center justify-end gap-5 py-1">
-            <RotaryDial
-              options={[
-                { value: "en", label: "EN" },
-                { value: "zh", label: "中" },
-              ]}
-              value={displayLang}
-              onchange={switchToLanguage}
-              title={displayDictionary.labels.switchLanguage}
-            />
-            <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
-            <div class="lg:hidden">
-              <RotaryDial
-                options={[
-                  { value: "system", icon: "computer" },
-                  { value: "light", icon: "sun" },
-                  { value: "dark", icon: "moon" },
-                ]}
-                value={colorMode}
-                onchange={(mode) => setColorMode(mode as ColorMode)}
-                labelLayout="inline"
-                title={dictionary.labels.colorMode(
-                  dictionary.labels.colorModes[colorMode],
-                )}
-              />
+          <div
+            class="border-t border-dashed border-black/10 sm:hidden dark:border-white/10"
+          ></div>
+          <div
+            class="flex shrink-0 items-center justify-between py-1 max-sm:pt-3 sm:justify-end"
+          >
+            <div class="flex items-center gap-2 sm:hidden">
+              {@render powerLamp()}
+            </div>
+            <div class="flex items-center gap-5">
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                >
+                  {displayDictionary.labels.languageDial}
+                </span>
+                <RotaryDial
+                  options={[
+                    { value: "en", label: "EN" },
+                    { value: "zh", label: "中" },
+                  ]}
+                  value={displayLang}
+                  onchange={switchToLanguage}
+                  title={displayDictionary.labels.switchLanguage}
+                />
+              </div>
+              <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
+              <div class="flex items-center gap-2 lg:hidden">
+                <span
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                >
+                  {displayDictionary.labels.colorModeDial}
+                </span>
+                <RotaryDial
+                  options={[
+                    { value: "system", icon: "computer" },
+                    { value: "light", icon: "sun" },
+                    { value: "dark", icon: "moon" },
+                  ]}
+                  value={colorMode}
+                  onchange={(mode) => setColorMode(mode as ColorMode)}
+                  labelLayout="inline"
+                  title={dictionary.labels.colorMode(
+                    dictionary.labels.colorModes[colorMode],
+                  )}
+                />
+              </div>
             </div>
           </div>
         </div>

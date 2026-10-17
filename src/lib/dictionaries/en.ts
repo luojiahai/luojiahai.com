@@ -93,6 +93,8 @@ const dictionary = {
     primaryNavigation: "Primary navigation",
     // Offered to a reader of the other language, so it is written in theirs.
     switchLanguage: "切换到中文",
+    languageDial: "Lang",
+    colorModeDial: "Mode",
     colorModes: { system: "System", light: "Light", dark: "Dark" },
     colorMode(mode: string) {
       return `Color mode: ${mode}`;
