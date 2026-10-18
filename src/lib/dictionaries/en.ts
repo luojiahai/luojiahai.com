@@ -95,6 +95,7 @@ const dictionary = {
     switchLanguage: "切换到中文",
     languageDial: "Lang",
     colorModeDial: "Mode",
+    powerLamp: "Power",
     colorModes: { system: "System", light: "Light", dark: "Dark" },
     colorMode(mode: string) {
       return `Color mode: ${mode}`;

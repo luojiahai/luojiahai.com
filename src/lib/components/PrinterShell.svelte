@@ -240,7 +240,7 @@
           <span
             class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
           >
-            ON
+            {displayDictionary.labels.powerLamp}
           </span>
         {/snippet}
 
@@ -273,7 +273,7 @@
             </div>
           </div>
 
-          <div class="hidden flex-col items-center gap-1.5 sm:flex">
+          <div class="hidden items-center gap-2 self-center sm:flex">
             {@render powerLamp()}
           </div>
         </div>
