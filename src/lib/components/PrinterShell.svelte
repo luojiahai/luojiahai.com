@@ -73,7 +73,7 @@
     document.documentElement.classList.toggle("dark", dark);
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", dark ? "#141413" : "#d1cfc5");
+      ?.setAttribute("content", dark ? "#111111" : "#d2d1c7");
   }
 
   onMount(() => {
@@ -238,7 +238,7 @@
             ></div>
           </div>
           <span
-            class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
+            class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none"
           >
             {displayDictionary.labels.powerLamp}
           </span>
@@ -252,7 +252,7 @@
                 class="absolute -inset-2 rounded-full bg-black/5 dark:bg-white/[0.08] shadow-inner"
               ></div>
               <img
-                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_rgba(223,128,99,0.08)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
+                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_color-mix(in_srgb,var(--color-printer-accent-dark)_8%,transparent)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
                 src="/static/avatar.webp"
                 alt={dictionary.meta.name}
                 width="40"
@@ -266,7 +266,7 @@
                 {dictionary.labels.brandName}
               </div>
               <div
-                class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-dark/40"
+                class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-light-dark"
               >
                 {dictionary.labels.brandTagline}
               </div>
@@ -304,7 +304,7 @@
             {/each}
           </nav>
           <div
-            class="border-t border-dashed border-black/10 sm:hidden dark:border-white/10"
+            class="border-t border-dashed border-printer-ink/10 sm:hidden dark:border-printer-ink-dark/10"
           ></div>
           <div
             class="flex shrink-0 items-center justify-between py-1 max-sm:pt-3 max-sm:pb-0 sm:justify-end"
@@ -315,7 +315,7 @@
             <div class="flex items-center gap-5">
               <div class="flex items-center gap-2">
                 <span
-                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.languageDial}
                 </span>
@@ -332,7 +332,7 @@
               <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
               <div class="flex items-center gap-2 lg:hidden">
                 <span
-                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.colorModeDial}
                 </span>
@@ -389,7 +389,7 @@
       <div class="paper-top-occlusion" aria-hidden="true"></div>
       <div bind:this={paperElement}>
         <div
-          class="printer-paper-area thermal-texture relative z-0 flex min-h-[62vh] flex-col overflow-hidden bg-printer-paper shadow-[0_18px_36px_rgba(75,57,43,0.14),0_3px_8px_rgba(75,57,43,0.12)] dark:border dark:border-white/[0.04] dark:bg-printer-paper-dark dark:shadow-[0_20px_42px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.34)]"
+          class="printer-paper-area thermal-texture relative z-0 flex min-h-[62vh] flex-col overflow-hidden bg-printer-paper shadow-[0_18px_36px_rgba(69,68,66,0.14),0_3px_8px_rgba(69,68,66,0.12)] dark:border dark:border-white/[0.04] dark:bg-printer-paper-dark dark:shadow-[0_20px_42px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.34)]"
         >
           <div
             class="paper-edge-top absolute -top-1 left-0 right-0 h-1 bg-printer-paper dark:bg-printer-paper-dark"
@@ -427,7 +427,7 @@
             class="relative z-10 mt-2 border-t border-dashed border-printer-ink/10 px-6 py-6 dark:border-printer-ink-dark/10 sm:px-10"
           >
             <div
-              class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               <div
                 class="font-mono text-label tracking-label uppercase order-2 sm:order-1"
@@ -448,7 +448,7 @@
                       {lang}
                       {dictionary}
                       {align}
-                      class="hover:text-printer-accent transition-colors"
+                      class="hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
                     >
                       {label}
                     </SocialHoverCard>

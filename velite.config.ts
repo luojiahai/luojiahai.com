@@ -170,7 +170,18 @@ export default defineConfig({
     clean: true,
   },
   collections: { categories, pages, posts, projects, use },
-  markdown: { rehypePlugins: [rehypePrettyCode, rehypeTableScroll] },
+  markdown: {
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: { light: "github-light", dark: "github-dark" },
+          keepBackground: false,
+        },
+      ],
+      rehypeTableScroll,
+    ],
+  },
   // Without strict, a schema violation is only logged and the document still
   // ships, so every cap above would be advisory.
   strict: true,

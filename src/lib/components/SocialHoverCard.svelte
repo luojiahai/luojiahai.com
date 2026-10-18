@@ -109,7 +109,7 @@
       {formatCount(value)}
     </div>
     <div
-      class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40 leading-tight"
+      class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-light-dark leading-tight"
     >
       {label}
     </div>
@@ -159,13 +159,13 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
-            class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-dark/50"
+            class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
             {kindLabels[kind]}
           </span>
           <span
-            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             {kind === "email" ? postmark : `@${stats[kind].handle}`}
           </span>
@@ -179,7 +179,7 @@
               {stats.github.name}
             </span>
             <span
-              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               @{stats.github.handle}
             </span>
@@ -207,7 +207,7 @@
             {/each}
           </div>
           <div
-            class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40 mt-1.5"
+            class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-light-dark mt-1.5"
           >
             {dictionary.social.recentActivity}
           </div>
@@ -220,7 +220,7 @@
               {profile.name}
             </span>
             <span
-              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               {kind === "x"
                 ? dictionary.social.since(stats.x.joined)
@@ -229,7 +229,7 @@
           </div>
           {#if profile.bio}
             <p
-              class="font-sans text-data text-printer-ink/70 dark:text-printer-ink-dark/60 mt-1 leading-snug line-clamp-2"
+              class="font-sans text-data text-printer-ink-light dark:text-printer-ink-light-dark mt-1 leading-snug line-clamp-2"
             >
               {profile.bio}
             </p>
@@ -247,7 +247,7 @@
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0 pt-1">
               <div
-                class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
+                class="font-mono text-micro uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
               >
                 {dictionary.social.emailTo}
               </div>
@@ -257,7 +257,7 @@
                 {dictionary.meta.name}
               </div>
               <div
-                class="font-mono text-label text-printer-ink/70 dark:text-printer-ink-dark/60 truncate"
+                class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark truncate"
               >
                 {href.replace("mailto:", "")}
               </div>
@@ -278,7 +278,7 @@
             </div>
           </div>
           <div
-            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
           >
             {dictionary.social.emailHint}
           </div>
@@ -288,7 +288,7 @@
       <!-- Pointer notch -->
       <div
         class={[
-          "absolute w-2 h-2 rotate-45 border-printer-ink/15 dark:border-printer-ink-dark/15 bg-printer-paper dark:bg-printer-paper-dark",
+          "absolute w-2 h-2 rotate-45 border-printer-ink/15 dark:border-printer-ink-dark/15 bg-white dark:bg-printer-shell-dark",
           side === "top"
             ? "top-full -mt-[1px] -translate-y-1/2 border-b border-r"
             : "bottom-full -mb-[1px] translate-y-1/2 border-t border-l",

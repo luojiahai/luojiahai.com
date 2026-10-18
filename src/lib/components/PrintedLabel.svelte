@@ -15,11 +15,11 @@
 
   const variantClasses = {
     default:
-      "border-printer-ink/10 dark:border-printer-ink-dark/10 text-printer-ink/70 dark:text-printer-ink-dark/70",
+      "border-printer-ink/10 dark:border-printer-ink-dark/10 text-printer-ink-light dark:text-printer-ink-light-dark",
     accent:
-      "border-printer-accent/30 dark:border-printer-accent-dark/30 text-printer-accent dark:text-printer-accent-dark bg-printer-accent/5",
+      "border-printer-accent/30 dark:border-printer-accent-dark/30 text-printer-accent dark:text-printer-accent-dark bg-printer-accent/5 dark:bg-printer-accent-dark/5",
     muted:
-      "border-printer-ink/5 dark:border-printer-ink-dark/5 text-printer-ink-light dark:text-printer-ink-dark/40",
+      "border-printer-ink/5 dark:border-printer-ink-dark/5 text-printer-ink-light dark:text-printer-ink-light-dark",
   };
 </script>
 

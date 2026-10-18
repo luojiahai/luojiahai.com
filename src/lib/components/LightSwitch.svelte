@@ -338,18 +338,18 @@
   }
 
   .bulb-wire {
-    stroke: rgba(20, 20, 19, 0.48);
+    stroke: rgba(11, 11, 11, 0.48);
     stroke-width: 3;
     stroke-linecap: round;
   }
   :global(.dark) .bulb-wire {
-    stroke: rgba(250, 249, 245, 0.3);
+    stroke: rgba(240, 239, 236, 0.3);
   }
   .bulb-cap {
     fill: var(--color-printer-ink);
   }
   :global(.dark) .bulb-cap {
-    fill: #4d4c48;
+    fill: #52514e;
   }
   /* Cream Braun-plastic drum in daylight, charcoal plastic at night */
   .bulb-shade {
@@ -427,17 +427,17 @@
   }
 
   .cord-rope {
-    stroke: rgba(20, 20, 19, 0.5);
+    stroke: rgba(11, 11, 11, 0.5);
     stroke-width: 2.5;
   }
   :global(.dark) .cord-rope {
-    stroke: rgba(250, 249, 245, 0.3);
+    stroke: rgba(240, 239, 236, 0.3);
   }
   .cord-ferrule {
     fill: var(--color-printer-ink);
   }
   :global(.dark) .cord-ferrule {
-    fill: #4d4c48;
+    fill: #52514e;
   }
   /* Pull knob in the same Braun plastic as the lamp housing, with an orange
      end cap */
@@ -470,6 +470,9 @@
   .cord-group:focus-visible .cord-handle {
     stroke: var(--color-printer-accent);
     stroke-width: 2;
+  }
+  :global(.dark) .cord-group:focus-visible .cord-handle {
+    stroke: var(--color-printer-accent-dark);
   }
 
   @keyframes light-switch-sway {
