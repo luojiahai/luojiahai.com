@@ -128,33 +128,43 @@
         </radialGradient>
         <!-- horizontal sheen that makes the flat drum read as a cylinder -->
         <linearGradient id="light-switch-cyl" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.32" />
-          <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.06" />
-          <stop offset="0.6" stop-color="#ffffff" stop-opacity="0" />
-          <stop offset="1" stop-color="#000000" stop-opacity="0.16" />
+          <stop offset="0" stop-color="#000000" stop-opacity="0.12" />
+          <stop offset="0.16" stop-color="#ffffff" stop-opacity="0.42" />
+          <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.05" />
+          <stop offset="0.72" stop-color="#000000" stop-opacity="0" />
+          <stop offset="1" stop-color="#000000" stop-opacity="0.24" />
         </linearGradient>
       </defs>
       <!-- straight rubber pendant cable -->
-      <path d="M50 -2 V58" class="bulb-wire" />
+      <path d="M50 -2 V60" class="bulb-wire" />
       <!-- strain relief where the cable enters the housing -->
-      <rect x="46" y="55" width="8" height="14" rx="4" class="bulb-cap" />
+      <rect x="46" y="56" width="8" height="12" rx="3" class="bulb-cap" />
       <!-- frosted diffuser globe -->
-      <circle cx="50" cy="128" r="23" fill="url(#light-switch-diffuser)" class="bulb-glass" />
+      <circle cx="50" cy="130" r="24" fill="url(#light-switch-diffuser)" class="bulb-glass" />
       <!-- dead-diffuser overlay, shown the instant the lamp switches off -->
-      <circle cx="50" cy="128" r="23" class="bulb-glass-dead" />
+      <circle cx="50" cy="130" r="24" class="bulb-glass-dead" />
       <!-- soft highlight on the globe -->
-      <path d="M35.5 122 a17.5 17.5 0 0 1 7.5 -10.5" class="bulb-glint" />
+      <path d="M35.12 123.76 a18 18 0 0 1 7.92 -11.04" class="bulb-glint" />
       <!-- matte plastic housing drum -->
-      <path d="M29 104 v-29 a7 7 0 0 1 7 -7 h28 a7 7 0 0 1 7 7 v29 z" class="bulb-shade" />
+      <path d="M28 105 V73 a7 7 0 0 1 7 -7 h30 a7 7 0 0 1 7 7 V105 Z" class="bulb-shade" />
       <path
-        d="M29 104 v-29 a7 7 0 0 1 7 -7 h28 a7 7 0 0 1 7 7 v29 z"
+        d="M28 105 V73 a7 7 0 0 1 7 -7 h30 a7 7 0 0 1 7 7 V105 Z"
         fill="url(#light-switch-cyl)"
         class="bulb-shade-sheen"
       />
-      <!-- vent slots -->
-      <path d="M40 79 H60 M40 84.5 H60 M40 90 H60" class="bulb-vent" />
+      <!-- grooves -->
+      <path d="M33 82 H67 M33 88 H67" class="bulb-vent" />
       <!-- accent trim ring where the globe meets the housing -->
-      <rect x="29" y="104" width="42" height="4" rx="2" class="bulb-ring" />
+      <rect x="27" y="103.5" width="46" height="5" rx="2.5" class="bulb-ring" />
+      <rect
+        x="27"
+        y="103.5"
+        width="46"
+        height="5"
+        rx="2.5"
+        fill="url(#light-switch-cyl)"
+        class="bulb-ring-sheen"
+      />
     </svg>
   </div>
 </div>
@@ -174,32 +184,33 @@
     <svg width="28" height="270" viewBox="0 0 28 270" fill="none" class="block">
       <defs>
         <linearGradient id="light-switch-handle-sheen" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.35" />
-          <stop offset="0.35" stop-color="#ffffff" stop-opacity="0.06" />
-          <stop offset="0.65" stop-color="#ffffff" stop-opacity="0" />
-          <stop offset="1" stop-color="#000000" stop-opacity="0.18" />
+          <stop offset="0" stop-color="#000000" stop-opacity="0.12" />
+          <stop offset="0.16" stop-color="#ffffff" stop-opacity="0.42" />
+          <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.05" />
+          <stop offset="0.72" stop-color="#000000" stop-opacity="0" />
+          <stop offset="1" stop-color="#000000" stop-opacity="0.24" />
         </linearGradient>
         <clipPath id="light-switch-handle-clip">
-          <rect x="6.5" y="202" width="15" height="32" rx="7.5" />
+          <path d="M7 203 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v28 a4 4 0 0 1 -4 4 h-6 a4 4 0 0 1 -4 -4 Z" />
         </clipPath>
       </defs>
       <!-- straight rubber cable -->
-      <line x1="14" y1="0" x2="14" y2="196" class="cord-rope" />
+      <line x1="14" y1="0" x2="14" y2="197" class="cord-rope" />
       <!-- ferrule where the cable enters the handle -->
-      <rect x="11" y="193" width="6" height="10" rx="3" class="cord-ferrule" />
+      <rect x="11" y="193" width="6" height="9" rx="2.5" class="cord-ferrule" />
       <!-- matte plastic pull handle -->
-      <rect x="6.5" y="202" width="15" height="32" rx="7.5" class="cord-handle" />
+      <path
+        d="M7 203 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v28 a4 4 0 0 1 -4 4 h-6 a4 4 0 0 1 -4 -4 Z"
+        class="cord-handle"
+      />
       <g clip-path="url(#light-switch-handle-clip)">
-        <rect x="6.5" y="207.5" width="15" height="3.5" class="cord-accent" />
-        <rect
-          x="6.5"
-          y="202"
-          width="15"
-          height="32"
+        <rect x="6" y="228.5" width="16" height="7" class="cord-accent" />
+        <path
+          d="M7 203 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v28 a4 4 0 0 1 -4 4 h-6 a4 4 0 0 1 -4 -4 Z"
           fill="url(#light-switch-handle-sheen)"
           class="cord-sheen"
         />
-        <path d="M10 220 H18 M10 224.5 H18 M10 229 H18" class="cord-grip" />
+        <path d="M9 205 H19 M9 209 H19" class="cord-grip" />
       </g>
     </svg>
   </button>
@@ -307,7 +318,7 @@
 
   .bulb-glow {
     left: -8px;
-    top: 70px;
+    top: 72px;
     width: 116px;
     height: 116px;
     border-radius: 9999px;
@@ -353,9 +364,12 @@
   :global(.dark) .bulb-shade-sheen {
     opacity: 0.55;
   }
+  :global(.dark) .bulb-ring-sheen {
+    opacity: 0.55;
+  }
   .bulb-vent {
     stroke: rgba(0, 0, 0, 0.16);
-    stroke-width: 2;
+    stroke-width: 1.4;
     stroke-linecap: round;
   }
   :global(.dark) .bulb-vent {
@@ -425,7 +439,8 @@
   :global(.dark) .cord-ferrule {
     fill: #4d4c48;
   }
-  /* Capsule pull handle in the same Braun plastic as the lamp housing */
+  /* Pull knob in the same Braun plastic as the lamp housing, with an orange
+     end cap */
   .cord-handle {
     fill: var(--color-printer-tape);
     stroke: rgba(0, 0, 0, 0.16);
@@ -446,7 +461,7 @@
   }
   .cord-grip {
     stroke: rgba(0, 0, 0, 0.18);
-    stroke-width: 1.6;
+    stroke-width: 1.2;
     stroke-linecap: round;
   }
   :global(.dark) .cord-grip {
