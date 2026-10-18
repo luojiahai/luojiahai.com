@@ -64,6 +64,7 @@ const dictionary: Dictionary = {
     switchLanguage: "Switch to English",
     languageDial: "语言",
     colorModeDial: "主题",
+    powerLamp: "电源",
     colorModes: { system: "跟随系统", light: "浅色", dark: "深色" },
     colorMode(mode: string) {
       return `颜色模式：${mode}`;
