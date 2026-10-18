@@ -200,13 +200,13 @@ html:lang(zh) {
   }
 
   .skip-link {
-    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-label tracking-label text-printer-paper transition-transform duration-200;
+    @apply fixed left-4 top-4 z-50 -translate-y-24 bg-printer-ink px-4 py-2 font-mono text-label tracking-label text-white transition-transform duration-200;
   }
   .skip-link:focus {
     @apply translate-y-0;
   }
   :is(.dark) .skip-link {
-    @apply bg-printer-ink-dark text-printer-paper-dark;
+    @apply bg-white text-printer-ink;
   }
 
   .paper-edge-bottom {
@@ -358,7 +358,7 @@ html:lang(zh) {
 
   /* Inline-code only: mono font + subtle background */
   .post-content :not(pre) > code {
-    @apply font-mono font-normal text-inherit bg-printer-ink/8 dark:bg-printer-ink-dark/12 px-1 py-0.5 rounded;
+    @apply font-mono font-normal text-inherit bg-printer-ink/5 dark:bg-printer-ink-dark/[0.075] px-1 py-0.5 rounded;
   }
 
   /* Wide tables scroll inside the paper column rather than being clipped by
@@ -423,15 +423,15 @@ html:lang(zh) {
      hover card. Padding stays with the caller. */
   .printed-card {
     @apply rounded-sm border border-printer-ink/15 dark:border-printer-ink-dark/15;
-    @apply bg-printer-paper dark:bg-printer-paper-dark;
-    @apply shadow-[0_10px_28px_rgba(0,0,0,0.16),0_2px_6px_rgba(0,0,0,0.08)];
-    @apply dark:shadow-[0_10px_28px_rgba(0,0,0,0.55),0_2px_6px_rgba(0,0,0,0.4)];
+    @apply bg-white dark:bg-printer-shell-dark;
+    @apply shadow-[0_8px_24px_rgba(0,0,0,0.12),0_2px_6px_rgba(0,0,0,0.08)];
+    @apply dark:shadow-[0_8px_24px_rgba(0,0,0,0.32),0_2px_6px_rgba(0,0,0,0.2)];
   }
 
   /* Printer button style */
   .printer-btn {
     @apply relative px-4 h-9 rounded-md font-mono text-label tracking-label uppercase;
-    @apply bg-printer-shell dark:bg-printer-shell-dark;
+    @apply bg-printer-shell;
     @apply border border-printer-ink/10 dark:border-white/[0.08];
     @apply text-printer-ink dark:text-printer-ink-dark;
     @apply transition-[transform,box-shadow,background-color,border-color,color] duration-200 select-none cursor-pointer;
@@ -443,6 +443,7 @@ html:lang(zh) {
       0 1px 1px rgba(0, 0, 0, 0.08);
   }
   :is(.dark) .printer-btn {
+    background: rgba(255, 255, 255, 0.1);
     box-shadow:
       inset 0 1px 0.5px rgba(255, 255, 255, 0.05),
       inset 0 -3px 0 rgba(0, 0, 0, 0.38),
@@ -458,6 +459,7 @@ html:lang(zh) {
   }
   :is(.dark) .printer-btn:hover {
     @apply border-printer-accent-dark/30 text-printer-accent-dark;
+    background: rgba(255, 255, 255, 0.14);
     box-shadow:
       inset 0 1px 0.5px rgba(255, 255, 255, 0.06),
       inset 0 -3px 0 rgba(0, 0, 0, 0.38),
@@ -554,7 +556,7 @@ html:lang(zh) {
   }
 
   .page-subtitle {
-    @apply max-w-[52ch] font-sans text-subtitle text-printer-ink-light dark:text-printer-ink-dark/65;
+    @apply max-w-[52ch] font-sans text-subtitle text-printer-ink-light dark:text-printer-ink-light-dark;
   }
 
   .printer-shell-bottom-shadow {

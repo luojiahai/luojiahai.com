@@ -21,13 +21,13 @@
       <a href={post.permalink} class="group block focus-visible:outline-none">
         <div
           class={[
-            "printed-row -mx-3 px-3 hover:bg-printer-ink/[0.035] group-focus-visible:bg-printer-ink/[0.035] dark:hover:bg-printer-ink-dark/[0.035] dark:group-focus-visible:bg-printer-ink-dark/[0.035]",
+            "printed-row -mx-3 px-3 hover:bg-printer-ink/5 group-focus-visible:bg-printer-ink/5 dark:hover:bg-printer-ink-dark/[0.075] dark:group-focus-visible:bg-printer-ink-dark/[0.075]",
             compact ? "py-2.5" : "py-4",
           ]}
         >
           <div class="grid gap-1 sm:grid-cols-[7.5rem_1fr] sm:gap-5">
             <div
-              class="font-mono text-label tracking-label uppercase text-printer-ink-light tabular-nums dark:text-printer-ink-dark/55 sm:pt-1"
+              class="font-mono text-label tracking-label uppercase text-printer-ink-light tabular-nums dark:text-printer-ink-light-dark sm:pt-1"
             >
               {displayDate(post.date, lang)}
             </div>
@@ -40,7 +40,7 @@
               {#if post.description}
                 <p
                   class={[
-                    "mt-1 max-w-[62ch] font-sans text-meta text-printer-ink-light dark:text-printer-ink-dark/60",
+                    "mt-1 max-w-[62ch] font-sans text-meta text-printer-ink-light dark:text-printer-ink-light-dark",
                     compact ? "line-clamp-1" : "line-clamp-2",
                   ]}
                 >

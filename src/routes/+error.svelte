@@ -142,7 +142,7 @@
         d="M100 25 L100 48"
         stroke="currentColor"
         stroke-width="1.5"
-        class="text-printer-ink/30 dark:text-printer-ink-dark/30 motion-safe:animate-bounce"
+        class="text-printer-ink-muted motion-safe:animate-bounce"
         style:animation-duration="2s"
       />
       <path
@@ -150,7 +150,7 @@
         stroke="currentColor"
         stroke-width="1.5"
         stroke-linejoin="round"
-        class="text-printer-ink/30 dark:text-printer-ink-dark/30 motion-safe:animate-bounce"
+        class="text-printer-ink-muted motion-safe:animate-bounce"
         style:animation-duration="2s"
       />
       <!-- Small page icon (ghost of missing paper) -->
@@ -184,7 +184,7 @@
 
   <!-- Sub text -->
   <p
-    class="font-mono text-data text-printer-ink-light dark:text-printer-ink-dark/40 text-center max-w-xs mb-8"
+    class="font-mono text-data text-printer-ink-light dark:text-printer-ink-light-dark text-center max-w-xs mb-8"
   >
     {dictionary.labels.notFoundSubtitle}
   </p>

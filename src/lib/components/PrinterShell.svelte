@@ -238,7 +238,7 @@
             ></div>
           </div>
           <span
-            class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none"
+            class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none"
           >
             {displayDictionary.labels.powerLamp}
           </span>
@@ -266,7 +266,7 @@
                 {dictionary.labels.brandName}
               </div>
               <div
-                class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-dark/40"
+                class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-light-dark"
               >
                 {dictionary.labels.brandTagline}
               </div>
@@ -315,7 +315,7 @@
             <div class="flex items-center gap-5">
               <div class="flex items-center gap-2">
                 <span
-                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.languageDial}
                 </span>
@@ -332,7 +332,7 @@
               <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
               <div class="flex items-center gap-2 lg:hidden">
                 <span
-                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-dark/40 uppercase leading-none sm:hidden"
+                  class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.colorModeDial}
                 </span>
@@ -427,7 +427,7 @@
             class="relative z-10 mt-2 border-t border-dashed border-printer-ink/10 px-6 py-6 dark:border-printer-ink-dark/10 sm:px-10"
           >
             <div
-              class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-dark/40"
+              class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               <div
                 class="font-mono text-label tracking-label uppercase order-2 sm:order-1"

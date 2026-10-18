@@ -30,7 +30,7 @@
       </p>
     {/if}
     <p
-      class="font-sans text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-1"
+      class="font-sans text-label text-printer-ink-light dark:text-printer-ink-light-dark mt-1"
     >
       {dictionary.labels.entries(data.posts.length)}
     </p>

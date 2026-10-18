@@ -80,14 +80,14 @@
     </h1>
     <div class="flex items-center gap-3 mt-2 flex-wrap">
       <span
-        class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 tabular-nums"
+        class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark tabular-nums"
       >
         {displayDate(post.date, lang)}
       </span>
       {#if data.translations.length > 0}
         <div class="flex items-center gap-2">
           <span
-            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40"
+            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             |
           </span>
@@ -127,7 +127,7 @@
           WeChat
         </p>
         <p
-          class="font-mono text-label text-printer-ink-light dark:text-printer-ink-dark/40 mt-0.5"
+          class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark mt-0.5"
         >
           {dictionary.labels.wechatScanHint}
         </p>
@@ -140,7 +140,7 @@
   <!-- Footer actions -->
   <div class="flex items-center gap-4">
     <span
-      class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-dark/40"
+      class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
     >
       {dictionary.labels.shareTo}
     </span>
@@ -148,7 +148,7 @@
       href={dictionary.urls.shareToX(post.title, post.permalink)}
       target="_blank"
       rel="noopener"
-      class="text-printer-ink-light dark:text-printer-ink-dark/40 hover:text-printer-ink dark:hover:text-printer-ink-dark transition-colors"
+      class="text-printer-ink-light dark:text-printer-ink-light-dark hover:text-printer-ink dark:hover:text-printer-ink-dark transition-colors"
       aria-label={dictionary.labels.shareToX}
     >
       <Icon name="x" class="w-4 h-4" />

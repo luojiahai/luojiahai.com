@@ -11,7 +11,7 @@
       href={project.link}
       target="_blank"
       rel="noopener"
-      class="printed-row group -mx-3 flex items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/[0.035] focus-visible:bg-printer-ink/[0.035] focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.035] dark:focus-visible:bg-printer-ink-dark/[0.035]"
+      class="printed-row group -mx-3 flex items-center gap-3 px-3 py-3 transition-colors hover:bg-printer-ink/5 focus-visible:bg-printer-ink/5 focus-visible:outline-none dark:hover:bg-printer-ink-dark/[0.075] dark:focus-visible:bg-printer-ink-dark/[0.075]"
     >
       {#if project.image}
         <img
@@ -36,13 +36,13 @@
           {project.name}
         </div>
         <div
-          class="mt-1 line-clamp-1 max-w-[62ch] font-sans text-meta text-printer-ink-light dark:text-printer-ink-dark/60"
+          class="mt-1 line-clamp-1 max-w-[62ch] font-sans text-meta text-printer-ink-light dark:text-printer-ink-light-dark"
         >
           {project.description}
         </div>
       </div>
       <span
-        class="shrink-0 font-mono text-sm text-printer-ink-light transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:text-printer-ink-dark/30 dark:group-hover:text-printer-accent-dark"
+        class="shrink-0 font-mono text-sm text-printer-ink-muted transition-transform duration-200 group-hover:translate-x-1 group-hover:text-printer-accent dark:group-hover:text-printer-accent-dark"
       >
         →
       </span>

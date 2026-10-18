@@ -79,7 +79,7 @@
         "font-mono text-micro uppercase leading-none",
         i === currentIndex
           ? "text-printer-accent dark:text-printer-accent-dark opacity-100"
-          : "text-printer-ink-light dark:text-printer-ink-dark/40 opacity-60",
+          : "text-printer-ink-muted",
       ]}
       style:left="calc(50% + {pos.x}px)"
       style:top="calc(50% + {pos.y}px)"
