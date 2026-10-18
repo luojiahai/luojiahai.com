@@ -73,7 +73,7 @@
     document.documentElement.classList.toggle("dark", dark);
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", dark ? "#141413" : "#d1cfc5");
+      ?.setAttribute("content", dark ? "#0d0d0c" : "#d1cfc5");
   }
 
   onMount(() => {

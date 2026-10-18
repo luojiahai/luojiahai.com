@@ -20,7 +20,7 @@
   --color-printer-button-dark: #30302e;
   --color-printer-button-active-dark: #3d3d3a;
   --color-printer-paper: #faf9f5;
-  --color-printer-paper-dark: #141413;
+  --color-printer-paper-dark: #1c1b1a;
   --color-printer-ink: #141413;
   --color-printer-ink-dark: #faf9f5;
   --color-printer-ink-light: #5e5d59;
@@ -123,7 +123,7 @@ html:lang(zh) {
 
   :is(.dark) html,
   :is(.dark) body {
-    background-color: #141413;
+    background-color: #0d0d0c;
     color: var(--color-printer-ink-dark);
   }
 
