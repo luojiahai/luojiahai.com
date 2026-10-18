@@ -252,7 +252,7 @@
                 class="absolute -inset-2 rounded-full bg-black/5 dark:bg-white/[0.08] shadow-inner"
               ></div>
               <img
-                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_rgba(223,128,99,0.08)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
+                class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_color-mix(in_srgb,var(--color-printer-accent-dark)_8%,transparent)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
                 src="/static/avatar.webp"
                 alt={dictionary.meta.name}
                 width="40"
@@ -304,7 +304,7 @@
             {/each}
           </nav>
           <div
-            class="border-t border-dashed border-black/10 sm:hidden dark:border-white/10"
+            class="border-t border-dashed border-printer-ink/10 sm:hidden dark:border-printer-ink-dark/10"
           ></div>
           <div
             class="flex shrink-0 items-center justify-between py-1 max-sm:pt-3 max-sm:pb-0 sm:justify-end"
@@ -448,7 +448,7 @@
                       {lang}
                       {dictionary}
                       {align}
-                      class="hover:text-printer-accent transition-colors"
+                      class="hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
                     >
                       {label}
                     </SocialHoverCard>

@@ -20,7 +20,6 @@
   --color-printer-lamp: #2e9d48;
   --color-printer-lamp-dark: #4cd06a;
   --color-printer-button-dark: #2c2c2a;
-  --color-printer-button-active-dark: #3d3d3a;
   --color-printer-paper: #fcfcfb;
   --color-printer-paper-dark: #151515;
   --color-printer-ink: #0b0b0b;
@@ -125,7 +124,7 @@ html:lang(zh) {
     color: var(--color-printer-ink);
   }
 
-  :is(.dark) html,
+  html:is(.dark),
   :is(.dark) body {
     background-color: var(--color-printer-bench-dark);
     color: var(--color-printer-ink-dark);
@@ -148,6 +147,14 @@ html:lang(zh) {
     background: color-mix(
       in oklab,
       var(--color-printer-accent) 24%,
+      transparent
+    );
+  }
+
+  :is(.dark) ::selection {
+    background: color-mix(
+      in oklab,
+      var(--color-printer-accent-dark) 24%,
       transparent
     );
   }
@@ -359,6 +366,15 @@ html:lang(zh) {
   /* Inline-code only: mono font + subtle background */
   .post-content :not(pre) > code {
     @apply font-mono font-normal text-inherit bg-printer-ink/5 dark:bg-printer-ink-dark/[0.075] px-1 py-0.5 rounded;
+  }
+
+  .post-content code[data-theme*=" "],
+  .post-content code[data-theme*=" "] span {
+    color: var(--shiki-light);
+  }
+  :is(.dark) .post-content code[data-theme*=" "],
+  :is(.dark) .post-content code[data-theme*=" "] span {
+    color: var(--shiki-dark);
   }
 
   /* Wide tables scroll inside the paper column rather than being clipped by

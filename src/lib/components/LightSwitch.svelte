@@ -471,6 +471,9 @@
     stroke: var(--color-printer-accent);
     stroke-width: 2;
   }
+  :global(.dark) .cord-group:focus-visible .cord-handle {
+    stroke: var(--color-printer-accent-dark);
+  }
 
   @keyframes light-switch-sway {
     0%,
