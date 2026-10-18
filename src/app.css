@@ -8,23 +8,27 @@
   --font-sans: "B612", "PingFang SC", "Noto Sans SC", sans-serif;
   --font-mono: "B612 Mono", "PingFang SC", "Noto Sans SC", monospace;
 
-  /* Claude Code palette, mapped to the printer's material hierarchy. */
-  --color-printer-body: #f5f4ed;
-  --color-printer-body-dark: #1a1918;
-  --color-printer-shell: #e8e6dc;
-  --color-printer-shell-dark: #262624;
+  /* claude.ai palette, mapped to the printer's material hierarchy. */
+  --color-printer-bench: #d2d1c7;
+  --color-printer-bench-dark: #111111;
+  --color-printer-body: #f3f3f0;
+  --color-printer-body-dark: #1a1a19;
+  --color-printer-shell: #e7e6e1;
+  --color-printer-shell-dark: #20201f;
   --color-printer-accent: #c34c1d;
   --color-printer-accent-dark: #e47348;
   --color-printer-lamp: #2e9d48;
   --color-printer-lamp-dark: #4cd06a;
-  --color-printer-button-dark: #30302e;
+  --color-printer-button-dark: #2c2c2a;
   --color-printer-button-active-dark: #3d3d3a;
-  --color-printer-paper: #faf9f5;
-  --color-printer-paper-dark: #141413;
-  --color-printer-ink: #141413;
-  --color-printer-ink-dark: #faf9f5;
-  --color-printer-ink-light: #5e5d59;
-  --color-printer-tape: #f0eee6;
+  --color-printer-paper: #fcfcfb;
+  --color-printer-paper-dark: #151515;
+  --color-printer-ink: #0b0b0b;
+  --color-printer-ink-dark: #f0efec;
+  --color-printer-ink-light: #52514e;
+  --color-printer-ink-light-dark: #c3c2b7;
+  --color-printer-ink-muted: #898781;
+  --color-printer-tape: #f0efec;
 
   --tracking-label: 0.14em;
   --tracking-engraved: 0.24em;
@@ -117,20 +121,20 @@ html:lang(zh) {
   html,
   body {
     @apply min-h-screen;
-    background-color: #d1cfc5;
+    background-color: var(--color-printer-bench);
     color: var(--color-printer-ink);
   }
 
   :is(.dark) html,
   :is(.dark) body {
-    background-color: #141413;
+    background-color: var(--color-printer-bench-dark);
     color: var(--color-printer-ink-dark);
   }
 
   *,
   ::before,
   ::after {
-    @apply dark:border-neutral-800;
+    @apply dark:border-printer-button-dark;
   }
 
   body {
@@ -450,7 +454,7 @@ html:lang(zh) {
     box-shadow:
       inset 0 1px 0.5px rgba(255, 255, 255, 0.62),
       inset 0 -3px 0 rgba(0, 0, 0, 0.07),
-      0 5px 10px rgba(75, 57, 43, 0.11);
+      0 5px 10px rgba(69, 68, 66, 0.11);
   }
   :is(.dark) .printer-btn:hover {
     @apply border-printer-accent-dark/30 text-printer-accent-dark;
@@ -504,8 +508,8 @@ html:lang(zh) {
   .printer-header-border {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      0 18px 40px rgba(75, 57, 43, 0.12),
-      0 4px 10px rgba(75, 57, 43, 0.12);
+      0 18px 40px rgba(69, 68, 66, 0.12),
+      0 4px 10px rgba(69, 68, 66, 0.12);
   }
   :is(.dark) .printer-header-border {
     box-shadow:
@@ -632,23 +636,23 @@ html:lang(zh) {
 
     /* Robot palette (light) — printer plastic + thermal paper */
     --robot-shell: var(--color-printer-shell);
-    --robot-shade: #c2c0b6;
-    --robot-dark: #73726c;
-    --robot-screen: #141413;
+    --robot-shade: #c3c2b7;
+    --robot-dark: #7b7974;
+    --robot-screen: #0b0b0b;
     --robot-paper: var(--color-printer-paper);
-    --robot-line: rgba(20, 20, 19, 0.32);
-    --robot-ink: rgba(20, 20, 19, 0.45);
+    --robot-line: rgba(11, 11, 11, 0.32);
+    --robot-ink: rgba(11, 11, 11, 0.45);
     --robot-accent: var(--color-printer-accent);
     --robot-lamp: var(--color-printer-lamp);
   }
   :is(.dark) .robot-lane {
     --robot-shell: var(--color-printer-button-dark);
-    --robot-shade: #5e5d59;
-    --robot-dark: #6b6a65;
-    --robot-screen: #141413;
-    --robot-paper: #45443f;
-    --robot-line: rgba(250, 249, 245, 0.2);
-    --robot-ink: rgba(250, 249, 245, 0.5);
+    --robot-shade: #52514e;
+    --robot-dark: #6d6b67;
+    --robot-screen: #0b0b0b;
+    --robot-paper: #454442;
+    --robot-line: rgba(240, 239, 236, 0.2);
+    --robot-ink: rgba(240, 239, 236, 0.5);
     --robot-accent: var(--color-printer-accent-dark);
     --robot-lamp: var(--color-printer-lamp-dark);
     --robot-accent-glow: color-mix(in srgb, var(--color-printer-accent-dark) 60%, transparent);

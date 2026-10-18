@@ -28,10 +28,10 @@ export interface OgCard {
 }
 
 const COLORS = {
-  bench: "#D1CFC5",
-  paper: "#FAF9F5",
-  ink: "#141413",
-  inkLight: "#5E5D59",
+  bench: "#D2D1C7",
+  paper: "#FCFCFB",
+  ink: "#0B0B0B",
+  inkLight: "#52514E",
   accent: "#C34C1D",
 };
 
@@ -246,7 +246,7 @@ function footer(card: OgCard): Node {
         alignItems: "center",
         marginTop: "auto",
         paddingTop: "26px",
-        borderTop: "1.5px dashed rgba(20, 20, 19, 0.14)",
+        borderTop: "1.5px dashed rgba(11, 11, 11, 0.14)",
       },
     },
     h(
@@ -381,7 +381,7 @@ function slip(card: OgCard): Node {
             "radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px)",
           backgroundSize: "7px 7px",
           boxShadow:
-            "0 18px 36px rgba(75, 57, 43, 0.14), 0 3px 8px rgba(75, 57, 43, 0.12)",
+            "0 18px 36px rgba(69, 68, 66, 0.14), 0 3px 8px rgba(69, 68, 66, 0.12)",
         },
       },
       // The shadow of the printer slot the slip just fed out of.
