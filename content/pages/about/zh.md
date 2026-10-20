@@ -5,14 +5,14 @@ title: 关于
 description: 关于我的东西。
 ---
 
-这是我的网站，不定期更新，分享一些随想随记，什么内容都有可能出现。「luojiahai」是我中文名字罗嘉海的拼音，也是我在互联网上的常用 ID。
+这是我的网站，不定期更新，什么都有可能出现，看我心情。luojiahai 是我中文名罗嘉海的拼音，也是我（几乎）全网统一的用户名。如果在哪个平台没找到我，要么是名字被人占了，要么是我不玩那个平台。
 
 <div class="content-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="luojiahai"><path fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="square" d="M22 32h84M22 96h84M22 64c14-18 28-18 42 0s28 18 42 0"/></svg></div>
 
-我是 INTJ（内向、直觉、思考、判断四种特质组成的人格类型）。我在中国广州出生长大，目前住在澳大利亚墨尔本。我是一名务实的计算机程序员，我做有用的东西。
+我是 INTJ 紫老头，巨蟹座（一般不提这个，因为我不太懂星座）。我出生在中华人民共和国广东省广州市海珠区，后来移居澳大利亚，现在定居墨尔本。我不是很喜欢澳大利亚，非常无聊，不推荐来。
 
-编程之外，我喜欢吃饭、做饭和逛超市。麦当劳是我最喜欢的餐厅，我还有很多麦当劳周边。我是开市客的黑钻会员，喜欢去那里购物，就算在过道里走走什么都不买也挺好。
+我的工作是敲代码，不过代码都是 AI 写的。目前在本地一家不算大厂的公司全职打工，工作之余也会捣鼓一些有的没的。我上大学那会儿还是手搓古法编程，真的是拿笔在纸上写代码，没有夸张。
 
-我是航空爱好者。我玩微软飞行模拟器，飞 [FlyByWire](https://flybywiresim.com/) 制作的空客 A320（A32NX），练习真实的驾驶：飞行程序、手动飞行，以及背后的航空知识。
+我喜欢吃饭、做饭和逛超市。自己做的饭吃了不烧心。逛超市不仅能买食材，还是我唯一的锻炼，我能在超市里一逛就是一两个小时，一点也不累。
 
-你可以在 [X](https://x.com/luojiahai)、[Instagram](https://instagram.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。
+我不太喜欢说话，语音和视频电话尽量别打给我，联系我最好打字。你可以在 [X](https://x.com/luojiahai)、[Instagram](https://instagram.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。
