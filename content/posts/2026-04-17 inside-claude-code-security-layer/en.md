@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-17"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "How Claude Code guards a tool call: an auto-mode AI classifier, fail-closed gates, and 23 Bash security rules."
 keywords:
   - Claude Code

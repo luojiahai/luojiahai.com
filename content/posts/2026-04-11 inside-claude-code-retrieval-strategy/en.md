@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-11"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code skips RAG entirely, letting the agent grep and a small metadata index handle retrieval."
 keywords:
   - Claude Code

@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-05-05"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Once a day, Claude Code forks a background agent to consolidate its memories. The source calls it dreaming."
 keywords:
   - Claude Code

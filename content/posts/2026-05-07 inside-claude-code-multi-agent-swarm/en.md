@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-05-07"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code's two multi-agent modes: a coordinator with disposable workers, and a swarm of teammates in terminal panes."
 keywords:
   - Claude Code
