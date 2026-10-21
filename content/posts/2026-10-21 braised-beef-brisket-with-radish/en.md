@@ -21,7 +21,7 @@ Cantonese · Main · About 2.5 hours
 | Ingredient | Amount |
 | --- | --- |
 | Beef brisket, rib-side cut (牛坑腩) | 2000g |
-| Radish | to taste |
+| Radish | as needed |
 | Chu Hou paste (柱侯酱) | 100g |
 | Hoisin sauce (海鲜酱) | 20g |
 | Satay sauce (沙爹酱) | 15g |
@@ -31,7 +31,7 @@ Cantonese · Main · About 2.5 hours
 | Ginger | 20g |
 | Shallots | 15g |
 | Garlic | 10g |
-| Garlic sprouts (蒜苗) | to taste |
+| Garlic sprouts (蒜苗) | as needed |
 | Bay leaves | 4 leaves |
 | Star anise | 3 pods |
 | Cinnamon | half a stick |
@@ -40,7 +40,7 @@ Cantonese · Main · About 2.5 hours
 | Xinhui dried tangerine peel (新会陈皮) | 1 piece |
 | Rock sugar | 30g |
 | Sesame oil | 2g |
-| Ground pepper | 3g |
+| Ground white pepper | 3g |
 | Chicken powder | 5g |
 | Rice wine (米酒) | to taste |
 | Maggi seasoning (美极) | to taste |
@@ -57,7 +57,7 @@ Heat the pan and add oil. Add the ginger, shallots and garlic and fry until gold
 
 ### 3. Combine in the pot
 
-Add boiling water and stir until the sauces are evenly mixed in. Then add the rock sugar, spices, ground pepper and chicken powder. Mix well and pour it all over the beef.
+Add boiling water and stir until the sauces are evenly mixed in. Then add the rock sugar, spices, ground white pepper and chicken powder. Mix well and pour it all over the beef.
 
 ### 4. Simmer low and slow
 
