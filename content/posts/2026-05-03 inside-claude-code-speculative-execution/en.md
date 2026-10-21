@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-05-03"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code speculatively runs your predicted next turn while you're idle, then commits it if you accept."
 keywords:
   - Claude Code

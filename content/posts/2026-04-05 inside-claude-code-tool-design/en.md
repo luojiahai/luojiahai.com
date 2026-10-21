@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-05"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "How Claude Code's 40+ built-in tools are registered, deferred, and locked down with fail-closed defaults."
 keywords:
   - Claude Code

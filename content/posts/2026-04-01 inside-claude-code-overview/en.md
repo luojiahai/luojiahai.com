@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-01"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "An end-to-end tour of Claude Code's architecture, and why it's all fundamentals rather than secret sauce."
 keywords:
   - Claude Code

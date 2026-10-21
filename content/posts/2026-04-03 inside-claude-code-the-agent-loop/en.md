@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-03"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "The autonomous agent at the heart of Claude Code is, underneath, a single while(true) loop."
 keywords:
   - Claude Code

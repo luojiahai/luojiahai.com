@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-15"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Five compression strategies, applied lightest to heaviest, keep Claude Code's context window from overflowing."
 keywords:
   - Claude Code

@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-09"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code splits its system prompt at a sentinel boundary to keep the cacheable prefix stable."
 keywords:
   - Claude Code

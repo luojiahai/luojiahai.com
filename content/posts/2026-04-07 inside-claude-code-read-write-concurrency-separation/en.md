@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-07"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code runs tools concurrently using the read/write-lock pattern straight out of databases."
 keywords:
   - Claude Code

@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-13"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code fights long-session context drift with a hot-warm-cold, three-tier memory architecture."
 keywords:
   - Claude Code

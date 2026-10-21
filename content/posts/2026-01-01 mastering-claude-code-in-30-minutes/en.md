@@ -4,8 +4,7 @@ slug: mastering-claude-code-in-30-minutes
 lang: en
 archived: true
 date: "2026-01-01"
-categories:
-  - ai
+categories: []
 description: "Learn advanced features, shortcuts, and workflows to get the most from Claude Code."
 keywords:
   - Claude Code

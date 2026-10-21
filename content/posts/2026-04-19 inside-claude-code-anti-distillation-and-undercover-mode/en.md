@@ -5,8 +5,7 @@ lang: en
 archived: true
 date: "2026-04-19"
 updated: "2026-07-25"
-categories:
-  - ai
+categories: []
 description: "Claude Code's two hidden defenses: one against model distillation, one against leaking internal codenames."
 keywords:
   - Claude Code
