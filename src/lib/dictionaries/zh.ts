@@ -25,7 +25,7 @@ const dictionary: Dictionary = {
     home: "/zh",
     posts: "/zh/posts",
     projects: "/zh/projects",
-    use: "/zh/use",
+    use: "/zh/about/use",
     about: "/zh/about",
 
     shareToX(title: string, postLink: string) {
@@ -49,6 +49,7 @@ const dictionary: Dictionary = {
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
     backToPosts: "← 返回文章",
+    backToAbout: "← 返回关于",
     allPosts: "← 全部文章",
     notFoundStatus: "纸空了",
     notFoundTitle: "托盘已空",

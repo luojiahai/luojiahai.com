@@ -54,7 +54,7 @@ const dictionary = {
     home: "/en",
     posts: "/en/posts",
     projects: "/en/projects",
-    use: "/en/use",
+    use: "/en/about/use",
     about: "/en/about",
 
     shareToX(title: string, postLink: string) {
@@ -79,6 +79,7 @@ const dictionary = {
     brandName: "LUOJIAHAI",
     brandTagline: "The sky is not the limit.",
     backToPosts: "← BACK TO POSTS",
+    backToAbout: "← BACK TO ABOUT",
     allPosts: "← ALL POSTS",
     notFoundStatus: "Paper Tray Empty",
     notFoundTitle: "Out of Paper",

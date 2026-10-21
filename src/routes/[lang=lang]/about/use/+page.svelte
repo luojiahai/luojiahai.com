@@ -61,4 +61,13 @@
 
     <PrintedDivider style="dashed" />
   {/each}
+
+  <div class="mt-6">
+    <a
+      href={dictionary.urls.about}
+      class="section-action"
+    >
+      {dictionary.labels.backToAbout}
+    </a>
+  </div>
 </div>
