@@ -17,7 +17,7 @@ export const prerender = true;
 const PAGE_ICONS = {
   posts: "draft",
   projects: "code",
-  use: "tools",
+  "about/use": "tools",
   about: "user",
 } satisfies Record<string, OgIcon>;
 
@@ -69,7 +69,7 @@ function resolveCard(path: string): OgCard | undefined {
     const text: Record<StaticPage, { title?: string; subtitle?: string }> = {
       posts: { title: labels.posts, subtitle: labels.postsSubtitle },
       projects: { title: labels.projects, subtitle: labels.projectsSubtitle },
-      use: { title: labels.use, subtitle: labels.useSubtitle },
+      "about/use": { title: labels.use, subtitle: labels.useSubtitle },
       about: { title: about?.title, subtitle: about?.description },
     };
     const { title, subtitle } = text[page];

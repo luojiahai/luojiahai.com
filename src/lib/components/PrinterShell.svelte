@@ -31,7 +31,6 @@
     { label: dictionary.labels.home, href: dictionary.urls.home },
     { label: dictionary.labels.posts, href: dictionary.urls.posts },
     { label: dictionary.labels.projects, href: dictionary.urls.projects },
-    { label: dictionary.labels.use, href: dictionary.urls.use },
     { label: dictionary.labels.about, href: dictionary.urls.about },
   ]);
 
@@ -283,23 +282,22 @@
           class="relative mt-2 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center"
         >
           <nav
-            class="relative grid w-full flex-1 grid-cols-6 gap-1.5 py-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5"
+            class="relative grid w-full flex-1 grid-cols-4 gap-1.5 py-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5"
             aria-label={dictionary.labels.primaryNavigation}
           >
-            {#each navItems as item, i (item.href)}
+            {#each navItems as item (item.href)}
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
                 onclick={(event) => onNavPress(event, item.href)}
                 class={[
-                  "printer-btn whitespace-nowrap max-sm:px-1",
-                  i < 3 ? "col-span-2" : "col-span-3",
+                  "printer-btn min-w-0 whitespace-nowrap max-sm:px-1",
                   (pendingNavHref
                     ? pendingNavHref === item.href
                     : isActive(item.href)) && "active",
                 ]}
               >
-                <span class="leading-none trim-label">{item.label}</span>
+                <span class="truncate leading-none trim-label">{item.label}</span>
               </a>
             {/each}
           </nav>

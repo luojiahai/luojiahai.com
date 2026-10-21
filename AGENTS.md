@@ -6,9 +6,9 @@
 - `src/routes/`: SvelteKit routes with `[lang=lang]/` i18n prefix. The blog
   lives under `posts/`, which covers the list, `[slug]/`, and
   `categories/[categorySlug]/`. Standalone pages: `projects/` (the project
-  list from `content/projects/`), `use/` (the
-  gear list, from `content/use/`), and `about/` (prose from
-  `content/pages/about/`).
+  list from `content/projects/`) and `about/` (prose from
+  `content/pages/about/`). The gear list, from `content/use/`, lives at
+  `about/use/`. It has no nav tab; the About prose links to it.
   Endpoints: `feed/` (runtime RSS), `api/social/` (runtime profile stats),
   `og/` (prerendered OG images), `sitemap.xml/`, `robots.txt/`.
 - `src/lib/components/`: Svelte components (printer shell UI, printed
