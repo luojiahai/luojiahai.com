@@ -120,8 +120,9 @@ const dictionary = {
     since(year: string) {
       return `since ${year}`;
     },
+    emailLabel: "Email",
     emailTo: "To",
-    emailHint: "Mail lands straight in my inbox.",
+    emailHint: "Email lands straight in my inbox.",
   },
 };
 

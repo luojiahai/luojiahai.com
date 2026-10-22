@@ -111,6 +111,7 @@ const dictionary: Dictionary = {
     since(year: string) {
       return `${year} 年至今`;
     },
+    emailLabel: "邮箱",
     emailTo: "收件人",
     emailHint: "邮件会直达我的收件箱。",
   },

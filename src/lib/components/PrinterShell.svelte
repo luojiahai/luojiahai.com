@@ -177,13 +177,12 @@
 
   const footerLinks: {
     kind: SocialCardKind;
-    label: string;
     align?: "right";
   }[] = [
-    { kind: "x", label: "X" },
-    { kind: "instagram", label: "Instagram" },
-    { kind: "github", label: "GitHub" },
-    { kind: "email", label: "Email", align: "right" },
+    { kind: "x" },
+    { kind: "instagram" },
+    { kind: "github" },
+    { kind: "email", align: "right" },
   ];
 </script>
 
@@ -438,7 +437,7 @@
                 © {currentYear} LUOJIAHAI
               </div>
               <div class="flex items-center gap-4 order-1 sm:order-2">
-                {#each footerLinks as { kind, label, align } (kind)}
+                {#each footerLinks as { kind, align } (kind)}
                   {@const contact = dictionary.contacts.find(
                     (contact) => contact.kind === kind,
                   )}
@@ -447,12 +446,12 @@
                       {kind}
                       href={contact.link}
                       {lang}
-                      labelLang="en"
+                      labelLang={contact.lang}
                       {dictionary}
                       {align}
                       class="font-mono text-label tracking-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
                     >
-                      {label}
+                      {contact.label}
                     </SocialHoverCard>
                   {/if}
                 {/each}
