@@ -5,7 +5,7 @@ title: About
 description: Things about me.
 ---
 
-This is my website. I update it whenever I feel like it, and anything could show up here. "luojiahai" is the Pinyin (Mandarin romanization) of my Chinese name, 罗嘉海, and it's my username on (almost) every platform. If you can't find me somewhere, either someone took the name or I'm not on that platform.
+This is my website. I update it whenever I feel like it, and anything could show up here. "luojiahai" is the Pinyin (Mandarin romanization) of my Chinese name, and it's my username on (almost) every platform. If you can't find me somewhere, either someone took the name or I'm not on that platform.
 
 <div class="content-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="luojiahai"><path fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="square" d="M22 32h84M22 96h84M22 64c14-18 28-18 42 0s28 18 42 0"/></svg></div>
 

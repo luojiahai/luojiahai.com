@@ -40,6 +40,7 @@
   <!-- Profile masthead -->
   <PrintedSection>
     <h1
+      lang="en"
       class="max-w-[11ch] font-sans text-display font-bold text-printer-ink dark:text-printer-ink-dark"
     >
       {dictionary.meta.name}

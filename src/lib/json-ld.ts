@@ -19,7 +19,7 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
     description: options.description,
     publisher: {
       "@type": "Person",
-      name: "Luo, Jiahai",
+      name: "LUOJIAHAI",
       url: SITE_URL,
       sameAs: [
         "https://x.com/luojiahai",
@@ -63,12 +63,12 @@ export function generateBlogPostingJsonLd(
       : {}),
     author: {
       "@type": "Person",
-      name: "Luo, Jiahai",
+      name: "LUOJIAHAI",
       url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
-      name: "Luo, Jiahai",
+      name: "LUOJIAHAI",
       url: SITE_URL,
     },
     mainEntityOfPage: {

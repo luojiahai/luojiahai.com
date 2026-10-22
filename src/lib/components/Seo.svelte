@@ -72,7 +72,7 @@
     <meta name="description" content={description} />
   {/if}
   <meta name="keywords" content={allKeywords.join(", ")} />
-  <meta name="author" content="Luo, Jiahai" />
+  <meta name="author" content={dictionary.meta.name} />
   <link rel="canonical" href={url} />
 
   <meta property="og:type" content={ogType} />
@@ -92,7 +92,7 @@
       property="article:modified_time"
       content={article.modifiedTime ?? article.publishedTime}
     />
-    <meta property="article:author" content="Luo, Jiahai" />
+    <meta property="article:author" content={dictionary.meta.name} />
     {#each article.tags ?? [] as tag (tag)}
       <meta property="article:tag" content={tag} />
     {/each}
