@@ -57,6 +57,7 @@
           kind={contact.kind}
           href={contact.link}
           {lang}
+          labelLang={contact.lang}
           {dictionary}
           align="left"
           side="bottom"
@@ -106,7 +107,7 @@
         {dictionary.labels.printedOn}
         {printedOn}
       </div>
-      <PrintedLabel variant="muted">luojiahai.com</PrintedLabel>
+      <PrintedLabel variant="muted" lang="en">luojiahai.com</PrintedLabel>
     </div>
   </div>
 </div>

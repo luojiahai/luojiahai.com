@@ -265,6 +265,7 @@
                 {dictionary.labels.brandName}
               </div>
               <div
+                lang="en"
                 class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-light-dark"
               >
                 {dictionary.labels.brandTagline}
@@ -319,8 +320,8 @@
                 </span>
                 <RotaryDial
                   options={[
-                    { value: "en", label: "EN" },
-                    { value: "zh", label: "中" },
+                    { value: "en", label: "EN", lang: "en" },
+                    { value: "zh", label: "中", lang: "zh" },
                   ]}
                   value={displayLang}
                   onchange={switchToLanguage}
@@ -428,13 +429,12 @@
               class="flex flex-col sm:flex-row items-center justify-between gap-4 text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               <div
+                lang="en"
                 class="font-mono text-label tracking-label uppercase order-2 sm:order-1"
               >
                 © {currentYear} LUOJIAHAI
               </div>
-              <div
-                class="font-mono text-label tracking-label uppercase flex items-center gap-4 order-1 sm:order-2"
-              >
+              <div class="flex items-center gap-4 order-1 sm:order-2">
                 {#each footerLinks as { kind, label, align } (kind)}
                   {@const contact = dictionary.contacts.find(
                     (contact) => contact.kind === kind,
@@ -444,9 +444,10 @@
                       {kind}
                       href={contact.link}
                       {lang}
+                      labelLang="en"
                       {dictionary}
                       {align}
-                      class="hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
+                      class="font-mono text-label tracking-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
                     >
                       {label}
                     </SocialHoverCard>
