@@ -91,12 +91,12 @@
 
   const postmark = new Date().toISOString().split("T")[0];
 
-  const kindLabels: Record<SocialCardKind, string> = {
+  const kindLabels = $derived<Record<SocialCardKind, string>>({
     github: "GITHUB",
     x: "X",
     instagram: "INSTAGRAM",
-    email: "MAIL",
-  };
+    email: dictionary.social.emailLabel,
+  });
 
   const alignClasses = {
     center: "left-1/2 -translate-x-1/2",
@@ -164,7 +164,7 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
-            lang="en"
+            lang={kind === "email" ? undefined : "en"}
             class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
