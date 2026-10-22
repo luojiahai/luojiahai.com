@@ -288,11 +288,6 @@
               </span>
             </div>
           </div>
-          <div
-            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark mt-2.5 pt-2 border-t border-dotted border-printer-ink/10 dark:border-printer-ink-dark/10"
-          >
-            {dictionary.social.emailHint}
-          </div>
         {/if}
       </div>
 

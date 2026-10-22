@@ -113,7 +113,6 @@ const dictionary: Dictionary = {
     },
     emailLabel: "邮箱",
     emailTo: "收件人",
-    emailHint: "邮件会直达我的收件箱。",
   },
 };
 
