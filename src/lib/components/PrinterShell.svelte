@@ -237,6 +237,7 @@
             ></div>
           </div>
           <span
+            lang={displayLang}
             class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none"
           >
             {displayDictionary.labels.powerLamp}
@@ -314,6 +315,7 @@
             <div class="flex items-center gap-5">
               <div class="flex items-center gap-2">
                 <span
+                  lang={displayLang}
                   class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.languageDial}
@@ -331,6 +333,7 @@
               <!-- Mobile/tablet: rotary dial. Desktop: replaced by the pull-cord light switch. -->
               <div class="flex items-center gap-2 lg:hidden">
                 <span
+                  lang={displayLang}
                   class="font-mono text-micro text-printer-ink-light dark:text-printer-ink-light-dark uppercase leading-none sm:hidden"
                 >
                   {displayDictionary.labels.colorModeDial}
