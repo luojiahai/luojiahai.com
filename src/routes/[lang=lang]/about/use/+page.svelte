@@ -39,7 +39,7 @@
               class="flex flex-col gap-y-1 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-4"
             >
               <div
-                class="font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
+                class="font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
               >
                 {item.label}
               </div>

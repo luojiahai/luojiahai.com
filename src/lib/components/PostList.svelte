@@ -27,7 +27,7 @@
         >
           <div class="grid gap-1 sm:grid-cols-[7.5rem_1fr] sm:gap-5">
             <div
-              class="font-mono text-label tracking-label uppercase text-printer-ink-light tabular-nums dark:text-printer-ink-light-dark sm:pt-1"
+              class="font-mono text-label uppercase text-printer-ink-light tabular-nums dark:text-printer-ink-light-dark sm:pt-1"
             >
               {displayDate(post.date, lang)}
             </div>

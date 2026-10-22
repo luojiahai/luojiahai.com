@@ -62,10 +62,10 @@
           {dictionary}
           align="left"
           side="bottom"
-          class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-label tracking-label uppercase text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-light-dark dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
+          class="inline-flex items-center gap-1.5 rounded-sm border border-printer-ink/8 px-2.5 py-1 font-mono text-label uppercase text-printer-ink-light transition-colors hover:border-printer-accent/20 hover:text-printer-accent dark:border-printer-ink-dark/8 dark:text-printer-ink-light-dark dark:hover:border-printer-accent-dark/20 dark:hover:text-printer-accent-dark"
         >
           <Icon name={socialCardIcons[contact.kind]} class="h-3 w-3" />
-          <span class="trim-label">{contact.label}</span>
+          {contact.label}
         </SocialHoverCard>
       {/each}
     </div>
@@ -103,7 +103,7 @@
   >
     <div class="flex items-center justify-between">
       <div
-        class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
+        class="font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
       >
         {dictionary.labels.printedOn}
         {printedOn}

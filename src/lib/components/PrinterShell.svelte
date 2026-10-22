@@ -298,7 +298,7 @@
                     : isActive(item.href)) && "active",
                 ]}
               >
-                <span class="truncate leading-none trim-label">{item.label}</span>
+                <span class="truncate leading-none">{item.label}</span>
               </a>
             {/each}
           </nav>
@@ -432,7 +432,7 @@
             >
               <div
                 lang="en"
-                class="font-mono text-label tracking-label uppercase order-2 sm:order-1"
+                class="font-mono text-label uppercase order-2 sm:order-1"
               >
                 © {currentYear} LUOJIAHAI
               </div>
@@ -449,7 +449,7 @@
                       labelLang={contact.lang}
                       {dictionary}
                       {align}
-                      class="font-mono text-label tracking-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
+                      class="font-mono text-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
                     >
                       {contact.label}
                     </SocialHoverCard>

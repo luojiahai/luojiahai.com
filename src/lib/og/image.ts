@@ -152,7 +152,6 @@ function chip(text: string): Node {
       style: {
         display: "flex",
         fontSize: "15px",
-        letterSpacing: "0.18em",
         textTransform: "uppercase",
         padding: "5px 10px 4px",
         border: `1.5px solid ${COLORS.accent}66`,
@@ -178,7 +177,6 @@ function markerRow(marker: OgMarker): Node {
             style: {
               display: "flex",
               fontSize: "15px",
-              letterSpacing: "0.12em",
               textTransform: "uppercase",
               color: COLORS.inkLight,
             },
@@ -282,7 +280,6 @@ function footer(card: OgCard): Node {
               display: "flex",
               fontSize: "18px",
               fontWeight: 700,
-              letterSpacing: "0.28em",
               color: COLORS.ink,
             },
           },
@@ -294,7 +291,6 @@ function footer(card: OgCard): Node {
             style: {
               display: "flex",
               fontSize: "11px",
-              letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: COLORS.inkLight,
             },
@@ -309,7 +305,6 @@ function footer(card: OgCard): Node {
         style: {
           display: "flex",
           fontSize: "14px",
-          letterSpacing: "0.2em",
           textTransform: "uppercase",
           color: COLORS.inkLight,
         },

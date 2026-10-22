@@ -40,7 +40,7 @@
 
   <!-- Footer -->
   <div
-    class="font-mono text-label tracking-label trim-label uppercase text-printer-ink-muted text-center py-4"
+    class="font-mono text-label uppercase text-printer-ink-muted text-center py-4"
   >
     {dictionary.labels.aboutSignOff}
   </div>
