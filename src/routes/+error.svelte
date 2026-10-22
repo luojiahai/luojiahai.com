@@ -52,7 +52,7 @@
       class="w-2 h-2 rounded-full bg-printer-accent dark:bg-printer-accent-dark motion-safe:animate-pulse"
     ></div>
     <span
-      class="font-mono text-label tracking-engraved trim-engraved uppercase text-printer-accent dark:text-printer-accent-dark"
+      class="font-mono text-label uppercase text-printer-accent dark:text-printer-accent-dark"
     >
       {dictionary.labels.notFoundStatus}
     </span>
@@ -177,7 +177,7 @@
 
   <!-- Main heading -->
   <h1
-    class="font-sans text-title tracking-engraved trim-engraved font-bold uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
+    class="font-sans text-title font-bold uppercase text-printer-ink dark:text-printer-ink-dark mb-3 text-center"
   >
     {dictionary.labels.notFoundTitle}
   </h1>
@@ -196,7 +196,7 @@
 
   <!-- Print home button -->
   <a href="/{lang}" class="printer-btn px-6 h-9">
-    <span class="trim-label">{dictionary.labels.notFoundButton}</span>
+    {dictionary.labels.notFoundButton}
   </a>
 
   <!-- Error code -->

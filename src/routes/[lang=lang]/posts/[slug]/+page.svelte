@@ -141,7 +141,7 @@
   <!-- Footer actions -->
   <div class="flex items-center gap-4">
     <span
-      class="font-mono text-label tracking-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
+      class="font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
     >
       {dictionary.labels.shareTo}
     </span>

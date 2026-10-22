@@ -157,7 +157,7 @@
       aria-hidden="true"
     >
       <div
-        class="printed-card px-4 py-3 text-left normal-case tracking-normal"
+        class="printed-card px-4 py-3 text-left normal-case"
       >
         <!-- Receipt header -->
         <div
@@ -165,7 +165,7 @@
         >
           <span
             lang={kind === "email" ? undefined : "en"}
-            class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
+            class="inline-flex items-center gap-1.5 font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
             {kindLabels[kind]}
