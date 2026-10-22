@@ -266,7 +266,7 @@
               </div>
               <div
                 lang="en"
-                class="mt-1.5 font-mono text-micro uppercase text-printer-ink-light sm:mt-2 dark:text-printer-ink-light-dark"
+                class="mt-1.5 font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
               >
                 {dictionary.labels.brandTagline}
               </div>
