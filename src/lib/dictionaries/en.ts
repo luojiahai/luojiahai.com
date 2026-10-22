@@ -122,7 +122,6 @@ const dictionary = {
     },
     emailLabel: "Email",
     emailTo: "To",
-    emailHint: "Email lands straight in my inbox.",
   },
 };
 
