@@ -261,6 +261,7 @@
                 {dictionary.social.emailTo}
               </div>
               <div
+                lang="en"
                 class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark mt-0.5 truncate"
               >
                 {dictionary.meta.name}

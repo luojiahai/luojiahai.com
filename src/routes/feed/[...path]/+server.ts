@@ -12,7 +12,7 @@ export const prerender = false;
 
 const FEED_DESCRIPTIONS: Record<Language, string> = {
   en: "All posts from luojiahai.",
-  zh: "罗嘉海的全部文章。",
+  zh: "luojiahai 的全部文章。",
 };
 
 function parsePath(path: string): { lang: Language } | undefined {
@@ -47,7 +47,7 @@ export const GET: RequestHandler = async ({ params, platform, url }) => {
       link: post.permalink,
       date: post.date,
       categories: post.categories,
-      author: "hi@luojiahai.com (Luo, Jiahai)",
+      author: `hi@luojiahai.com (${dictionary.meta.name})`,
     })),
   });
 

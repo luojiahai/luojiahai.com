@@ -3,15 +3,12 @@ import type { Dictionary } from "./en";
 
 const dictionary: Dictionary = {
   meta: {
-    name: "罗嘉海",
+    name: "LUOJIAHAI",
     websiteName: "luojiahai",
     motto: "你好，世界！",
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
-        "罗嘉海",
-        "Luo Jiahai",
-        "罗嘉海的个人主页",
         "个人主页",
         "个人网站",
         "个人博客",

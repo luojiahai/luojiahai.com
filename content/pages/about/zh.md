@@ -5,7 +5,7 @@ title: 关于
 description: 关于我的东西。
 ---
 
-这是我的网站，不定期更新，什么都有可能出现，看我心情。luojiahai 是我中文名罗嘉海的拼音，也是我（几乎）全网统一的用户名。如果在哪个平台没找到我，要么是名字被人占了，要么是我不玩那个平台。
+这是我的网站，不定期更新，什么都有可能出现，看我心情。luojiahai 是我中文名的拼音，也是我（几乎）全网统一的用户名。如果在哪个平台没找到我，要么是名字被人占了，要么是我不玩那个平台。
 
 <div class="content-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="luojiahai"><path fill="none" stroke="currentColor" stroke-width="17" stroke-linecap="square" d="M22 32h84M22 96h84M22 64c14-18 28-18 42 0s28 18 42 0"/></svg></div>
 

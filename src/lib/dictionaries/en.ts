@@ -34,15 +34,12 @@ const contacts: Contact[] = [
 
 const dictionary = {
   meta: {
-    name: "Luo, Jiahai",
+    name: "LUOJIAHAI",
     websiteName: "luojiahai",
     motto: "Hello, World!",
     fillKeywords(keywords?: string[]): string[] {
       return [
         "luojiahai",
-        "Luo Jiahai",
-        "Jiahai Luo",
-        "罗嘉海",
         "luojiahai Website",
         "Personal Blog",
         "Personal Website",
