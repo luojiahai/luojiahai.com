@@ -81,16 +81,19 @@ const dictionary: Dictionary = {
       label: "X",
       link: "https://x.com/luojiahai",
       kind: "x",
+      lang: "en",
     },
     {
       label: "Instagram",
       link: "https://instagram.com/luojiahai",
       kind: "instagram",
+      lang: "en",
     },
     {
       label: "GitHub",
       link: "https://github.com/luojiahai",
       kind: "github",
+      lang: "en",
     },
     {
       label: "邮箱",

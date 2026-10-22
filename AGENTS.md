@@ -171,8 +171,12 @@ as an in-repo backstop.
   the text is centered or sits in a padded chip or button, since tracking
   trails the last glyph. Negative tracking is for 24px and up only. Weight is 400 or 700 only: B612
   has nothing between, and PingFang does, so a `font-medium` would split en
-  and zh. `html:lang(zh)` bumps label/micro by 1px, cuts caps tracking to 0.05em
-  and removes negative tracking, which collides full-width CJK glyphs.
+  and zh. `[lang|="zh"]` bumps label/micro by 1px, cuts caps tracking to 0.05em
+  and removes negative tracking, which collides full-width CJK glyphs;
+  `[lang|="en"]` restores the en values, so the nearest `lang` ancestor wins.
+  Text that stays Latin on zh pages takes `lang="en"` on the element carrying
+  the type class (CJK on en pages takes `lang="zh"`), since em tracking and
+  size resolve there and children inherit the px.
 
 ## Commit & Pull Request Guidelines
 - Commits: clear, imperative messages (e.g., "Update work entries").

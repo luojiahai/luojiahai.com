@@ -5,6 +5,8 @@ interface Contact {
   label: string;
   link: string;
   kind: SocialCardKind;
+  /** Set when the label stays Latin in another language, so it keeps en type tokens. */
+  lang?: "en";
 }
 
 const contacts: Contact[] = [

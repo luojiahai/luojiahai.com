@@ -83,15 +83,32 @@
 }
 
 /* CJK glyphs need the extra pixel at label sizes. Wide tracking breaks them
-   apart, but zh pages still set Latin caps (GITHUB, VIEW ALL), so keep a
-   little. Negative tracking makes the full-width glyphs collide. */
-html:lang(zh) {
+   apart, and the 0.05em left is for Latin mixed into zh strings. Negative
+   tracking makes the full-width glyphs collide. Latin-only text on zh pages
+   takes lang="en", and CJK-only text on en pages lang="zh", so the nearest
+   lang ancestor picks the tokens. */
+[lang|="zh"] {
   --text-label: 12px;
   --text-micro: 10px;
   --tracking-label: 0.05em;
   --tracking-engraved: 0.05em;
   --tracking-tight: 0;
   --text-display--letter-spacing: 0;
+}
+[lang|="en"] {
+  --text-label: 11px;
+  --text-micro: 9px;
+  --tracking-label: 0.14em;
+  --tracking-engraved: 0.24em;
+  --tracking-tight: -0.02em;
+  --text-display--letter-spacing: -0.03em;
+}
+/* A var() in a custom property resolves where it is declared and inherits
+   frozen, so these re-derive from the nearest lang's tokens. */
+[lang] {
+  --text-micro--letter-spacing: var(--tracking-engraved);
+  --text-prose-h1--letter-spacing: var(--tracking-tight);
+  --text-prose-h2--letter-spacing: var(--tracking-tight);
 }
 
 /* Letter-spacing also trails the last glyph, which pushes centered or padded

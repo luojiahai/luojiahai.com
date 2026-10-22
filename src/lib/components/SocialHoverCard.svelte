@@ -11,6 +11,7 @@
     kind,
     href,
     lang,
+    labelLang,
     dictionary,
     align = "center",
     side = "top",
@@ -20,6 +21,9 @@
     kind: SocialCardKind;
     href: string;
     lang: Language;
+    /** Sets `lang` on the link alone, so a Latin label keeps en tokens on a
+     * zh page without restyling the card, which is a child of the wrapper. */
+    labelLang?: Language;
     dictionary: Dictionary;
     align?: "center" | "left" | "right";
     /** Where the card opens relative to the link. The printed paper is
@@ -134,6 +138,7 @@
     {href}
     target={kind === "email" ? undefined : "_blank"}
     rel={kind === "email" ? undefined : "noopener"}
+    lang={labelLang}
     class={className}
     onfocus={show}
     onblur={hide}
@@ -159,12 +164,14 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
+            lang="en"
             class="inline-flex items-center gap-1.5 font-mono text-label tracking-engraved uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
             {kindLabels[kind]}
           </span>
           <span
+            lang="en"
             class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             {kind === "email" ? postmark : `@${stats[kind].handle}`}
@@ -179,6 +186,7 @@
               {stats.github.name}
             </span>
             <span
+              lang="en"
               class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               @{stats.github.handle}
@@ -220,6 +228,7 @@
               {profile.name}
             </span>
             <span
+              lang={kind === "x" ? undefined : "en"}
               class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               {kind === "x"
@@ -257,6 +266,7 @@
                 {dictionary.meta.name}
               </div>
               <div
+                lang="en"
                 class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark truncate"
               >
                 {href.replace("mailto:", "")}
@@ -271,6 +281,7 @@
                 class="w-3.5 h-3.5 text-printer-accent dark:text-printer-accent-dark"
               />
               <span
+                lang="en"
                 class="font-mono text-micro uppercase text-printer-accent dark:text-printer-accent-dark"
               >
                 HELLO

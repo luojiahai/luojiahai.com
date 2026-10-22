@@ -8,6 +8,8 @@
     label?: string;
     /** ...or an icon label. */
     icon?: IconName;
+    /** The label's language, so its type tokens follow the label, not the page. */
+    lang?: string;
   }
 
   let {
@@ -74,6 +76,7 @@
   {#each options as opt, i (opt.value)}
     {@const pos = labelPosition(i)}
     <div
+      lang={opt.lang}
       class={[
         "absolute pointer-events-none select-none transition-opacity duration-200",
         "font-mono text-micro uppercase leading-none",

@@ -93,6 +93,7 @@
           </span>
           {#each data.translations as translation (translation.lang)}
             <a
+              lang={translation.lang}
               class="font-mono text-label text-printer-accent dark:text-printer-accent-dark hover:underline"
               href={translation.permalink}
             >

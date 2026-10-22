@@ -1,15 +1,18 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import type { Language } from "$lib/dictionaries";
   import type { IconName } from "$lib/icons";
   import Icon from "./Icon.svelte";
 
   let {
     variant = "default",
     icon,
+    lang,
     children,
   }: {
     variant?: "default" | "accent" | "muted";
     icon?: IconName;
+    lang?: Language;
     children: Snippet;
   } = $props();
 
@@ -24,6 +27,7 @@
 </script>
 
 <span
+  {lang}
   class={[
     "inline-flex items-center gap-1 leading-none font-mono text-label tracking-label uppercase px-2 py-[3px] rounded-sm border",
     variantClasses[variant],

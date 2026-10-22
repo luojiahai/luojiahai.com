@@ -201,6 +201,7 @@
 
   <!-- Error code -->
   <div
+    lang="en"
     class="mt-10 font-mono text-micro uppercase text-printer-ink/20 dark:text-printer-ink-dark/15"
   >
     {dictionary.labels.notFoundError}
