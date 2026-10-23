@@ -3,7 +3,12 @@
   import type { Snippet } from "svelte";
   import { fly } from "svelte/transition";
   import type { Dictionary, Language } from "$lib/dictionaries";
-  import { socialCardIcons, type SocialCardKind } from "$lib/social";
+  import {
+    isStaticKind,
+    socialCardIcons,
+    staticProfiles,
+    type SocialCardKind,
+  } from "$lib/social";
   import { ensureSocialStats, social } from "$lib/social-state.svelte";
   import Icon from "./Icon.svelte";
 
@@ -95,6 +100,8 @@
     github: "GITHUB",
     x: "X",
     instagram: "INSTAGRAM",
+    douyin: "抖音",
+    xiaohongshu: "小红书",
     email: dictionary.social.emailLabel,
   });
 
@@ -164,7 +171,7 @@
           class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
-            lang={kind === "email" ? undefined : "en"}
+            lang={kind === "email" || isStaticKind(kind) ? undefined : "en"}
             class="inline-flex items-center gap-1.5 font-mono text-label uppercase text-printer-ink-light dark:text-printer-ink-light-dark"
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
@@ -174,7 +181,9 @@
             lang="en"
             class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
           >
-            {kind === "email" ? postmark : `@${stats[kind].handle}`}
+            {kind === "email"
+              ? postmark
+              : `@${(isStaticKind(kind) ? staticProfiles[kind] : stats[kind]).handle}`}
           </span>
         </div>
 
@@ -250,6 +259,20 @@
             {@render statCell(dictionary.social.followers, profile.followers)}
             {@render statCell(dictionary.social.following, profile.following)}
             {@render statCell(dictionary.social.posts, profile.posts)}
+          </div>
+        {:else if isStaticKind(kind)}
+          {@const profile = staticProfiles[kind]}
+          <div class="flex items-baseline gap-1.5">
+            <span
+              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
+            >
+              {profile.name}
+            </span>
+            <span
+              class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
+            >
+              {profile.idLabel}：{profile.handle}
+            </span>
           </div>
         {:else}
           <!-- Printed envelope slip -->

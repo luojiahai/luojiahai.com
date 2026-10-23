@@ -75,16 +75,14 @@ const dictionary: Dictionary = {
   },
   contacts: [
     {
-      label: "X",
-      link: "https://x.com/luojiahai",
-      kind: "x",
-      lang: "en",
+      label: "抖音",
+      link: "https://www.douyin.com/user/MS4wLjABAAAAiCvY7XFjEK8GiaIlcVR2M7ouyzJbstd01vBMPZ_qKNI",
+      kind: "douyin",
     },
     {
-      label: "Instagram",
-      link: "https://instagram.com/luojiahai",
-      kind: "instagram",
-      lang: "en",
+      label: "小红书",
+      link: "https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba",
+      kind: "xiaohongshu",
     },
     {
       label: "GitHub",
