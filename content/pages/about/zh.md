@@ -15,4 +15,4 @@ description: 关于我的东西。
 
 我喜欢吃饭、做饭和逛超市。自己做的饭吃了不烧心。逛超市不仅能买食材，还是我唯一的锻炼，我能在超市里一逛就是一两个小时，一点也不累。如果你感兴趣的话，这里是[我使用的东西](/zh/about/use)。
 
-我不太喜欢说话，语音和视频电话尽量别打给我，联系我最好打字。你可以在 [X](https://x.com/luojiahai)、[Instagram](https://instagram.com/luojiahai) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。
+我不太喜欢说话，语音和视频电话尽量别打给我，联系我最好打字。你可以在 [抖音](https://www.douyin.com/user/MS4wLjABAAAAiCvY7XFjEK8GiaIlcVR2M7ouyzJbstd01vBMPZ_qKNI)、[小红书](https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba) 或 [GitHub](https://github.com/luojiahai) 找到我，或者发邮件到 [hi@luojiahai.com](mailto:hi@luojiahai.com)。

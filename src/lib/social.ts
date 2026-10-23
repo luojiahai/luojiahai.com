@@ -49,14 +49,32 @@ export interface SocialStats {
   instagram: InstagramStats;
 }
 
+type LiveKind = Exclude<keyof SocialStats, "fetchedAt">;
+
+type StaticKind = "douyin" | "xiaohongshu";
+
 /** Card variants supported by SocialHoverCard. */
-export type SocialCardKind = Exclude<keyof SocialStats, "fetchedAt"> | "email";
+export type SocialCardKind = LiveKind | StaticKind | "email";
+
+export const staticProfiles: Record<
+  StaticKind,
+  { name: string; handle: string; idLabel: string }
+> = {
+  douyin: { name: "肆海", handle: "luojiahai", idLabel: "抖音号" },
+  xiaohongshu: { name: "肆海", handle: "luojiahai", idLabel: "小红书号" },
+};
+
+export function isStaticKind(kind: SocialCardKind): kind is StaticKind {
+  return kind in staticProfiles;
+}
 
 /** The icon each card kind is drawn with, on its link and in the card. */
 export const socialCardIcons: Record<SocialCardKind, IconName> = {
   github: "github",
   x: "x",
   instagram: "instagram",
+  douyin: "douyin",
+  xiaohongshu: "xiaohongshu",
   email: "mail",
 };
 

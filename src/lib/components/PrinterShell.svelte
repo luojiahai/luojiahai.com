@@ -9,7 +9,6 @@
     type Dictionary,
     type Language,
   } from "$lib/dictionaries";
-  import type { SocialCardKind } from "$lib/social";
   import PrinterRobot from "./PrinterRobot.svelte";
   import SocialHoverCard from "./SocialHoverCard.svelte";
   import RotaryDial from "./RotaryDial.svelte";
@@ -174,16 +173,6 @@
   });
 
   const currentYear = new Date().getFullYear();
-
-  const footerLinks: {
-    kind: SocialCardKind;
-    align?: "right";
-  }[] = [
-    { kind: "x" },
-    { kind: "instagram" },
-    { kind: "github" },
-    { kind: "email", align: "right" },
-  ];
 </script>
 
 <a class="skip-link" href="#main-content">
@@ -437,23 +426,20 @@
                 © {currentYear} LUOJIAHAI
               </div>
               <div class="flex items-center gap-4 order-1 sm:order-2">
-                {#each footerLinks as { kind, align } (kind)}
-                  {@const contact = dictionary.contacts.find(
-                    (contact) => contact.kind === kind,
-                  )}
-                  {#if contact}
-                    <SocialHoverCard
-                      {kind}
-                      href={contact.link}
-                      {lang}
-                      labelLang={contact.lang}
-                      {dictionary}
-                      {align}
-                      class="font-mono text-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
-                    >
-                      {contact.label}
-                    </SocialHoverCard>
-                  {/if}
+                {#each dictionary.contacts as contact, i (contact.kind)}
+                  <SocialHoverCard
+                    kind={contact.kind}
+                    href={contact.link}
+                    {lang}
+                    labelLang={contact.lang}
+                    {dictionary}
+                    align={i === dictionary.contacts.length - 1
+                      ? "right"
+                      : undefined}
+                    class="font-mono text-label uppercase hover:text-printer-accent dark:hover:text-printer-accent-dark transition-colors"
+                  >
+                    {contact.label}
+                  </SocialHoverCard>
                 {/each}
               </div>
             </div>
