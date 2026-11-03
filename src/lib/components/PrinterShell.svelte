@@ -241,8 +241,8 @@
               ></div>
               <img
                 class="relative z-10 h-9 w-9 rounded-full shadow-sm ring-1 ring-black/10 dark:shadow-[0_0_12px_color-mix(in_srgb,var(--color-printer-accent-dark)_8%,transparent)] dark:ring-white/[0.15] sm:h-10 sm:w-10"
-                src="/static/avatar.webp"
-                alt={dictionary.meta.name}
+                src="/icon.svg"
+                alt=""
                 width="40"
                 height="40"
               />

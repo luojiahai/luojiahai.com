@@ -130,7 +130,7 @@ async function loadCjkSubset(text: string): Promise<Font[]> {
 // Building blocks
 // ---------------------------------------------------------------------------
 
-const AVATAR_DATA_URI = `data:image/jpeg;base64,${readFileSync("src/lib/og/avatar.jpg").toString("base64")}`;
+const SITE_ICON_DATA_URI = svgDataUri(readFileSync("static/icon.svg", "utf8"));
 
 const ICON_SIZE = 32;
 
@@ -261,7 +261,7 @@ function footer(card: OgCard): Node {
           },
         },
         h("img", {
-          src: AVATAR_DATA_URI,
+          src: SITE_ICON_DATA_URI,
           width: 40,
           height: 40,
           style: {
