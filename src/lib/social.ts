@@ -60,7 +60,7 @@ export const staticProfiles: Record<
   StaticKind,
   { handle: string; idLabel: string }
 > = {
-  douyin: { handle: "luojiahai", idLabel: "抖音号" },
+  douyin: { handle: "58659521161", idLabel: "抖音号" },
   xiaohongshu: { handle: "luojiahai", idLabel: "小红书号" },
 };
 
