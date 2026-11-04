@@ -58,10 +58,10 @@ export type SocialCardKind = LiveKind | StaticKind | "email";
 
 export const staticProfiles: Record<
   StaticKind,
-  { name: string; handle: string; idLabel: string }
+  { handle: string; idLabel: string }
 > = {
-  douyin: { name: "肆海", handle: "luojiahai", idLabel: "抖音号" },
-  xiaohongshu: { name: "肆海", handle: "luojiahai", idLabel: "小红书号" },
+  douyin: { handle: "luojiahai", idLabel: "抖音号" },
+  xiaohongshu: { handle: "luojiahai", idLabel: "小红书号" },
 };
 
 export function isStaticKind(kind: SocialCardKind): kind is StaticKind {

@@ -264,11 +264,6 @@
           {@const profile = staticProfiles[kind]}
           <div class="flex items-baseline gap-1.5">
             <span
-              class="font-mono text-data font-bold text-printer-ink dark:text-printer-ink-dark"
-            >
-              {profile.name}
-            </span>
-            <span
               class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
               {profile.idLabel}：{profile.handle}
