@@ -25,7 +25,7 @@ export function generateWebSiteJsonLd(options: JsonLdWebSite): object {
         "https://x.com/luojiahai",
         "https://instagram.com/luojiahai",
         "https://github.com/luojiahai",
-        "https://www.douyin.com/user/MS4wLjABAAAAiCvY7XFjEK8GiaIlcVR2M7ouyzJbstd01vBMPZ_qKNI",
+        "https://www.douyin.com/user/MS4wLjABAAAAzPs6xglRVS0rtCg_fiyzVZ-VzushqboYOJpyYAz64agXIJ0Viwz7Xd6F1h1acYvD",
         "https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba",
       ],
     },

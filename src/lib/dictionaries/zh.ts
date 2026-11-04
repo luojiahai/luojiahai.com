@@ -76,7 +76,7 @@ const dictionary: Dictionary = {
   contacts: [
     {
       label: "抖音",
-      link: "https://www.douyin.com/user/MS4wLjABAAAAiCvY7XFjEK8GiaIlcVR2M7ouyzJbstd01vBMPZ_qKNI",
+      link: "https://www.douyin.com/user/MS4wLjABAAAAzPs6xglRVS0rtCg_fiyzVZ-VzushqboYOJpyYAz64agXIJ0Viwz7Xd6F1h1acYvD",
       kind: "douyin",
     },
     {
