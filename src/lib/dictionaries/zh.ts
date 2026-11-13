@@ -75,11 +75,6 @@ const dictionary: Dictionary = {
   },
   contacts: [
     {
-      label: "抖音",
-      link: "https://www.douyin.com/user/MS4wLjABAAAAzPs6xglRVS0rtCg_fiyzVZ-VzushqboYOJpyYAz64agXIJ0Viwz7Xd6F1h1acYvD",
-      kind: "douyin",
-    },
-    {
       label: "小红书",
       link: "https://www.xiaohongshu.com/user/profile/5c8e525c000000001203a0ba",
       kind: "xiaohongshu",

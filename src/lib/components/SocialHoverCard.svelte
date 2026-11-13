@@ -100,7 +100,6 @@
     github: "GITHUB",
     x: "X",
     instagram: "INSTAGRAM",
-    douyin: "抖音",
     xiaohongshu: "小红书",
     email: dictionary.social.emailLabel,
   });
