@@ -98,9 +98,6 @@ const dictionary: Dictionary = {
     repos: "仓库",
     contributions: "年贡献",
     recentActivity: "近期活动",
-    since(year: string) {
-      return `${year} 年至今`;
-    },
     emailLabel: "邮箱",
     emailTo: "收件人",
   },

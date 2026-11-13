@@ -114,9 +114,6 @@ const dictionary = {
     repos: "Repos",
     contributions: "Contribs/yr",
     recentActivity: "Recent activity",
-    since(year: string) {
-      return `since ${year}`;
-    },
     emailLabel: "Email",
     emailTo: "To",
   },

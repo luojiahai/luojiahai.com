@@ -94,8 +94,6 @@
       : cells;
   });
 
-  const postmark = new Date().toISOString().split("T")[0];
-
   const kindLabels = $derived<Record<SocialCardKind, string>>({
     github: "GITHUB",
     x: "X",
@@ -167,7 +165,7 @@
       >
         <!-- Receipt header -->
         <div
-          class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
+          class="flex items-center pb-2 mb-2.5 border-b border-dashed border-printer-ink/15 dark:border-printer-ink-dark/15"
         >
           <span
             lang={kind === "email" || isStaticKind(kind) ? undefined : "en"}
@@ -175,14 +173,6 @@
           >
             <Icon name={socialCardIcons[kind]} class="w-3 h-3 shrink-0" />
             {kindLabels[kind]}
-          </span>
-          <span
-            lang="en"
-            class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
-          >
-            {kind === "email"
-              ? postmark
-              : `@${(isStaticKind(kind) ? staticProfiles[kind] : stats[kind]).handle}`}
           </span>
         </div>
 
@@ -236,12 +226,10 @@
               {profile.name}
             </span>
             <span
-              lang={kind === "x" ? undefined : "en"}
+              lang="en"
               class="font-mono text-label text-printer-ink-light dark:text-printer-ink-light-dark"
             >
-              {kind === "x"
-                ? dictionary.social.since(stats.x.joined)
-                : `@${profile.handle}`}
+              @{profile.handle}
             </span>
           </div>
           {#if profile.bio}
