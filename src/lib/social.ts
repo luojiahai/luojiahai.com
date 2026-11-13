@@ -22,18 +22,7 @@ export interface GitHubStats {
   endDate: string;
 }
 
-export interface XStats {
-  handle: string;
-  name: string;
-  bio: string;
-  followers: number;
-  following: number;
-  posts: number;
-  /** Year the account joined. */
-  joined: string;
-}
-
-export interface InstagramStats {
+export interface ProfileStats {
   handle: string;
   name: string;
   bio: string;
@@ -45,8 +34,8 @@ export interface InstagramStats {
 export interface SocialStats {
   fetchedAt: string;
   github: GitHubStats;
-  x: XStats;
-  instagram: InstagramStats;
+  x: ProfileStats;
+  instagram: ProfileStats;
 }
 
 type LiveKind = Exclude<keyof SocialStats, "fetchedAt">;

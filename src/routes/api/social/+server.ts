@@ -4,9 +4,8 @@ import {
   SOCIAL_STATS_VERSION,
   socialFallback,
   type GitHubStats,
-  type InstagramStats,
+  type ProfileStats,
   type SocialStats,
-  type XStats,
 } from "$lib/social";
 import { SITE_URL } from "$lib/site-config";
 import type { RequestHandler } from "./$types";
@@ -130,7 +129,7 @@ async function fetchGitHubContributions(): Promise<GitHubContributions> {
   }
 }
 
-async function fetchXProfile(): Promise<XStats> {
+async function fetchXProfile(): Promise<ProfileStats> {
   const res = await fetch(`https://api.fxtwitter.com/${X_HANDLE}`, {
     headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
   });
@@ -140,10 +139,6 @@ async function fetchXProfile(): Promise<XStats> {
   };
   const user = data.user;
   if (!user) throw new Error("x profile shape");
-  const joined =
-    typeof user.joined === "string" && !Number.isNaN(Date.parse(user.joined))
-      ? String(new Date(user.joined).getUTCFullYear())
-      : socialFallback.x.joined;
   return {
     handle: typeof user.screen_name === "string" ? user.screen_name : X_HANDLE,
     name: typeof user.name === "string" ? user.name : socialFallback.x.name,
@@ -151,14 +146,13 @@ async function fetchXProfile(): Promise<XStats> {
     followers: assertNumber(user.followers, "x followers"),
     following: assertNumber(user.following, "x following"),
     posts: assertNumber(user.tweets, "x tweets"),
-    joined,
   };
 }
 
 /** Instagram's anonymous web-profile API. It rejects non-browser user
  * agents and blocks some datacenter IPs, so failures are expected and
  * fall back to the last-good snapshot. */
-async function fetchInstagramProfile(): Promise<InstagramStats> {
+async function fetchInstagramProfile(): Promise<ProfileStats> {
   const res = await fetch(
     `https://i.instagram.com/api/v1/users/web_profile_info/?username=${INSTAGRAM_HANDLE}`,
     {
