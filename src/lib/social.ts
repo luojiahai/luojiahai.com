@@ -51,7 +51,7 @@ export interface SocialStats {
 
 type LiveKind = Exclude<keyof SocialStats, "fetchedAt">;
 
-type StaticKind = "douyin" | "xiaohongshu";
+type StaticKind = "xiaohongshu";
 
 /** Card variants supported by SocialHoverCard. */
 export type SocialCardKind = LiveKind | StaticKind | "email";
@@ -60,7 +60,6 @@ export const staticProfiles: Record<
   StaticKind,
   { handle: string; idLabel: string }
 > = {
-  douyin: { handle: "luojiahai", idLabel: "抖音号" },
   xiaohongshu: { handle: "luojiahai", idLabel: "小红书号" },
 };
 
@@ -73,7 +72,6 @@ export const socialCardIcons: Record<SocialCardKind, IconName> = {
   github: "github",
   x: "x",
   instagram: "instagram",
-  douyin: "douyin",
   xiaohongshu: "xiaohongshu",
   email: "mail",
 };
